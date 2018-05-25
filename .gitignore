@@ -1,2 +1,3 @@
+*/bin/*.a
+*/bin/intermediates/*
 *.logging
-*.o
