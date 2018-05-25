@@ -1,3 +1,3 @@
-*/bin/*.a
-*/bin/intermediates/*
+**/bin/*.a
+**/bin/intermediates/*
 *.logging
