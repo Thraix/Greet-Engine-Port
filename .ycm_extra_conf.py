@@ -17,9 +17,7 @@ BASE_FLAGS = [
         '-std=c++11',
         '-xc++',
         '-I/usr/lib/',
-        '-I/usr/include/'
-        '-Ideps/includes/',
-        '-I Greet-core/src/'
+        '-I/usr/include/',
         ]
 
 SOURCE_EXTENSIONS = [
@@ -35,6 +33,8 @@ HEADER_EXTENSIONS = [
         ]
 
 HEADER_DIRECTORIES = [
+        'Greet-core/src/',
+        'deps/includes'
         ]
 
 def IsHeaderFile(filename):
@@ -153,6 +153,11 @@ def FlagsForCompilationDatabase(root, filename):
 def FlagsForFile(filename):
     root = os.path.realpath(filename);
     compilation_db_flags = FlagsForCompilationDatabase(root, filename)
+    confPath = os.path.dirname(os.path.abspath(__file__))
+    
+    for dir in HEADER_DIRECTORIES:
+       BASE_FLAGS.append('-I'+confPath+'/'+dir) 
+    
     if compilation_db_flags:
         final_flags = compilation_db_flags
     else:

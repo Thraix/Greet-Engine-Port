@@ -9,6 +9,7 @@ namespace Greet {
 
 	BatchRenderer::~BatchRenderer()
 	{
+
 		delete m_indices;
 		GLCall(glDeleteBuffers(1, &m_ibo));
 		GLCall(glDeleteBuffers(1, &m_vbo));
@@ -90,11 +91,9 @@ namespace Greet {
 		texture_font_t* ftfont = font->GetFTFont();
 		float x = position.x;
 		const Vec2& scale = Vec2(1,1);//font->getScale();
-		float baseline = ftfont->size - ftfont->ascender;
     const char* str = text.c_str();
 		for(uint i = 0;i<text.length();i++)
 		{
-			const char& c = text[i];
 			texture_glyph_t* glyph = texture_font_get_glyph(ftfont,str+i);
 			if(glyph != NULL)
 			{

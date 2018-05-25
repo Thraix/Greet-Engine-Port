@@ -1,23 +1,25 @@
 CC=@g++
 AR=@ar
-
-OBJPATH=bin/intermediates
+BIN=bin
+OBJPATH=$(BIN)/intermediates
 SOURCES=$(wildcard src/*.cpp) $(wildcard src/**/*.cpp) $(wildcard src/**/**/*.cpp) $(wildcard src/**/**/**/*.cpp)
 OBJECTS=$(addprefix $(OBJPATH)/, $(notdir $(SOURCES:.cpp=.o)))
 INCLUDES=-I../deps/includes/ -I src/
-CFLAGS=$(INCLUDES) -std=c++17 -c -w -g3
+CFLAGS=$(INCLUDES) -std=c++17 -c -w -g3 -D_DEBUG
 LIBS=-lGL -l:libglfw.so -l:libfreeimage.so
-EXECUTABLE=bin/libgreet.a
-PRINT=${info Compiling $<}
+LIBRARY=$(BIN)/libgreet.a
+PRINT=${info ---- $<}
 
-all: $(EXECUTABLE)
-	$(info Done :D)
+all: $(LIBRARY)
+	$(info ---------------------------------)
+	$(info ----  Greet Engine Compiled  ----)
+	$(info ---------------------------------)
 rebuild: clean all
 
 
-$(EXECUTABLE): $(OBJECTS)
-	$(info Linking libraries)
-	$(AR) rvs $(EXECUTABLE) $(OBJECTS)
+$(LIBRARY): $(OBJECTS)
+	$(info Generating library file)
+	$(AR) rs $(LIBRARY) $(OBJECTS)
 
 $(OBJPATH)/%.o: src/%.cpp
 	$(PRINT)
