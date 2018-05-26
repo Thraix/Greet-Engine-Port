@@ -74,10 +74,10 @@ namespace Greet{
 
 		inline uint GetTexID() const { return m_sprite == NULL ? 0 : m_sprite->GetTextureID(); }
 		inline uint GetMaskTexID() const { return m_mask == NULL ? 0 : m_mask->GetTextureID(); }
-		inline const Vec2& GetTexPos() const { return m_sprite == NULL ? Vec2(0, 0) : m_sprite->GetTexPos(); }
-		inline const Vec2& GetTexSize() const { return m_sprite == NULL ? Vec2(1, 1) : m_sprite->GetTexSize(); }
-		inline const Vec2& GetMaskTexPos() const { return m_mask == NULL ? Vec2(0, 0) : m_mask->GetTexPos(); }
-		inline const Vec2& GetMaskTexSize() const { return m_mask == NULL ? Vec2(1, 1) : m_mask->GetTexSize(); }
+		inline Vec2 GetTexPos() const { return m_sprite == NULL ? Vec2(0, 0) : m_sprite->GetTexPos(); }
+		inline Vec2 GetTexSize() const { return m_sprite == NULL ? Vec2(1, 1) : m_sprite->GetTexSize(); }
+		inline Vec2 GetMaskTexPos() const { return m_mask == NULL ? Vec2(0, 0) : m_mask->GetTexPos(); }
+		inline Vec2 GetMaskTexSize() const { return m_mask == NULL ? Vec2(1, 1) : m_mask->GetTexSize(); }
 		inline Sprite& GetSprite() const { return *m_sprite; }
 		inline Sprite& GetMask() const { return *m_mask; }
 	};

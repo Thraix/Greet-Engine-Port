@@ -16,7 +16,7 @@ all: $(EXECUTABLE)
 rebuild: clean all
 
 
-$(EXECUTABLE): $(OBJECTS)
+$(EXECUTABLE): $(OBJECTS) ../../Greet-core/bin/libgreet.a
 	$(info Linking libraries)
 	$(CC) -o $(EXECUTABLE) $(OBJECTS) $(LIBS)
 

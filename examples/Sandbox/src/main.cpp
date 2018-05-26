@@ -148,7 +148,7 @@ public:
 		fps = new Label("144 fps", Vec2(50, 300), "roboto", 72, ColorUtils::Vec3ToColorHex(ColorUtils::GetMaterialColorAsRGB(120 / 360.0f, 9)));
 		cursor = new Renderable2D(Vec2(0,0),Vec2(32,32),0xffffffff, new Sprite(TextureManager::Get2D("cursor")), new Sprite(TextureManager::Get2D("mask")));
 		//drivers::DriverDispatcher::addDriver(new drivers::LinearDriver(driverTest->m_position.x, -20, 0.5f, true, new drivers::DriverAdapter()));
-		guilayer = new GUILayer(new GUIRenderer(),Shader::FromFile("res/shaders/gui.shader"));
+		//guilayer = new GUILayer(new GUIRenderer(),Shader::FromFile("res/shaders/gui.shader"));
 		std::vector<std::string> labels{ "Babymode", "Softcore",  "Easy", "Medium", "Hard", "Hardcore", "Expert" };
 
 		slider = new Slider(Vec2(0, 0), Vec2(200, 30), 0, 255, 1);
@@ -178,7 +178,7 @@ public:
 		scene3d = new Layer(new BatchRenderer(),blurShader, Mat3::Orthographic(0.0f, (float)Window::GetWidth(), 0.0f, (float)Window::GetHeight()));
 		fboScene = new Renderable2D(Vec2(0,0),Vec2(960,540),0xffffffff,new Sprite(fbo->GetColorTexture(GL_COLOR_ATTACHMENT0)),NULL);
 		scene3d->Add(fboScene);
-		uilayer->Add(fps);
+		//uilayer->Add(fps);
 		frame->Add(slider);
 		frame->Add(slider2);
 		frame->Add(slider3);
@@ -189,7 +189,7 @@ public:
 		frame->Add(picker);
 		frame->Pack();
 		//frame->Add(sliderVertical);
-		guilayer->Add(frame);
+		//guilayer->Add(frame);
 		uilayer->Add(cursor);
 
 		//drivers::DriverDispatcher::addDriver(new drivers::LinearDriver(frame->m_position.x, 100, 5, true, new drivers::DriverAdapter()));
@@ -208,7 +208,7 @@ public:
 		//Tree t(renderer3d,0,0,0);
 		uint pos = 0;
 //		Log::info(JSONLoader::isNumber("0.1234s",pos));
-		//RenderEngine::AddLayer2d(uilayer, "uilayer");
+		RenderEngine::AddLayer2d(uilayer, "uilayer");
 		//RenderEngine::AddLayer2d(guilayer, "guilayer");
 		RenderEngine::AddLayer3d(new Layer3D(renderer3d), "3dWorld");
 		guirenderer = new GUIRenderer();
@@ -312,7 +312,7 @@ public:
 
 	void Update(float elapsedTime) override
 	{
-		guilayer->Update(elapsedTime);
+		//guilayer->Update(elapsedTime);
 		progressFloat++;
 		if (progressFloat > 1000)
 			progressFloat = 0;
@@ -468,7 +468,7 @@ public:
 	{
 		//guirenderer->SubmitString("test", Vec2(100, 100), FontManager::Get("roboto",24), 0xff00ff);
 		//guirenderer->SubmitRect(Vec2(0, 0), Vec2(1, 1), 0xffffff00);
-		guilayer->Render();
+		//guilayer->Render();
 	}
 	
 	void WindowResize(int width, int height) override
