@@ -67,7 +67,7 @@ namespace Greet {
 		glfwSetWindowFocusCallback(window,window_focus_callback);
 		glfwSetScrollCallback(window, mouse_scroll_callback);
 		glfwSetCharCallback(window, key_char_callback);
-		//glfwSetJoystickCallback(joystick_callback);
+		glfwSetJoystickCallback(joystick_callback);
 
 		glfwSwapInterval(0);
 		GLCall(glEnable(GL_TEXTURE_2D));

@@ -20,8 +20,27 @@ This library allows the engine to load images to easier be able to render them.
 
 ### Install GLFW 
 This library offers a cross-platform way to handle windows and input.
+
+To get version 3.2.1 of glfw run the following:
+
+**NOTE: This will replace any newer or older version of the glfw library.**
 ```
-  sudo apt-get install libglfw3-dev
+  sudo sh glfwInstall.sh
+```
+
+Alternative if you do not trust the script run the following (which is a copy of the script):
+```
+  wget https://github.com/glfw/glfw/archive/3.2.1.zip
+  unzip 3.2.1.zip
+  cd glfw-3.2.1
+  mkdir build
+  cd build
+  cmake ../ -DBUILD_SHARED_LIBS=ON
+  make
+  sudo cp src/libglfw.so* /usr/lib/x86_64-linux-gnu/
+  cd ../../
+  rm glfw-3.2.1 -rf
+  rm 3.2.1.zip
 ```
 
 ### Install GLEW
