@@ -7,9 +7,13 @@
 
 namespace Greet {
 
-	App::App()
+	App::App(const std::string& title, uint width, uint height)
 	: m_fps(0), m_ups(0)
 	{
+    Window::CreateWindow(title,width,height);
+    Window::AddResizeCallback(this);
+    Window::AddJoystickCallback(this);
+    Window::AddWindowFocusCallback(this);
 		//std::ofstream file(".logging");
 		//LogStream* fileStream = new LogStream(file, LogLevel::error, "fileStream");
 		//Log::addLogStream(fileStream);
@@ -21,15 +25,6 @@ namespace Greet {
 		Window::DestroyWindow();
 	}
 
-	void App::CreateWindow(std::string title, int width, int height)
-	{
-		Window::CreateWindow(title, width, height);
-		Window::AddResizeCallback(this);
-		Window::AddJoystickCallback(this);
-		Window::AddWindowFocusCallback(this);
-		m_initialized = true;
-	}
-
 	void App::Start()
 	{
 		Init();
@@ -38,11 +33,6 @@ namespace Greet {
 
 	void App::Run()
 	{
-		if (!m_initialized)
-		{
-			Log::Error("Window is not initalized, set it in App::createWindow");
-			return;
-		}
 		m_timer = new Timer();
 		double timer = 0.0f;
 		double updateTimer = 0.0f;

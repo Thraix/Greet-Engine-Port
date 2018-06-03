@@ -39,6 +39,12 @@ private:
 	Renderable2D* fboScene;
 
 public:
+  Core()
+    : App("Best Game Ever", 960, 540)
+  {
+		SetFrameCap(144);
+  }
+
 	~Core()
 	{
 		delete modelMaterial;
@@ -55,12 +61,8 @@ public:
 
 	void Init() override
 	{
-		Log::Info("Random UUID: ", UUID::GetInstance().GetUUID());
 		EventDispatcher::AddKeyListener(DISPATCHER_GUI+1, *this);
 		EventDispatcher::AddMouseListener(DISPATCHER_GUI + 1, *this);
-    Window::AddJoystickCallback(this);
-		CreateWindow("Best Game Ever", 960, 540);
-		SetFrameCap(144);
 		TextureManager::Add(new Texture2D("res/textures/stallTexture.png", "stall"));
 		TextureManager::Add(new Texture2D("res/textures/cursor.png", "cursor"));
 		TextureManager::Add(new Texture2D("res/textures/mask.png", "mask"));

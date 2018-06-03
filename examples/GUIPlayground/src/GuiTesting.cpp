@@ -8,7 +8,11 @@ private:
 	Content* content;
 	//Container* container;
 public:
-
+  Core()
+    : App("Gui Playground", 960, 540)
+  {
+		SetFrameCap(144);
+  }
 	~Core()
 	{
 		GLayer::DestroyInstance();
@@ -17,8 +21,6 @@ public:
 
 	void Init() override
 	{
-		CreateWindow("GreetTemplateMain", 960, 540);
-		SetFrameCap(144);
 		FontManager::Add(new FontContainer("res/fonts/Roboto-Black.ttf","roboto"));
 		GLayer::CreateInstance(new GUIRenderer(), Shader(Shader::FromFile("res/shaders/gui.shader")));
 		//content = new Content();

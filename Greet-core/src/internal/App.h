@@ -12,14 +12,10 @@ namespace Greet {
 		uint m_fps;
 		uint m_ups;
 		double frameCap = 0;
-		bool m_initialized = false;
 	protected:
-		App();
+		App(const std::string& title, uint width, uint height);
 
 		virtual ~App();
-
-		void CreateWindow(std::string title, int width, int height);
-
 
 		virtual void Init() = 0;
 		virtual void Tick() = 0;
