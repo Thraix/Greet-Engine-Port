@@ -229,6 +229,7 @@ namespace Greet {
 
 	void Window::joystick_callback(int joy, int event)
 	{
+    Log::Info("connected");
 		for (uint i = 0;i < joystickState.size();i++)
 			joystickState[i]->JoystickState(joy, event == GLFW_CONNECTED);
 	}
