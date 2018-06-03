@@ -69,10 +69,10 @@ namespace Greet {
 		void SetDistanceClamp(float min, float max);
 		void SetHeightClamp(float min, float max);
 
-		bool OnMoved(const MouseMovedEvent& e) override;
 		bool OnPressed(const MousePressedEvent& e) override;
-		bool OnReleased(const MouseReleasedEvent& e) override;
-		bool OnScroll(const MouseScrollEvent& e) override;
+		void OnReleased(const MouseReleasedEvent& e) override;
+		void OnMoved(const MouseMovedEvent& e) override;
+		void OnScroll(const MouseScrollEvent& e) override;
 	};
 
 }

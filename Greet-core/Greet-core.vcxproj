@@ -37,20 +37,15 @@
     <ClCompile Include="src\graphics\fonts\FontContainer.cpp" />
     <ClCompile Include="src\graphics\fonts\FontManager.cpp" />
     <ClCompile Include="src\graphics\FrameBufferObject.cpp" />
-    <ClCompile Include="src\graphics\gui\Border.cpp" />
     <ClCompile Include="src\graphics\gui\Button.cpp" />
-    <ClCompile Include="src\graphics\gui\ColorPicker.cpp" />
-    <ClCompile Include="src\graphics\gui\Frame.cpp" />
-    <ClCompile Include="src\graphics\gui\GUI.cpp" />
+    <ClCompile Include="src\graphics\gui\Container.cpp" />
+    <ClCompile Include="src\graphics\gui\Content.cpp" />
+    <ClCompile Include="src\graphics\gui\FrameContainer.cpp" />
+    <ClCompile Include="src\graphics\gui\GLayer.cpp" />
+    <ClCompile Include="src\graphics\gui\GUIUtils.cpp" />
     <ClCompile Include="src\graphics\gui\Label.cpp" />
-    <ClCompile Include="src\graphics\gui\Panel.cpp" />
-    <ClCompile Include="src\graphics\gui\ProgressBar.cpp" />
-    <ClCompile Include="src\graphics\gui\Slider.cpp" />
-    <ClCompile Include="src\graphics\gui\SliderController.cpp" />
-    <ClCompile Include="src\graphics\gui\TextBox.cpp" />
     <ClCompile Include="src\graphics\layers\Box2DLayer.cpp" />
     <ClCompile Include="src\graphics\layers\Group.cpp" />
-    <ClCompile Include="src\graphics\layers\GUILayer.cpp" />
     <ClCompile Include="src\graphics\layers\Layer3D.cpp" />
     <ClCompile Include="src\graphics\models\EntityModel.cpp" />
     <ClCompile Include="src\graphics\models\Material.cpp" />
@@ -77,6 +72,7 @@
     <ClCompile Include="src\graphics\Window.cpp" />
     <ClCompile Include="src\input\Joystick.cpp" />
     <ClCompile Include="src\internal\App.cpp" />
+    <ClCompile Include="src\internal\OpenGLObjectHandler.cpp" />
     <ClCompile Include="src\logging\Log.cpp" />
     <ClCompile Include="src\logging\Logger.cpp" />
     <ClCompile Include="src\logging\LogLevel.cpp" />
@@ -96,6 +92,8 @@
     <ClCompile Include="src\utils\json\JSONObject.cpp" />
     <ClCompile Include="src\utils\Noise.cpp" />
     <ClCompile Include="src\utils\UUID.cpp" />
+    <ClCompile Include="src\utils\xml\XML.cpp" />
+    <ClCompile Include="src\utils\xml\XMLObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\audio\AudioChannel.h" />
@@ -123,7 +121,6 @@
     <ClInclude Include="src\graphics\Animation.h" />
     <ClInclude Include="src\graphics\atlas\Atlas.h" />
     <ClInclude Include="src\graphics\atlas\AtlasManager.h" />
-    <ClInclude Include="src\graphics\AttributePointer.h" />
     <ClInclude Include="src\graphics\buffers\BatchIndexBuffer.h" />
     <ClInclude Include="src\graphics\buffers\Buffer.h" />
     <ClInclude Include="src\graphics\buffers\IndexBuffer.h" />
@@ -132,23 +129,16 @@
     <ClInclude Include="src\graphics\fonts\FontContainer.h" />
     <ClInclude Include="src\graphics\fonts\FontManager.h" />
     <ClInclude Include="src\graphics\FrameBufferObject.h" />
-    <ClInclude Include="src\graphics\gui\Border.h" />
     <ClInclude Include="src\graphics\gui\Button.h" />
-    <ClInclude Include="src\graphics\gui\ColorPicker.h" />
-    <ClInclude Include="src\graphics\gui\DefaultProgressBarIndicator.h" />
-    <ClInclude Include="src\graphics\gui\Frame.h" />
-    <ClInclude Include="src\graphics\gui\GUI.h" />
+    <ClInclude Include="src\graphics\gui\Container.h" />
+    <ClInclude Include="src\graphics\gui\Content.h" />
+    <ClInclude Include="src\graphics\gui\FrameContainer.h" />
+    <ClInclude Include="src\graphics\gui\GLayer.h" />
+    <ClInclude Include="src\graphics\gui\GUIMouseListener.h" />
+    <ClInclude Include="src\graphics\gui\GUIUtils.h" />
     <ClInclude Include="src\graphics\gui\Label.h" />
-    <ClInclude Include="src\graphics\gui\LTRB.h" />
-    <ClInclude Include="src\graphics\gui\Panel.h" />
-    <ClInclude Include="src\graphics\gui\ProgressBar.h" />
-    <ClInclude Include="src\graphics\gui\ProgressBarIndicator.h" />
-    <ClInclude Include="src\graphics\gui\Slider.h" />
-    <ClInclude Include="src\graphics\gui\SliderController.h" />
-    <ClInclude Include="src\graphics\gui\TextBox.h" />
     <ClInclude Include="src\graphics\layers\Box2DLayer.h" />
     <ClInclude Include="src\graphics\layers\Group.h" />
-    <ClInclude Include="src\graphics\layers\GUILayer.h" />
     <ClInclude Include="src\graphics\layers\Layer.h" />
     <ClInclude Include="src\graphics\layers\Layer3D.h" />
     <ClInclude Include="src\graphics\Light.h" />
@@ -190,6 +180,7 @@
     <ClInclude Include="src\internal\App.h" />
     <ClInclude Include="src\internal\GreetGL.h" />
     <ClInclude Include="src\internal\GreetTypes.h" />
+    <ClInclude Include="src\internal\OpenGLObjectHandler.h" />
     <ClInclude Include="src\listeners\JoystickState.h" />
     <ClInclude Include="src\listeners\OnClickListener.h" />
     <ClInclude Include="src\listeners\WindowFocus.h" />
@@ -208,6 +199,7 @@
     <ClInclude Include="src\math\Vec2.h" />
     <ClInclude Include="src\math\Vec3.h" />
     <ClInclude Include="src\math\Vec4.h" />
+    <ClInclude Include="src\utils\AABBUtils.h" />
     <ClInclude Include="src\utils\ColorUtils.h" />
     <ClInclude Include="src\utils\DialogBox.h" />
     <ClInclude Include="src\utils\ErrorHandle.h" />
@@ -218,12 +210,16 @@
     <ClInclude Include="src\utils\json\JSONArrayObject.h" />
     <ClInclude Include="src\utils\json\JSONLoader.h" />
     <ClInclude Include="src\utils\json\JSONObject.h" />
+    <ClInclude Include="src\utils\LogUtils.h" />
     <ClInclude Include="src\utils\Noise.h" />
     <ClInclude Include="src\utils\OBJUtils.h" />
     <ClInclude Include="src\utils\StringUtils.h" />
     <ClInclude Include="src\utils\Timer.h" />
     <ClInclude Include="src\utils\Utils.h" />
     <ClInclude Include="src\utils\UUID.h" />
+    <ClInclude Include="src\utils\xml\XML.h" />
+    <ClInclude Include="src\utils\xml\XMLException.h" />
+    <ClInclude Include="src\utils\xml\XMLObject.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="src\graphics\shaders\basiclightshader.frag" />

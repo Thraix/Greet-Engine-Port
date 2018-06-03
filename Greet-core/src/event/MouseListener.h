@@ -14,8 +14,8 @@ namespace Greet {
 		MouseListener() : m_id(m_currentId++) {}
 		// returns true if the event will stop following events from taking place, mostly used for GUI
 		virtual bool OnPressed(const MousePressedEvent& e) { return false; }
-		virtual bool OnReleased(const MouseReleasedEvent& e)  { return false; }
-		virtual bool OnMoved(const MouseMovedEvent& e)  { return false; }
-		virtual bool OnScroll(const MouseScrollEvent& e) { return false; };
+		virtual void OnReleased(const MouseReleasedEvent& e) { }
+		virtual void OnMoved(const MouseMovedEvent& e) { }
+		virtual void OnScroll(const MouseScrollEvent& e) { };
 	};
 }

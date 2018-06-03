@@ -1,6 +1,6 @@
 #include "GUIRenderer.h"
 
-#include <graphics/gui/GUI.h>
+#include <algorithm>
 
 namespace Greet
 {
@@ -148,21 +148,18 @@ namespace Greet
 		texture_font_t* ftfont = font->GetFTFont();
 		float x = position.x;
 		const Vec2& scale = Vec2(1, 1);//font->getScale();
-		float baseline = ftfont->size - ftfont->ascender;
 		Vec2 pos;
 		Vec2 size;
 		Vec2 uv0;
 		Vec2 uv1;
-    const char* str = text.c_str();
 		for (uint i = 0;i < text.length();i++)
 		{
-			const char& c = text[i];
-			texture_glyph_t* glyph = texture_font_get_glyph(ftfont, str+i);
+			texture_glyph_t* glyph = texture_font_get_glyph(ftfont, text.c_str() + i);
 			if (glyph != NULL)
 			{
 				if (i > 0)
 				{
-					float kerning = texture_glyph_get_kerning(glyph, str + i - 1);
+					float kerning = texture_glyph_get_kerning(glyph, text.c_str() + i - 1);
 					x += kerning / scale.x;
 				}
 
@@ -214,7 +211,7 @@ namespace Greet
 			return m_viewports.top();
 		else
 		{
-			Log::Info("No viewport");
+			Log::Warning("No viewport");
 			Vec4 viewport;;
 			Vec2 temp = GetMatrix() * Vec2(pos1.x, pos1.y);
 			viewport.x = temp.x;
@@ -233,7 +230,7 @@ namespace Greet
 
 		Vec4 viewport = GetViewport(Vec2(std::min(std::min(pos1.x,pos2.x),pos3.x), std::min(std::min(pos1.y, pos2.y), pos3.y)), Vec2(std::max(std::max(pos1.x, pos2.x), pos3.x), std::max(std::max(pos1.y, pos2.y), pos3.y)));
 
-		AppendVertexBuffer(pos1, Vec2(0, 0), 0.0f, color, viewport, isHsv);
+      AppendVertexBuffer(pos1, Vec2(0, 0), 0.0f, color, viewport, isHsv);
 		AppendVertexBuffer(pos2, Vec2(0, 0), 0.0f, color, viewport, isHsv);
 		AppendVertexBuffer(pos3, Vec2(0, 0), 0.0f, color, viewport, isHsv);
 

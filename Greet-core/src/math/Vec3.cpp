@@ -1,7 +1,7 @@
 #include "Vec3.h"
 
-#include "MathFunc.h"
-#include "Maths.h"
+#include <math/MathFunc.h>
+#include <math/Maths.h>
 
 namespace Greet{
 

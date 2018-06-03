@@ -1,4 +1,5 @@
 #include "Log.h"
+
 namespace Greet {
 
 	Log Log::m_log;

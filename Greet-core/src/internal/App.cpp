@@ -2,6 +2,8 @@
 #include <drivers/DriverDispatcher.h>
 #include <chrono>
 #include <thread>
+#include <logging/Log.h>
+#include <graphics/RenderEngine.h>
 
 namespace Greet {
 

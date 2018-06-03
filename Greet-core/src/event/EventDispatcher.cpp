@@ -89,8 +89,7 @@ namespace Greet {
 			std::vector<MouseListener*> listeners = it->second;
 			for (auto it2 = listeners.begin(); it2 != listeners.end(); it2++)
 			{
-				if ((*it2)->OnReleased(e))
-					return;
+				(*it2)->OnReleased(e);
 			}
 		}
 	}
@@ -102,8 +101,7 @@ namespace Greet {
 			std::vector<MouseListener*> listeners = it->second;
 			for (auto it2 = listeners.begin(); it2 != listeners.end(); it2++)
 			{
-				if ((*it2)->OnMoved(e))
-					return;
+				(*it2)->OnMoved(e);
 			}
 		}
 	}
@@ -115,8 +113,7 @@ namespace Greet {
 			std::vector<MouseListener*> listeners = it->second;
 			for (auto it2 = listeners.begin(); it2 != listeners.end(); it2++)
 			{
-				if ((*it2)->OnScroll(e))
-					return;
+				(*it2)->OnScroll(e);
 			}
 		}
 	}
@@ -128,10 +125,7 @@ namespace Greet {
 			std::vector<KeyListener*> listeners = it->second;
 			for (auto it2 = listeners.begin(); it2 != listeners.end(); it2++)
 			{
-				if ((*it2)->OnPressed(e))
-				{
-					return;
-				}
+				(*it2)->OnPressed(e);
 			}
 		}
 	}
@@ -143,8 +137,7 @@ namespace Greet {
 			std::vector<KeyListener*> listeners = it->second;
 			for (auto it2 = listeners.begin(); it2 != listeners.end(); it2++)
 			{
-				if ((*it2)->OnReleased(e))
-					return;
+				(*it2)->OnReleased(e);
 			}
 		}
 	}
@@ -156,8 +149,7 @@ namespace Greet {
 			std::vector<KeyListener*> listeners = it->second;
 			for (auto it2 = listeners.begin(); it2 != listeners.end(); it2++)
 			{
-				if ((*it2)->OnTyped(e))
-					return;
+				(*it2)->OnTyped(e);
 			}
 		}
 	}

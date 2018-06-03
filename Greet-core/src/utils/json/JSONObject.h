@@ -1,12 +1,8 @@
 #pragma once
 
-#include <utils/json/JSON.h>
 #include <utils/json/JSONArray.h>
 #include <internal/GreetTypes.h>
-#include <logging/Log.h>
 #include <map>
-#include <vector>
-#include <utils/StringUtils.h>
 
 namespace Greet {
 

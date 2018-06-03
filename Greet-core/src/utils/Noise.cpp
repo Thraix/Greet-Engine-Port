@@ -1,5 +1,4 @@
 #include "Noise.h"
-#define _USE_MATH_DEFINES
 #include <string>
 #include <cmath>
 #include <logging/Log.h>

@@ -1,5 +1,7 @@
 #include "Joystick.h"
 
+#include <logging/Log.h>
+
 namespace Greet {
 	Joystick::Joystick(uint jsNum, float calibrateLeft, float calibrateRight)
 		: m_jsNum(jsNum), m_calibrateLeft(calibrateLeft), m_calibrateRight(calibrateRight)

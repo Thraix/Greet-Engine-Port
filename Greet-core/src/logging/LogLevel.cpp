@@ -1,4 +1,5 @@
 #include "LogLevel.h"
+
 namespace Greet {
 	// Low level -> high priority
 	LogLevel LogLevel::information(1 << 24);

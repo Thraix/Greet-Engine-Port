@@ -1,9 +1,9 @@
 #pragma once
 
-#include <graphics/Window.h>
+#include <internal/GreetTypes.h>
+
 #include <set>
 #include <random>
-#include <ctime>
 
 namespace Greet {
 

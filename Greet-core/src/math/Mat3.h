@@ -2,8 +2,6 @@
 
 #include "Vec2.h"
 #include "Vec3.h"
-#include "MathFunc.h"
-#include <string.h>
 
 namespace Greet{
 	struct Mat3

@@ -1,4 +1,8 @@
 #include "UUID.h"
+
+#include <graphics/Window.h>
+#include <ctime>
+
 namespace Greet {
 
 	UUID UUID::s_instance;

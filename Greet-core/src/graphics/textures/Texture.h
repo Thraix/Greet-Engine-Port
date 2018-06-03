@@ -1,10 +1,6 @@
 #pragma once
 
-#include <logging/Log.h>
-#include <internal/GreetGL.h>
-#include <internal/GreetTypes.h>
-#include <utils/ImageUtils.h>
-#include <FreeImage.h>
+#include <string>
 #include <internal/GreetTypes.h>
 
 namespace Greet {
@@ -17,6 +13,8 @@ namespace Greet {
 	public:
 		Texture(const std::string& name, uint textureType);
 		Texture(uint texId, const std::string& name, uint textureType);
+		Texture(const Texture& texture);
+		Texture& operator=(const Texture& shader);
 		virtual ~Texture();
 		virtual void Enable() const;
 		virtual void Disable() const;

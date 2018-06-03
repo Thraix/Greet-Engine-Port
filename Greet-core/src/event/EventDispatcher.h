@@ -18,16 +18,18 @@ namespace Greet {
 namespace Greet {
 	class EventDispatcher
 	{
-	public:
 		friend class Window;
-		static void AddMouseListener(uint priority, MouseListener& listener);
-		static void AddKeyListener(uint priority, KeyListener& listener);
-		static void RemoveMouseListener(MouseListener& listener);
-		static void RemoveKeyListener(KeyListener& listener);
 	private:
 		static std::map<uint, std::vector<MouseListener*>, std::greater<uint>> m_mouseListeners;
 		static std::map<uint, std::vector<KeyListener*>, std::greater<uint>> m_keyListeners;
 
+	public:
+		static void AddMouseListener(uint priority, MouseListener& listener);
+		static void AddKeyListener(uint priority, KeyListener& listener);
+		static void RemoveMouseListener(MouseListener& listener);
+		static void RemoveKeyListener(KeyListener& listener);
+
+	private:
 		static void OnMousePressed(const MousePressedEvent& e);
 		static void OnMouseReleased(const MouseReleasedEvent& e);
 		static void OnMouseMoved(const MouseMovedEvent& e);

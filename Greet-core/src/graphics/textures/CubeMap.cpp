@@ -1,5 +1,8 @@
 #include "CubeMap.h"
 
+#include <internal/GreetGL.h>
+#include <utils/ImageUtils.h>
+
 namespace Greet {
 	CubeMap::CubeMap(const std::string& top, const std::string& bottom, const std::string& left, const std::string& right, const std::string& front, const std::string& back, const std::string& name)
 		: Texture(name, GL_TEXTURE_CUBE_MAP)

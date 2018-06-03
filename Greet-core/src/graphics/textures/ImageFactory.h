@@ -1,8 +1,7 @@
 #pragma once
-#include <logging/Log.h>
+
 #include <FreeImage.h>
 #include <internal/GreetTypes.h>
-#include <utils/Utils.h>
 
 namespace Greet { namespace ImageFactory {
 		BYTE* GetBadFormatImage(uint* width, uint* height, uint* bpp);

@@ -95,17 +95,17 @@ namespace Greet { namespace ColorUtils {
 
 	inline byte GetAlpha(uint color)
 	{
-		return color >> 24 & 0xff;
+		return (color >> 24) & 0xff;
 	}
 
 	inline byte GetRed(uint color)
 	{
-		return color >> 16 & 0xff;
+		return (color >> 16) & 0xff;
 	}
 
 	inline byte GetGreen(uint color)
 	{
-		return color >> 8 & 0xff;
+		return (color >> 8) & 0xff;
 	}
 
 	inline byte GetBlue(uint color)

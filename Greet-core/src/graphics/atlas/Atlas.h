@@ -1,5 +1,6 @@
 #pragma once
 
+#include <utils/ImageUtils.h>
 #include <graphics/textures/Texture.h>
 #include <graphics/Sprite.h>
 #include <list>

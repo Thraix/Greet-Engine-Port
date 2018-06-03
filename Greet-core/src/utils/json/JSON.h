@@ -1,8 +1,8 @@
 #pragma once
 
-#include <cstring>
 #include <internal/GreetTypes.h>
 #include <logging/Log.h>
+#include <cstring>
 
 namespace Greet {
 

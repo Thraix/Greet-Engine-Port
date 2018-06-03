@@ -1,21 +1,30 @@
 #pragma once
 
-#ifndef _USE_MATH_DEFINES
-	#define _USE_MATH_DEFINES
-#endif
-
+#include <cmath>
 #include <iostream>
-#include <math.h>
 #include <math/Vec3.h>
 #include <math/Vec4.h>
-#include <logging/Log.h>
 
 namespace Greet{
 	
 	struct Vec2
 	{
 	public:
-		float x, y;
+		union
+		{
+			struct
+			{
+				float x, y;
+			};
+			struct
+			{
+				float w, h;
+			};
+			struct
+			{
+				float s, t;
+			};
+		};
 		Vec2();
 		Vec2(float x, float y);
 		Vec2(const Vec3& vec3);

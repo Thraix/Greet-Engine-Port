@@ -1,10 +1,11 @@
 #include "AtlasManager.h"	
+
 namespace Greet{
 	std::vector<Atlas*> AtlasManager::m_atlas;
 
 	void AtlasManager::Add(Atlas* atlas)
 	{
-		for (int i = 0;i < m_atlas.size();i++)
+		for (size_t i = 0;i < m_atlas.size();i++)
 		{
 			if (atlas->GetName() == m_atlas[i]->GetName())
 			{

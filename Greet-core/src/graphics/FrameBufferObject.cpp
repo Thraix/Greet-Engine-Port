@@ -1,5 +1,7 @@
 #include "FrameBufferObject.h"
 
+#include <graphics/Window.h>
+
 namespace Greet {
 
 	FrameBufferObject::FrameBufferObject(uint width, uint height)
@@ -60,7 +62,7 @@ namespace Greet {
 		for (auto it = m_colorTextures.begin();it != m_colorTextures.end();it++)
 			colorBuffers[i++] = it->first;
 		GLCall(glDrawBuffers(size,colorBuffers));
-		delete colorBuffers;
+		delete[] colorBuffers;
 		GLCall(glBindFramebuffer(GL_FRAMEBUFFER,0));
 	}
 

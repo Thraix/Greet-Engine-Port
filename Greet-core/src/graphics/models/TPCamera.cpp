@@ -169,7 +169,7 @@ namespace Greet {
 		return false;
 	}
 
-	bool TPCamera::OnReleased(const MouseReleasedEvent& e)
+	void TPCamera::OnReleased(const MouseReleasedEvent& e)
 	{
 		if (e.GetButton() == GLFW_MOUSE_BUTTON_1)
 		{
@@ -183,10 +183,9 @@ namespace Greet {
 		{
 			m_mouse3 = false;
 		}
-		return false;
 	}
 
-	bool TPCamera::OnMoved(const MouseMovedEvent& e) {
+	void TPCamera::OnMoved(const MouseMovedEvent& e) {
 		if (m_mouse3) {
 			m_heightWanted += e.GetDY() * m_heightSpeed;
 			Math::Clamp(&m_heightWanted, m_heightMin, m_heightMax);
@@ -203,13 +202,11 @@ namespace Greet {
 			m_positionWanted.x += dpos.y * m_distanceSpeed * m_distance;
 			m_positionWanted.z -= dpos.x * m_distanceSpeed * m_distance;
 		}
-		return false;
 	}
 
-	bool TPCamera::OnScroll(const MouseScrollEvent& e) {
+	void TPCamera::OnScroll(const MouseScrollEvent& e) {
 		m_distanceWanted -= e.GetScroll();
 		Math::Clamp(&m_distanceWanted, m_distanceMin, m_distanceMax);
-		return false;
 	}
 
 }

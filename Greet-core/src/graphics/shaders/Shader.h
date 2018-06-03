@@ -1,14 +1,8 @@
 #pragma once
 
-#include <logging/Log.h>
-#include <internal/GreetGL.h>
+#include <string>
 #include <math/Maths.h>
-#include <utils/FileUtils.h>
-#include <iostream>
-#include <vector>
-#include <utils/ErrorHandle.h>
-#include <sstream>
-#include <fstream>
+#include <internal/GreetGL.h>
 
 namespace Greet {
 	class Shader
@@ -24,9 +18,12 @@ namespace Greet {
 
 		Shader(const std::string& geomSrc, const std::string& vertSrc, const std::string& fragSrc);
 		Shader(const std::string& vertSrc, const std::string& fragSrc);
-	public:
 
+	public:
+		Shader(const Shader& shader); // Copy constructor
 		virtual ~Shader();
+
+		Shader& operator=(const Shader& shader);
 		void Enable() const;
 		static void Disable();
 		void BindAttributeOutput(uint attachmentId, const std::string& name);
@@ -44,11 +41,11 @@ namespace Greet {
 		void SetUniformMat3(const GLchar *name, const Mat3 &value) const;
 		void SetUniformMat4(const GLchar *name, const Mat4 &value) const;
 	public:
-		static Shader* FromFile(const std::string& shaderPath);
-		static Shader* FromFile(const std::string& vertPath, const std::string& fragPath);
-		static Shader* FromFile(const std::string& geomPath, const std::string& vertPath, const std::string& fragPath);
-		static Shader* FromSource(const std::string& vertSrc, const std::string& fragSrc);
-		static Shader* FromSource(const std::string& geomSrc, const std::string& vertSrc, const std::string& fragSrc);
+		static Shader FromFile(const std::string& shaderPath);
+		static Shader FromFile(const std::string& vertPath, const std::string& fragPath);
+		static Shader FromFile(const std::string& geomPath, const std::string& vertPath, const std::string& fragPath);
+		static Shader FromSource(const std::string& vertSrc, const std::string& fragSrc);
+		static Shader FromSource(const std::string& geomSrc, const std::string& vertSrc, const std::string& fragSrc);
 	};
 
 }

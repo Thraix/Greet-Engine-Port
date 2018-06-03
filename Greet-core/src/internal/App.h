@@ -2,8 +2,6 @@
 
 #include <graphics/Window.h>
 #include <utils/Timer.h>
-#include <logging/Log.h>
-#include <graphics/RenderEngine.h>
 
 namespace Greet {
 

@@ -1,5 +1,10 @@
 #include "Window.h"
 
+#include <graphics/fonts/FontManager.h>
+#include <graphics/textures/TextureManager.h>
+#include <internal/GreetGL.h>
+#include <event/EventDispatcher.h>
+
 namespace Greet {
 
 	std::vector<Joystick> Window::joysticks;
@@ -28,7 +33,6 @@ namespace Greet {
 		Window::width = width;
 		Window::height = height;
 
-		//SoundManager::Init();
 		memset(mouseButtonDown,false,MAX_MOUSEBUTTONS);
 		for (int i = 0; i < MAX_JOYSTICKS; i++)
 		{
@@ -43,8 +47,6 @@ namespace Greet {
 	void Window::DestroyWindow()
 	{
 		FontManager::Destroy();
-		AudioChannelManager::Destroy();
-		//SoundManager::Destroy();
 		TextureManager::Destroy();
 		glfwTerminate();
 	}
@@ -54,7 +56,7 @@ namespace Greet {
 		ASSERT(glfwInit(),"Failed to initialize GLFW!");
 		window = glfwCreateWindow(width, height, title.c_str(), NULL, NULL);
 		ASSERT(window,"Failed to initialize window!");
-		glfwSetInputMode(window,GLFW_CURSOR,GLFW_CURSOR_HIDDEN);
+		//glfwSetInputMode(window,GLFW_CURSOR,GLFW_CURSOR_HIDDEN);
 		//glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 		glfwMakeContextCurrent(window);
 
@@ -118,7 +120,6 @@ namespace Greet {
 
 	void Window::Render()
 	{
-		//SoundManager::Update();
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}

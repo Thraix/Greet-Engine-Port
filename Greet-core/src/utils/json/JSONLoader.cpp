@@ -1,5 +1,8 @@
 #include "JSONLoader.h"
 
+#include <utils/FileUtils.h>
+#include <utils/StringUtils.h>
+
 namespace Greet {
 
 	JSONObject JSONLoader::LoadJSON(const std::string& filename)

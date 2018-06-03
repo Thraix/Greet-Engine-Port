@@ -1,12 +1,12 @@
 #pragma once
 
+#include <graphics/fonts/Font.h>
 #include <internal/GreetTypes.h>
 #include <string>
-#include <vector>
+#include <set>
 
 namespace Greet{
 
-	class Font;
 	class FontContainer
 	{
 	friend class Font;
@@ -16,7 +16,7 @@ namespace Greet{
 		uint m_datasize;
 		std::string m_name;
 		std::string m_filename;
-		std::vector<Font*> m_fonts;
+		std::set<Font*, FontCompare> m_fonts;
 
 	public:
 		FontContainer(const std::string& filename, const std::string& name);

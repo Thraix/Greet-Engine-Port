@@ -13,7 +13,6 @@ namespace Greet{
 	class Renderable2D;
 	class Renderable4Poly;
 	class RenderablePoly;
-	class Label;
 
 	class Renderer2D : public Renderer
 	{

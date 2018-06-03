@@ -1,5 +1,7 @@
 #include "Vec4.h"
 
+#include <math.h>
+
 namespace Greet{
 
 	Vec4::Vec4()

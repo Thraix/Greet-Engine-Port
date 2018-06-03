@@ -1,5 +1,9 @@
 #include "ImageFactory.h"
 
+#include <logging/Log.h>
+#include <utils/Utils.h>
+
+
 namespace Greet { namespace ImageFactory 
 {
 	BYTE* GetBadFormatImage(uint* width, uint* height, uint* bpp)

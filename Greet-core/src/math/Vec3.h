@@ -4,15 +4,25 @@
 	#define _USE_MATH_DEFINES
 #endif
 
-#include <math.h>
-#include <math/Vec4.h>
 #include <iostream>
+#include <math/Vec4.h>
 
 namespace Greet{
 	
 	struct Vec3
 	{
-		float x, y, z;
+		union
+		{
+			struct {
+				float x, y, z;
+			};
+			struct {
+				float r, g, b;
+			};
+			struct {
+				float h, s, v;
+			};
+		};
 		Vec3() = default;
 		Vec3(float x, float y, float z);
 		Vec3(const Vec4& vec4);

@@ -1,22 +1,12 @@
 #pragma once
 
-#include <logging/Log.h>
-#include <graphics/fonts/FontManager.h>
-#include <graphics/textures/TextureManager.h>
-#include <graphics/textures/Texture2D.h>
-#include <audio/SoundManager.h>
-#include <audio/AudioChannelManager.h>
-#include <graphics/textures/ImageFactory.h>
-#include <input/Joystick.h>
-#include <vector>
-#include <iostream>
-#include <internal/GreetGL.h>
-#include <internal/GreetTypes.h>
-#include <utils/UUID.h>
+
 #include <listeners/JoystickState.h>
 #include <listeners/WindowListener.h>
-#include <event/EventDispatcher.h>
-#include <algorithm>
+#include <internal/GreetTypes.h>
+#include <input/Joystick.h>
+
+#include <vector>
 
 #define MAX_KEYS			1024
 #define MAX_MOUSEBUTTONS	32

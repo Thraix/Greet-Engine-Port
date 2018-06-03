@@ -3,7 +3,6 @@
 #include <map>
 #include <graphics/layers/Layer.h>
 #include <graphics/layers/Layer3D.h>
-#include <graphics/layers/GUILayer.h>
 
 namespace Greet {
 	class RenderEngine

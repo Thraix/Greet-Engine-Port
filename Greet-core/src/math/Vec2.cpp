@@ -1,5 +1,8 @@
 #include "Vec2.h"
 
+#include <logging/Log.h>
+#include <math.h>
+
 namespace Greet {
 
 	Vec2::Vec2()

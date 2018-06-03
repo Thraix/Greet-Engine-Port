@@ -2,7 +2,6 @@
 
 #include <utils/json/JSON.h>
 #include <vector>
-#include <set>
 
 namespace Greet {
 

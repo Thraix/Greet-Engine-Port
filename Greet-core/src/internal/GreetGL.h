@@ -1,6 +1,8 @@
 #ifndef _GREETGL_H_
 #define _GREETGL_H_
 
+#include <utils/LogUtils.h>
+
 #ifndef GLEW_STATIC
 #define GLEW_STATIC
 #endif // !GLEW_STATIC
@@ -47,7 +49,10 @@ static void GLLogError(const char* glCall, const char* file, int line)
 {
 	GLenum err;
 	while ((err = glGetError()) != GL_NO_ERROR)
-		Greet::Log::Error("OpenGL error(",err,")", " at ", file,":",line," using ", glCall);
+	{
+		Greet::Log::Error("OpenGL error(0x", Greet::LogUtils::DecToHex(err), ")", " at ", file, ":", line, " using ", glCall);
+		ASSERT(false, "OpenGL error");
+	}
 }
 
 

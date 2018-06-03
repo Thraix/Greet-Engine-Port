@@ -15,9 +15,8 @@ namespace Greet {
 	public:
 		KeyListener() : m_id(m_currentId++) {}
 
-		// returns true if the event will stop following events from taking place, mostly used for GUI
-		virtual bool OnPressed(const KeyPressedEvent& e) {  return false; }
-		virtual bool OnReleased(const KeyReleasedEvent& e) { return false; }
-		virtual bool OnTyped(const KeyTypedEvent& e) { return false; }
+		virtual void OnPressed(const KeyPressedEvent& e) {  ; }
+		virtual void OnReleased(const KeyReleasedEvent& e) {  }
+		virtual void OnTyped(const KeyTypedEvent& e) {  }
 	};
 }

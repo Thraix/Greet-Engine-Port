@@ -1,9 +1,7 @@
 #pragma once
 
-#include <stdlib.h>
-#include <fstream>
-#include "Logger.h"
-#include "LogLevel.h"
+#include <logging/Logger.h>
+#include <logging/LogLevel.h>
 
 #define ASSERT(x,...) if(!(x)) { Greet::Log::Error(__VA_ARGS__);abort();}
 

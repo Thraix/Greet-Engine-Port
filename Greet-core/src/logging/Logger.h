@@ -2,8 +2,8 @@
 
 #include <iostream>
 
-#include "LogLevel.h"
-#include "LogStream.h"
+#include <logging/LogLevel.h>
+#include <logging/LogStream.h>
 
 #include <vector>
 

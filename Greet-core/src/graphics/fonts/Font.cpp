@@ -1,4 +1,5 @@
 #include "Font.h"
+#include <graphics/fonts/FontContainer.h>
 
 namespace Greet{
 
@@ -35,7 +36,6 @@ namespace Greet{
 
 		for (uint i = startPos;i < endPos;i++)
 		{
-			const char& c = text[i];
 			ftgl::texture_glyph_t* glyph = ftgl::texture_font_get_glyph(GetFTFont(), text.c_str()+i);
 			if (glyph != NULL)
 			{
@@ -59,7 +59,7 @@ namespace Greet{
 		for (uint i = 0;i < text.size();i++)
 		{
 			const char& c = text[i+1];
-			ftgl::texture_glyph_t* glyph = ftgl::texture_font_get_glyph(GetFTFont(), text.c_str()+i);
+			ftgl::texture_glyph_t* glyph = ftgl::texture_font_get_glyph(GetFTFont(), text.c_str()+ i+1);
 			if (glyph != NULL)
 			{
 				widths[i] = width;

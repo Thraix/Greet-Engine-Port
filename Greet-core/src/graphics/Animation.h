@@ -1,6 +1,5 @@
 #pragma once
 
-#include <graphics/textures/Texture.h>
 #include <math/Maths.h>
 #include <graphics/Sprite.h>
 

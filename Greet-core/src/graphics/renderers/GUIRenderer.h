@@ -1,11 +1,10 @@
 #pragma once
 
-#include <graphics/renderers/Renderer.h>
 #include <graphics/fonts/Font.h>
+#include <graphics/renderers/Renderer.h>
 #include <internal/GreetGL.h>
 #include <math/Vec4.h>
 #include <stack>
-#include <algorithm>
 
 namespace Greet
 {

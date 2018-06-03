@@ -1,5 +1,8 @@
 #include "Texture2D.h"
 
+#include <internal/GreetGL.h>
+#include <internal/OpenGLObjectHandler.h>
+
 namespace Greet {
 
 	Texture2D::Texture2D(const std::string& filename, const std::string& name)

@@ -1,5 +1,6 @@
 #include "Shader.h"
 
+
 namespace Greet { namespace ShaderFactory {
 
 	const std::string default_shader_vert =
@@ -30,26 +31,26 @@ namespace Greet { namespace ShaderFactory {
 		#include "skyboxshader.frag"
 	;
 
-	Shader* LEDShader()
+	Shader LEDShader()
 	{
 		return Shader::FromSource(default_shader_vert, led_shader_frag);
 	}
 
-	Shader* DefaultShader()
+	Shader DefaultShader()
 	{
 		return Shader::FromSource(default_shader_vert, default_shader_frag);
 	}
 
-	Shader* BasicLightShader()
+	Shader BasicLightShader()
 	{
 		return Shader::FromSource(default_shader_vert, basic_light_shader_frag);
 	}
-	Shader* DebugShader()
+	Shader DebugShader()
 	{
 		return Shader::FromSource(default_shader_vert, debug_shader_frag);
 	}
 	
-	Shader* SkyboxShader()
+	Shader SkyboxShader()
 	{
 		return Shader::FromSource(skybox_shader_vert, skybox_shader_frag);
 	}

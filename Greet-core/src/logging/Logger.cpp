@@ -1,5 +1,7 @@
 #include "Logger.h"
-#include "Log.h"
+
+#include <logging/Log.h>
+
 namespace Greet {
 
 	Logger::Logger()

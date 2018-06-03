@@ -2,9 +2,8 @@
 
 #include <string>
 #include <internal/GreetTypes.h>
-#include <internal/GreetGL.h>
-#include <utils/ImageUtils.h>
 #include <graphics/textures/Texture.h>
+#include <utils/ImageUtils.h>
 
 namespace Greet {
 

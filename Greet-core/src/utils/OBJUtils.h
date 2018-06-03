@@ -5,6 +5,7 @@
 #include <string>
 #include <utils/FileUtils.h>
 #include <utils/StringUtils.h>
+#include <fstream>
 
 #define GOBJ_VECTOR3_SIZE sizeof(float) * 3 // 13
 #define GOBJ_VECTOR2_SIZE sizeof(float) * 2 // 9

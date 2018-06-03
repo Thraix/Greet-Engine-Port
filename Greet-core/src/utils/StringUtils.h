@@ -51,10 +51,52 @@ namespace Greet { namespace StringUtils{
 			start_pos += to.length();
 		}
 	}
+
 	inline bool starts_with(const std::string& s, const std::string& prefix)
 	{
-		return s.compare(0, prefix.size(), prefix) == 0;
-			
+		return s.compare(0, prefix.size(), prefix) == 0;		
+	}
+
+	inline bool ends_with(const std::string& s, const std::string& prefix)
+	{
+		return s.compare(s.length()-prefix.length(), prefix.size(), prefix) == 0;
+	}
+
+	inline static bool IsWhiteSpace(char c)
+	{
+		return c == '\n' || c == '\t' || c == '\r' || c == ' ' || c == '\t';
+	}
+
+	inline static bool IsLetter(char c)
+	{
+		return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
+	}
+
+	inline std::string GetWord(const std::string& string, int startPos = 0)
+	{
+		if (startPos >= string.length())
+			throw std::runtime_error("start position out of bounds.");
+
+		int endPos = startPos;
+		while (endPos < string.length() && IsLetter(string[endPos])) endPos++;
+		return string.substr(startPos, endPos - startPos);
+	}
+
+	inline std::string StringTrim(const std::string& string, bool beginning = true, bool ending = true)
+	{
+		int start = 0;
+		if (beginning)
+		{
+			int start = 0;
+			while (start < string.length() && IsWhiteSpace(string[start])) start++;
+		}
+
+		int end = string.length() - 1;
+		if (ending)
+		{
+			while (end > start && IsWhiteSpace(string[end])) end--;
+		}
+		return string.substr(start, end - start);
 	}
 
 
