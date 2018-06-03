@@ -31,7 +31,8 @@ namespace Greet {
     public:
       Content();
       Content(const XMLObject& object, Content* parent);
-
+      void RenderHandle(GUIRenderer* renderer, const Vec2& position) const;
+      void UpdateHandle(float timeElapsed);
       virtual void Render(GUIRenderer* renderer, const Vec2& position) const;
       virtual void Update(float timeElapsed);
 
@@ -41,15 +42,19 @@ namespace Greet {
       Content* GetContent(uint index);
 
       // Returns true if this component or a child that was pressed is focusable.
-      bool MousePressHandle(const MousePressedEvent& event, const Vec2& translatedPos, const GUIMouseListener& listener);
-      void MouseReleaseHandle(const MouseReleasedEvent& event, const Vec2& translatedPos, const GUIMouseListener& listener);
+      bool MousePressHandle(const MousePressedEvent& event, const Vec2& translatedPos);
+      void MouseReleaseHandle(const MouseReleasedEvent& event, const Vec2& translatedPos);
       void MouseMoveHandle(const MouseMovedEvent& event, const Vec2& translatedPos);
+      void KeyPressedHandle(const KeyPressedEvent& event);
+      void KeyReleasedHandle(const KeyReleasedEvent& event);
+      
 
+      // These are called in the beginning of MouseHandle and doesn't need to do any processing when used
       virtual void OnMousePressed(const MousePressedEvent& event, const Vec2& translatedPos){}
       virtual void OnMouseReleased(const MouseReleasedEvent& event, const Vec2& translatedPos){}
       virtual void OnMouseMoved(const MouseMovedEvent& event, const Vec2& translatedPos){}
-      virtual void OnKeyPressed(const KeyPressedEvent& event);
-      virtual void OnKeyReleased(const KeyReleasedEvent& event);
+      virtual void OnKeyPressed(const KeyPressedEvent& event){}
+      virtual void OnKeyReleased(const KeyReleasedEvent& event){}
 
 
       virtual void OnFocused();
@@ -58,7 +63,7 @@ namespace Greet {
 
       void SetSpacing(float spacing);
       float GetSpacing() const;
-      bool IsMouseInside(const Vec2& mousePos) const;
+      virtual bool IsMouseInside(const Vec2& mousePos) const;
       Vec2 GetSize() const;
       void SetSize(const Vec2& size);
       virtual float GetWidth() const;

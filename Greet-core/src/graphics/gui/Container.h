@@ -6,7 +6,7 @@
 #include <utils/xml/XML.h>
 
 namespace Greet {
-  class Container
+  class Container : public Content
   {
     protected:
 
@@ -15,8 +15,6 @@ namespace Greet {
       static byte RESIZING_TOP;
       static byte RESIZING_BOTTOM;
       static uint RESIZING_MARGIN;
-
-      bool hasFocusedContent;
 
       bool m_resizing;
       byte m_resizableFlags;
@@ -28,39 +26,31 @@ namespace Greet {
       Vec2 m_clickPos;
       Vec2 m_posOrigin;
       Vec2 m_sizeOrigin;
-      XMLObject xmlObject;
 
       GUIMouseListener* m_mouseListener;
 
     public:
-      float marginLeft;
-      float marginRight;
-      float marginTop;
-      float marginBottom;
-
       float borderLeft;
       float borderRight;
       float borderTop;
       float borderBottom;
 
-      Vec4 backgroundColor;
       Vec4 borderColor;
 
       bool visible;
 
       Vec2 pos;
-      Vec2 size;
-      Content* content;
 
     public:
       Container();
       Container(const XMLObject& object);
-      Container(const Vec2& pos, const Vec2& size, Content* content);
       virtual ~Container();
       virtual void PreRender(GUIRenderer* renderer) const;
-      virtual void Render(GUIRenderer* renderer) const;
+      virtual void Render(GUIRenderer* renderer, const Vec2& position) const override;
       virtual void PostRender(GUIRenderer* renderer) const;
-      virtual void Update(float timeElapsed);
+      virtual void Update(float timeElapsed) override;
+
+      virtual bool IsMouseInside(const Vec2& mousePos) const override;
 
       // Check if the mouse is within the resize window and sets flags
       bool CheckResize(const Vec2& mousePos);
@@ -72,6 +62,7 @@ namespace Greet {
       void ResizeScreenClamp();
 
       // Getters and setters
+      const Vec2& GetPosition() const {return pos;}
       virtual Vec2 GetContentPosition() const { return Vec2(marginLeft + borderLeft, marginTop + borderTop); };
       virtual Vec2 GetContentSize() const { return size - GetContentPosition() - Vec2(marginRight + borderRight, marginBottom + borderBottom); }
       void SetMargins(float left, float right, float top, float bottom);
@@ -81,11 +72,11 @@ namespace Greet {
 
       // Listeners
       virtual void OnWindowResize(int width, int height);
-      virtual bool OnPressed(const MousePressedEvent& event);
-      virtual void OnReleased(const MouseReleasedEvent& event);
-      virtual void OnMoved(const MouseMovedEvent& event);
-      virtual void OnPressed(const KeyPressedEvent& event);
-      virtual void OnReleased(const KeyReleasedEvent& event);
+
+      virtual void OnMousePressed(const MousePressedEvent& event, const Vec2& translatedPos) override;
+      virtual void OnMouseReleased(const MouseReleasedEvent& event, const Vec2& translatedPos) override;
+      virtual void OnMouseMoved(const MouseMovedEvent& event, const Vec2& translatedPos) override;
+
       virtual void OnFocused();
       virtual void OnUnfocused();
 

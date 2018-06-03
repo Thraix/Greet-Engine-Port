@@ -1,3 +1,4 @@
+#if 0
 #include "FrameContainer.h"
 
 namespace Greet {
@@ -108,3 +109,4 @@ namespace Greet {
 		}
 	}
 }
+#endif

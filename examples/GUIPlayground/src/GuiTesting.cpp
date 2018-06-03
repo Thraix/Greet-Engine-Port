@@ -6,13 +6,13 @@ class Core : public App, public KeyListener, public MouseListener, public OnClic
 {
 private:
 	Content* content;
-	Container* container;
+	//Container* container;
 public:
 
 	~Core()
 	{
 		GLayer::DestroyInstance();
-		delete container;
+//		delete container;
 	}
 
 	void Init() override
@@ -21,12 +21,12 @@ public:
 		SetFrameCap(144);
 		FontManager::Add(new FontContainer("res/fonts/Roboto-Black.ttf","roboto"));
 		GLayer::CreateInstance(new GUIRenderer(), Shader(Shader::FromFile("res/shaders/gui.shader")));
-		content = new Content();
-		content->SetMargins(0, 0, 0, 0);
-		content->AddContent(new Label("test1", FontManager::Get("roboto", 24), Vec4(0.5, 1, 1, 1)));
-		content->AddContent(new Label("test2", FontManager::Get("roboto", 12), Vec4(0.5, 1, 1, 1)));
-		content->AddContent(new Button(Vec2(80, 20), "Press me!"));
-		container = new FrameContainer(Vec2(50, 50), Vec2(200, 200), content, "Debug");
+		//content = new Content();
+		//content->SetMargins(0, 0, 0, 0);
+		//content->AddContent(new Label("test1", FontManager::Get("roboto", 24), Vec4(0.5, 1, 1, 1)));
+		//content->AddContent(new Label("test2", FontManager::Get("roboto", 12), Vec4(0.5, 1, 1, 1)));
+		//content->AddContent(new Button(Vec2(80, 20), "Press me!"));
+		//container = new FrameContainer(Vec2(50, 50), Vec2(200, 200), content, "Debug");
 		//GLayer::AddContainer(container, "Debug");
 		GLayer::AddContainer(GUIUtils::GetContainer(XML::FromFile("res/guis/gui.xml")), "testing");
 	}

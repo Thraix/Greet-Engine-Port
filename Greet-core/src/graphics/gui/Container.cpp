@@ -10,34 +10,22 @@ namespace Greet {
   byte Container::RESIZING_RIGHT = BIT(1);
   byte Container::RESIZING_TOP = BIT(2);
   byte Container::RESIZING_BOTTOM = BIT(3);
-  uint Container::RESIZING_MARGIN = 5;
-
+  uint Container::RESIZING_MARGIN = 10;
   Container::Container()
-    : Container(Vec2(0, 0), Vec2(100, 100), new Content())
+    : Container(XMLObject())
   {
-
+  
   }
-
+  // These are usually the top element to no parent is needed
   Container::Container(const XMLObject& object)
-    : xmlObject(object.GetStrippedXMLObject())
+    : Content(object, NULL)
   {
     m_resizableFlags = RESIZING_LEFT | RESIZING_RIGHT | RESIZING_TOP | RESIZING_BOTTOM;
     m_resizing = 0;
-    content = new Content();
-    backgroundColor = Vec4(1, 1, 1, 1);
-    minSize = size = Vec2(100, 100);
-    marginTop = marginLeft = marginBottom = marginRight = 10;
+    minSize = Vec2(100, 100);
     borderTop = borderLeft = borderBottom = borderRight = 0;
-    if (object.HasProperty("spacing"))
-    {
-      content->SetSpacing(GUIUtils::CalcSize(object.GetProperty("spacing"), Window::GetHeight()));
-    }
-    if (object.HasProperty("width"))
-    {
-      size.w = GUIUtils::CalcSize(object.GetProperty("width"), Window::GetWidth());
-    }
-    if (object.HasProperty("height")) { size.h = GUIUtils::CalcSize(object.GetProperty("height"), Window::GetHeight());
-    }
+
+    // This is super ugly, need to find a better way to initialize these...
     if (object.HasProperty("minWidth"))
     {
       minSize.x = GUIUtils::CalcSize(object.GetProperty("minWidth"), Window::GetWidth());
@@ -68,22 +56,6 @@ namespace Greet {
       if (!GUIUtils::GetBoolean(object.GetProperty("resizeBottom")))
         m_resizableFlags &= ~RESIZING_BOTTOM;
     }
-    if (object.HasProperty("marginTop"))
-    {
-      marginTop = GUIUtils::CalcSize(object.GetProperty("marginTop"), Window::GetHeight());
-    }
-    if (object.HasProperty("marginLeft"))
-    {
-      marginLeft = GUIUtils::CalcSize(object.GetProperty("marginLeft"), Window::GetWidth());
-    }
-    if (object.HasProperty("marginBottom"))
-    {
-      marginBottom = GUIUtils::CalcSize(object.GetProperty("marginBottom"), Window::GetHeight());
-    }
-    if (object.HasProperty("marginRight"))
-    {
-      marginRight = GUIUtils::CalcSize(object.GetProperty("marginRight"), Window::GetWidth());
-    }
     if (object.HasProperty("borderTop"))
     {
       borderTop = GUIUtils::CalcSize(object.GetProperty("borderTop"), Window::GetHeight());
@@ -100,39 +72,19 @@ namespace Greet {
     {
       borderRight = GUIUtils::CalcSize(object.GetProperty("borderRight"), Window::GetWidth());
     }
-    if (object.HasProperty("backgroundColor"))
-    {
-      backgroundColor = GUIUtils::GetColor(object.GetProperty("backgroundColor"));
-    }
     if (object.HasProperty("borderColor"))
     {
       borderColor = GUIUtils::GetColor(object.GetProperty("borderColor"));
     }
-    content->SetMargins(0, 0, 0, 0);
-    content->SetSize(GetContentSize());
     pos = Vec2(0, 0);
     for (uint i = 0;i < object.GetObjectCount();i++)
     {
-      content->AddContent(GUIUtils::GetContent(object.GetObject(i), content));
+      AddContent(GUIUtils::GetContent(object.GetObject(i), this));
     }
-  }
-
-  Container::Container(const Vec2& pos, const Vec2& size, Content* content)
-    : pos(pos), size(size), content(content), xmlObject(XMLObject())
-  {
-    // Allow resizing in all directions
-    m_resizableFlags = RESIZING_LEFT | RESIZING_RIGHT | RESIZING_TOP | RESIZING_BOTTOM;
-    m_stayInsideWindow = true;
-    marginLeft = 10;
-    marginRight = 10;
-    marginTop = 10;
-    marginBottom = 10;
-    minSize = Vec2(100, 100);
   }
 
   Container::~Container()
   {
-    delete content;
   }
 
   void Container::PreRender(GUIRenderer* renderer) const
@@ -140,14 +92,14 @@ namespace Greet {
     renderer->PushViewport(pos, size, false);
   }
 
-  void Container::Render(GUIRenderer* renderer) const
+  // position is a dummy variable for container
+  void Container::Render(GUIRenderer* renderer, const Vec2& position) const
   {
     // Frame around Container
     renderer->SubmitRect(pos, size, borderColor, false);
     // Container content
     renderer->SubmitRect(pos + Vec2(borderLeft, borderTop), size - Vec2(borderLeft + borderRight, borderTop + borderBottom), backgroundColor, false);
     // Render the content
-    content->Render(renderer, pos + GetContentPosition());
   }
 
 
@@ -159,7 +111,6 @@ namespace Greet {
 
   void Container::Update(float timeElapsed)
   {
-    content->Update(timeElapsed);
   }
 
 
@@ -222,7 +173,6 @@ namespace Greet {
         size.y = minSize.y;
     }
     ResizeScreenClamp();
-    content->SetSize(GetContentSize());
   }
 
   void Container::ResizeScreenClamp()
@@ -279,77 +229,41 @@ namespace Greet {
         size.h = GUIUtils::CalcSize(h, height);
       }
     }
-    content->SetSize(GetContentSize());
   }
 
-  bool Container::OnPressed(const MousePressedEvent& event)
+  void Container::OnMousePressed(const MousePressedEvent& event, const Vec2& translatedPos)
   {
-    if (AABBUtils::PointInsideBox(event.GetPosition(), pos - RESIZING_MARGIN, size + 2 * RESIZING_MARGIN))
+    if (event.GetButton() == GLFW_MOUSE_BUTTON_1)
     {
-      if (event.GetButton() == GLFW_MOUSE_BUTTON_1)
-      {
-        m_posOrigin = pos;
-        m_sizeOrigin = size;
-        m_clickPos = event.GetPosition();
-        if (CheckResize(event.GetPosition()))
-        {
-          return true;
-        }
-      }
-
-      if (AABBUtils::PointInsideBox(event.GetPosition(), pos + GetContentPosition(), GetContentSize()))
-      {
-        if (content->MousePressHandle(event, event.GetPosition() - GetContentPosition(), *m_mouseListener) && !hasFocusedContent)
-        {
-          content->OnFocused();
-          hasFocusedContent = true;
-        }
-      }
-      else
-      {
-        if (hasFocusedContent)
-        {
-          content->OnUnfocused();
-          hasFocusedContent = false;
-        }
-      }
-
-      return true;
+      m_posOrigin = pos;
+      m_sizeOrigin = size;
+      m_clickPos = event.GetPosition();
+      CheckResize(event.GetPosition());
     }
-    return false;
   }
 
-  void Container::OnReleased(const MouseReleasedEvent& event)
+  void Container::OnMouseReleased(const MouseReleasedEvent& event, const Vec2& translatedPos)
   {
     if (event.GetButton() == GLFW_MOUSE_BUTTON_1)
     {
       m_resizing = false;
     }
-    if (hasFocusedContent)
-      content->MouseReleaseHandle(event, Vec2(marginLeft, marginTop), *m_mouseListener);
   }
 
-  void Container::OnMoved(const MouseMovedEvent& event)
+  void Container::OnMouseMoved(const MouseMovedEvent& event, const Vec2& translatedPos)
   {
     if (m_resizing)
     {
       Resize(event.GetPosition());
     }
-    if (hasFocusedContent)
-      content->MouseMoveHandle(event, Vec2(marginLeft, marginTop));
   }
 
-  void Container::OnPressed(const KeyPressedEvent& event)
+  bool Container::IsMouseInside(const Vec2& mousePos) const
   {
-    //if (hasFocusedContent)
-    //	content->KeyPress(event);
+    Vec2 resizeMargin = Vec2(RESIZING_MARGIN, RESIZING_MARGIN);
+    return AABBUtils::PointInsideBox(mousePos, -resizeMargin, GetSize() + resizeMargin*2);
   }
 
-  void Container::OnReleased(const KeyReleasedEvent& event)
-  {
-    //if (hasFocusedContent)
-    //	content->KeyRelease(event);
-  }
 
   void Container::OnFocused()
   {
@@ -358,8 +272,6 @@ namespace Greet {
 
   void Container::OnUnfocused()
   {
-    if (hasFocusedContent)
-      content->OnUnfocused();
     // Change the title to be more dark, see other windows applications
   }
 }

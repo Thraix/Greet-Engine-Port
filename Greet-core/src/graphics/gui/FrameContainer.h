@@ -1,3 +1,4 @@
+#if 0
 #pragma once
 
 #include "Container.h"
@@ -44,3 +45,4 @@ namespace Greet {
 		void OnMoved(const MouseMovedEvent& event) override;
 	};
 }
+#endif

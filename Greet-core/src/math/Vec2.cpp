@@ -200,6 +200,11 @@ namespace Greet {
 		return Vec2(first.x, first.y).Divide(c);
 	}
 
+	Vec2 operator-(const Vec2& first)
+	{
+		return Vec2(-first.x, -first.y);
+	}
+
 	Vec2& Vec2::operator+=(const Vec2 &other)
 	{
 		return Add(other);

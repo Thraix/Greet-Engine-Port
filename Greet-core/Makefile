@@ -21,19 +21,19 @@ $(LIBRARY): $(OBJECTS)
 	$(info Generating library file)
 	$(AR) rs $(LIBRARY) $(OBJECTS)
 
-$(OBJPATH)/%.o: src/%.cpp
+$(OBJPATH)/%.o: src/%.cpp src/%.h
 	$(PRINT)
 	$(CC) $(CFLAGS) -o $@ $<
 
-$(OBJPATH)/%.o: src/**/%.cpp
+$(OBJPATH)/%.o: src/**/%.cpp src/**/%.h
 	$(PRINT)
 	$(CC) $(CFLAGS) -o $@ $<
 
-$(OBJPATH)/%.o: src/**/**/%.cpp
+$(OBJPATH)/%.o: src/**/**/%.cpp src/**/**/%.h
 	$(PRINT)
 	$(CC) $(CFLAGS) -o $@ $<
 
-$(OBJPATH)/%.o: src/**/**/**/%.cpp
+$(OBJPATH)/%.o: src/**/**/**/%.cpp src/**/**/**/%.h
 	$(PRINT)
 	$(CC) $(CFLAGS) -o $@ $<
 

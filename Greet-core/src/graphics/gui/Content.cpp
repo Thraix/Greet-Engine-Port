@@ -6,15 +6,16 @@
 namespace Greet {
 
   Content::Content()
-    : parent(NULL), marginLeft(0), marginRight(0), marginTop(0), marginBottom(0), ySpacing(5), size(Vec2(100, 100)), xmlObject(XMLObject())
+    : m_focused(NULL), parent(NULL), marginLeft(0), marginRight(0), marginTop(0), marginBottom(0), ySpacing(5), size(Vec2(100, 100)), xmlObject(XMLObject())
   {
     m_isFocusable = false;
   }
 
   Content::Content(const XMLObject& object, Content* parent)
-    : parent(parent), xmlObject(object.GetStrippedXMLObject())
+    : parent(parent), m_focused(NULL), xmlObject(object.GetStrippedXMLObject())
   {
     size = Vec2(0, 0);
+    marginTop = marginLeft = marginBottom = marginRight = 10;
     if (object.HasProperty("width"))
     {
       size.w = GUIUtils::CalcSize(object.GetProperty("width"), GetPotentialWidth());
@@ -27,26 +28,54 @@ namespace Greet {
     {
       backgroundColor = GUIUtils::GetColor(object.GetProperty("backgroundColor"));
     }
+    if (object.HasProperty("marginTop"))
+    {
+      marginTop = GUIUtils::CalcSize(object.GetProperty("marginTop"), Window::GetHeight());
+    }
+    if (object.HasProperty("marginLeft"))
+    {
+      marginLeft = GUIUtils::CalcSize(object.GetProperty("marginLeft"), Window::GetWidth());
+    }
+    if (object.HasProperty("marginBottom"))
+    {
+      marginBottom = GUIUtils::CalcSize(object.GetProperty("marginBottom"), Window::GetHeight());
+    }
+    if (object.HasProperty("marginRight"))
+    {
+      marginRight = GUIUtils::CalcSize(object.GetProperty("marginRight"), Window::GetWidth());
+    }
+  }
+
+  void Content::RenderHandle(GUIRenderer* renderer, const Vec2& position) const
+  {
+    if (xmlObject.HasProperty("backgroundColor"))
+      renderer->SubmitRect(position, GetSize(), backgroundColor, false);
+    Render(renderer, position);
+    float yPos = marginTop;
+    for (auto it = m_contents.begin(); it != m_contents.end(); ++it)
+    {
+      (*it)->RenderHandle(renderer, position + Vec2(marginLeft, yPos));
+      yPos += (*it)->GetHeight() + ySpacing;
+    }
   }
 
   void Content::Render(GUIRenderer* renderer, const Vec2& position) const
   {
-    float yPos = marginTop;
+
+  }
+
+  void Content::UpdateHandle(float timeElapsed)
+  {
+    Update(timeElapsed);
     for (auto it = m_contents.begin(); it != m_contents.end(); ++it)
     {
-      (*it)->Render(renderer, position + Vec2(marginLeft, yPos));
-      yPos += (*it)->GetHeight() + ySpacing;
+      (*it)->UpdateHandle(timeElapsed);
     }
-    if (xmlObject.HasProperty("backgroundColor"))
-      renderer->SubmitRect(position, GetSize(), backgroundColor, false);
   }
 
   void Content::Update(float timeElapsed)
   {
-    for (auto it = m_contents.begin(); it != m_contents.end(); ++it)
-    {
-      (*it)->Update(timeElapsed);
-    }
+
   }
 
   void Content::AddContent(Content* content)
@@ -96,41 +125,42 @@ namespace Greet {
   }
 
 
-  bool Content::MousePressHandle(const MousePressedEvent& event, const Vec2& translatedPos, const GUIMouseListener& listener)
+  bool Content::MousePressHandle(const MousePressedEvent& event, const Vec2& translatedPos)
   {
-    OnMousePressed(event,translatedPos);
-    float yPos = marginTop;
-    for (auto it = m_contents.rbegin(); it != m_contents.rend(); ++it)
-    {
-      // Translate the mouse.
-      Vec2 translatedPosContent = translatedPos - Vec2(marginLeft, yPos);
-      if ((*it)->IsMouseInside(translatedPosContent))
-      {
-        // Check if the contents wants focus.
-        (*it)->MousePressHandle(event, translatedPosContent, listener);
-        if ((*it)->IsFocusable())
-        {
-          if (*it == m_focused)
-          {
-            m_focused->OnUnfocused();
-            (*it)->OnFocused();
-            m_focused = *it;
-          }
-          listener.OnMousePressed(*it);
-          return true;
-        }
-      }
-      yPos += (*it)->GetHeight() + ySpacing;
-    }
-    if (m_focused != NULL)
-    {
-      m_focused->OnUnfocused();
+    if(IsMouseInside(translatedPos)){
+      OnMousePressed(event,translatedPos);
+      Content* lastFocus = m_focused;
       m_focused = NULL;
+      float yPos = marginTop;
+      for (auto it = m_contents.begin(); it != m_contents.end(); ++it)
+      {
+        // Translate the mouse.
+        Vec2 translatedPosContent = translatedPos - Vec2(marginLeft, yPos);
+        bool mouseInside = (*it)->MousePressHandle(event, translatedPosContent);
+        if (mouseInside)
+        {
+          // We always set the value since we want the "top" element, incase Contents overlap
+          m_focused = *it;
+        }
+        yPos += (*it)->GetHeight() + ySpacing;
+      }
+      if (m_focused == NULL)
+      {
+        if(lastFocus != NULL)
+          lastFocus->OnUnfocused();
+      }
+      else if(lastFocus != m_focused)
+      {
+        if(lastFocus != NULL)
+          lastFocus->OnUnfocused();
+        m_focused->OnFocused();
+      }
+      return true;
     }
     return false;
   }
 
-  void Content::MouseReleaseHandle(const MouseReleasedEvent& event, const Vec2& translatedPos, const GUIMouseListener& listener)
+  void Content::MouseReleaseHandle(const MouseReleasedEvent& event, const Vec2& translatedPos)
   {
     OnMouseReleased(event,translatedPos);
     if (m_focused != NULL)
@@ -141,11 +171,10 @@ namespace Greet {
       {
         if (m_focused == *it)
         {
-          m_focused->MouseReleaseHandle(event, translatedPos - Vec2(marginLeft, yPos), listener);
-          listener.OnMouseReleased(m_focused);
+          m_focused->MouseReleaseHandle(event, translatedPos - Vec2(marginLeft, yPos));
           if (m_focused->IsMouseInside(translatedPos - Vec2(marginLeft, yPos)))
           {
-            listener.OnMouseClicked(m_focused);
+            //listener.OnMouseClicked(m_focused);
           }
         }
         yPos += (*it)->GetHeight() + ySpacing;
@@ -156,32 +185,33 @@ namespace Greet {
   void Content::MouseMoveHandle(const MouseMovedEvent& event, const Vec2& translatedPos)
   {
     OnMouseMoved(event,translatedPos);
-    // Calculate the focused yPos
-    float yPos = marginTop;
-    for (auto it = m_contents.begin(); it != m_contents.end(); ++it)
+    if(m_focused != NULL)
     {
-      if (m_focused == *it)
+      // We loop since we need to calculate the yPos 
+      float yPos = marginTop;
+      for (auto it = m_contents.begin(); it != m_contents.end(); ++it)
       {
-        m_focused->MouseMoveHandle(event, translatedPos - Vec2(marginLeft, yPos));
+        if (m_focused == *it)
+        {
+          m_focused->MouseMoveHandle(event, translatedPos - Vec2(marginLeft, yPos));
+        }
+        yPos += (*it)->GetHeight() + ySpacing;
       }
-      else if (m_focused == NULL)
-      {
-
-      }
-      yPos += (*it)->GetHeight() + ySpacing;
     }
   }
 
-  void Content::OnKeyPressed(const KeyPressedEvent& event)
+  void Content::KeyPressedHandle(const KeyPressedEvent& event)
   {
+    OnKeyPressed(event);
     if (m_focused != NULL)
     {
       m_focused->OnKeyPressed(event);
     }
   }
 
-  void Content::OnKeyReleased(const KeyReleasedEvent& event)
+  void Content::KeyReleasedHandle(const KeyReleasedEvent& event)
   {
+    OnKeyReleased(event);
     if (m_focused != NULL)
     {
       m_focused->OnKeyReleased(event);
@@ -234,6 +264,8 @@ namespace Greet {
       const std::string& w = xmlObject.GetProperty("width");
       if (!GUIUtils::IsStaticSize(w))
       {
+        if (parent == NULL)
+          return GUIUtils::CalcSize(w, Window::GetWidth());
         return GUIUtils::CalcSize(w, parent->GetPotentialWidth());
       }
       return size.w;
@@ -260,6 +292,8 @@ namespace Greet {
       const std::string& h = xmlObject.GetProperty("height");
       if (!GUIUtils::IsStaticSize(h))
       {
+        if (parent == NULL)
+          return GUIUtils::CalcSize(h, Window::GetWidth());
         return GUIUtils::CalcSize(h, parent->GetPotentialHeight());
       }
       return size.h;
@@ -292,6 +326,8 @@ namespace Greet {
       }
       else
       {
+        if (parent == NULL)
+          return GUIUtils::CalcSize(w, Window::GetWidth());
         // No need to check for parent since the top parent doesn't have an xml object.
         return GUIUtils::CalcSize(w, parent->GetPotentialWidth());
       }
@@ -312,6 +348,8 @@ namespace Greet {
       }
       else
       {
+        if (parent == NULL)
+          return GUIUtils::CalcSize(h, Window::GetHeight());
         // No need to check for parent since the top parent doesn't have an xml object.
         return GUIUtils::CalcSize(h, parent->GetPotentialHeight());
       }

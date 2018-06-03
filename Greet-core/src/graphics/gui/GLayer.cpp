@@ -31,7 +31,7 @@ namespace Greet {
 	{
 		for (auto it = containers.rbegin(); it != containers.rend(); ++it)
 		{
-			if (it->second->OnPressed(event))
+			if (it->second->MousePressHandle(event, event.GetPosition() - it->second->GetPosition()))
 			{
 				if (it->second != m_focused)
 				{
@@ -55,27 +55,25 @@ namespace Greet {
 	void GLayer::OnReleased(const MouseReleasedEvent& event)
 	{
 		if (m_focused != NULL)
-			m_focused->OnReleased(event);
+			m_focused->MouseReleaseHandle(event, event.GetPosition() - m_focused->GetPosition());
 	}
 
 	void GLayer::OnMoved(const MouseMovedEvent& event)
 	{
-		for (auto it = containers.begin(); it != containers.end(); ++it)
-		{
-			it->second->OnMoved(event);
-		}
+		if (m_focused != NULL)
+			m_focused->MouseMoveHandle(event, event.GetPosition() - m_focused->GetPosition());
 	}
 
 	void GLayer::OnPressed(const KeyPressedEvent& event)
 	{
 		if (m_focused != NULL)
-			m_focused->OnPressed(event);
+			m_focused->KeyPressedHandle(event);
 	}
 
 	void GLayer::OnReleased(const KeyReleasedEvent& event)
 	{
 		if (m_focused != NULL)
-			m_focused->OnReleased(event);
+			m_focused->KeyReleasedHandle(event);
 	}
 
 	void GLayer::WindowResize(int width, int height)
@@ -113,7 +111,7 @@ namespace Greet {
 		for (auto it = containers.begin(); it != containers.end(); ++it)
 		{
 			it->second->PreRender(renderer);
-			it->second->Render(renderer);
+			it->second->RenderHandle(renderer, it->second->GetPosition());
 			it->second->PostRender(renderer);
 		}
 		renderer->End();
@@ -125,7 +123,7 @@ namespace Greet {
 	{
 		for (auto it = containers.begin(); it != containers.end(); ++it)
 		{
-			it->second->Update(timeElapsed);
+			it->second->UpdateHandle(timeElapsed);
 		}
 	}
 
