@@ -198,14 +198,6 @@ namespace Greet {
     }
   }
 
-  void Container::SetMargins(float left, float right, float top, float bottom)
-  {
-    marginLeft = left;
-    marginRight = right;
-    marginTop = top;
-    marginBottom = bottom;
-  }
-
   void Container::SetGUIMouseListener(GUIMouseListener* listener)
   {
     m_mouseListener = listener;

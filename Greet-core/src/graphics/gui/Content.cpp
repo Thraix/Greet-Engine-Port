@@ -16,6 +16,7 @@ namespace Greet {
   {
     size = Vec2(0, 0);
     marginTop = marginLeft = marginBottom = marginRight = 10;
+    ySpacing = 10;
     if (object.HasProperty("width"))
     {
       size.w = GUIUtils::CalcSize(object.GetProperty("width"), GetPotentialWidth());
@@ -24,25 +25,29 @@ namespace Greet {
     {
       size.h = GUIUtils::CalcSize(object.GetProperty("height"), GetPotentialHeight());
     }
+    if (object.HasProperty("spacing"))
+    {
+      ySpacing = GUIUtils::CalcSize(object.GetProperty("spacing"), GetPotentialHeight());
+    }
     if (object.HasProperty("backgroundColor"))
     {
       backgroundColor = GUIUtils::GetColor(object.GetProperty("backgroundColor"));
     }
     if (object.HasProperty("marginTop"))
     {
-      marginTop = GUIUtils::CalcSize(object.GetProperty("marginTop"), Window::GetHeight());
+      marginTop = GUIUtils::CalcSize(object.GetProperty("marginTop"), GetPotentialHeight());
     }
     if (object.HasProperty("marginLeft"))
     {
-      marginLeft = GUIUtils::CalcSize(object.GetProperty("marginLeft"), Window::GetWidth());
+      marginLeft = GUIUtils::CalcSize(object.GetProperty("marginLeft"), GetPotentialWidth());
     }
     if (object.HasProperty("marginBottom"))
     {
-      marginBottom = GUIUtils::CalcSize(object.GetProperty("marginBottom"), Window::GetHeight());
+      marginBottom = GUIUtils::CalcSize(object.GetProperty("marginBottom"), GetPotentialHeight());
     }
     if (object.HasProperty("marginRight"))
     {
-      marginRight = GUIUtils::CalcSize(object.GetProperty("marginRight"), Window::GetWidth());
+      marginRight = GUIUtils::CalcSize(object.GetProperty("marginRight"), GetPotentialWidth());
     }
   }
 
@@ -322,7 +327,7 @@ namespace Greet {
       const std::string& w = xmlObject.GetProperty("width");
       if (GUIUtils::IsStaticSize(w))
       {
-        return size.w;
+        return size.w - marginRight - marginLeft;
       }
       else
       {
@@ -333,7 +338,9 @@ namespace Greet {
       }
     }
     if (parent == NULL)
-      return size.w;
+    {
+      return size.w - marginRight - marginLeft;
+    } 
     return parent->GetPotentialWidth();
   }
 

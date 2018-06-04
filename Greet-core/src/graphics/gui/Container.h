@@ -65,7 +65,6 @@ namespace Greet {
       const Vec2& GetPosition() const {return pos;}
       virtual Vec2 GetContentPosition() const { return Vec2(marginLeft + borderLeft, marginTop + borderTop); };
       virtual Vec2 GetContentSize() const { return size - GetContentPosition() - Vec2(marginRight + borderRight, marginBottom + borderBottom); }
-      void SetMargins(float left, float right, float top, float bottom);
 
       // Set listeners
       void SetGUIMouseListener(GUIMouseListener* listener);
