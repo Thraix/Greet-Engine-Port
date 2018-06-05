@@ -6,7 +6,7 @@
 namespace Greet {
 
   Content::Content()
-    : m_focused(NULL), parent(NULL), marginLeft(0), marginRight(0), marginTop(0), marginBottom(0), ySpacing(5), size(Vec2(100, 100)), xmlObject(XMLObject())
+    : m_focused(NULL), parent(NULL), margin(Vec4(0,0,0,0)), border(Vec4(0,0,0,0)), ySpacing(5), size(Vec2(100, 100)), xmlObject(XMLObject())
   {
     m_isFocusable = false;
   }
@@ -14,8 +14,9 @@ namespace Greet {
   Content::Content(const XMLObject& object, Content* parent)
     : parent(parent), m_focused(NULL), xmlObject(object.GetStrippedXMLObject())
   {
-    size = Vec2(0, 0);
-    marginTop = marginLeft = marginBottom = marginRight = 10;
+    size = Vec2(100, 100);
+    margin = Vec4(10,10,10,10);
+    border = Vec4(0,0,0,0);
     ySpacing = 10;
     if (object.HasProperty("width"))
     {
@@ -35,31 +36,55 @@ namespace Greet {
     }
     if (object.HasProperty("marginTop"))
     {
-      marginTop = GUIUtils::CalcSize(object.GetProperty("marginTop"), GetPotentialHeight());
+      margin.top = GUIUtils::CalcSize(object.GetProperty("marginTop"), GetPotentialHeight());
     }
     if (object.HasProperty("marginLeft"))
     {
-      marginLeft = GUIUtils::CalcSize(object.GetProperty("marginLeft"), GetPotentialWidth());
+      margin.left  = GUIUtils::CalcSize(object.GetProperty("marginLeft"), GetPotentialWidth());
     }
     if (object.HasProperty("marginBottom"))
     {
-      marginBottom = GUIUtils::CalcSize(object.GetProperty("marginBottom"), GetPotentialHeight());
+      margin.bottom  = GUIUtils::CalcSize(object.GetProperty("marginBottom"), GetPotentialHeight());
     }
     if (object.HasProperty("marginRight"))
     {
-      marginRight = GUIUtils::CalcSize(object.GetProperty("marginRight"), GetPotentialWidth());
+      margin.right = GUIUtils::CalcSize(object.GetProperty("marginRight"), GetPotentialWidth());
+    }
+    if (object.HasProperty("borderTop"))
+    {
+      border.top = GUIUtils::CalcSize(object.GetProperty("borderTop"), Window::GetHeight());
+    }
+    if (object.HasProperty("borderLeft"))
+    {
+      border.left = GUIUtils::CalcSize(object.GetProperty("borderLeft"), Window::GetWidth());
+    }
+    if (object.HasProperty("borderBottom"))
+    {
+      border.bottom = GUIUtils::CalcSize(object.GetProperty("borderBottom"), Window::GetHeight());
+    }
+    if (object.HasProperty("borderRight"))
+    {
+      border.right = GUIUtils::CalcSize(object.GetProperty("borderRight"), Window::GetWidth());
+    }
+    if (object.HasProperty("borderColor"))
+    {
+      borderColor = GUIUtils::GetColor(object.GetProperty("borderColor"));
     }
   }
 
   void Content::RenderHandle(GUIRenderer* renderer, const Vec2& position) const
   {
+    // Border around Content 
+    if (xmlObject.HasProperty("borderColor"))
+      renderer->SubmitRect(position, size, borderColor, false);
+    // Content background
     if (xmlObject.HasProperty("backgroundColor"))
-      renderer->SubmitRect(position, GetSize(), backgroundColor, false);
+      renderer->SubmitRect(position + Vec2(border.left, border.top), size - Vec2(border.left + border.right, border.top + border.bottom), backgroundColor, false);
     Render(renderer, position);
-    float yPos = marginTop;
+    float yPos = margin.top;
     for (auto it = m_contents.begin(); it != m_contents.end(); ++it)
     {
-      (*it)->RenderHandle(renderer, position + Vec2(marginLeft, yPos));
+      (*it)->RenderHandle(renderer, position + Vec2(margin.left, yPos));
       yPos += (*it)->GetHeight() + ySpacing;
     }
   }
@@ -71,6 +96,7 @@ namespace Greet {
 
   void Content::UpdateHandle(float timeElapsed)
   {
+    size = GetSize();
     Update(timeElapsed);
     for (auto it = m_contents.begin(); it != m_contents.end(); ++it)
     {
@@ -136,11 +162,11 @@ namespace Greet {
       OnMousePressed(event,translatedPos);
       Content* lastFocus = m_focused;
       m_focused = NULL;
-      float yPos = marginTop;
+      float yPos = margin.top;
       for (auto it = m_contents.begin(); it != m_contents.end(); ++it)
       {
         // Translate the mouse.
-        Vec2 translatedPosContent = translatedPos - Vec2(marginLeft, yPos);
+        Vec2 translatedPosContent = translatedPos - Vec2(margin.left, yPos);
         bool mouseInside = (*it)->MousePressHandle(event, translatedPosContent);
         if (mouseInside)
         {
@@ -171,13 +197,13 @@ namespace Greet {
     if (m_focused != NULL)
     {
       // Calculate the focused yPos
-      float yPos = marginTop;
+      float yPos = margin.top;
       for (auto it = m_contents.begin(); it != m_contents.end(); ++it)
       {
         if (m_focused == *it)
         {
-          m_focused->MouseReleaseHandle(event, translatedPos - Vec2(marginLeft, yPos));
-          if (m_focused->IsMouseInside(translatedPos - Vec2(marginLeft, yPos)))
+          m_focused->MouseReleaseHandle(event, translatedPos - Vec2(margin.left, yPos));
+          if (m_focused->IsMouseInside(translatedPos - Vec2(margin.left, yPos)))
           {
             //listener.OnMouseClicked(m_focused);
           }
@@ -193,12 +219,12 @@ namespace Greet {
     if(m_focused != NULL)
     {
       // We loop since we need to calculate the yPos 
-      float yPos = marginTop;
+      float yPos = margin.top;
       for (auto it = m_contents.begin(); it != m_contents.end(); ++it)
       {
         if (m_focused == *it)
         {
-          m_focused->MouseMoveHandle(event, translatedPos - Vec2(marginLeft, yPos));
+          m_focused->MouseMoveHandle(event, translatedPos - Vec2(margin.left, yPos));
         }
         yPos += (*it)->GetHeight() + ySpacing;
       }
@@ -286,7 +312,7 @@ namespace Greet {
       {
         maxWidth = Math::Max((*it)->GetWidth(), maxWidth);
       }
-      return maxWidth + marginLeft + marginRight;
+      return maxWidth + margin.left + margin.right;
     }
   }
 
@@ -298,7 +324,7 @@ namespace Greet {
       if (!GUIUtils::IsStaticSize(h))
       {
         if (parent == NULL)
-          return GUIUtils::CalcSize(h, Window::GetWidth());
+          return GUIUtils::CalcSize(h, Window::GetHeight());
         return GUIUtils::CalcSize(h, parent->GetPotentialHeight());
       }
       return size.h;
@@ -309,7 +335,7 @@ namespace Greet {
     }
     else
     {
-      float height = marginTop + marginBottom;
+      float height = margin.top + margin.bottom;
       for (auto it = m_contents.begin(); it != m_contents.end(); ++it)
       {
         if (it != m_contents.begin())
@@ -327,7 +353,7 @@ namespace Greet {
       const std::string& w = xmlObject.GetProperty("width");
       if (GUIUtils::IsStaticSize(w))
       {
-        return size.w - marginRight - marginLeft;
+        return size.w - margin.right - margin.left;
       }
       else
       {
@@ -338,9 +364,7 @@ namespace Greet {
       }
     }
     if (parent == NULL)
-    {
-      return size.w - marginRight - marginLeft;
-    } 
+      return size.w - margin.right - margin.left;
     return parent->GetPotentialWidth();
   }
 
@@ -351,7 +375,7 @@ namespace Greet {
       const std::string& h = xmlObject.GetProperty("height");
       if (GUIUtils::IsStaticSize(h))
       {
-        return size.h;
+        return size.h - margin.top - margin.bottom;
       }
       else
       {
@@ -362,15 +386,15 @@ namespace Greet {
       }
     }
     if (parent == NULL)
-      return size.h;
+      return size.h - margin.top - margin.bottom;
     return parent->GetPotentialHeight();
   }
 
   void Content::SetMargins(float left, float right, float top, float bottom)
   {
-    marginLeft = left;
-    marginRight = right;
-    marginTop = top;
-    marginBottom = bottom;
+    margin.left = left;
+    margin.right = right;
+    margin.top = top;
+    margin.bottom = bottom;
   }
 }

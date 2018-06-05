@@ -15,10 +15,10 @@ namespace Greet {
       bool m_isFocusable;
       Content* m_focused;
       bool isFocused;
-      float marginLeft;
-      float marginRight;
-      float marginTop;
-      float marginBottom;
+
+      Vec4 margin;
+      Vec4 border;
+
       XMLObject xmlObject;
 
       float ySpacing;
@@ -26,6 +26,7 @@ namespace Greet {
       Vec2 size;
       Content* parent;
       Vec4 backgroundColor;
+      Vec4 borderColor;
       std::vector<Content*> m_contents;
 
     public:

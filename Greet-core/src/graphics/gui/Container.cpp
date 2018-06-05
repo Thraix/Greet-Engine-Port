@@ -23,7 +23,6 @@ namespace Greet {
     m_resizableFlags = RESIZING_LEFT | RESIZING_RIGHT | RESIZING_TOP | RESIZING_BOTTOM;
     m_resizing = 0;
     minSize = Vec2(100, 100);
-    borderTop = borderLeft = borderBottom = borderRight = 0;
 
     // This is super ugly, need to find a better way to initialize these...
     if (object.HasProperty("minWidth"))
@@ -42,9 +41,7 @@ namespace Greet {
     if (object.HasProperty("resizeRight"))
     {
       if (!GUIUtils::GetBoolean(object.GetProperty("resizeRight")))
-      {
         m_resizableFlags &= ~RESIZING_RIGHT;
-      }
     }
     if (object.HasProperty("resizeTop"))
     {
@@ -55,26 +52,6 @@ namespace Greet {
     {
       if (!GUIUtils::GetBoolean(object.GetProperty("resizeBottom")))
         m_resizableFlags &= ~RESIZING_BOTTOM;
-    }
-    if (object.HasProperty("borderTop"))
-    {
-      borderTop = GUIUtils::CalcSize(object.GetProperty("borderTop"), Window::GetHeight());
-    }
-    if (object.HasProperty("borderLeft"))
-    {
-      borderLeft = GUIUtils::CalcSize(object.GetProperty("borderLeft"), Window::GetWidth());
-    }
-    if (object.HasProperty("borderBottom"))
-    {
-      borderBottom = GUIUtils::CalcSize(object.GetProperty("borderBottom"), Window::GetHeight());
-    }
-    if (object.HasProperty("borderRight"))
-    {
-      borderRight = GUIUtils::CalcSize(object.GetProperty("borderRight"), Window::GetWidth());
-    }
-    if (object.HasProperty("borderColor"))
-    {
-      borderColor = GUIUtils::GetColor(object.GetProperty("borderColor"));
     }
     pos = Vec2(0, 0);
     for (uint i = 0;i < object.GetObjectCount();i++)
@@ -92,27 +69,10 @@ namespace Greet {
     renderer->PushViewport(pos, size, false);
   }
 
-  // position is a dummy variable for container
-  void Container::Render(GUIRenderer* renderer, const Vec2& position) const
-  {
-    // Frame around Container
-    renderer->SubmitRect(pos, size, borderColor, false);
-    // Container content
-    renderer->SubmitRect(pos + Vec2(borderLeft, borderTop), size - Vec2(borderLeft + borderRight, borderTop + borderBottom), backgroundColor, false);
-    // Render the content
-  }
-
-
   void Container::PostRender(GUIRenderer* renderer) const
   {
     renderer->PopViewport();
   }
-
-
-  void Container::Update(float timeElapsed)
-  {
-  }
-
 
   bool Container::CheckResize(const Vec2& mousePos)
   {

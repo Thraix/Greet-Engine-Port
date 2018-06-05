@@ -30,13 +30,6 @@ namespace Greet {
       GUIMouseListener* m_mouseListener;
 
     public:
-      float borderLeft;
-      float borderRight;
-      float borderTop;
-      float borderBottom;
-
-      Vec4 borderColor;
-
       bool visible;
 
       Vec2 pos;
@@ -46,9 +39,7 @@ namespace Greet {
       Container(const XMLObject& object);
       virtual ~Container();
       virtual void PreRender(GUIRenderer* renderer) const;
-      virtual void Render(GUIRenderer* renderer, const Vec2& position) const override;
       virtual void PostRender(GUIRenderer* renderer) const;
-      virtual void Update(float timeElapsed) override;
 
       virtual bool IsMouseInside(const Vec2& mousePos) const override;
 

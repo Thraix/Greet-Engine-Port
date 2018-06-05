@@ -16,6 +16,7 @@ namespace Greet
 
 		}
 
+		Log::Warning("Could not read XML object ", object.GetName(), ".");
 		return new Container();
 	}
 

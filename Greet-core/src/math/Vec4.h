@@ -21,6 +21,9 @@ namespace Greet{
 			struct {
 				float h, s, v, hsv_a;
 			};
+			struct {
+				float top, left, bottom, right;
+			};
 		};
 		Vec4();
 		//Vec4(const Vec4& copy);
