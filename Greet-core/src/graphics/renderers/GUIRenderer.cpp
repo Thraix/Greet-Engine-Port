@@ -154,12 +154,12 @@ namespace Greet
 		Vec2 uv1;
 		for (uint i = 0;i < text.length();i++)
 		{
-			texture_glyph_t* glyph = texture_font_get_glyph(ftfont, text.c_str() + i);
+			texture_glyph_t* glyph = texture_font_get_glyph(ftfont, "Test");
 			if (glyph != NULL)
 			{
 				if (i > 0)
 				{
-					float kerning = texture_glyph_get_kerning(glyph, text.c_str() + i - 1);
+					float kerning = texture_glyph_get_kerning(glyph, "aTest");
 					x += kerning / scale.x;
 				}
 

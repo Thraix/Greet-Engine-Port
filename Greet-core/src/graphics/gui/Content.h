@@ -18,6 +18,7 @@ namespace Greet {
 
       Vec4 margin;
       Vec4 border;
+      Vec4 padding;
 
       XMLObject xmlObject;
 
@@ -57,7 +58,6 @@ namespace Greet {
       virtual void OnKeyPressed(const KeyPressedEvent& event){}
       virtual void OnKeyReleased(const KeyReleasedEvent& event){}
 
-
       virtual void OnFocused();
       virtual void OnUnfocused();
       virtual bool IsFocusable() const { return m_isFocusable; };
@@ -73,5 +73,8 @@ namespace Greet {
       virtual float GetPotentialHeight() const;
 
       void SetMargins(float left, float right, float top, float bottom);
+    private:
+      // Helper functions
+      Vec2 GetChildOffset(const Content* child) const;
   };
 }

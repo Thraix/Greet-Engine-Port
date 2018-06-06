@@ -10,10 +10,13 @@ namespace Greet {
 	protected:
 		uint m_width;
 		uint m_height;
+    uint m_bpp;
 	public:
+    Texture2D(uint width, uint height, uint bpp);
 		Texture2D(const std::string& filename, const std::string& name);
 		Texture2D(BYTE* bits, uint width, uint height, uint bpp, const std::string& name);
 		Texture2D(uint texID, uint width, uint height, const std::string& name);
+    void SetPixels(const void* pixels) const;
 		virtual ~Texture2D();
 		inline uint GetWidth() const { return m_width; }
 		inline uint GetHeight() const { return m_height; }

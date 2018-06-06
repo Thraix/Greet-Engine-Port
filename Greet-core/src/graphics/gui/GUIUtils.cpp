@@ -2,6 +2,7 @@
 
 #include "Container.h"
 #include "Content.h"
+#include "Button.h"
 
 namespace Greet
 {
@@ -24,7 +25,7 @@ namespace Greet
 	{
 		if (object.GetName() == "Button")
 		{
-			//return new Button(object);
+			return new Button(object,parent);
 		}
 		if (object.GetName() == "Content")
 		{

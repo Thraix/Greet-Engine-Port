@@ -11,12 +11,14 @@ namespace Greet {
   byte Container::RESIZING_TOP = BIT(2);
   byte Container::RESIZING_BOTTOM = BIT(3);
   uint Container::RESIZING_MARGIN = 10;
+
   Container::Container()
     : Container(XMLObject())
   {
   
   }
-  // These are usually the top element to no parent is needed
+
+  // These are usually the top element so no parent is needed
   Container::Container(const XMLObject& object)
     : Content(object, NULL)
   {

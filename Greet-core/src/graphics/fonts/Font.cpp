@@ -11,10 +11,12 @@ namespace Greet{
 
 	void Font::Init()
 	{
-		m_atlas = ftgl::texture_atlas_new(512,512,4);
+		m_atlas = ftgl::texture_atlas_new(512,512,3);
+    Log::Info(m_atlas->id);
 		if (m_container->GetData() == NULL)
 		{
 			m_font = ftgl::texture_font_new_from_file(m_atlas, m_size, m_container->GetFileName().c_str());
+      Log::Info("Here");
 			ASSERT(m_font, "Could not load font from file: ", m_container->m_filename);
 		}
 		else

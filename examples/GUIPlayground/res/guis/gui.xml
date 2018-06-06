@@ -1,13 +1,15 @@
 <Container 
   width="200px" height="100%" minWidth="100px" spacing="10px"
   resizeTop="false" resizeLeft="false" resizeBottom="false" resizeRight="true"
-  marginTop="10px" marginLeft="10px" marginBottom="10px" marginRight="10px"
+  paddingTop="10px" paddinglLeft="10px" paddingBottom="10px" paddingRight="10px"
   borderTop="1px" borderLeft="1px" borderBottom="1px" borderRight="1px"
   borderColor="#ff00ff" backgroundColor="#000077">
   <Content
+    borderColor="#00ff00" borderTop="1px" borderLeft="1px" borderBottom="1px" borderRight="1px"
     width="100%" height="50px" backgroundColor="#ff00ff">Press me!</Content>
   <Content
-      width="100%" height="50px" backgroundColor="#ff0000">Press me!</Content>
+    width="100%" height="50px" backgroundColor="#ff0000">Press me!</Content>
   <Content
-      width="50%" height="50px" backgroundColor="#0000ff">Press me!</Content>
+    width="50%" height="50px" backgroundColor="#0000ff">Press me!</Content>
+  <Button width="100%" height="40px" backgroundColor="#20aa44">Button!</Button>
 </Container>
