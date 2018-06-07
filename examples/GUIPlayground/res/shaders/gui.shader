@@ -67,6 +67,5 @@ void main()
 	{
 		int tid = int(fs_in.texID - 0.5);
 		color *= texture(textures[tid], fs_in.texCoord);
-		color = vec4(1.0,1.0,1.0,1.0);
 	}
 }

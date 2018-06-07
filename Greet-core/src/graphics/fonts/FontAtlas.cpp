@@ -1,0 +1,83 @@
+#include "FontAtlas.h"
+#include <math/Vec3.h>
+
+namespace Greet
+{
+  FontAtlas::FontAtlas(const std::string& filename, uint width, uint height, uint fontSize)
+    : yPos(0), xPos(0), nextYPos(0), width(width), height(height), fontSize(fontSize)
+  {
+    if(FT_Init_FreeType(&library))
+    {
+      Log::Error("Could not initialize FreeType.");
+    }
+    if(FT_New_Face(library, filename.c_str(), 0, &face))
+    {
+      Log::Error("Could not initialize font: ", filename);
+    }
+
+    FT_Set_Pixel_Sizes(face, 0, fontSize);
+
+    atlas = new Texture2D(width,height,32); 
+    m_pixels = new char[width*height*4];
+    memset(m_pixels, width*height*4, 0);
+  }
+
+  FontAtlas::~FontAtlas()
+  {
+    delete[] m_pixels;
+  }
+
+  const Glyph& FontAtlas::GetGlyph(char character)
+  {
+    auto it = glyphs.find(character);
+    if(it != glyphs.end())
+    {
+      return it->second;
+    }
+    return AddGlyph(character);
+  }
+
+  const Glyph& FontAtlas::AddGlyph(char character)
+  {
+    if(FT_Load_Char(face,character,FT_LOAD_RENDER))
+    {
+      Log::Info("Could not load character: ", character);
+      // Lets just hope that there is a character in the map. Maybe add a dummy character later
+      return glyphs.begin()->second;
+    }
+    uint pixelWidth = face->glyph->bitmap.width;
+    uint pixelHeight = face->glyph->bitmap.rows;
+    if(xPos + pixelWidth >= width)
+    {
+      xPos = 0;
+      yPos = nextYPos + 1;
+    }
+    // Set new y value.
+    if(yPos+pixelHeight > nextYPos)
+      nextYPos = yPos+pixelHeight;
+    for(uint y = 0;y<pixelHeight;y++)
+    {
+      for(uint x = 0;x<pixelWidth;x++)
+      {
+        m_pixels[4*((x+xPos) + (y+yPos) * width)+0] = 0xff;
+        m_pixels[4*((x+xPos) + (y+yPos) * width)+1] = 0xff;
+        m_pixels[4*((x+xPos) + (y+yPos) * width)+2] = 0xff;
+        m_pixels[4*((x+xPos) + (y+yPos) * width)+3] = face->glyph->bitmap.buffer[(x+y*pixelWidth)];
+      }
+    }
+    Glyph g;
+    g.width = face->glyph->metrics.width / 64.0;
+    g.kerning = face->glyph->metrics.horiBearingX / 64.0;
+    g.advanceX = face->glyph->metrics.horiAdvance / 64.0;
+    g.advanceY = face->glyph->metrics.vertAdvance / 64.0;
+    g.height = face->glyph->metrics.height / 64.0;
+    g.ascending = (face->glyph->metrics.horiBearingY) / 64.0;
+    g.descending = (g.height - face->glyph->metrics.horiBearingY) / 64.0;
+    g.textureCoords = Vec4(yPos / (float)height, xPos / (float)width, (yPos+pixelHeight)/(float)height, (xPos+pixelWidth)/(float)width);
+    xPos += pixelWidth + 1;
+    std::pair<std::map<char,  Glyph>::iterator, bool> ret = glyphs.emplace(character, g);
+    atlas->SetPixels(m_pixels);
+    //Log::Info(g.width," ",g.kerning, " ", g.advanceX," ",g.advanceY, " ", g.height," ", g.ascending," ",g.descending);
+    return ret.first->second;
+  }
+}

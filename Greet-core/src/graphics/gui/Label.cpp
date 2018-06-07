@@ -10,7 +10,7 @@ namespace Greet {
 
 	void Label::Render(GUIRenderer* renderer, const Vec2& position) const
 	{
-		renderer->SubmitString(str, position + Vec2(0, font->GetAscender()), font, color, true);
+		//renderer->SubmitString(str, position + Vec2(0, font->GetAscender()), font, color, true);
 	}
 
 

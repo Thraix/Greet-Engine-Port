@@ -11,5 +11,5 @@
     width="100%" height="50px" backgroundColor="#ff0000">Press me!</Content>
   <Content
     width="50%" height="50px" backgroundColor="#0000ff">Press me!</Content>
-  <Button width="100%" height="40px" backgroundColor="#20aa44">Button!</Button>
+  <Button width="100%" height="40px" backgroundColor="#20aa44" fontColor="#ffffff" fontSize="20px">Button!</Button>
 </Container>

@@ -6,6 +6,7 @@
 namespace Greet {
 
   Texture2D::Texture2D(uint width, uint height, uint bpp)
+    : Texture("", GL_TEXTURE_2D)
   {
     GenTexture(width,height,bpp);
   }

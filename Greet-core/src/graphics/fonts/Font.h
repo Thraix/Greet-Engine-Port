@@ -6,6 +6,7 @@
 #include <string>
 #include <math/Maths.h>
 #include <logging/Log.h>
+#include <graphics/fonts/FontAtlas.h>
 
 namespace Greet{
 
@@ -14,19 +15,16 @@ namespace Greet{
 	class Font
 	{
 	private:
+    FontAtlas* m_atlas;
 		FontContainer* m_container;
-		ftgl::texture_atlas_t* m_atlas;
-		ftgl::texture_font_t* m_font;
 		float m_size;
 		
 	public:
 		Font(FontContainer* container, uint size);
 		void Init();
-		inline ftgl::texture_font_t* GetFTFont() const { return m_font;}
+		inline FontAtlas* GetFontAtlas() const { return m_atlas;}
+    inline uint GetFontAtlasId() const { return m_atlas->GetTextureId();}
 		inline float GetSize() const {return m_size;}
-		inline float GetAscender() const { return m_font->ascender; }
-		inline float GetDescender() const { return m_font->descender; }
-		inline uint GetAtlasID() const {return m_atlas->id;}
 		float GetWidthOfText(const std::string& text, uint startPos, uint endPos) const;
 		float GetWidthOfText(const std::string& text) const;
 		float* GetPartialWidths(const std::string& text);

@@ -1,6 +1,7 @@
 #include "GUIRenderer.h"
 
 #include <algorithm>
+#include <cmath>
 
 namespace Greet
 {
@@ -137,46 +138,37 @@ namespace Greet
 
 	void GUIRenderer::SubmitString(const std::string& text, const Vec2& position, Font* font, const Vec4& color, bool isHsv)
 	{
-		using namespace ftgl;
-		float ts = GetTextureSlot(font->GetAtlasID());
-		if (ts == 0 && font->GetAtlasID() != 0)
+		float ts = GetTextureSlot(font->GetFontAtlasId());
+		if (ts == 0 && font->GetFontAtlasId() != 0)
 		{
 			Flush();
-			ts = GetTextureSlot(font->GetAtlasID());
+      ts = GetTextureSlot(font->GetFontAtlasId());
 		}
 
-		texture_font_t* ftfont = font->GetFTFont();
-		float x = position.x;
-		const Vec2& scale = Vec2(1, 1);//font->getScale();
+    FontAtlas* atlas = font->GetFontAtlas();
+		const Vec2& scale = Vec2(1,1);//Vec2(64.0, 64.0) / font->GetSize();//font->getScale();
 		Vec2 pos;
 		Vec2 size;
 		Vec2 uv0;
 		Vec2 uv1;
+    Vec2 roundPos = Vec2(round(position.x), round(position.y));
+		float x = roundPos.x;
 		for (uint i = 0;i < text.length();i++)
 		{
-			texture_glyph_t* glyph = texture_font_get_glyph(ftfont, "Test");
-			if (glyph != NULL)
-			{
-				if (i > 0)
-				{
-					float kerning = texture_glyph_get_kerning(glyph, "aTest");
-					x += kerning / scale.x;
-				}
+      const Glyph& glyph = atlas->GetGlyph(text[i]);
+      pos.x = x;
+      pos.y = roundPos.y - glyph.ascending / scale.y;
+      size.x = glyph.width / scale.x;
+      size.y = glyph.height / scale.y;
 
-				pos.x = x + glyph->offset_x / scale.x;
-				pos.y = position.y - glyph->offset_y / scale.y;
-				size.x = glyph->width / scale.x;
-				size.y = glyph->height / scale.y;
+      uv0.x = glyph.textureCoords.left;
+      uv0.y = 1.0-glyph.textureCoords.top;
+      uv1.x = glyph.textureCoords.right;
+      uv1.y = 1.0-glyph.textureCoords.bottom;
 
-				uv0.x = glyph->s0;
-				uv0.y = 1 - glyph->t0;
-				uv1.x = glyph->s1;
-				uv1.y = 1 - glyph->t1;
+      AppendQuad(pos, size, uv0, uv1, ts, color, isHsv);
 
-				AppendQuad(pos, size, uv0, uv1, ts, color, isHsv);
-
-				x += glyph->advance_x / scale.x;
-			}
+      x += glyph.advanceX / scale.x;
 		}
 	}
 

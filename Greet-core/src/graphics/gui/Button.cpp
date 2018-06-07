@@ -7,7 +7,7 @@ namespace Greet {
     : Content(object, parent)
   {
     textColor = Vec4(0.0,0.0,0.0,1.0);
-    fontSize = 12;
+    fontSize = 20;
     if (object.HasProperty("fontSize"))
     {
       fontSize = GUIUtils::CalcSize(object.GetProperty("fontSize"), GetHeight());
@@ -26,7 +26,7 @@ namespace Greet {
   void Button::Render(GUIRenderer* renderer, const Vec2& position) const
   {
     Font* font = FontManager::Get("roboto",fontSize);
-    renderer->SubmitString(xmlObject.GetText(), position+Vec2((GetWidth() - font->GetWidthOfText(xmlObject.GetText()))/2,GetHeight()/2), FontManager::Get("roboto",fontSize), textColor,false);
+    renderer->SubmitString(xmlObject.GetText(), position+Vec2((GetWidth() - font->GetWidthOfText(xmlObject.GetText()))/2,GetHeight()/2 + fontSize*0.333f), font, textColor,false);
   }
 
   bool Button::IsFocusable() const

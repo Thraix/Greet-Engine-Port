@@ -7,6 +7,7 @@ import re
 
 BASE_FLAGS = [
         '-Wall',
+        '-Wuninitialized',
         '-Wextra',
         '-Wno-long-long',
         '-Wno-variadic-macros',
