@@ -59,10 +59,11 @@ namespace Greet
     {
       for(uint x = 0;x<pixelWidth;x++)
       {
+        unsigned char a = face->glyph->bitmap.buffer[(x+y*pixelWidth)];
         m_pixels[4*((x+xPos) + (y+yPos) * width)+0] = 0xff;
         m_pixels[4*((x+xPos) + (y+yPos) * width)+1] = 0xff;
         m_pixels[4*((x+xPos) + (y+yPos) * width)+2] = 0xff;
-        m_pixels[4*((x+xPos) + (y+yPos) * width)+3] = face->glyph->bitmap.buffer[(x+y*pixelWidth)];
+        m_pixels[4*((x+xPos) + (y+yPos) * width)+3] = a; 
       }
     }
     Glyph g;

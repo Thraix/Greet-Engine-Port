@@ -157,9 +157,9 @@ namespace Greet
 		{
       const Glyph& glyph = atlas->GetGlyph(text[i]);
       pos.x = x;
-      pos.y = roundPos.y - glyph.ascending / scale.y;
-      size.x = glyph.width / scale.x;
-      size.y = glyph.height / scale.y;
+      pos.y = roundPos.y - glyph.ascending * scale.y;
+      size.x = glyph.width * scale.x;
+      size.y = glyph.height * scale.y;
 
       uv0.x = glyph.textureCoords.left;
       uv0.y = 1.0-glyph.textureCoords.top;
@@ -168,7 +168,7 @@ namespace Greet
 
       AppendQuad(pos, size, uv0, uv1, ts, color, isHsv);
 
-      x += glyph.advanceX / scale.x;
+      x += glyph.advanceX * scale.x;
 		}
 	}
 
