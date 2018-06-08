@@ -11,12 +11,14 @@ namespace Greet {
 		return normal;
 	}
 
+  
+
 	void MeshFactory::CalculateNormals(Vec3* vertices, uint vertexCount, uint* indices, uint indexCount, Vec3* normals)
 	{
 		Vec3 faceNormal;
 		Vec3 p1, p2, p3;
 		memset(normals, 0, sizeof(float) * 3 * vertexCount);
-		for (int i = 0; i < indexCount; i += 3)
+		for (uint i = 0; i < indexCount; i += 3)
 		{
 			p1 = vertices[indices[i]];
 			p2 = vertices[indices[i + 1]];
@@ -26,7 +28,7 @@ namespace Greet {
 			normals[indices[i + 1]] += faceNormal;
 			normals[indices[i + 2]] += faceNormal;
 		}
-		for (int i = 0; i < vertexCount; i++)
+		for (uint i = 0; i < vertexCount; i++)
 		{
 			((Vec3*)normals)[i].Normalize();
 		}
@@ -39,6 +41,53 @@ namespace Greet {
 		CalculateNormals(vertices, vertexCount, indices, indexCount, normals);
 		return normals;
 	}
+
+  MeshData* MeshFactory::Polygon(uint count, float size, PolygonSizeFormat format)
+  {
+    if(count < 3)
+    {
+      Log::Warning("Invalid Polygon corners (returning square): ", count);
+      count = 4;
+    }
+    uint indexCount = 3 * (count - 2);
+    Vec3* vertices = new Vec3[count];
+    Vec3* normals = new Vec3[count];
+    uint* indices = new uint[indexCount];
+    
+    float radius = 0;
+    // 180 * (count - 2) / count
+    float cornerAngle = M_PI * (1 - 2 / (float)count);
+
+    switch(format)
+    {
+      case SIDE_LENGTH:
+        radius = size / (2 * cos(cornerAngle/2));
+        break;
+      case CIRCUMSCRIBED_RADIUS:
+        radius = size;
+        break;
+      case INSCRIBED_RADIUS:
+        radius = size / sin(cornerAngle/2);
+        break;
+    }
+    float angle = 2 * M_PI / (float)count;
+    for(uint i = 0; i < count;i++)
+    {
+      vertices[i] = Vec3(cos(angle*i), 0, sin(angle*i)) * radius;
+      normals[i] = Vec3(0,1,0);
+    }
+    
+    for(uint i = 0;i < count - 2; i++)
+    {
+      indices[i*3 + 0] = 0;
+      indices[i*3 + 1] = 2 + i;
+      indices[i*3 + 2] = 1 + i;
+    }
+
+    MeshData* meshData = new MeshData(vertices, count, indices, indexCount);
+    meshData->AddAttribute(new AttributeData(ATTRIBUTE_NORMAL, normals));
+    return meshData;
+  }
 
 	MeshData* MeshFactory::Quad(float x, float y, float z, float width, float length)
 	{

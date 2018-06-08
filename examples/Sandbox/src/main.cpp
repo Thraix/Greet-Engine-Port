@@ -20,6 +20,7 @@ private:
 	EntityModel* stall;
 	EntityModel* dragon;
 	EntityModel* grid;
+  EntityModel* polygon;
 	EntityModel* cube;
 	EntityModel* tetrahedron;
 	std::vector<EntityModel> models;
@@ -97,6 +98,11 @@ public:
 		//noise[0] = 10;
 		MeshData* gridMesh = MeshFactory::LowPolyGrid(0, 0, 0, gridWidth+1, gridLength+1, gridWidth, gridLength, noise,1);
 		RecalcGrid(gridMesh, gridWidth, gridLength);
+
+    MeshData* polygonMesh = MeshFactory::Polygon(6, 10, MeshFactory::PolygonSizeFormat::SIDE_LENGTH);
+    MaterialModel* polygonModel = new MaterialModel(new Mesh(polygonMesh), *terrainMaterial);
+    polygon = new EntityModel(*polygonModel, Vec3(0,1,0), Vec3(1,1,1), Vec3(0,0,0));
+    
 		
 		//gridMesh->setDefaultAttribute4f(MESH_COLORS_LOCATION, vec4(1.0f, 0.0f, 0.0f, 1.0f));
 		//gridMesh->setEnableCulling(false);
@@ -187,6 +193,7 @@ public:
 		//renderer3d->submit(stall);
 		//renderer3d->submit(dragon);
 		renderer3d->Submit(grid);
+    renderer3d->Submit(polygon);
 		//renderer3d->submit(cube);
 		//renderer3d->submit(tetrahedron);
 		//for (uint i = 0;i < 2000;i++)

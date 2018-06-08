@@ -7,9 +7,15 @@ namespace Greet {
 	class MeshFactory
 	{
 		public:
+      enum PolygonSizeFormat 
+      {
+        SIDE_LENGTH, INSCRIBED_RADIUS, CIRCUMSCRIBED_RADIUS
+      };
+
 			static Vec3 CalculateNormal(Vec3 p1, Vec3 p2, Vec3 p3);
 			static void CalculateNormals(Vec3* vertices, uint vertexCount, uint* indices, uint indexCount, Vec3* normals);
 			static Vec3* CalculateNormals(Vec3* vertices, uint vertexCount, uint* indices, uint indexCount);
+      static MeshData* Polygon(uint count, float size, PolygonSizeFormat format);
 			static MeshData* Quad(float x, float y, float z, float width, float length);
 			static MeshData* Cube(float x, float y, float z, float width, float height, float length);
 			// This Cube generator works better for voxel rendering since the normals work better.
