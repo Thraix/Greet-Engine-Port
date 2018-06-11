@@ -2,7 +2,7 @@
 
 namespace Greet {
 
-	Material::Material(const Shader& shader, Texture* texture)
+	Material::Material(const Shader& shader, const Texture& texture)
 		: m_shader(shader), m_texture(texture)
 	{
 		UpdateTexture();
@@ -19,15 +19,13 @@ namespace Greet {
 		m_shader.SetUniform1f("shineDamper", m_shineDamper);
 		m_shader.SetUniform4f("mat_color", ColorUtils::ColorHexToVec4(m_color));
 		//m_shader.setUniform3f("fogColor", Vec3(0.0,1.0,0.0));
-		if (m_texture != NULL)
-			m_texture->Enable();
+    m_texture.Enable();
 			
 	}
 
 	void Material::Unbind() const
 	{
-		if (m_texture != NULL)
-			m_texture->Disable();
+    m_texture.Disable();
 		m_shader.Disable();
 	}
 
@@ -39,12 +37,9 @@ namespace Greet {
 
 	void Material::UpdateTexture()
 	{
-		if (m_texture == NULL)
-		{
-			m_shader.Enable();
-			m_shader.SetUniformBoolean("hasTexture", false);
-			m_shader.Disable();
-		}
+    m_shader.Enable();
+    m_shader.SetUniformBoolean("hasTexture", m_texture.GetTexId() != 0);
+    m_shader.Disable();
 	}
 
 	Material* Material::SetReflectivity(float reflectivity) 

@@ -14,19 +14,21 @@ namespace Greet {
 	{
 	private:
 		// Location, vbo
-		uint m_drawMode;
 		std::map<uint,uint> m_vbos;
 		uint m_vaoId;
 		uint m_iboId;
 		uint m_vertexCount;
 		uint m_indexCount;
+		uint m_drawMode;
 		bool m_culling = true;
 		bool m_clockwise = false;
 
 	public:
 		Mesh(const Vec3* vertices, uint vertexCount, const uint* indices, uint indexCount);
 		Mesh(MeshData* data);
+    Mesh(const Mesh& mesh);
 		void init(const Vec3* vertices, uint vertexCount, const uint* indices, uint indexCount);
+    Mesh& operator=(const Mesh& mesh);
 		virtual ~Mesh();
 		inline uint GetVAO()  const { return m_vaoId; };
 

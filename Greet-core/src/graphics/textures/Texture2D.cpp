@@ -18,11 +18,17 @@ namespace Greet {
 	}
 
 	Texture2D::Texture2D(BYTE* bits, uint width, uint height, uint bpp, const std::string& name)
-		: Texture(name, GL_TEXTURE_2D)
+		: Texture(name, GL_TEXTURE_2D), m_width(width), m_height(height)
 	{
 		GenTexture(bits, bpp);
 		delete[] bits;
 	}
+
+  Texture2D::Texture2D()
+    : Texture(GL_TEXTURE_2D)
+  {
+    
+  }
 
 	Texture2D::Texture2D(uint texId, uint width, uint height, const std::string& name)
 		:Texture(texId, name, GL_TEXTURE_2D), m_width(width), m_height(height)
@@ -53,10 +59,6 @@ namespace Greet {
 
 	void Texture2D::GenTexture(BYTE* bits, uint bpp)
 	{
-		if (m_texId != 0)
-			GLCall(glDeleteTextures(1,&m_texId));
-		GLCall(glGenTextures(1, &m_texId));
-
 		GLCall(glBindTexture(GL_TEXTURE_2D, m_texId));
 		GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST));
 		GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST));

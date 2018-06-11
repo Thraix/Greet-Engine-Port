@@ -9,14 +9,14 @@ namespace Greet {
 	{
 	private:
 		static uint s_current_id;
-		uint m_id;
-		const Material& m_material;
 		Mesh* m_mesh;
+		Material* m_material;
+		uint m_id;
 	public:
-		MaterialModel(Mesh* mesh, const Material& material);
+		MaterialModel(Mesh* mesh, Material* material);
 		virtual ~MaterialModel();
 
-		inline const Material& GetMaterial() const { return m_material; }
+		inline const Material& GetMaterial() const { return *m_material; }
 		inline const Mesh& GetMesh() const { return *m_mesh; }
 		friend bool operator < (const MaterialModel & lhs, const MaterialModel & rhs)
 		{

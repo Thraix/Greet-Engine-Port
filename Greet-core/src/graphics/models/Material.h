@@ -11,13 +11,14 @@ namespace Greet {
 	{
 	private:
 		Shader m_shader;
-		Texture* m_texture;
+		Texture m_texture;
 		float m_shineDamper = 10;
 		float m_reflectivity = 1;
 		uint m_color;
 
 	public:
-		Material(const Shader& shader, Texture* texture);
+		Material(const Shader& shader, const Texture& texture);
+    Material();
 		virtual ~Material();
 
 		void Bind() const;
@@ -31,8 +32,8 @@ namespace Greet {
 		inline float GetShineDamper() const { return m_shineDamper; }
 		inline uint GetColor() const { return m_color; }
 		inline const Shader& GetShader() const { return m_shader; }
-		inline const Texture& GetTexture() const { return *m_texture; }
-		inline uint GetTextureId() const { return m_texture == NULL ? 0 : m_texture->GetTexId(); }
+		inline const Texture& GetTexture() const { return m_texture; }
+		inline uint GetTextureId() const { return m_texture.GetTexId(); }
 	private:
 		void UpdateTexture();
 	};

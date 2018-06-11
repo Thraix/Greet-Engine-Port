@@ -23,8 +23,10 @@ namespace Greet {
 			break;
 		case VERTEX_ARRAY:
 			GLCall(glGenVertexArrays(1, &id));
+      break;
 		default:
-			Log::Warning("No such OpenGLType at create: ", type);
+      // Incase I forget to add a switch for future objects
+			Log::Warning("No such OpenGLType at create: ", OpenGLTypeName(type));
 		}
 
 		if (id == 0)
@@ -57,6 +59,7 @@ namespace Greet {
 		if (itObj == itType->second.end())
 		{
 			Log::Warning("Copying non-existing OpenGLObject");
+			Log::Warning("Copying non-existing OpenGLObject (type=",OpenGLTypeName(type)," id=",id,")");
 			return;
 		}
 		itObj->second++;
@@ -73,7 +76,7 @@ namespace Greet {
 		auto itObj = itType->second.find(id);
 		if (itObj == itType->second.end())
 		{
-			Log::Warning("Deleting non-existing OpenGLObject");
+			Log::Warning("Deleting non-existing OpenGLObject (type=",OpenGLTypeName(type)," id=",id,")");
 			return;
 		}
 		itObj->second--;
@@ -98,11 +101,32 @@ namespace Greet {
 			break;
 		case VERTEX_ARRAY:
 			GLCall(glDeleteVertexArrays(1, &objIterator->first));
+      break;
 		default:
+      // Incase I forget to add a switch for future objects
 			Log::Warning("No such OpenGLType at delete: ", type);
 		}
 
 		// Remove the object from the map.
 		typeIterator->second.erase(objIterator);
 	}
+  
+  std::string OpenGLObjectHandler::OpenGLTypeName(OpenGLType type)
+  {
+		switch (type)
+		{
+		case SHADER:
+      return "Shader";
+    case TEXTURE:
+      return "Texture";
+    case BUFFER:
+      return "Buffer";
+    case VERTEX_ARRAY:
+      return "Vertex array";
+    default:
+      // Incase I forget to add a switch for future objects
+      return "No name";
+		}
+  
+  }
 }

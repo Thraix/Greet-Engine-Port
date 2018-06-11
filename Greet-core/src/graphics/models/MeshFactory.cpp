@@ -73,7 +73,7 @@ namespace Greet {
     float angle = 2 * M_PI / (float)count;
     for(uint i = 0; i < count;i++)
     {
-      vertices[i] = Vec3(cos(angle*i), 0, sin(angle*i)) * radius;
+      vertices[i] = Vec3(cos(angle/2 + angle*i), 0, sin(angle/2 + angle*i)) * radius;
       normals[i] = Vec3(0,1,0);
     }
     

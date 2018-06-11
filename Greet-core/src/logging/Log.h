@@ -47,7 +47,7 @@ namespace Greet {
 		template <typename... Args>
 		static void Info(const Args&... args)
 		{
-			m_log.m_logger.Log(LogLevel::information, "[INF] ", args...);
+			m_log.m_logger.Log(LogLevel::Information(), "[INF] ", args...);
 		}
 
 		/*
@@ -56,7 +56,7 @@ namespace Greet {
 		template <typename... Args>
 		static void Warning(const Args&... args)
 		{
-			m_log.m_logger.Log(LogLevel::warning, "[WRN] ", args...);
+			m_log.m_logger.Log(LogLevel::Warning(), "[WRN] ", args...);
 		}
 
 		/*
@@ -65,7 +65,7 @@ namespace Greet {
 		template <typename... Args>
 		static void Error(const Args&... args)
 		{
-			m_log.m_logger.Log(LogLevel::error,"[ERR] ",args...);
+			m_log.m_logger.Log(LogLevel::Error(),"[ERR] ",args...);
 		}
 
 		/*

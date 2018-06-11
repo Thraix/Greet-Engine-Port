@@ -6,7 +6,7 @@
 namespace Greet {
 
 	LogStream::LogStream()
-		: m_stream(std::cout), m_logLevel(LogLevel::information), m_name(""), m_levelCheck(*GTECheck)
+		: m_stream(std::cout), m_logLevel(LogLevel::Information()), m_name(""), m_levelCheck(*GTECheck)
 	{
 
 	}

@@ -1,43 +1,253 @@
+# This Makefile was generated using MakeGen v1.0.5 made by Tim Håkansson
+# and is licensed under MIT. Full source of the project can be found at
+# https://github.com/Thraix/MakeGen
 CC=@g++
-AR=@ar
-BIN=bin
-OBJPATH=$(BIN)/intermediates
-SOURCES=$(wildcard src/*.cpp) $(wildcard src/**/*.cpp) $(wildcard src/**/**/*.cpp) $(wildcard src/**/**/**/*.cpp)
-OBJECTS=$(addprefix $(OBJPATH)/, $(notdir $(SOURCES:.cpp=.o)))
-INCLUDES=-I../deps/includes/ -I src/
-CFLAGS=$(INCLUDES) -std=c++17 -c -w -g3 -D_DEBUG -D_USE_MATH_DEFINES
-LIBS=-lGL -l:libglfw.so -l:libfreeimage.so
-LIBRARY=$(BIN)/libgreet.a
-PRINT=${info ---- $<}
-
-all: $(LIBRARY)
-	$(info ---------------------------------)
-	$(info ----  Greet Engine Compiled  ----)
-	$(info ---------------------------------)
+CO=@ar rs
+BIN=bin/
+OBJPATH=$(BIN)intermediates
+INCLUDES=-I./../deps/includes/ -I./src/ 
+OBJECTS=$(OBJPATH)/AudioChannel.o $(OBJPATH)/AudioChannelManager.o $(OBJPATH)/Sound.o $(OBJPATH)/SoundManager.o $(OBJPATH)/Driver.o $(OBJPATH)/DriverDispatcher.o $(OBJPATH)/LinearDriver.o $(OBJPATH)/RectDriver.o $(OBJPATH)/Event.o $(OBJPATH)/EventDispatcher.o $(OBJPATH)/KeyListener.o $(OBJPATH)/MouseListener.o $(OBJPATH)/Animation.o $(OBJPATH)/FrameBufferObject.o $(OBJPATH)/ParticlePool.o $(OBJPATH)/RenderEngine.o $(OBJPATH)/Skybox.o $(OBJPATH)/Window.o $(OBJPATH)/Atlas.o $(OBJPATH)/AtlasManager.o $(OBJPATH)/BatchIndexBuffer.o $(OBJPATH)/Buffer.o $(OBJPATH)/IndexBuffer.o $(OBJPATH)/VertexArray.o $(OBJPATH)/Font.o $(OBJPATH)/FontAtlas.o $(OBJPATH)/FontContainer.o $(OBJPATH)/FontManager.o $(OBJPATH)/Button.o $(OBJPATH)/Container.o $(OBJPATH)/Content.o $(OBJPATH)/FrameContainer.o $(OBJPATH)/GLayer.o $(OBJPATH)/GUIProperty.o $(OBJPATH)/GUIUtils.o $(OBJPATH)/Label.o $(OBJPATH)/Group.o $(OBJPATH)/Layer3D.o $(OBJPATH)/EntityModel.o $(OBJPATH)/Material.o $(OBJPATH)/MaterialModel.o $(OBJPATH)/Mesh.o $(OBJPATH)/MeshData.o $(OBJPATH)/MeshFactory.o $(OBJPATH)/TPCamera.o $(OBJPATH)/BatchRenderer.o $(OBJPATH)/BatchRenderer3D.o $(OBJPATH)/GUIRenderer.o $(OBJPATH)/Renderer3D.o $(OBJPATH)/Shader.o $(OBJPATH)/ShaderFactory.o $(OBJPATH)/CubeMap.o $(OBJPATH)/ImageFactory.o $(OBJPATH)/Texture.o $(OBJPATH)/Texture2D.o $(OBJPATH)/TextureManager.o $(OBJPATH)/Joystick.o $(OBJPATH)/App.o $(OBJPATH)/OpenGLObjectHandler.o $(OBJPATH)/Log.o $(OBJPATH)/LogStream.o $(OBJPATH)/Logger.o $(OBJPATH)/Mat3.o $(OBJPATH)/Mat4.o $(OBJPATH)/Quaternion.o $(OBJPATH)/Vec2.o $(OBJPATH)/Vec3.o $(OBJPATH)/Vec4.o $(OBJPATH)/ErrorHandle.o $(OBJPATH)/Noise.o $(OBJPATH)/UUID.o $(OBJPATH)/JSON.o $(OBJPATH)/JSONArray.o $(OBJPATH)/JSONLoader.o $(OBJPATH)/JSONObject.o $(OBJPATH)/XML.o $(OBJPATH)/XMLObject.o 
+CFLAGS=$(INCLUDES) -std=c++17 -c -w -g3 -D_DEBUG -D_USE_MATH_DEFINES 
+OUTPUT=$(BIN)libgreet.a
+all: $(OUTPUT)
 rebuild: clean all
-
-
-$(LIBRARY): $(OBJECTS)
-	$(info Generating library file)
-	$(AR) rs $(LIBRARY) $(OBJECTS)
-
-$(OBJPATH)/%.o: src/%.cpp src/%.h
-	$(PRINT)
-	$(CC) $(CFLAGS) -o $@ $<
-
-$(OBJPATH)/%.o: src/**/%.cpp src/**/%.h
-	$(PRINT)
-	$(CC) $(CFLAGS) -o $@ $<
-
-$(OBJPATH)/%.o: src/**/**/%.cpp src/**/**/%.h
-	$(PRINT)
-	$(CC) $(CFLAGS) -o $@ $<
-
-$(OBJPATH)/%.o: src/**/**/**/%.cpp src/**/**/**/%.h
-	$(PRINT)
-	$(CC) $(CFLAGS) -o $@ $<
-
-
 clean:
 	$(info Removing intermediates)
-	rm -rf $(OBJPATH)/*
+	rm -rf $(OBJPATH)/*.o
+$(OUTPUT): $(OBJECTS)
+	$(info Generating output file)
+	$(CO) $(OUTPUT) $(OBJECTS)
+install: all
+	$(info Installing Greet Engine to /usr/bin/)
+	@cp $(OUTPUT) /usr/bin/libgreet.a
+$(OBJPATH)/AudioChannel.o : src/audio/AudioChannel.cpp src/audio/AudioChannel.h src/utils/StringUtils.h src/audio/SoundManager.h src/audio/Sound.h  src/audio/AudioChannelManager.h  src/internal/GreetTypes.h src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  src/utils/ErrorHandle.h  src/utils/Utils.h src/internal/GreetGL.h  src/utils/LogUtils.h      
+	$(info -[1%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
+$(OBJPATH)/AudioChannelManager.o : src/audio/AudioChannelManager.cpp src/audio/AudioChannelManager.h src/audio/AudioChannel.h src/utils/StringUtils.h src/internal/GreetTypes.h src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  src/utils/ErrorHandle.h  src/utils/Utils.h src/internal/GreetGL.h  src/utils/LogUtils.h   
+	$(info -[2%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
+$(OBJPATH)/Sound.o : src/audio/Sound.cpp src/audio/Sound.h src/audio/AudioChannel.h src/utils/StringUtils.h src/audio/AudioChannelManager.h  src/internal/GreetTypes.h src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  src/utils/ErrorHandle.h  src/utils/Utils.h src/internal/GreetGL.h  src/utils/LogUtils.h     src/audio/SoundManager.h   
+	$(info -[3%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
+$(OBJPATH)/SoundManager.o : src/audio/SoundManager.cpp src/audio/SoundManager.h src/audio/Sound.h src/audio/AudioChannel.h src/utils/StringUtils.h src/audio/AudioChannelManager.h  src/internal/GreetTypes.h src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  src/utils/ErrorHandle.h  src/utils/Utils.h src/internal/GreetGL.h  src/utils/LogUtils.h      
+	$(info -[5%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
+$(OBJPATH)/Driver.o : src/drivers/Driver.cpp src/drivers/Driver.h src/drivers/DriverListener.h src/internal/GreetTypes.h src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h 
+	$(info -[6%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
+$(OBJPATH)/DriverDispatcher.o : src/drivers/DriverDispatcher.cpp src/drivers/DriverDispatcher.h src/drivers/Driver.h src/drivers/DriverListener.h src/internal/GreetTypes.h
+	$(info -[7%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
+$(OBJPATH)/LinearDriver.o : src/drivers/LinearDriver.cpp src/drivers/LinearDriver.h src/drivers/Driver1.h src/drivers/Driver.h src/drivers/DriverListener.h src/internal/GreetTypes.h
+	$(info -[9%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
+$(OBJPATH)/RectDriver.o : src/drivers/RectDriver.cpp src/drivers/RectDriver.h src/drivers/Driver4.h src/drivers/Driver.h src/drivers/DriverListener.h src/internal/GreetTypes.h
+	$(info -[10%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
+$(OBJPATH)/Event.o : src/event/Event.cpp src/event/Event.h
+	$(info -[11%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
+$(OBJPATH)/EventDispatcher.o : src/event/EventDispatcher.cpp src/event/EventDispatcher.h src/event/KeyListener.h src/event/KeyEvent.h src/event/Event.h src/math/Maths.h src/math/Mat3.h src/math/Vec2.h src/math/Vec3.h src/math/Vec4.h   src/math/Mat4.h   src/math/MathFunc.h src/internal/GreetTypes.h   src/math/Quaternion.h  src/math/Transform.h     src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  src/event/MouseEvent.h    src/event/MouseListener.h   src/utils/Utils.h src/internal/GreetGL.h  src/utils/LogUtils.h   
+	$(info -[12%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
+$(OBJPATH)/KeyListener.o : src/event/KeyListener.cpp src/event/KeyListener.h src/event/KeyEvent.h src/event/Event.h src/math/Maths.h src/math/Mat3.h src/math/Vec2.h src/math/Vec3.h src/math/Vec4.h   src/math/Mat4.h   src/math/MathFunc.h src/internal/GreetTypes.h   src/math/Quaternion.h  src/math/Transform.h     src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h 
+	$(info -[14%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
+$(OBJPATH)/MouseListener.o : src/event/MouseListener.cpp src/event/MouseListener.h src/event/MouseEvent.h src/event/Event.h src/internal/GreetTypes.h src/math/Maths.h src/math/Mat3.h src/math/Vec2.h src/math/Vec3.h src/math/Vec4.h   src/math/Mat4.h   src/math/MathFunc.h    src/math/Quaternion.h  src/math/Transform.h    
+	$(info -[15%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
+$(OBJPATH)/Animation.o : src/graphics/Animation.cpp src/graphics/Animation.h src/graphics/Sprite.h src/graphics/textures/Texture2D.h src/graphics/textures/Texture.h src/internal/GreetTypes.h src/utils/ImageUtils.h src/graphics/textures/ImageFactory.h  src/internal/GreetGL.h src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  src/utils/LogUtils.h     src/utils/ErrorHandle.h  src/utils/Utils.h   src/utils/StringUtils.h  src/math/Maths.h src/math/Mat3.h src/math/Vec2.h src/math/Vec3.h src/math/Vec4.h   src/math/Mat4.h   src/math/MathFunc.h    src/math/Quaternion.h  src/math/Transform.h     
+	$(info -[16%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
+$(OBJPATH)/FrameBufferObject.o : src/graphics/FrameBufferObject.cpp src/graphics/FrameBufferObject.h src/graphics/textures/Texture2D.h src/graphics/textures/Texture.h src/internal/GreetTypes.h src/utils/ImageUtils.h src/graphics/textures/ImageFactory.h  src/internal/GreetGL.h src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  src/utils/LogUtils.h     src/utils/ErrorHandle.h  src/utils/Utils.h   src/utils/StringUtils.h  src/graphics/Window.h src/input/Joystick.h   src/math/Maths.h src/math/Mat3.h src/math/Vec2.h src/math/Vec3.h src/math/Vec4.h   src/math/Mat4.h   src/math/MathFunc.h    src/math/Quaternion.h  src/math/Transform.h      src/listeners/JoystickState.h  src/listeners/WindowListener.h src/listeners/WindowFocus.h src/listeners/WindowResize.h
+	$(info -[18%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
+$(OBJPATH)/ParticlePool.o : src/graphics/ParticlePool.cpp
+	$(info -[19%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
+$(OBJPATH)/RenderEngine.o : src/graphics/RenderEngine.cpp src/graphics/RenderEngine.h src/graphics/layers/Layer.h src/graphics/Renderable.h src/graphics/renderers/Renderer2D.h src/graphics/Sprite.h src/graphics/textures/Texture2D.h src/graphics/textures/Texture.h src/internal/GreetTypes.h src/utils/ImageUtils.h src/graphics/textures/ImageFactory.h  src/internal/GreetGL.h src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  src/utils/LogUtils.h     src/utils/ErrorHandle.h  src/utils/Utils.h   src/utils/StringUtils.h  src/math/Maths.h src/math/Mat3.h src/math/Vec2.h src/math/Vec3.h src/math/Vec4.h   src/math/Mat4.h   src/math/MathFunc.h    src/math/Quaternion.h  src/math/Transform.h     src/graphics/fonts/Font.h src/graphics/fonts/FontAtlas.h          src/graphics/renderers/Renderer.h       src/graphics/shaders/Shader.h    src/graphics/layers/Layer3D.h  src/graphics/renderers/Renderer3D.h src/graphics/Skybox.h src/graphics/models/Camera.h src/graphics/models/EntityModel.h src/graphics/models/MaterialModel.h src/graphics/models/Material.h  src/graphics/shaders/Uniformable.h src/graphics/shaders/uniforms/Uniform.h   src/utils/ColorUtils.h    src/graphics/models/Mesh.h src/graphics/models/MeshData.h              src/graphics/textures/CubeMap.h          
+	$(info -[20%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
+$(OBJPATH)/Skybox.o : src/graphics/Skybox.cpp src/graphics/Skybox.h src/graphics/models/Camera.h src/graphics/models/EntityModel.h src/graphics/models/MaterialModel.h src/graphics/models/Material.h src/graphics/shaders/Shader.h src/internal/GreetGL.h src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  src/utils/LogUtils.h src/internal/GreetTypes.h  src/math/Maths.h src/math/Mat3.h src/math/Vec2.h src/math/Vec3.h src/math/Vec4.h   src/math/Mat4.h   src/math/MathFunc.h    src/math/Quaternion.h  src/math/Transform.h     src/graphics/shaders/Uniformable.h src/graphics/shaders/uniforms/Uniform.h  src/graphics/textures/Texture.h  src/utils/ColorUtils.h    src/graphics/models/Mesh.h src/graphics/models/MeshData.h         src/utils/ErrorHandle.h  src/utils/Utils.h   src/graphics/renderers/Renderer3D.h    src/graphics/renderers/Renderer.h         src/graphics/textures/CubeMap.h   src/utils/ImageUtils.h src/graphics/textures/ImageFactory.h      src/utils/StringUtils.h src/graphics/models/MeshFactory.h   src/graphics/shaders/ShaderFactory.h 
+	$(info -[22%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
+$(OBJPATH)/Window.o : src/graphics/Window.cpp src/event/EventDispatcher.h src/event/KeyListener.h src/event/KeyEvent.h src/event/Event.h src/math/Maths.h src/math/Mat3.h src/math/Vec2.h src/math/Vec3.h src/math/Vec4.h   src/math/Mat4.h   src/math/MathFunc.h src/internal/GreetTypes.h   src/math/Quaternion.h  src/math/Transform.h     src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  src/event/MouseEvent.h    src/event/MouseListener.h   src/utils/Utils.h src/internal/GreetGL.h  src/utils/LogUtils.h    src/graphics/Window.h src/input/Joystick.h     src/listeners/JoystickState.h  src/listeners/WindowListener.h src/listeners/WindowFocus.h src/listeners/WindowResize.h src/graphics/fonts/FontManager.h src/graphics/fonts/FontContainer.h src/graphics/fonts/Font.h src/graphics/fonts/FontAtlas.h src/graphics/textures/Texture2D.h src/graphics/textures/Texture.h  src/utils/ImageUtils.h src/graphics/textures/ImageFactory.h     src/utils/ErrorHandle.h   src/utils/StringUtils.h             src/graphics/textures/TextureManager.h src/graphics/textures/CubeMap.h     
+	$(info -[23%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
+$(OBJPATH)/Atlas.o : src/graphics/atlas/Atlas.cpp src/graphics/atlas/Atlas.h src/graphics/Sprite.h src/graphics/textures/Texture2D.h src/graphics/textures/Texture.h src/internal/GreetTypes.h src/utils/ImageUtils.h src/graphics/textures/ImageFactory.h  src/internal/GreetGL.h src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  src/utils/LogUtils.h     src/utils/ErrorHandle.h  src/utils/Utils.h   src/utils/StringUtils.h  src/math/Maths.h src/math/Mat3.h src/math/Vec2.h src/math/Vec3.h src/math/Vec4.h   src/math/Mat4.h   src/math/MathFunc.h    src/math/Quaternion.h  src/math/Transform.h      
+	$(info -[24%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
+$(OBJPATH)/AtlasManager.o : src/graphics/atlas/AtlasManager.cpp src/graphics/atlas/AtlasManager.h src/graphics/atlas/Atlas.h src/graphics/Sprite.h src/graphics/textures/Texture2D.h src/graphics/textures/Texture.h src/internal/GreetTypes.h src/utils/ImageUtils.h src/graphics/textures/ImageFactory.h  src/internal/GreetGL.h src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  src/utils/LogUtils.h     src/utils/ErrorHandle.h  src/utils/Utils.h   src/utils/StringUtils.h  src/math/Maths.h src/math/Mat3.h src/math/Vec2.h src/math/Vec3.h src/math/Vec4.h   src/math/Mat4.h   src/math/MathFunc.h    src/math/Quaternion.h  src/math/Transform.h         
+	$(info -[25%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
+$(OBJPATH)/BatchIndexBuffer.o : src/graphics/buffers/BatchIndexBuffer.cpp src/graphics/buffers/BatchIndexBuffer.h src/internal/GreetGL.h src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  src/utils/LogUtils.h src/internal/GreetTypes.h 
+	$(info -[27%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
+$(OBJPATH)/Buffer.o : src/graphics/buffers/Buffer.cpp src/graphics/buffers/Buffer.h src/internal/GreetGL.h src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  src/utils/LogUtils.h src/internal/GreetTypes.h 
+	$(info -[28%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
+$(OBJPATH)/IndexBuffer.o : src/graphics/buffers/IndexBuffer.cpp src/graphics/buffers/IndexBuffer.h src/internal/GreetGL.h src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  src/utils/LogUtils.h src/internal/GreetTypes.h 
+	$(info -[29%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
+$(OBJPATH)/VertexArray.o : src/graphics/buffers/VertexArray.cpp src/graphics/buffers/VertexArray.h src/graphics/buffers/Buffer.h src/internal/GreetGL.h src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  src/utils/LogUtils.h src/internal/GreetTypes.h   
+	$(info -[31%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
+$(OBJPATH)/Font.o : src/graphics/fonts/Font.cpp src/graphics/fonts/Font.h src/graphics/fonts/FontAtlas.h src/graphics/textures/Texture2D.h src/graphics/textures/Texture.h src/internal/GreetTypes.h src/utils/ImageUtils.h src/graphics/textures/ImageFactory.h  src/internal/GreetGL.h src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  src/utils/LogUtils.h     src/utils/ErrorHandle.h  src/utils/Utils.h   src/utils/StringUtils.h   src/math/Vec4.h     src/math/Maths.h src/math/Mat3.h src/math/Vec2.h src/math/Vec3.h    src/math/Mat4.h   src/math/MathFunc.h    src/math/Quaternion.h  src/math/Transform.h     src/graphics/fonts/FontContainer.h  
+	$(info -[32%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
+$(OBJPATH)/FontAtlas.o : src/graphics/fonts/FontAtlas.cpp src/graphics/fonts/FontAtlas.h src/graphics/textures/Texture2D.h src/graphics/textures/Texture.h src/internal/GreetTypes.h src/utils/ImageUtils.h src/graphics/textures/ImageFactory.h  src/internal/GreetGL.h src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  src/utils/LogUtils.h     src/utils/ErrorHandle.h  src/utils/Utils.h   src/utils/StringUtils.h   src/math/Vec4.h src/math/Vec3.h 
+	$(info -[33%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
+$(OBJPATH)/FontContainer.o : src/graphics/fonts/FontContainer.cpp src/graphics/fonts/FontContainer.h src/graphics/fonts/Font.h src/graphics/fonts/FontAtlas.h src/graphics/textures/Texture2D.h src/graphics/textures/Texture.h src/internal/GreetTypes.h src/utils/ImageUtils.h src/graphics/textures/ImageFactory.h  src/internal/GreetGL.h src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  src/utils/LogUtils.h     src/utils/ErrorHandle.h  src/utils/Utils.h   src/utils/StringUtils.h   src/math/Vec4.h     src/math/Maths.h src/math/Mat3.h src/math/Vec2.h src/math/Vec3.h    src/math/Mat4.h   src/math/MathFunc.h    src/math/Quaternion.h  src/math/Transform.h     
+	$(info -[35%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
+$(OBJPATH)/FontManager.o : src/graphics/fonts/FontManager.cpp src/graphics/fonts/FontManager.h src/graphics/fonts/FontContainer.h src/graphics/fonts/Font.h src/graphics/fonts/FontAtlas.h src/graphics/textures/Texture2D.h src/graphics/textures/Texture.h src/internal/GreetTypes.h src/utils/ImageUtils.h src/graphics/textures/ImageFactory.h  src/internal/GreetGL.h src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  src/utils/LogUtils.h     src/utils/ErrorHandle.h  src/utils/Utils.h   src/utils/StringUtils.h   src/math/Vec4.h     src/math/Maths.h src/math/Mat3.h src/math/Vec2.h src/math/Vec3.h    src/math/Mat4.h   src/math/MathFunc.h    src/math/Quaternion.h  src/math/Transform.h        
+	$(info -[36%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
+$(OBJPATH)/Button.o : src/graphics/gui/Button.cpp src/graphics/fonts/FontManager.h src/graphics/fonts/FontContainer.h src/graphics/fonts/Font.h src/graphics/fonts/FontAtlas.h src/graphics/textures/Texture2D.h src/graphics/textures/Texture.h src/internal/GreetTypes.h src/utils/ImageUtils.h src/graphics/textures/ImageFactory.h  src/internal/GreetGL.h src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  src/utils/LogUtils.h     src/utils/ErrorHandle.h  src/utils/Utils.h   src/utils/StringUtils.h   src/math/Vec4.h     src/math/Maths.h src/math/Mat3.h src/math/Vec2.h src/math/Vec3.h    src/math/Mat4.h   src/math/MathFunc.h    src/math/Quaternion.h  src/math/Transform.h         src/graphics/gui/Button.h src/graphics/gui/Content.h src/event/KeyEvent.h src/event/Event.h  src/event/MouseEvent.h    src/graphics/gui/GUIMouseListener.h src/graphics/gui/GUIUtils.h src/graphics/Window.h src/input/Joystick.h     src/listeners/JoystickState.h  src/listeners/WindowListener.h src/listeners/WindowFocus.h src/listeners/WindowResize.h src/utils/ColorUtils.h     src/utils/xml/XML.h src/utils/xml/XMLObject.h src/graphics/renderers/GUIRenderer.h  src/graphics/renderers/Renderer.h      src/graphics/gui/Label.h  
+	$(info -[37%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
+$(OBJPATH)/Container.o : src/graphics/gui/Container.cpp src/graphics/gui/Container.h src/graphics/gui/Content.h src/event/KeyEvent.h src/event/Event.h src/math/Maths.h src/math/Mat3.h src/math/Vec2.h src/math/Vec3.h src/math/Vec4.h   src/math/Mat4.h   src/math/MathFunc.h src/internal/GreetTypes.h   src/math/Quaternion.h  src/math/Transform.h     src/event/MouseEvent.h    src/graphics/gui/GUIMouseListener.h src/graphics/gui/GUIUtils.h src/graphics/Window.h src/input/Joystick.h src/internal/GreetGL.h src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  src/utils/LogUtils.h      src/listeners/JoystickState.h  src/listeners/WindowListener.h src/listeners/WindowFocus.h src/listeners/WindowResize.h src/utils/ColorUtils.h    src/utils/StringUtils.h src/utils/xml/XML.h src/utils/xml/XMLObject.h src/graphics/renderers/GUIRenderer.h src/graphics/fonts/Font.h src/graphics/fonts/FontAtlas.h src/graphics/textures/Texture2D.h src/graphics/textures/Texture.h  src/utils/ImageUtils.h src/graphics/textures/ImageFactory.h     src/utils/ErrorHandle.h  src/utils/Utils.h            src/graphics/renderers/Renderer.h         src/utils/AABBUtils.h  
+	$(info -[38%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
+$(OBJPATH)/Content.o : src/graphics/gui/Content.cpp src/graphics/gui/Content.h src/event/KeyEvent.h src/event/Event.h src/math/Maths.h src/math/Mat3.h src/math/Vec2.h src/math/Vec3.h src/math/Vec4.h   src/math/Mat4.h   src/math/MathFunc.h src/internal/GreetTypes.h   src/math/Quaternion.h  src/math/Transform.h     src/event/MouseEvent.h    src/graphics/gui/GUIMouseListener.h src/graphics/gui/GUIUtils.h src/graphics/Window.h src/input/Joystick.h src/internal/GreetGL.h src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  src/utils/LogUtils.h      src/listeners/JoystickState.h  src/listeners/WindowListener.h src/listeners/WindowFocus.h src/listeners/WindowResize.h src/utils/ColorUtils.h    src/utils/StringUtils.h src/utils/xml/XML.h src/utils/xml/XMLObject.h src/graphics/renderers/GUIRenderer.h src/graphics/fonts/Font.h src/graphics/fonts/FontAtlas.h src/graphics/textures/Texture2D.h src/graphics/textures/Texture.h  src/utils/ImageUtils.h src/graphics/textures/ImageFactory.h     src/utils/ErrorHandle.h  src/utils/Utils.h            src/graphics/renderers/Renderer.h       src/utils/AABBUtils.h 
+	$(info -[40%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
+$(OBJPATH)/FrameContainer.o : src/graphics/gui/FrameContainer.cpp src/graphics/gui/FrameContainer.h src/Greet.h src/audio/AudioChannel.h src/utils/StringUtils.h src/audio/AudioChannelManager.h  src/internal/GreetTypes.h src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  src/utils/ErrorHandle.h  src/utils/Utils.h src/internal/GreetGL.h  src/utils/LogUtils.h    src/audio/Sound.h    src/audio/SoundManager.h    src/drivers/Driver.h src/drivers/DriverListener.h  src/drivers/Driver1.h  src/drivers/Driver2.h  src/drivers/Driver4.h  src/drivers/DriverAdapter.h  src/drivers/DriverDispatcher.h   src/drivers/LinearDriver.h  src/drivers/RectDriver.h  src/event/Event.h src/event/EventDispatcher.h src/event/KeyListener.h src/event/KeyEvent.h  src/math/Maths.h src/math/Mat3.h src/math/Vec2.h src/math/Vec3.h src/math/Vec4.h   src/math/Mat4.h   src/math/MathFunc.h    src/math/Quaternion.h  src/math/Transform.h      src/event/MouseEvent.h    src/event/MouseListener.h        src/graphics/Animation.h src/graphics/Sprite.h src/graphics/textures/Texture2D.h src/graphics/textures/Texture.h  src/utils/ImageUtils.h src/graphics/textures/ImageFactory.h          src/graphics/FrameBufferObject.h   src/graphics/Light.h src/graphics/shaders/Shader.h    src/graphics/RenderEngine.h src/graphics/layers/Layer.h src/graphics/Renderable.h src/graphics/renderers/Renderer2D.h  src/graphics/fonts/Font.h src/graphics/fonts/FontAtlas.h          src/graphics/renderers/Renderer.h         src/graphics/layers/Layer3D.h  src/graphics/renderers/Renderer3D.h src/graphics/Skybox.h src/graphics/models/Camera.h src/graphics/models/EntityModel.h src/graphics/models/MaterialModel.h src/graphics/models/Material.h  src/graphics/shaders/Uniformable.h src/graphics/shaders/uniforms/Uniform.h   src/utils/ColorUtils.h    src/graphics/models/Mesh.h src/graphics/models/MeshData.h              src/graphics/textures/CubeMap.h            src/graphics/Renderable2D.h   src/graphics/buffers/Buffer.h  src/graphics/buffers/IndexBuffer.h  src/graphics/buffers/VertexArray.h        src/graphics/RenderablePoly.h    src/graphics/Window.h src/input/Joystick.h     src/listeners/JoystickState.h  src/listeners/WindowListener.h src/listeners/WindowFocus.h src/listeners/WindowResize.h src/graphics/atlas/Atlas.h    src/graphics/atlas/AtlasManager.h     src/graphics/buffers/BatchIndexBuffer.h      src/graphics/fonts/FontContainer.h   src/graphics/fonts/FontManager.h     src/graphics/gui/Button.h src/graphics/gui/Content.h   src/graphics/gui/GUIMouseListener.h src/graphics/gui/GUIUtils.h    src/utils/xml/XML.h src/utils/xml/XMLObject.h src/graphics/renderers/GUIRenderer.h     src/graphics/gui/Label.h   src/graphics/gui/Container.h      src/graphics/gui/GLayer.h         src/graphics/layers/Group.h      src/graphics/models/FPCamera.h      src/graphics/models/MeshFactory.h   src/graphics/models/TPCamera.h      src/graphics/renderers/BatchRenderer.h        src/graphics/renderers/BatchRenderer3D.h      src/graphics/textures/TextureManager.h   src/utils/OBJUtils.h  src/utils/FileUtils.h        src/graphics/shaders/ShaderFactory.h          src/internal/App.h  src/utils/Timer.h   src/internal/OpenGLObjectHandler.h   src/listeners/OnClickListener.h                  src/utils/AABBUtils.h       src/utils/Noise.h     src/utils/UUID.h   src/utils/json/JSON.h   src/utils/json/JSONArray.h  src/utils/json/JSONLoader.h  src/utils/json/JSONObject.h     src/utils/xml/XMLException.h   
+	$(info -[41%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
+$(OBJPATH)/GLayer.o : src/graphics/gui/GLayer.cpp src/event/EventDispatcher.h src/event/KeyListener.h src/event/KeyEvent.h src/event/Event.h src/math/Maths.h src/math/Mat3.h src/math/Vec2.h src/math/Vec3.h src/math/Vec4.h   src/math/Mat4.h   src/math/MathFunc.h src/internal/GreetTypes.h   src/math/Quaternion.h  src/math/Transform.h     src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  src/event/MouseEvent.h    src/event/MouseListener.h   src/utils/Utils.h src/internal/GreetGL.h  src/utils/LogUtils.h    src/graphics/gui/GLayer.h   src/graphics/gui/Container.h src/graphics/gui/Content.h   src/graphics/gui/GUIMouseListener.h src/graphics/gui/GUIUtils.h src/graphics/Window.h src/input/Joystick.h     src/listeners/JoystickState.h  src/listeners/WindowListener.h src/listeners/WindowFocus.h src/listeners/WindowResize.h src/utils/ColorUtils.h    src/utils/StringUtils.h src/utils/xml/XML.h src/utils/xml/XMLObject.h src/graphics/renderers/GUIRenderer.h src/graphics/fonts/Font.h src/graphics/fonts/FontAtlas.h src/graphics/textures/Texture2D.h src/graphics/textures/Texture.h  src/utils/ImageUtils.h src/graphics/textures/ImageFactory.h     src/utils/ErrorHandle.h            src/graphics/renderers/Renderer.h        src/graphics/shaders/Shader.h    
+	$(info -[42%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
+$(OBJPATH)/GUIProperty.o : src/graphics/gui/GUIProperty.cpp src/graphics/gui/GUIProperty.h src/graphics/gui/Content.h src/event/KeyEvent.h src/event/Event.h src/math/Maths.h src/math/Mat3.h src/math/Vec2.h src/math/Vec3.h src/math/Vec4.h   src/math/Mat4.h   src/math/MathFunc.h src/internal/GreetTypes.h   src/math/Quaternion.h  src/math/Transform.h     src/event/MouseEvent.h    src/graphics/gui/GUIMouseListener.h src/graphics/gui/GUIUtils.h src/graphics/Window.h src/input/Joystick.h src/internal/GreetGL.h src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  src/utils/LogUtils.h      src/listeners/JoystickState.h  src/listeners/WindowListener.h src/listeners/WindowFocus.h src/listeners/WindowResize.h src/utils/ColorUtils.h    src/utils/StringUtils.h src/utils/xml/XML.h src/utils/xml/XMLObject.h src/graphics/renderers/GUIRenderer.h src/graphics/fonts/Font.h src/graphics/fonts/FontAtlas.h src/graphics/textures/Texture2D.h src/graphics/textures/Texture.h  src/utils/ImageUtils.h src/graphics/textures/ImageFactory.h     src/utils/ErrorHandle.h  src/utils/Utils.h            src/graphics/renderers/Renderer.h     
+	$(info -[44%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
+$(OBJPATH)/GUIUtils.o : src/graphics/gui/GUIUtils.cpp src/graphics/gui/Button.h src/graphics/gui/Content.h src/event/KeyEvent.h src/event/Event.h src/math/Maths.h src/math/Mat3.h src/math/Vec2.h src/math/Vec3.h src/math/Vec4.h   src/math/Mat4.h   src/math/MathFunc.h src/internal/GreetTypes.h   src/math/Quaternion.h  src/math/Transform.h     src/event/MouseEvent.h    src/graphics/gui/GUIMouseListener.h src/graphics/gui/GUIUtils.h src/graphics/Window.h src/input/Joystick.h src/internal/GreetGL.h src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  src/utils/LogUtils.h      src/listeners/JoystickState.h  src/listeners/WindowListener.h src/listeners/WindowFocus.h src/listeners/WindowResize.h src/utils/ColorUtils.h    src/utils/StringUtils.h src/utils/xml/XML.h src/utils/xml/XMLObject.h src/graphics/renderers/GUIRenderer.h src/graphics/fonts/Font.h src/graphics/fonts/FontAtlas.h src/graphics/textures/Texture2D.h src/graphics/textures/Texture.h  src/utils/ImageUtils.h src/graphics/textures/ImageFactory.h     src/utils/ErrorHandle.h  src/utils/Utils.h            src/graphics/renderers/Renderer.h      src/graphics/gui/Label.h   src/graphics/gui/Container.h     
+	$(info -[45%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
+$(OBJPATH)/Label.o : src/graphics/gui/Label.cpp src/graphics/gui/Label.h src/graphics/fonts/Font.h src/graphics/fonts/FontAtlas.h src/graphics/textures/Texture2D.h src/graphics/textures/Texture.h src/internal/GreetTypes.h src/utils/ImageUtils.h src/graphics/textures/ImageFactory.h  src/internal/GreetGL.h src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  src/utils/LogUtils.h     src/utils/ErrorHandle.h  src/utils/Utils.h   src/utils/StringUtils.h   src/math/Vec4.h     src/math/Maths.h src/math/Mat3.h src/math/Vec2.h src/math/Vec3.h    src/math/Mat4.h   src/math/MathFunc.h    src/math/Quaternion.h  src/math/Transform.h     src/graphics/gui/Content.h src/event/KeyEvent.h src/event/Event.h  src/event/MouseEvent.h    src/graphics/gui/GUIMouseListener.h src/graphics/gui/GUIUtils.h src/graphics/Window.h src/input/Joystick.h     src/listeners/JoystickState.h  src/listeners/WindowListener.h src/listeners/WindowFocus.h src/listeners/WindowResize.h src/utils/ColorUtils.h     src/utils/xml/XML.h src/utils/xml/XMLObject.h src/graphics/renderers/GUIRenderer.h  src/graphics/renderers/Renderer.h     
+	$(info -[46%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
+$(OBJPATH)/Group.o : src/graphics/layers/Group.cpp src/graphics/layers/Group.h src/graphics/Renderable2D.h src/graphics/Renderable.h src/graphics/renderers/Renderer2D.h src/graphics/Sprite.h src/graphics/textures/Texture2D.h src/graphics/textures/Texture.h src/internal/GreetTypes.h src/utils/ImageUtils.h src/graphics/textures/ImageFactory.h  src/internal/GreetGL.h src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  src/utils/LogUtils.h     src/utils/ErrorHandle.h  src/utils/Utils.h   src/utils/StringUtils.h  src/math/Maths.h src/math/Mat3.h src/math/Vec2.h src/math/Vec3.h src/math/Vec4.h   src/math/Mat4.h   src/math/MathFunc.h    src/math/Quaternion.h  src/math/Transform.h     src/graphics/fonts/Font.h src/graphics/fonts/FontAtlas.h          src/graphics/renderers/Renderer.h       src/graphics/buffers/Buffer.h  src/graphics/buffers/IndexBuffer.h  src/graphics/buffers/VertexArray.h    src/graphics/shaders/Shader.h     
+	$(info -[48%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
+$(OBJPATH)/Layer3D.o : src/graphics/layers/Layer3D.cpp src/graphics/layers/Layer3D.h src/graphics/Renderable.h src/graphics/renderers/Renderer2D.h src/graphics/Sprite.h src/graphics/textures/Texture2D.h src/graphics/textures/Texture.h src/internal/GreetTypes.h src/utils/ImageUtils.h src/graphics/textures/ImageFactory.h  src/internal/GreetGL.h src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  src/utils/LogUtils.h     src/utils/ErrorHandle.h  src/utils/Utils.h   src/utils/StringUtils.h  src/math/Maths.h src/math/Mat3.h src/math/Vec2.h src/math/Vec3.h src/math/Vec4.h   src/math/Mat4.h   src/math/MathFunc.h    src/math/Quaternion.h  src/math/Transform.h     src/graphics/fonts/Font.h src/graphics/fonts/FontAtlas.h          src/graphics/renderers/Renderer.h      src/graphics/renderers/Renderer3D.h src/graphics/Skybox.h src/graphics/models/Camera.h src/graphics/models/EntityModel.h src/graphics/models/MaterialModel.h src/graphics/models/Material.h src/graphics/shaders/Shader.h   src/graphics/shaders/Uniformable.h src/graphics/shaders/uniforms/Uniform.h   src/utils/ColorUtils.h    src/graphics/models/Mesh.h src/graphics/models/MeshData.h              src/graphics/textures/CubeMap.h          
+	$(info -[49%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
+$(OBJPATH)/EntityModel.o : src/graphics/models/EntityModel.cpp src/graphics/models/EntityModel.h src/graphics/models/MaterialModel.h src/graphics/models/Material.h src/graphics/shaders/Shader.h src/internal/GreetGL.h src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  src/utils/LogUtils.h src/internal/GreetTypes.h  src/math/Maths.h src/math/Mat3.h src/math/Vec2.h src/math/Vec3.h src/math/Vec4.h   src/math/Mat4.h   src/math/MathFunc.h    src/math/Quaternion.h  src/math/Transform.h     src/graphics/shaders/Uniformable.h src/graphics/shaders/uniforms/Uniform.h  src/graphics/textures/Texture.h  src/utils/ColorUtils.h    src/graphics/models/Mesh.h src/graphics/models/MeshData.h         src/utils/ErrorHandle.h  src/utils/Utils.h  
+	$(info -[50%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
+$(OBJPATH)/Material.o : src/graphics/models/Material.cpp src/graphics/models/Material.h src/graphics/shaders/Shader.h src/internal/GreetGL.h src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  src/utils/LogUtils.h src/internal/GreetTypes.h  src/math/Maths.h src/math/Mat3.h src/math/Vec2.h src/math/Vec3.h src/math/Vec4.h   src/math/Mat4.h   src/math/MathFunc.h    src/math/Quaternion.h  src/math/Transform.h     src/graphics/shaders/Uniformable.h src/graphics/shaders/uniforms/Uniform.h  src/graphics/textures/Texture.h  src/utils/ColorUtils.h   
+	$(info -[51%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
+$(OBJPATH)/MaterialModel.o : src/graphics/models/MaterialModel.cpp
+	$(info -[53%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
+$(OBJPATH)/Mesh.o : src/graphics/models/Mesh.cpp src/graphics/models/Mesh.h src/graphics/models/MeshData.h src/internal/GreetGL.h src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  src/utils/LogUtils.h src/internal/GreetTypes.h    src/math/Maths.h src/math/Mat3.h src/math/Vec2.h src/math/Vec3.h src/math/Vec4.h   src/math/Mat4.h   src/math/MathFunc.h    src/math/Quaternion.h  src/math/Transform.h     src/graphics/textures/Texture.h     src/utils/ErrorHandle.h  src/utils/Utils.h   src/internal/OpenGLObjectHandler.h 
+	$(info -[54%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
+$(OBJPATH)/MeshData.o : src/graphics/models/MeshData.cpp src/graphics/models/MeshData.h src/internal/GreetGL.h src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  src/utils/LogUtils.h src/internal/GreetTypes.h    src/math/Maths.h src/math/Mat3.h src/math/Vec2.h src/math/Vec3.h src/math/Vec4.h   src/math/Mat4.h   src/math/MathFunc.h    src/math/Quaternion.h  src/math/Transform.h     
+	$(info -[55%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
+$(OBJPATH)/MeshFactory.o : src/graphics/models/MeshFactory.cpp src/graphics/models/MeshFactory.h src/graphics/models/MeshData.h src/internal/GreetGL.h src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  src/utils/LogUtils.h src/internal/GreetTypes.h    src/math/Maths.h src/math/Mat3.h src/math/Vec2.h src/math/Vec3.h src/math/Vec4.h   src/math/Mat4.h   src/math/MathFunc.h    src/math/Quaternion.h  src/math/Transform.h      
+	$(info -[57%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
+$(OBJPATH)/TPCamera.o : src/graphics/models/TPCamera.cpp src/graphics/models/TPCamera.h src/event/EventDispatcher.h src/event/KeyListener.h src/event/KeyEvent.h src/event/Event.h src/math/Maths.h src/math/Mat3.h src/math/Vec2.h src/math/Vec3.h src/math/Vec4.h   src/math/Mat4.h   src/math/MathFunc.h src/internal/GreetTypes.h   src/math/Quaternion.h  src/math/Transform.h     src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  src/event/MouseEvent.h    src/event/MouseListener.h   src/utils/Utils.h src/internal/GreetGL.h  src/utils/LogUtils.h     src/graphics/models/Camera.h src/graphics/models/EntityModel.h src/graphics/models/MaterialModel.h src/graphics/models/Material.h src/graphics/shaders/Shader.h   src/graphics/shaders/Uniformable.h src/graphics/shaders/uniforms/Uniform.h  src/graphics/textures/Texture.h  src/utils/ColorUtils.h    src/graphics/models/Mesh.h src/graphics/models/MeshData.h         src/utils/ErrorHandle.h   src/graphics/renderers/Renderer3D.h src/graphics/Skybox.h    src/graphics/textures/CubeMap.h   src/utils/ImageUtils.h src/graphics/textures/ImageFactory.h      src/utils/StringUtils.h   src/graphics/renderers/Renderer.h        
+	$(info -[58%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
+$(OBJPATH)/BatchRenderer.o : src/graphics/renderers/BatchRenderer.cpp src/graphics/renderers/BatchRenderer.h src/graphics/Renderable2D.h src/graphics/Renderable.h src/graphics/renderers/Renderer2D.h src/graphics/Sprite.h src/graphics/textures/Texture2D.h src/graphics/textures/Texture.h src/internal/GreetTypes.h src/utils/ImageUtils.h src/graphics/textures/ImageFactory.h  src/internal/GreetGL.h src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  src/utils/LogUtils.h     src/utils/ErrorHandle.h  src/utils/Utils.h   src/utils/StringUtils.h  src/math/Maths.h src/math/Mat3.h src/math/Vec2.h src/math/Vec3.h src/math/Vec4.h   src/math/Mat4.h   src/math/MathFunc.h    src/math/Quaternion.h  src/math/Transform.h     src/graphics/fonts/Font.h src/graphics/fonts/FontAtlas.h          src/graphics/renderers/Renderer.h       src/graphics/buffers/Buffer.h  src/graphics/buffers/IndexBuffer.h  src/graphics/buffers/VertexArray.h    src/graphics/shaders/Shader.h      src/graphics/RenderablePoly.h  src/graphics/buffers/BatchIndexBuffer.h     
+	$(info -[59%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
+$(OBJPATH)/BatchRenderer3D.o : src/graphics/renderers/BatchRenderer3D.cpp src/graphics/renderers/BatchRenderer3D.h src/graphics/Skybox.h src/graphics/models/Camera.h src/graphics/models/EntityModel.h src/graphics/models/MaterialModel.h src/graphics/models/Material.h src/graphics/shaders/Shader.h src/internal/GreetGL.h src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  src/utils/LogUtils.h src/internal/GreetTypes.h  src/math/Maths.h src/math/Mat3.h src/math/Vec2.h src/math/Vec3.h src/math/Vec4.h   src/math/Mat4.h   src/math/MathFunc.h    src/math/Quaternion.h  src/math/Transform.h     src/graphics/shaders/Uniformable.h src/graphics/shaders/uniforms/Uniform.h  src/graphics/textures/Texture.h  src/utils/ColorUtils.h    src/graphics/models/Mesh.h src/graphics/models/MeshData.h         src/utils/ErrorHandle.h  src/utils/Utils.h   src/graphics/renderers/Renderer3D.h    src/graphics/renderers/Renderer.h         src/graphics/textures/CubeMap.h   src/utils/ImageUtils.h src/graphics/textures/ImageFactory.h      src/utils/StringUtils.h   src/graphics/models/MeshFactory.h    src/graphics/textures/TextureManager.h  src/graphics/textures/Texture2D.h   src/utils/OBJUtils.h  src/utils/FileUtils.h  
+	$(info -[61%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
+$(OBJPATH)/GUIRenderer.o : src/graphics/renderers/GUIRenderer.cpp src/graphics/renderers/GUIRenderer.h src/graphics/fonts/Font.h src/graphics/fonts/FontAtlas.h src/graphics/textures/Texture2D.h src/graphics/textures/Texture.h src/internal/GreetTypes.h src/utils/ImageUtils.h src/graphics/textures/ImageFactory.h  src/internal/GreetGL.h src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  src/utils/LogUtils.h     src/utils/ErrorHandle.h  src/utils/Utils.h   src/utils/StringUtils.h   src/math/Vec4.h     src/math/Maths.h src/math/Mat3.h src/math/Vec2.h src/math/Vec3.h    src/math/Mat4.h   src/math/MathFunc.h    src/math/Quaternion.h  src/math/Transform.h     src/graphics/renderers/Renderer.h     
+	$(info -[62%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
+$(OBJPATH)/Renderer3D.o : src/graphics/renderers/Renderer3D.cpp src/graphics/renderers/Renderer3D.h src/graphics/Skybox.h src/graphics/models/Camera.h src/graphics/models/EntityModel.h src/graphics/models/MaterialModel.h src/graphics/models/Material.h src/graphics/shaders/Shader.h src/internal/GreetGL.h src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  src/utils/LogUtils.h src/internal/GreetTypes.h  src/math/Maths.h src/math/Mat3.h src/math/Vec2.h src/math/Vec3.h src/math/Vec4.h   src/math/Mat4.h   src/math/MathFunc.h    src/math/Quaternion.h  src/math/Transform.h     src/graphics/shaders/Uniformable.h src/graphics/shaders/uniforms/Uniform.h  src/graphics/textures/Texture.h  src/utils/ColorUtils.h    src/graphics/models/Mesh.h src/graphics/models/MeshData.h         src/utils/ErrorHandle.h  src/utils/Utils.h       src/graphics/textures/CubeMap.h   src/utils/ImageUtils.h src/graphics/textures/ImageFactory.h      src/utils/StringUtils.h   src/graphics/renderers/Renderer.h     
+	$(info -[63%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
+$(OBJPATH)/Shader.o : src/graphics/shaders/Shader.cpp src/graphics/shaders/Shader.h src/internal/GreetGL.h src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  src/utils/LogUtils.h src/internal/GreetTypes.h  src/math/Maths.h src/math/Mat3.h src/math/Vec2.h src/math/Vec3.h src/math/Vec4.h   src/math/Mat4.h   src/math/MathFunc.h    src/math/Quaternion.h  src/math/Transform.h     src/graphics/shaders/ShaderFactory.h  src/internal/OpenGLObjectHandler.h  src/utils/ErrorHandle.h  src/utils/Utils.h   src/utils/FileUtils.h 
+	$(info -[64%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
+$(OBJPATH)/ShaderFactory.o : src/graphics/shaders/ShaderFactory.cpp src/graphics/shaders/Shader.h src/internal/GreetGL.h src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  src/utils/LogUtils.h src/internal/GreetTypes.h  src/math/Maths.h src/math/Mat3.h src/math/Vec2.h src/math/Vec3.h src/math/Vec4.h   src/math/Mat4.h   src/math/MathFunc.h    src/math/Quaternion.h  src/math/Transform.h     src/graphics/shaders/basiclightshader.frag src/graphics/shaders/debugshader.frag src/graphics/shaders/default2dshader.frag src/graphics/shaders/default2dshader.vert src/graphics/shaders/ledshader.frag src/graphics/shaders/skyboxshader.frag src/graphics/shaders/skyboxshader.vert
+	$(info -[66%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
+$(OBJPATH)/CubeMap.o : src/graphics/textures/CubeMap.cpp src/graphics/textures/CubeMap.h src/graphics/textures/Texture.h src/internal/GreetTypes.h  src/utils/ImageUtils.h src/graphics/textures/ImageFactory.h  src/internal/GreetGL.h src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  src/utils/LogUtils.h     src/utils/ErrorHandle.h  src/utils/Utils.h   src/utils/StringUtils.h  
+	$(info -[67%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
+$(OBJPATH)/ImageFactory.o : src/graphics/textures/ImageFactory.cpp src/graphics/textures/ImageFactory.h src/internal/GreetTypes.h src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  src/utils/Utils.h src/internal/GreetGL.h  src/utils/LogUtils.h   
+	$(info -[68%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
+$(OBJPATH)/Texture.o : src/graphics/textures/Texture.cpp src/graphics/textures/Texture.h src/internal/GreetTypes.h src/internal/GreetGL.h src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  src/utils/LogUtils.h   src/internal/OpenGLObjectHandler.h 
+	$(info -[70%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
+$(OBJPATH)/Texture2D.o : src/graphics/textures/Texture2D.cpp src/graphics/textures/Texture2D.h src/graphics/textures/Texture.h src/internal/GreetTypes.h src/utils/ImageUtils.h src/graphics/textures/ImageFactory.h  src/internal/GreetGL.h src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  src/utils/LogUtils.h     src/utils/ErrorHandle.h  src/utils/Utils.h   src/utils/StringUtils.h  src/internal/OpenGLObjectHandler.h 
+	$(info -[71%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
+$(OBJPATH)/TextureManager.o : src/graphics/textures/TextureManager.cpp src/graphics/textures/TextureManager.h src/graphics/textures/CubeMap.h src/graphics/textures/Texture.h src/internal/GreetTypes.h  src/utils/ImageUtils.h src/graphics/textures/ImageFactory.h  src/internal/GreetGL.h src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  src/utils/LogUtils.h     src/utils/ErrorHandle.h  src/utils/Utils.h   src/utils/StringUtils.h src/graphics/textures/Texture2D.h  
+	$(info -[72%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
+$(OBJPATH)/Joystick.o : src/input/Joystick.cpp src/input/Joystick.h src/internal/GreetGL.h src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  src/utils/LogUtils.h src/internal/GreetTypes.h   src/math/Maths.h src/math/Mat3.h src/math/Vec2.h src/math/Vec3.h src/math/Vec4.h   src/math/Mat4.h   src/math/MathFunc.h    src/math/Quaternion.h  src/math/Transform.h     
+	$(info -[74%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
+$(OBJPATH)/App.o : src/internal/App.cpp src/drivers/DriverDispatcher.h src/drivers/Driver.h src/drivers/DriverListener.h src/internal/GreetTypes.h src/graphics/RenderEngine.h src/graphics/layers/Layer.h src/graphics/Renderable.h src/graphics/renderers/Renderer2D.h src/graphics/Sprite.h src/graphics/textures/Texture2D.h src/graphics/textures/Texture.h  src/utils/ImageUtils.h src/graphics/textures/ImageFactory.h  src/internal/GreetGL.h src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  src/utils/LogUtils.h     src/utils/ErrorHandle.h  src/utils/Utils.h   src/utils/StringUtils.h  src/math/Maths.h src/math/Mat3.h src/math/Vec2.h src/math/Vec3.h src/math/Vec4.h   src/math/Mat4.h   src/math/MathFunc.h    src/math/Quaternion.h  src/math/Transform.h     src/graphics/fonts/Font.h src/graphics/fonts/FontAtlas.h          src/graphics/renderers/Renderer.h       src/graphics/shaders/Shader.h    src/graphics/layers/Layer3D.h  src/graphics/renderers/Renderer3D.h src/graphics/Skybox.h src/graphics/models/Camera.h src/graphics/models/EntityModel.h src/graphics/models/MaterialModel.h src/graphics/models/Material.h  src/graphics/shaders/Uniformable.h src/graphics/shaders/uniforms/Uniform.h   src/utils/ColorUtils.h    src/graphics/models/Mesh.h src/graphics/models/MeshData.h              src/graphics/textures/CubeMap.h           src/internal/App.h src/graphics/Window.h src/input/Joystick.h     src/listeners/JoystickState.h  src/listeners/WindowListener.h src/listeners/WindowFocus.h src/listeners/WindowResize.h src/utils/Timer.h 
+	$(info -[75%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
+$(OBJPATH)/OpenGLObjectHandler.o : src/internal/OpenGLObjectHandler.cpp src/internal/GreetGL.h src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  src/utils/LogUtils.h src/internal/GreetTypes.h  src/internal/OpenGLObjectHandler.h 
+	$(info -[76%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
+$(OBJPATH)/Log.o : src/logging/Log.cpp src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h 
+	$(info -[77%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
+$(OBJPATH)/LogStream.o : src/logging/LogStream.cpp src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  
+	$(info -[79%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
+$(OBJPATH)/Logger.o : src/logging/Logger.cpp src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  
+	$(info -[80%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
+$(OBJPATH)/Mat3.o : src/math/Mat3.cpp src/math/Mat3.h src/math/Vec2.h src/math/Vec3.h src/math/Vec4.h   src/math/MathFunc.h src/internal/GreetTypes.h  
+	$(info -[81%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
+$(OBJPATH)/Mat4.o : src/math/Mat4.cpp src/math/Mat4.h src/math/Vec2.h src/math/Vec3.h src/math/Vec4.h   src/math/MathFunc.h src/internal/GreetTypes.h  
+	$(info -[83%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
+$(OBJPATH)/Quaternion.o : src/math/Quaternion.cpp src/math/MathFunc.h src/internal/GreetTypes.h src/math/Vec2.h src/math/Vec3.h src/math/Vec4.h   src/math/Quaternion.h 
+	$(info -[84%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
+$(OBJPATH)/Vec2.o : src/math/Vec2.cpp src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  src/math/Vec2.h src/math/Vec3.h src/math/Vec4.h 
+	$(info -[85%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
+$(OBJPATH)/Vec3.o : src/math/Vec3.cpp src/math/MathFunc.h src/internal/GreetTypes.h src/math/Vec2.h src/math/Vec3.h src/math/Vec4.h   src/math/Maths.h src/math/Mat3.h   src/math/Mat4.h    src/math/Quaternion.h  src/math/Transform.h     
+	$(info -[87%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
+$(OBJPATH)/Vec4.o : src/math/Vec4.cpp src/math/Vec4.h
+	$(info -[88%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
+$(OBJPATH)/ErrorHandle.o : src/utils/ErrorHandle.cpp src/utils/ErrorHandle.h src/internal/GreetTypes.h src/utils/Utils.h src/internal/GreetGL.h src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  src/utils/LogUtils.h   
+	$(info -[89%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
+$(OBJPATH)/Noise.o : src/utils/Noise.cpp src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  src/utils/Noise.h src/internal/GreetTypes.h
+	$(info -[90%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
+$(OBJPATH)/UUID.o : src/utils/UUID.cpp src/graphics/Window.h src/input/Joystick.h src/internal/GreetGL.h src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  src/utils/LogUtils.h src/internal/GreetTypes.h   src/math/Maths.h src/math/Mat3.h src/math/Vec2.h src/math/Vec3.h src/math/Vec4.h   src/math/Mat4.h   src/math/MathFunc.h    src/math/Quaternion.h  src/math/Transform.h      src/listeners/JoystickState.h  src/listeners/WindowListener.h src/listeners/WindowFocus.h src/listeners/WindowResize.h src/utils/UUID.h 
+	$(info -[92%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
+$(OBJPATH)/JSON.o : src/utils/json/JSON.cpp src/utils/json/JSON.h src/internal/GreetTypes.h src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h 
+	$(info -[93%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
+$(OBJPATH)/JSONArray.o : src/utils/json/JSONArray.cpp src/utils/json/JSONArray.h src/utils/json/JSON.h src/internal/GreetTypes.h src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  src/utils/json/JSONObject.h  
+	$(info -[94%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
+$(OBJPATH)/JSONLoader.o : src/utils/json/JSONLoader.cpp src/utils/FileUtils.h src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  src/utils/StringUtils.h src/utils/json/JSONLoader.h src/utils/json/JSONArray.h src/utils/json/JSON.h src/internal/GreetTypes.h  src/utils/json/JSONObject.h  
+	$(info -[96%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
+$(OBJPATH)/JSONObject.o : src/utils/json/JSONObject.cpp src/utils/StringUtils.h src/utils/json/JSONObject.h src/internal/GreetTypes.h src/utils/json/JSONArray.h src/utils/json/JSON.h  src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h 
+	$(info -[97%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
+$(OBJPATH)/XML.o : src/utils/xml/XML.cpp src/utils/xml/XML.h src/utils/xml/XMLObject.h
+	$(info -[98%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
+$(OBJPATH)/XMLObject.o : src/utils/xml/XMLObject.cpp src/utils/StringUtils.h src/utils/xml/XMLException.h src/utils/xml/XMLObject.h
+	$(info -[100%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<

@@ -16,6 +16,7 @@ namespace Greet {
 		Texture2D(const std::string& filename, const std::string& name);
 		Texture2D(BYTE* bits, uint width, uint height, uint bpp, const std::string& name);
 		Texture2D(uint texID, uint width, uint height, const std::string& name);
+    Texture2D();
     void SetPixels(const void* pixels) const;
 		virtual ~Texture2D();
 		inline uint GetWidth() const { return m_width; }

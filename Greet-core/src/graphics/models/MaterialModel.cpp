@@ -4,7 +4,7 @@ namespace Greet {
 
 	uint MaterialModel::s_current_id;
 
-	MaterialModel::MaterialModel(Mesh* mesh, const Material& material)
+	MaterialModel::MaterialModel(Mesh* mesh, Material* material)
 		: m_mesh(mesh), m_material(material), m_id(s_current_id++)
 	{
 		
@@ -12,7 +12,6 @@ namespace Greet {
 
 	MaterialModel::~MaterialModel()
 	{
-		delete m_mesh;
 	}
 
 

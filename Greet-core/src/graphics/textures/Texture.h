@@ -13,6 +13,7 @@ namespace Greet {
 	public:
 		Texture(const std::string& name, uint textureType);
 		Texture(uint texId, const std::string& name, uint textureType);
+    Texture(uint textureType);
 		Texture(const Texture& texture);
 		Texture& operator=(const Texture& shader);
 		virtual ~Texture();

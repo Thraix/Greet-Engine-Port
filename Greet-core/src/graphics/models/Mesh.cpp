@@ -1,5 +1,7 @@
 #include "Mesh.h"
 
+#include <internal/OpenGLObjectHandler.h>
+
 namespace Greet {
 
 	Mesh::Mesh(const Vec3* vertices, uint vertexCount, const uint* indices, uint indexCount)
@@ -16,6 +18,11 @@ namespace Greet {
 		}
 	}
 
+  Mesh::Mesh(const Mesh& mesh)
+  {
+    operator=(mesh);
+  }
+
 	void Mesh::init(const Vec3* vertices, uint vertexCount, const uint* indices, uint indexCount)
 	{
 		m_drawMode = GL_TRIANGLES;
@@ -23,11 +30,11 @@ namespace Greet {
 		m_indexCount = indexCount;
 
 		// VAO
-		GLCall(glGenVertexArrays(1, &m_vaoId));
+    m_vaoId = OpenGLObjectHandler::CreateOpenGLObject(OpenGLType::VERTEX_ARRAY);
 		GLCall(glBindVertexArray(m_vaoId));
 
 		// IBO
-		GLCall(glGenBuffers(1, &m_iboId));
+    m_iboId = OpenGLObjectHandler::CreateOpenGLObject(OpenGLType::BUFFER);
 		GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_iboId));
 		GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexCount * sizeof(uint), indices, GL_STATIC_DRAW));
 
@@ -40,15 +47,38 @@ namespace Greet {
 		// Unbind
 		GLCall(glBindVertexArray(0));
 	}
+  Mesh& Mesh::operator=(const Mesh& mesh)
+  {
+    if(this != &mesh)
+    {
+      for(auto it = mesh.m_vbos.begin();it!=mesh.m_vbos.end(); ++it)
+      {
+        OpenGLObjectHandler::CopyOpenGLObject(OpenGLType::BUFFER, it->second);
+        this->m_vbos.emplace(it->first,it->second);
+      }
+      OpenGLObjectHandler::CopyOpenGLObject(OpenGLType::BUFFER, mesh.m_iboId);
+      OpenGLObjectHandler::CopyOpenGLObject(OpenGLType::VERTEX_ARRAY, mesh.m_vaoId);
+      
+      // Copy buffers and drawmodes
+      this->m_vaoId = mesh.m_vaoId;
+      this->m_iboId = mesh.m_iboId;
+      this->m_vertexCount = mesh.m_vertexCount;
+      this->m_indexCount = mesh.m_indexCount;
+      this->m_drawMode = mesh.m_drawMode;
+      this->m_culling = mesh.m_culling;
+      this->m_clockwise = mesh.m_clockwise;
+    }
+    return *this;
+  }
+
 	Mesh::~Mesh()
 	{
 		for (auto it = m_vbos.begin();it != m_vbos.end(); it++)
 		{
-			GLCall(glDeleteBuffers(1,&it->second));
+      OpenGLObjectHandler::DestroyOpenGLObject(OpenGLType::BUFFER, it->second);
 		}
-		m_vbos.clear();
-		GLCall(glDeleteBuffers(1,&m_iboId));
-		GLCall(glDeleteVertexArrays(1,&m_vaoId));
+    OpenGLObjectHandler::DestroyOpenGLObject(OpenGLType::BUFFER, m_iboId);
+    OpenGLObjectHandler::DestroyOpenGLObject(OpenGLType::VERTEX_ARRAY, m_vaoId);
 	}
 
 	void Mesh::Render() const
@@ -109,7 +139,7 @@ namespace Greet {
 		GLCall(glBindVertexArray(m_vaoId));
 		GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_iboId));
 		uint vbo;
-		GLCall(glGenBuffers(1, &vbo));
+    vbo = OpenGLObjectHandler::CreateOpenGLObject(OpenGLType::BUFFER);
 		GLCall(glBindBuffer(GL_ARRAY_BUFFER, vbo));
 		m_vbos.emplace(location, vbo); // Needed to delete vbo when deleting mesh
 		GLCall(glBufferData(GL_ARRAY_BUFFER, m_vertexCount * sizeof(float) * 3, data, GL_STATIC_DRAW));
@@ -130,8 +160,7 @@ namespace Greet {
 		GLCall(glBindVertexArray(m_vaoId));
 		GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_iboId));
 		uint vbo;
-		GLCall(glGenBuffers(1, &vbo));
-		GLCall(glBindBuffer(GL_ARRAY_BUFFER, vbo));
+    vbo = OpenGLObjectHandler::CreateOpenGLObject(OpenGLType::BUFFER);
 		m_vbos.emplace(location, vbo); // Needed to delete vbo when deleting mesh
 		GLCall(glBufferData(GL_ARRAY_BUFFER, m_vertexCount * sizeof(float) * 2, data, GL_STATIC_DRAW));
 		GLCall(glVertexAttribPointer(location, 2, GL_FLOAT, false, 0, 0));
@@ -150,7 +179,7 @@ namespace Greet {
 		}
 		GLCall(glBindVertexArray(m_vaoId));
 		uint vbo;
-		GLCall(glGenBuffers(1, &vbo));
+    vbo = OpenGLObjectHandler::CreateOpenGLObject(OpenGLType::BUFFER);
 		GLCall(glBindBuffer(GL_ARRAY_BUFFER, vbo));
 		m_vbos.emplace(location, vbo); // Needed to delete vbo when deleting mesh
 		GLCall(glBufferData(GL_ARRAY_BUFFER, m_vertexCount * sizeof(byte) * attributeSize, data, GL_STATIC_DRAW));
@@ -171,7 +200,7 @@ namespace Greet {
 		}
 		GLCall(glBindVertexArray(m_vaoId));
 		uint vbo;
-		GLCall(glGenBuffers(1, &vbo));
+    vbo = OpenGLObjectHandler::CreateOpenGLObject(OpenGLType::BUFFER);
 		GLCall(glBindBuffer(GL_ARRAY_BUFFER, vbo));
 		m_vbos.emplace(data->location,vbo); // Needed to delete vbo when deleting mesh
 		GLCall(glBufferData(GL_ARRAY_BUFFER, m_vertexCount * data->memoryValueSize, data->data, GL_STATIC_DRAW));

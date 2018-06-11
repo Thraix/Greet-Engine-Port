@@ -3,6 +3,7 @@
 #include <logging/LogLevel.h>
 #include <ostream>
 #include <string>
+#include <iostream>
 
 namespace Greet {
 
@@ -17,10 +18,10 @@ namespace Greet {
 		std::ostream& m_stream;
 		/* Loglevel that is compared with the given log level whilst outputing */
 		LogLevel m_logLevel;
-		/* The comparison that checks if the stream should output this with a given LogLevel*/
-		LevelCheck m_levelCheck;
 		/* Name of the LogStream, used to differantiate streams */
 		std::string m_name;
+		/* The comparison that checks if the stream should output this with a given LogLevel*/
+		LevelCheck m_levelCheck;
 	private:
 		LogStream();
 	public:
