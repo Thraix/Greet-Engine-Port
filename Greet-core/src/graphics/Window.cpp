@@ -4,6 +4,7 @@
 #include <graphics/textures/TextureManager.h>
 #include <internal/GreetGL.h>
 #include <event/EventDispatcher.h>
+#include <internal/OpenGLObjectHandler.h>
 
 namespace Greet {
 
@@ -49,6 +50,7 @@ namespace Greet {
 		FontManager::Destroy();
 		TextureManager::Destroy();
 		glfwTerminate();
+    OpenGLObjectHandler::Destroy();
 	}
 
 	bool Window::init()

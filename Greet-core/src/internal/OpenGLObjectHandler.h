@@ -13,7 +13,7 @@ namespace Greet {
 
 	class OpenGLObjectHandler
 	{
-
+  friend class Window;
 	private:
 		static std::map < OpenGLType, std::map<uint, uint>> m_openGLObjects; // map<type, map<id, count> >
     static std::string OpenGLTypeName(OpenGLType type);
@@ -29,5 +29,6 @@ namespace Greet {
 	private:
 		// Fully deletes the object from the map.
 		static void DeleteOpenGLObject(const OpenGLType& type, const std::map<OpenGLType, std::map<uint, uint>>::iterator& typeIterator, const std::map<uint, uint>::iterator& objIterator);
+    static void Destroy();
 	};
 }

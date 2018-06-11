@@ -4,3 +4,4 @@
 *.swp
 *.swo
 deps/libs/*
+*Makefile.backup

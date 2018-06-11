@@ -129,4 +129,17 @@ namespace Greet {
 		}
   
   }
+
+  void OpenGLObjectHandler::Destroy()
+  {
+    for(auto mapIt = m_openGLObjects.begin();mapIt!=m_openGLObjects.end();++mapIt)
+    {
+      if(mapIt->second.size() != 0)
+        Log::Warning("Objects were not deleted, possible leak (type=",OpenGLTypeName(mapIt->first),")");
+      for(auto objIt = mapIt->second.begin();objIt!=mapIt->second.end();++objIt)
+      {
+        DeleteOpenGLObject(mapIt->first,mapIt, objIt);
+      }
+    }
+  }
 }
