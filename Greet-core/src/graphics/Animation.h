@@ -18,7 +18,7 @@ namespace Greet {
 	public:
 
 	public:
-		Animation(Texture2D* texture, Vec2 texPos, Vec2 texSize, float frameTimer, uint images, bool horizontalRead);
+		Animation(const Texture2D& texture, Vec2 texPos, Vec2 texSize, float frameTimer, uint images, bool horizontalRead);
 		Animation(const Sprite& sprite, float frameTimer, uint images, bool horizontalRead);
 		~Animation();
 

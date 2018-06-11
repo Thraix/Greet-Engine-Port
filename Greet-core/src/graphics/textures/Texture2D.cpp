@@ -6,32 +6,32 @@
 namespace Greet {
 
   Texture2D::Texture2D(uint width, uint height, uint bpp)
-    : Texture("", GL_TEXTURE_2D)
+    : Texture(GL_TEXTURE_2D)
   {
     GenTexture(width,height,bpp);
   }
   
-  Texture2D::Texture2D(const std::string& filename, const std::string& name)
-		:Texture(name, GL_TEXTURE_2D)
+  Texture2D::Texture2D(const std::string& filename)
+		:Texture(GL_TEXTURE_2D)
 	{
 		LoadTexture(filename);
 	}
 
-	Texture2D::Texture2D(BYTE* bits, uint width, uint height, uint bpp, const std::string& name)
-		: Texture(name, GL_TEXTURE_2D), m_width(width), m_height(height)
+	Texture2D::Texture2D(BYTE* bits, uint width, uint height, uint bpp)
+		: Texture(GL_TEXTURE_2D), m_width(width), m_height(height)
 	{
 		GenTexture(bits, bpp);
 		delete[] bits;
 	}
 
   Texture2D::Texture2D()
-    : Texture(GL_TEXTURE_2D)
+    : Texture(GL_TEXTURE_2D,false)
   {
     
   }
 
-	Texture2D::Texture2D(uint texId, uint width, uint height, const std::string& name)
-		:Texture(texId, name, GL_TEXTURE_2D), m_width(width), m_height(height)
+	Texture2D::Texture2D(uint texId, uint width, uint height, uint bpp)
+		:Texture(texId, (uint)GL_TEXTURE_2D), m_width(width), m_height(height), m_bpp(bpp)
 	{
 
 	}

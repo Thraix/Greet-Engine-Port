@@ -55,7 +55,7 @@ namespace Greet {
 		GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
 		GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
 		GLCall(glFramebufferTexture2D(GL_FRAMEBUFFER, attachmentId, GL_TEXTURE_2D, texId, 0));
-		m_colorTextures.emplace(attachmentId,new Texture2D(texId,m_width,m_height,""));
+		m_colorTextures.emplace(attachmentId,new Texture2D(texId,m_width,m_height,24));
 		uint size = m_colorTextures.size();
 		uint* colorBuffers = new uint[size];
 		uint i = 0;
@@ -77,7 +77,7 @@ namespace Greet {
 		GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST));
 		GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
 		//GLCall(glTexParameteri(GL_TEXTURE_2D,GL_DEPTH_TEXTURE_MODE,GL_INTENSITY);
-		m_depthTexture = new Texture2D(texId,m_width,m_height,"");
+		m_depthTexture = new Texture2D(texId,m_width,m_height,32);
 		GLCall(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, texId, 0));
 		GLCall(glBindFramebuffer(GL_FRAMEBUFFER,0));
 	}

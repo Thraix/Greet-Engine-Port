@@ -20,7 +20,7 @@ namespace Greet{
 
 		BYTE* m_bits;
 	public:
-		Atlas(std::string atlasName, uint atlasSize, uint textureSize);
+		Atlas(uint atlasSize, uint textureSize);
 		virtual ~Atlas();
 
 		bool AddTexture(std::string name, std::string filePath);

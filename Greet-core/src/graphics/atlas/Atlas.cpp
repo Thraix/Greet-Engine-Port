@@ -2,25 +2,25 @@
 
 namespace Greet {
 
-	Atlas::Atlas(std::string atlasName, uint atlasSize, uint textureSize)
-		: Texture2D(0,atlasSize,atlasSize,atlasName), m_textureSize(textureSize)
+	Atlas::Atlas(uint atlasSize, uint textureSize)
+		: Texture2D(atlasSize,atlasSize,32), m_textureSize(textureSize)
 	{
-		ASSERT(atlasSize > m_textureSize, "ATLAS", "Atlas size must be greater than the textures sizes: ", m_name.c_str());
-		ASSERT(!(atlasSize == 0) && !(atlasSize & (atlasSize - 1)),"ATLAS", "Atlas size must be a power of two: ", m_name.c_str());
-		ASSERT(!(textureSize == 0) && !(m_textureSize & (m_textureSize - 1)), "ATLAS", "Texture size must be a power of two: ", m_name.c_str());
+		ASSERT(atlasSize > m_textureSize, "ATLAS", "Atlas size must be greater than the textures sizes");
+		ASSERT(!(atlasSize == 0) && !(atlasSize & (atlasSize - 1)),"ATLAS", "Atlas size must be a power of two");
+		ASSERT(!(textureSize == 0) && !(m_textureSize & (m_textureSize - 1)), "ATLAS", "Texture size must be a power of two");
 		m_texturesSide = atlasSize / m_textureSize;
 		m_textures = (atlasSize / m_textureSize)*(atlasSize / m_textureSize);
 		uint bits = atlasSize * atlasSize * 4;
 
 		m_bits = new BYTE[bits];
-		for (int i = 0; i < bits; i+=4)
+		for (uint i = 0; i < bits; i+=4)
 		{
 			m_bits[i+FI_RGBA_RED  ]	 = 0;
 			m_bits[i+FI_RGBA_GREEN]	 = 0;
 			m_bits[i+FI_RGBA_BLUE]	 = 0;
 			m_bits[i+FI_RGBA_ALPHA]	 = 255;
 		}
-		for (int i = 0; i < m_textures; i++)
+		for (uint i = 0; i < m_textures; i++)
 		{
 			m_occupied.push_back(false);
 		}
@@ -49,7 +49,7 @@ namespace Greet {
 		uint textures = m_width / m_textureSize;
 		if (m_textureNames.size() >= textures*textures)
 		{
-			Log::Error("There is no more room in the Atlas. Increase size or create a new one. ", m_name.c_str());
+			Log::Error("There is no more room in the Atlas. Increase size or create a new one.");
 			return false;
 		}
 		uint width;
@@ -86,7 +86,7 @@ namespace Greet {
 		}
 		if (x == m_texturesSide || y == m_texturesSide)
 		{
-			Log::Error("There is no more room in the Atlas. Increase size or create a new one. ", m_name.c_str());
+			Log::Error("There is no more room in the Atlas. Increase size or create a new one.");
 			return;
 		}
 
@@ -134,11 +134,11 @@ namespace Greet {
 				Vec2 spritePos = spriteSize*Vec2(x, y);
 				spritePos += texPos * spriteSize;
 				spriteSize *= texSize;
-				return new Sprite(this, spritePos, spriteSize);
+				return new Sprite(*this, spritePos, spriteSize);
 			}
 		}
-		Log::Error("No texture found in Atlas: ", m_name.c_str(), "(", sheetName.c_str(), ")");
-		return new Sprite(this);
+		Log::Error("No texture found in Atlas: (", sheetName.c_str(), ")");
+		return new Sprite(*this);
 	}
 
 	void Atlas::RemoveTexture(std::string textureName)

@@ -2,7 +2,7 @@
 
 namespace Greet {
 
-	Animation::Animation(Texture2D* texture, Vec2 texPos, Vec2 texSize, float frameTimer, uint images, bool horizontalRead)
+	Animation::Animation(const Texture2D& texture, Vec2 texPos, Vec2 texSize, float frameTimer, uint images, bool horizontalRead)
 		: Sprite(texture, texPos, texSize), m_frameTimer(frameTimer), m_frameTime(frameTimer), m_images(images), m_image(0)
 	{
 		m_add = Vec2(horizontalRead ? texSize.x : 0.0f, horizontalRead ? 0.0f : texSize.y);

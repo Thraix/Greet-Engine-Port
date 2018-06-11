@@ -4,20 +4,20 @@
 #include <utils/ImageUtils.h>
 
 namespace Greet {
-	CubeMap::CubeMap(const std::string& top, const std::string& bottom, const std::string& left, const std::string& right, const std::string& front, const std::string& back, const std::string& name)
-		: Texture(name, GL_TEXTURE_CUBE_MAP)
+	CubeMap::CubeMap(const std::string& top, const std::string& bottom, const std::string& left, const std::string& right, const std::string& front, const std::string& back)
+		: Texture(GL_TEXTURE_CUBE_MAP)
 	{
 		LoadCubeMap(top, bottom, left, right, front, back);
 	}
 
-	CubeMap::CubeMap(const std::string& map, const std::string& name)
-		: Texture(name,GL_TEXTURE_CUBE_MAP)
+	CubeMap::CubeMap(const std::string& map)
+		: Texture(GL_TEXTURE_CUBE_MAP)
 	{
 		LoadCubeMap(map);
 	}
 
-	CubeMap::CubeMap(uint texId, const std::string& name)
-		: Texture(texId, name, GL_TEXTURE_CUBE_MAP)
+	CubeMap::CubeMap(uint texId)
+		: Texture(texId, (uint)GL_TEXTURE_CUBE_MAP)
 	{
 
 	}

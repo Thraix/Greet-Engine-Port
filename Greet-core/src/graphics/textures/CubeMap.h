@@ -10,9 +10,9 @@ namespace Greet {
 	class CubeMap : public Texture
 	{
 	public:
-		CubeMap(const std::string& top, const std::string& bottom, const std::string& left, const std::string& right, const std::string& front, const std::string& back, const std::string& name);
-		CubeMap(const std::string& map, const std::string& name);
-		CubeMap(uint texId, const std::string& name);
+		CubeMap(const std::string& top, const std::string& bottom, const std::string& left, const std::string& right, const std::string& front, const std::string& back);
+		CubeMap(const std::string& map);
+		CubeMap(uint texId);
 	private:
 		void LoadCubeMap(const std::string& image);
 		void LoadCubeMap(const std::string& top, const std::string& bottom, const std::string& left, const std::string& right, const std::string& front, const std::string& back);
