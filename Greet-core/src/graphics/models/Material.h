@@ -2,7 +2,8 @@
 
 #include <graphics/shaders/Uniformable.h>
 #include <graphics/shaders/Shader.h>
-#include <graphics/textures/Texture.h>
+#include <graphics/shaders/ShaderFactory.h>
+#include <graphics/textures/Texture2D.h>
 #include <utils/ColorUtils.h>
 
 namespace Greet {
@@ -11,14 +12,14 @@ namespace Greet {
 	{
 	private:
 		Shader m_shader;
-		Texture m_texture;
+		Texture2D m_texture;
 		float m_shineDamper = 10;
 		float m_reflectivity = 1;
 		uint m_color;
 
 	public:
-		Material(const Shader& shader, const Texture& texture);
-    Material();
+		Material(const Shader& shader, const Texture2D& texture);
+		Material(const Shader& shader);
 		virtual ~Material();
 
 		void Bind() const;

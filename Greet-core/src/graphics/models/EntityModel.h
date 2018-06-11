@@ -6,7 +6,7 @@ namespace Greet {
 
 	class EntityModel {
 	private:
-		MaterialModel* m_model;
+		const MaterialModel* m_model;
 	private:
 		Vec3 m_position;
 		Vec3 m_scale;
@@ -14,8 +14,8 @@ namespace Greet {
 		Mat4 m_transformationMatrix;
 		bool m_hasChanged;
 	public:
-		EntityModel(MaterialModel* model, float x, float y, float z, float sx, float sy, float sz, float rx, float ry, float rz);
-		EntityModel(MaterialModel* model, Vec3 position, Vec3 scale, Vec3 rotation);
+		EntityModel(const MaterialModel* model, float x, float y, float z, float sx, float sy, float sz, float rx, float ry, float rz);
+		EntityModel(const MaterialModel* model, Vec3 position, Vec3 scale, Vec3 rotation);
 		
 		inline const MaterialModel& GetMaterialModel() const { return *m_model; }
 		inline const Mat4& GetTransformationMatrix() const { return m_transformationMatrix; }
