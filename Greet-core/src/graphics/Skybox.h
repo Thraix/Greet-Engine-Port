@@ -10,12 +10,12 @@ namespace Greet {
 	class Skybox
 	{
 	private:
-		CubeMap* m_map;
+		CubeMap m_map;
 		Shader m_shader;
 		Mesh* m_mesh;
 	public:
-		Skybox(CubeMap* map);
-		const CubeMap* GetCubeMap() const { return m_map; };
+		Skybox(const CubeMap& map);
+		const CubeMap& GetCubeMap() const { return m_map; };
 		virtual ~Skybox();
 		void Render(const Mat4& projectionMatrix, const Camera& camera) const;
 	};
