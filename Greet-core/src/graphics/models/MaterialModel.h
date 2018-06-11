@@ -9,11 +9,11 @@ namespace Greet {
 	{
 	private:
 		static uint s_current_id;
-		Mesh* m_mesh;
-		Material* m_material;
+		const Mesh* m_mesh;
+		const Material* m_material;
 		uint m_id;
 	public:
-		MaterialModel(Mesh* mesh, Material* material);
+		MaterialModel(const Mesh* mesh, const Material* material);
 		virtual ~MaterialModel();
 
 		inline const Material& GetMaterial() const { return *m_material; }

@@ -4,7 +4,7 @@ namespace Greet {
 
 	uint MaterialModel::s_current_id;
 
-	MaterialModel::MaterialModel(Mesh* mesh, Material* material)
+	MaterialModel::MaterialModel(const Mesh* mesh, const Material* material)
 		: m_mesh(mesh), m_material(material), m_id(s_current_id++)
 	{
 		
