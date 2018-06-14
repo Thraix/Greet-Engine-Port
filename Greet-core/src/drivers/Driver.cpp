@@ -11,11 +11,6 @@ namespace Greet {
 	
 	}
 
-	Driver::~Driver() 
-	{
-		delete m_listener;
-	}
-
 	void Driver::Preupdate(float timeElapsed) 
 	{ 
 		m_elapsedSinceStart += timeElapsed;
@@ -25,6 +20,7 @@ namespace Greet {
 			m_elapsed = m_time - m_elapsedSinceStart + timeElapsed;
 			m_elapsedSinceStart = m_time;
 		}
+    m_listener->OnDriverUpdated();
 	}
 
 	bool Driver::Postupdate()
@@ -39,6 +35,6 @@ namespace Greet {
 
 	void Driver::OnFinished() 
 	{
-		m_listener->OnFinished();
+		m_listener->OnDriverFinished();
 	}
 }

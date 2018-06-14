@@ -5,6 +5,8 @@
 
 namespace Greet {
 
+  class Renderer3D;
+
 	class MaterialModel
 	{
 	private:
@@ -15,6 +17,14 @@ namespace Greet {
 	public:
 		MaterialModel(const Mesh* mesh, const Material* material);
 		virtual ~MaterialModel();
+
+    void PreRender(const Renderer3D* renderer, const Mat4& transformationMatrix) const;
+    void Render(const Renderer3D* renderer, const Mat4& transformationMatrix) const;
+    void PostRender(const Renderer3D* renderer, const Mat4& transformationMatrix) const;
+
+    void PreRender(const Renderer3D* renderer) const;
+    void Render(const Renderer3D* renderer) const;
+    void PostRender(const Renderer3D* renderer) const;
 
 		inline const Material& GetMaterial() const { return *m_material; }
 		inline const Mesh& GetMesh() const { return *m_mesh; }

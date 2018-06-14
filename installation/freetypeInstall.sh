@@ -3,8 +3,7 @@ tar -xvzf freetype-2.9.tar.gz
 cd freetype-2.9
 mkdir build
 cd build
-cmake ../ -DBUILD_SHARED_LIBS
-make install
+sudo cmake ../ -DBUILD_SHARED_LIBS:BOOL=true
+sudo make install
 cd ../../
-rm -rf freetype-2.9*
-
+rm -rf freetype-2.9

@@ -1,3 +1,5 @@
+#pragma once
+
 #include "Camera.h"
 #include <math/Maths.h>
 #include <event/MouseListener.h>

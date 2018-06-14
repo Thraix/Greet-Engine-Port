@@ -59,7 +59,7 @@ namespace Greet {
 		window = glfwCreateWindow(width, height, title.c_str(), NULL, NULL);
 		ASSERT(window,"Failed to initialize window!");
 		//glfwSetInputMode(window,GLFW_CURSOR,GLFW_CURSOR_HIDDEN);
-		//glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+		//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 		glfwMakeContextCurrent(window);
 
 		//glfwSetWindowUserPointer(window,this);

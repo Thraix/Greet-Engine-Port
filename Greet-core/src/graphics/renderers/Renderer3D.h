@@ -16,30 +16,40 @@ namespace Greet{
 	protected:
 		Mat4 m_projectionMatrix;
 		Camera* m_camera;
+		Skybox* m_skybox;
 		float m_renderDistance;
 		float m_near;
 		float m_far;
-		Skybox* m_skybox;
 
 
 	public:
+		Renderer3D(const Mat4& projectionMatrix, Camera* camera, float near=-1, float far=1)
+			: m_projectionMatrix(projectionMatrix), m_camera(camera), m_skybox(NULL), m_renderDistance(far), m_near(near), m_far(far)
+		{
+			
+		}
+		Renderer3D(const Mat4& projectionMatrix, Camera* camera, Skybox* skybox, float near=-1, float far=1)
+			: m_projectionMatrix(projectionMatrix), m_camera(camera), m_skybox(skybox), m_renderDistance(far), m_near(near), m_far(far)
+		{
+			
+		}
 		Renderer3D(float width, float height, Camera* camera, float fov, float near, float far, Skybox* skybox)
 			: m_projectionMatrix(Mat4::ProjectionMatrix(width/height, fov, near, far)), m_camera(camera), m_skybox(skybox), m_renderDistance(far), m_near(near), m_far(far)
 		{
 			
 		}
+
+		Renderer3D(float width, float height, Camera* camera, float fov, float near, float far)
+			: m_projectionMatrix(Mat4::ProjectionMatrix(width/height, fov, near, far)), m_camera(camera), m_skybox(NULL), m_renderDistance(far), m_near(near), m_far(far)
+		{
+			
+		}
 		virtual ~Renderer3D() 
 		{
-			delete m_skybox;
 		}
 
-		virtual void Render(const EntityModel& model) const;
-		virtual void Render(const Mesh& model) const;
-		virtual void Render(const MaterialModel& model) const;
-
 		virtual void Update(float timeElapsed);
-
-		virtual void Submit(const EntityModel* model) {};
+    virtual void BindMatrices(const Shader& shader, bool shouldBindShader = false) const;
 
 		virtual void Begin() {
 			RenderSkybox();

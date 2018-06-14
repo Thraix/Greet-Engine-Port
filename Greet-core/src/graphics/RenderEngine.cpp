@@ -56,7 +56,9 @@ namespace Greet {
 	{
 		for (auto it = m_renderer3ds.begin(); it != m_renderer3ds.end(); it++)
 		{
+      it->second->PreRender();
 			it->second->Render();
+      it->second->PostRender();
 		}
 
 		for (auto it = m_renderer2ds.begin(); it != m_renderer2ds.end(); it++)

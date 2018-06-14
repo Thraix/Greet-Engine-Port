@@ -17,7 +17,6 @@ namespace Greet {
 
 		Driver(float time, DriverListener* listener);
 
-		~Driver();
 
 		void Preupdate(float timeElapsed);
 		virtual void Update() = 0;

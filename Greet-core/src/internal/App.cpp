@@ -36,7 +36,7 @@ namespace Greet {
 		m_timer = new Timer();
 		double timer = 0.0f;
 		double updateTimer = 0.0f;
-		double updateTick = 1.0 / 300.0;
+		double updateTick = frameCap;
 		double renderTimer = 0.0f;
 
 		uint frames = 0;

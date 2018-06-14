@@ -13,14 +13,9 @@ namespace Greet {
 	public:
 		Layer3D(Renderer3D* renderer);
 		virtual ~Layer3D();
-		void Add(const EntityModel* renderable);
+    virtual void PreRender() const;
 		virtual void Render() const;
+    virtual void PostRender() const;
 		virtual void Update(float timeElapsed);
-		virtual void ViewportResize(float x, float y, float width, float height) {}
-		virtual void WindowResize(int width, int height) {}
-
-		
-	protected:
-		virtual void SetUniforms() const {}
 	};
 }

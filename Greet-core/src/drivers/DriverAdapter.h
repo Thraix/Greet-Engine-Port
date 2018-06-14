@@ -7,8 +7,7 @@ namespace Greet {
 	class DriverAdapter : public DriverListener
 	{
 	public:
-	public:
-		void OnFinished() override {}
+		void OnDriverFinished() override {}
 	};
 
 }
