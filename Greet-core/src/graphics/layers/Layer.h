@@ -4,10 +4,11 @@
 #include <graphics/Renderable.h>
 #include <graphics/renderers/Renderer2D.h>
 #include <logging/Log.h>
+#include <graphics/layers/Scene.h>
 
 namespace Greet {
 
-	class Layer
+	class Layer : public Scene
 	{
 	protected:
 		Renderer2D* m_renderer;
@@ -43,11 +44,15 @@ namespace Greet {
 			m_renderables.push_back(renderable);
 		}
 
-		virtual void Render() const
-		{
+    virtual void PreRender() const override
+    {
 			m_shader.Enable();
 			setUniforms();
 			m_renderer->Begin();
+    }
+
+		virtual void Render() const override
+		{
 			uint size = m_renderables.size();
 			for (uint i = 0; i < size; i++)
 			{
@@ -55,12 +60,16 @@ namespace Greet {
 				m_renderables[i]->Submit(m_renderer);
 				m_renderables[i]->End(m_renderer);
 			}
+		}
+
+    virtual void PostRender() const override
+    {
 			m_renderer->End();
 			m_renderer->Flush();
 			m_shader.Disable();
-		}
+    }
 
-		virtual void Update(float timeElapsed)
+		virtual void Update(float timeElapsed) override
 		{
 			uint size = m_renderables.size();
 			for (uint i = 0; i < size; i++)

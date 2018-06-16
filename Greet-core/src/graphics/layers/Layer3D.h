@@ -1,12 +1,10 @@
 #pragma once
 
-#include <graphics/shaders/Shader.h>
-#include <graphics/Renderable.h>
 #include <graphics/renderers/Renderer3D.h>
-#include <logging/Log.h>
+#include <graphics/layers/Scene.h>
 
 namespace Greet {
-	class Layer3D
+	class Layer3D : public Scene
 	{
 	protected:
 		Renderer3D* m_renderer;
@@ -17,5 +15,7 @@ namespace Greet {
 		virtual void Render() const;
     virtual void PostRender() const;
 		virtual void Update(float timeElapsed);
+    const Renderer3D* GetRenderer() const { return m_renderer;}
+    void SetRenderer(Renderer3D* renderer) { m_renderer = renderer;}
 	};
 }

@@ -1,25 +1,25 @@
 #pragma once
 
 #include <map>
-#include <graphics/layers/Layer.h>
-#include <graphics/layers/Layer3D.h>
+#include <graphics/layers/Scene.h>
 
-namespace Greet {
-	class RenderEngine
-	{
+  namespace Greet {
+    class RenderEngine
+    {
 
-	private:
-		static std::map<std::string, Layer*> m_renderer2ds;
-		static std::map<std::string, Layer3D*> m_renderer3ds;
+    private:
+      // they are the same but 3d scenes are always rendered first
+      static std::map<std::string, Scene*> m_scenes2d;
+      static std::map<std::string, Scene*> m_scenes3d;
 
-	public:
-		static void AddLayer2d(Layer* renderer, const std::string& name);
-		static void AddLayer3d(Layer3D* renderer, const std::string& name);
+    public:
+		static void Add2DScene(Scene* scene, const std::string& name);
+		static void Add3DScene(Scene* scene, const std::string& name);
 
-		static Layer* RemoveLayer2d(const std::string& name);
-		static Layer3D* RemoveLayer3d(const std::string& name);
-		static Layer* GetRenderer2d(const std::string& name);
-		static Layer3D* GetRenderer3d(const std::string& name);
+		static Scene* Remove2DScene(const std::string& name);
+		static Scene* Remove3DScene(const std::string& name);
+		static Scene* Get2DScene(const std::string& name);
+		static Scene* Get3DScene(const std::string& name);
 		static void Render();
 		static void Update(float timeElapsed);
 

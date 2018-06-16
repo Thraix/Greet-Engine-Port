@@ -1,82 +1,90 @@
 #include "RenderEngine.h"
 
+#include <logging/Log.h>
+
 namespace Greet {
 
-	std::map<std::string, Layer*> RenderEngine::m_renderer2ds;
+	std::map<std::string, Scene*> RenderEngine::m_scenes2d;
 
-	std::map<std::string, Layer3D*> RenderEngine::m_renderer3ds;
+	std::map<std::string, Scene*> RenderEngine::m_scenes3d;
 
-	void RenderEngine::AddLayer2d(Layer* renderer, const std::string& name)
+	void RenderEngine::Add2DScene(Scene* scene, const std::string& name)
 	{
-		if (renderer == NULL)
+		if (scene == NULL)
 		{
-			Log::Error("Trying to add Renderer2D to RenderEngine but it is NULL.");
+			Log::Error("Trying to add Scene to RenderEngine but it is NULL.");
 			return;
 		}
-		m_renderer2ds.emplace(name, renderer);
+		m_scenes2d.emplace(name, scene);
 	}
 
-	void RenderEngine::AddLayer3d(Layer3D* renderer, const std::string& name)
+	void RenderEngine::Add3DScene(Scene* scene, const std::string& name)
 	{
-		if (renderer == NULL)
+		if (scene == NULL)
 		{
 			Log::Error("Trying to add Renderer3D to RenderEngine but it is NULL.");
 			return;
 		}
-		m_renderer3ds.emplace(name, renderer);
+		m_scenes3d.emplace(name, scene);
 	}
 
-	Layer* RenderEngine::RemoveLayer2d(const std::string& name)
+	Scene* RenderEngine::Remove2DScene(const std::string& name)
 	{
-		auto it = m_renderer2ds.find(name);
-		m_renderer2ds.erase(it);
+		auto it = m_scenes2d.find(name);
+		m_scenes2d.erase(it);
 		return it->second;
 	}
 
-	Layer3D* RenderEngine::RemoveLayer3d(const std::string& name)
+	Scene* RenderEngine::Remove3DScene(const std::string& name)
 	{
-		auto it = m_renderer3ds.find(name);
-		m_renderer3ds.erase(it);
+		auto it = m_scenes3d.find(name);
+		m_scenes3d.erase(it);
 		return it->second;
 	}
 
-	Layer* RenderEngine::GetRenderer2d(const std::string& name)
+	Scene* RenderEngine::Get2DScene(const std::string& name)
 	{
-		auto it = m_renderer2ds.find(name);
+		auto it = m_scenes2d.find(name);
 		return it->second;
 	}
 
-	Layer3D* RenderEngine::GetRenderer3d(const std::string& name)
+	Scene* RenderEngine::Get3DScene(const std::string& name)
 	{
-		auto it = m_renderer3ds.find(name);
+		auto it = m_scenes3d.find(name);
 		return it->second;
 	}
 
 	void RenderEngine::Render()
 	{
-		for (auto it = m_renderer3ds.begin(); it != m_renderer3ds.end(); it++)
+		for (auto it = m_scenes3d.begin(); it != m_scenes3d.end(); it++)
 		{
       it->second->PreRender();
 			it->second->Render();
       it->second->PostRender();
 		}
 
-		for (auto it = m_renderer2ds.begin(); it != m_renderer2ds.end(); it++)
+		for (auto it = m_scenes2d.begin(); it != m_scenes2d.end(); it++)
 		{
+      it->second->PreRender();
 			it->second->Render();
+      it->second->PostRender();
 		}
 	}
 
 	void RenderEngine::Update(float timeElapsed)
 	{
-		for (auto it = m_renderer3ds.begin(); it != m_renderer3ds.end(); it++)
+		for (auto it = m_scenes3d.begin(); it != m_scenes3d.end(); it++)
 		{
+			it->second->PreUpdate(timeElapsed);
 			it->second->Update(timeElapsed);
+			it->second->PostUpdate(timeElapsed);
 		}
 
-		for (auto it = m_renderer2ds.begin(); it != m_renderer2ds.end(); it++)
+		for (auto it = m_scenes2d.begin(); it != m_scenes2d.end(); it++)
 		{
+			it->second->PreUpdate(timeElapsed);
 			it->second->Update(timeElapsed);
+			it->second->PostUpdate(timeElapsed);
 		}
 	}
 

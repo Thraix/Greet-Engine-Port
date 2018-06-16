@@ -80,5 +80,6 @@ namespace Greet {
 			if (timeToNext >= 1)
 				std::this_thread::sleep_for(std::chrono::milliseconds((long long)timeToNext));
 		}
+    delete m_timer;
 	}
 }
