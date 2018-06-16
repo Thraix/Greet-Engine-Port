@@ -140,6 +140,8 @@ namespace Greet {
 		GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_iboId));
 		uint vbo;
     vbo = OpenGLObjectHandler::CreateOpenGLObject(OpenGLType::BUFFER);
+    if(vbo == 0)
+      Log::Error("Couldn't generate buffer");
 		GLCall(glBindBuffer(GL_ARRAY_BUFFER, vbo));
 		m_vbos.emplace(location, vbo); // Needed to delete vbo when deleting mesh
 		GLCall(glBufferData(GL_ARRAY_BUFFER, m_vertexCount * sizeof(float) * 3, data, GL_STATIC_DRAW));
@@ -161,6 +163,9 @@ namespace Greet {
 		GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_iboId));
 		uint vbo;
     vbo = OpenGLObjectHandler::CreateOpenGLObject(OpenGLType::BUFFER);
+    if(vbo == 0)
+      Log::Error("Couldn't generate buffer");
+		GLCall(glBindBuffer(GL_ARRAY_BUFFER, vbo));
 		m_vbos.emplace(location, vbo); // Needed to delete vbo when deleting mesh
 		GLCall(glBufferData(GL_ARRAY_BUFFER, m_vertexCount * sizeof(float) * 2, data, GL_STATIC_DRAW));
 		GLCall(glVertexAttribPointer(location, 2, GL_FLOAT, false, 0, 0));
@@ -180,6 +185,8 @@ namespace Greet {
 		GLCall(glBindVertexArray(m_vaoId));
 		uint vbo;
     vbo = OpenGLObjectHandler::CreateOpenGLObject(OpenGLType::BUFFER);
+    if(vbo == 0)
+      Log::Error("Couldn't generate buffer");
 		GLCall(glBindBuffer(GL_ARRAY_BUFFER, vbo));
 		m_vbos.emplace(location, vbo); // Needed to delete vbo when deleting mesh
 		GLCall(glBufferData(GL_ARRAY_BUFFER, m_vertexCount * sizeof(byte) * attributeSize, data, GL_STATIC_DRAW));
@@ -201,6 +208,8 @@ namespace Greet {
 		GLCall(glBindVertexArray(m_vaoId));
 		uint vbo;
     vbo = OpenGLObjectHandler::CreateOpenGLObject(OpenGLType::BUFFER);
+    if(vbo == 0)
+      Log::Error("Couldn't generate buffer");
 		GLCall(glBindBuffer(GL_ARRAY_BUFFER, vbo));
 		m_vbos.emplace(data->location,vbo); // Needed to delete vbo when deleting mesh
 		GLCall(glBufferData(GL_ARRAY_BUFFER, m_vertexCount * data->memoryValueSize, data->data, GL_STATIC_DRAW));

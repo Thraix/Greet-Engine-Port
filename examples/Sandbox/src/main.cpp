@@ -64,15 +64,15 @@ public:
 	{
 		EventDispatcher::AddKeyListener(DISPATCHER_GUI+1, *this);
 		EventDispatcher::AddMouseListener(DISPATCHER_GUI + 1, *this);
-		TextureManager::Add(new Texture2D("res/textures/stallTexture.png", "stall"));
-		TextureManager::Add(new Texture2D("res/textures/cursor.png", "cursor"));
-		TextureManager::Add(new Texture2D("res/textures/mask.png", "mask"));
-		TextureManager::Add(new Texture2D("res/textures/mask2.png", "mask2"));
-		TextureManager::Add(new CubeMap("res/textures/skybox.png", "skybox"));
-		TextureManager::Add(new Texture2D("res/textures/lens_flare1.png", "lensflare1"));
-		TextureManager::Add(new Texture2D("res/textures/lens_flare2.png", "lensflare2"));
-		TextureManager::Add(new Texture2D("res/textures/lens_flare3.png", "lensflare3"));
-		TextureManager::Add(new Texture2D("res/textures/lens_flare4.png", "lensflare4"));
+		TextureManager::Add("stall",Texture2D("res/textures/stallTexture.png"));
+		TextureManager::Add("cursor",Texture2D("res/textures/cursor.png"));
+		TextureManager::Add("mask",Texture2D("res/textures/mask.png"));
+		TextureManager::Add("mask2",Texture2D("res/textures/mask2.png"));
+		TextureManager::Add("skybox",CubeMap("res/textures/skybox.png"));
+		TextureManager::Add("lensflare1",Texture2D("res/textures/lens_flare1.png"));
+		TextureManager::Add("lensflare2",Texture2D("res/textures/lens_flare2.png"));
+		TextureManager::Add("lensflare3",Texture2D("res/textures/lens_flare3.png"));
+		TextureManager::Add("lensflare4",Texture2D("res/textures/lens_flare4.png"));
 		FontManager::Add(new FontContainer("res/fonts/Anonymous Pro.ttf", "anonymous"));
 		FontManager::Add(new FontContainer("res/fonts/Roboto-Thin.ttf", "roboto"));
 
@@ -87,9 +87,9 @@ public:
 		Shader stallShader = Shader::FromFile("res/shaders/3dshader.shader");
 		Shader blurShader = Shader::FromFile("res/shaders/default2dshader.vert","res/shaders/guassianblur.frag");
 
-		modelMaterial = new Material(modelShader, NULL);
-		stallMaterial = new Material(stallShader, TextureManager::Get("stall"));
-		terrainMaterial = new Material(terrainShader, NULL);
+		modelMaterial = new Material(modelShader);
+		stallMaterial = new Material(stallShader, TextureManager::Get2D("stall"));
+		terrainMaterial = new Material(terrainShader);
 		terrainMaterial->SetReflectivity(0.5f);
 		terrainMaterial->SetShineDamper(5.0f);
 		uint gridWidth = 999;
@@ -100,34 +100,34 @@ public:
 		RecalcGrid(gridMesh, gridWidth, gridLength);
 
     MeshData* polygonMesh = MeshFactory::Polygon(6, 10, MeshFactory::PolygonSizeFormat::SIDE_LENGTH);
-    MaterialModel* polygonModel = new MaterialModel(new Mesh(polygonMesh), *terrainMaterial);
-    polygon = new EntityModel(*polygonModel, Vec3(0,1,0), Vec3(1,1,1), Vec3(0,0,0));
+    MaterialModel* polygonModel = new MaterialModel(new Mesh(polygonMesh), terrainMaterial);
+    polygon = new EntityModel(polygonModel, Vec3(0,1,0), Vec3(1,1,1), Vec3(0,0,0));
     
 		
 		//gridMesh->setDefaultAttribute4f(MESH_COLORS_LOCATION, vec4(1.0f, 0.0f, 0.0f, 1.0f));
 		//gridMesh->setEnableCulling(false);
-		MaterialModel* gridModelMaterial = new MaterialModel(new Mesh(gridMesh), *terrainMaterial);
-		grid = new EntityModel(*gridModelMaterial, Vec3(0, -20, 0), Vec3(1.0f, 1.0f, 1.0f), Vec3(0.0f, 0.0f, 0.0f));
+		MaterialModel* gridModelMaterial = new MaterialModel(new Mesh(gridMesh), terrainMaterial);
+		grid = new EntityModel(gridModelMaterial, Vec3(0, -20, 0), Vec3(1.0f, 1.0f, 1.0f), Vec3(0.0f, 0.0f, 0.0f));
 		delete gridMesh;
 
 		MeshData* cubeMesh = MeshFactory::Cube(0,0,0,10,10,10);
-		MaterialModel* cubeModelMaterial = new MaterialModel(new Mesh(cubeMesh), *modelMaterial);
-		cube = new EntityModel(*cubeModelMaterial, Vec3(0,0,0), Vec3(1, 1, 1), Vec3(0, 0, 0));
+		MaterialModel* cubeModelMaterial = new MaterialModel(new Mesh(cubeMesh), modelMaterial);
+		cube = new EntityModel(cubeModelMaterial, Vec3(0,0,0), Vec3(1, 1, 1), Vec3(0, 0, 0));
 		delete cubeMesh;
 
 		MeshData* tetrahedronMesh = MeshFactory::Tetrahedron(0,0,0,10);
-		MaterialModel* tetrahedronModelMaterial = new MaterialModel(new Mesh(tetrahedronMesh), *modelMaterial);
-		tetrahedron = new EntityModel(*tetrahedronModelMaterial, Vec3(30, 0, 10), Vec3(1, 1, 1), Vec3(0, 0, 0));
+		MaterialModel* tetrahedronModelMaterial = new MaterialModel(new Mesh(tetrahedronMesh), modelMaterial);
+		tetrahedron = new EntityModel(tetrahedronModelMaterial, Vec3(30, 0, 10), Vec3(1, 1, 1), Vec3(0, 0, 0));
 		delete tetrahedronMesh;
 
 		Mesh* stallMesh = ObjUtils::LoadObj("res/objs/stall.obj.gobj");
 		stallMaterial->SetReflectivity(0.1)->SetShineDamper(1);
-		MaterialModel* stallModelMaterial = new MaterialModel(stallMesh, *stallMaterial);
-		stall = new EntityModel(*stallModelMaterial, Vec3(0.0f, 0.0f, -25), Vec3(1.0f, 1.0f, 1.0f), Vec3(0.0f, 0.0f, 0.0f));
+		MaterialModel* stallModelMaterial = new MaterialModel(stallMesh, stallMaterial);
+		stall = new EntityModel(stallModelMaterial, Vec3(0.0f, 0.0f, -25), Vec3(1.0f, 1.0f, 1.0f), Vec3(0.0f, 0.0f, 0.0f));
 
 		Mesh* dragonMesh = ObjUtils::LoadObj("res/objs/dragon.obj.gobj");
-		MaterialModel* dragonModelMaterial = new MaterialModel(dragonMesh, *modelMaterial);
-		dragon = new EntityModel(*dragonModelMaterial, Vec3(10.0f, 0.0f, -25), Vec3(1.0f, 1.0f, 1.0f), Vec3(0.0f, 0.0f, 0.0f));
+		MaterialModel* dragonModelMaterial = new MaterialModel(dragonMesh, modelMaterial);
+		dragon = new EntityModel(dragonModelMaterial, Vec3(10.0f, 0.0f, -25), Vec3(1.0f, 1.0f, 1.0f), Vec3(0.0f, 0.0f, 0.0f));
 		
 		//Mesh* gridMesh = MeshFactory::cube(0,0,0,10,10,10);
 		//gridMesh->setEnableCulling(false);
@@ -193,7 +193,7 @@ public:
 		//renderer3d->submit(stall);
 		//renderer3d->submit(dragon);
 		renderer3d->Submit(grid);
-    renderer3d->Submit(polygon);
+    //renderer3d->Submit(polygon);
 		//renderer3d->submit(cube);
 		//renderer3d->submit(tetrahedron);
 		//for (uint i = 0;i < 2000;i++)
@@ -205,9 +205,9 @@ public:
 		//Tree t(renderer3d,0,0,0);
 		uint pos = 0;
 //		Log::info(JSONLoader::isNumber("0.1234s",pos));
-		RenderEngine::AddLayer2d(uilayer, "uilayer");
+		RenderEngine::Add2DScene(uilayer, "uilayer");
 		//RenderEngine::AddLayer2d(guilayer, "guilayer");
-		RenderEngine::AddLayer3d(new Layer3D(renderer3d), "3dWorld");
+		RenderEngine::Add3DScene(new Layer3D(renderer3d), "3dWorld");
 		guirenderer = new GUIRenderer();
 		//guirenderer->PushMatrix(Mat3::Orthographic(0, Window::GetWidth(), 0, Window::GetHeight()));
 		Log::Info(ColorUtils::HexToVec4(0xffaa0077));

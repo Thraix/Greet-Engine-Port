@@ -56,6 +56,7 @@ namespace Greet {
 	bool Window::init()
 	{
 		ASSERT(glfwInit(),"Failed to initialize GLFW!");
+    glfwWindowHint(GLFW_SAMPLES, 4);
 		window = glfwCreateWindow(width, height, title.c_str(), NULL, NULL);
 		ASSERT(window,"Failed to initialize window!");
 		//glfwSetInputMode(window,GLFW_CURSOR,GLFW_CURSOR_HIDDEN);
@@ -78,6 +79,7 @@ namespace Greet {
 		GLCall(glEnable(GL_BLEND));
 		GLCall(glEnable(GL_DEPTH_TEST));
 		GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
+    GLCall(glEnable(GL_MULTISAMPLE));
 		ASSERT(glewInit() == GLEW_OK,"Glew failed to init.");
 		GLCall(glProvokingVertex(GL_FIRST_VERTEX_CONVENTION));
 
