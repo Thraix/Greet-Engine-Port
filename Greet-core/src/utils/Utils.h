@@ -5,7 +5,7 @@
 #include <internal/GreetTypes.h>
 #include <internal/GreetGL.h>
 
-#define BIT(x) (1 << x)
+#define BIT(x) (1 << (x))
 
 namespace Greet { namespace Utils {
 

@@ -257,6 +257,7 @@ namespace Greet { namespace ObjUtils {
 		Vec2* texCoordsArray = new Vec2[vertexCount];
 		Vec3* normalsArray = new Vec3[vertexCount];
 
+    // asdasdasdad
 		ReadVec3s(file, pointer, vertices, vertexCount);
 		ReadVec2s(file, pointer, texCoords, texCoordCount);
 		ReadVec3s(file, pointer, normals, normalCount);

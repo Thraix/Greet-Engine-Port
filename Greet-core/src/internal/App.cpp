@@ -4,6 +4,7 @@
 #include <thread>
 #include <logging/Log.h>
 #include <graphics/RenderEngine.h>
+#include <event/InputController.h>
 
 namespace Greet {
 
@@ -47,6 +48,7 @@ namespace Greet {
 			double elapsed = m_timer->Elapsed();
 			if (elapsed - updateTimer >= updateTick)
 			{
+        InputController::FlushInputs();
 				DriverDispatcher::Update(updateTick);
 				Window::Update();
 				RenderEngine::Update(elapsed - updateTimer);

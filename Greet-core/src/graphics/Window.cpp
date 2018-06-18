@@ -5,6 +5,7 @@
 #include <internal/GreetGL.h>
 #include <event/EventDispatcher.h>
 #include <internal/OpenGLObjectHandler.h>
+#include <event/InputController.h>
 
 namespace Greet {
 
@@ -177,9 +178,15 @@ namespace Greet {
 	void Window::key_callback(GLFWwindow *window, int key, int scancode, int action, int mods)
 	{
 		if (action == GLFW_RELEASE)
+    {
+      InputController::KeyButton(key, -1);
 			EventDispatcher::OnKeyReleased(KeyReleasedEvent(key));
+    }
 		else if(action == GLFW_PRESS)
+    {
+      InputController::KeyButton(key, 1);
 			EventDispatcher::OnKeyPressed(KeyPressedEvent(key));
+    }
 		else if(action == GLFW_REPEAT)
 			EventDispatcher::OnKeyPressed(KeyPressedEvent(key));
 	}
@@ -204,8 +211,11 @@ namespace Greet {
 	void Window::mouse_position_callback(GLFWwindow* window, double xpos, double ypos)
 	{
 		EventDispatcher::OnMouseMoved(MouseMovedEvent(xpos, ypos, xpos - mousePosPixel.x, ypos - mousePosPixel.y, isMouseButtonDown));
+    Vec2 mousePosDelta = mousePos;
 		mousePos = Vec2(xpos / width, 1.0f - (ypos / height))*2.0f - 1.0f;
 		mousePosPixel = Vec2(xpos, ypos);
+    InputController::MouseMotion(0, mousePos.x);
+    InputController::MouseMotion(1, mousePos.y);
 	}
 
 	void Window::mouse_scroll_callback(GLFWwindow* window, double scrollX, double scrollY)
@@ -233,7 +243,6 @@ namespace Greet {
 
 	void Window::joystick_callback(int joy, int event)
 	{
-    Log::Info("connected");
 		for (uint i = 0;i < joystickState.size();i++)
 			joystickState[i]->JoystickState(joy, event == GLFW_CONNECTED);
 	}

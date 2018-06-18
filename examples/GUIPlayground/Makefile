@@ -1,42 +1,27 @@
-CC=g++
-PLATFORM=unix
-OBJPATH=bin/intermediates
-SOURCES=$(wildcard src/*.cpp) $(wildcard src/**/*.cpp) $(wildcard src/**/**/*.cpp) $(wildcard src/**/**/**/*.cpp)
-OBJECTS=$(addprefix $(OBJPATH)/, $(notdir $(SOURCES:.cpp=.o)))
-INCLUDES=-I../../deps/includes/ -I ../../Greet-core/src/
-LIBDIR=-L../../deps/libs/$(PLATFORM)/ -L../../Greet-core/bin/
-
-CFLAGS=$(INCLUDES) -std=c++17 -c -w -g3
-LIBS=$(LIBDIR) -l:libgreet.a -lGL -l:libGLEW.so -l:libglfw.so -l:libfreeimage.so -l:libfreetype-gl.a -l:libfreetype.so 
-EXECUTABLE=bin/Sandbox.a
-PRINT=${info Compiling $<}
-
-all: $(EXECUTABLE)
-	$(info Done :D)
+# This Makefile was generated using MakeGen v1.0.5 made by Tim Håkansson
+# and is licensed under MIT. Full source of the project can be found at
+# https://github.com/Thraix/MakeGen
+CC=@g++
+CO=@g++ -o
+BIN=bin/
+OBJPATH=$(BIN)intermediates
+INCLUDES=-I./../../Greet-core/src/ -I./../../deps/includes/ 
+OBJECTS=$(OBJPATH)/GuiTesting.o 
+CFLAGS=$(INCLUDES) -std=c++17 -c -w -g3 -D_DEBUG 
+LIBDIR=-L./../../deps/libs/unix/ -L./../../Greet-core/bin/ 
+LIBS=$(LIBDIR) -lgreet -lGL -lGLEW -lglfw -lfreeimage -lfreetype-gl -lfreetype 
+OUTPUT=$(BIN)Sandbox.a
+all: $(OUTPUT)
 rebuild: clean all
-
-$(EXECUTABLE): $(OBJECTS) ../../Greet-core/bin/libgreet.a
-	$(info Linking libraries)
-	$(CC) -o $(EXECUTABLE) $(OBJECTS) $(LIBS)
-
-$(OBJPATH)/%.o: src/%.cpp
-	$(PRINT)
-	$(CC) $(CFLAGS) -o $@ $<
-
-$(OBJPATH)/%.o: src/**/%.cpp
-	$(PRINT)
-	$(CC) $(CFLAGS) -o $@ $<
-
-$(OBJPATH)/%.o: src/**/**/%.cpp
-	$(PRINT)
-	$(CC) $(CFLAGS) -o $@ $<
-
-$(OBJPATH)/%.o: src/**/**/**/%.cpp
-	$(PRINT)
-	$(CC) $(CFLAGS) -o $@ $<
-
-
 clean:
 	$(info Removing intermediates)
-	rm -rf $(OBJPATH)/*
-	rm -f $(EXECUTABLE)
+	rm -rf $(OBJPATH)/*.o
+$(OUTPUT): $(OBJECTS)
+	$(info Generating output file)
+	$(CO) $(OUTPUT) $(OBJECTS) $(LIBS)
+install: all
+	$(info Installing Sandbox to /usr/bin/)
+	@cp $(OUTPUT) /usr/bin/Sandbox.a
+$(OBJPATH)/GuiTesting.o : src/GuiTesting.cpp
+	$(info -[100%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
