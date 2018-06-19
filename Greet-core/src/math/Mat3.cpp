@@ -181,7 +181,7 @@ namespace Greet{
 		temp[7] = mat.elements[6] * mat.elements[1] - mat.elements[0] * mat.elements[7];
 		temp[8] = mat.elements[0] * mat.elements[4] - mat.elements[3] * mat.elements[1];
 
-		det = mat.elements[0] * temp[0] + mat.elements[1] * temp[4] + mat.elements[2] * temp[7];
+		det = mat.elements[0] * temp[0] + mat.elements[3] * temp[1] + mat.elements[6] * temp[2];
 		
 		if (det == 0)
 			return mat;
