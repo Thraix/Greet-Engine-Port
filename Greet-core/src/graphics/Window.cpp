@@ -195,9 +195,15 @@ namespace Greet {
 	{
 		mouseButtonDown[button] = action == GLFW_PRESS;
 		if (action == GLFW_RELEASE)
+    {
 			EventDispatcher::OnMouseReleased(MouseReleasedEvent(mousePosPixel.x,mousePosPixel.y,button));
+      InputController::MouseButton(button,-1);
+    }
 		else if (action == GLFW_PRESS)
+    {
 			EventDispatcher::OnMousePressed(MousePressedEvent(mousePosPixel.x, mousePosPixel.y, button));
+      InputController::MouseButton(button,1);
+    }
 		isMouseButtonDown = mouseButtonDown[button];
 		if(!isMouseButtonDown)
 			for (uint i = 0;i < MAX_MOUSEBUTTONS;i++)
