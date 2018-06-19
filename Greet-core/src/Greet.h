@@ -68,6 +68,10 @@
 #include <graphics/renderers/Renderer3D.h>
 #include <graphics/layers/Layer3D.h>
 #include <graphics/RenderEngine.h>
+#include <event/InputControl.h>
+#include <event/InputControlListener.h>
+#include <event/InputController.h>
+#include <graphics/layers/Scene.h>
 #include <listeners/JoystickState.h>
 #include <listeners/WindowListener.h>
 #include <input/Joystick.h>

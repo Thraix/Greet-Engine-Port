@@ -7,24 +7,19 @@
 #include <map>
 #include <queue>
 #include <event/InputControl.h>
+
 namespace Greet
 {
-  struct InputControllerTest
-  {
-    virtual void OnInputChanged(InputControl* control) = 0;
-  };
-
   class InputController
   {
     public:
       friend class Window;
       friend class App;
+      friend class Joystick;
     private:
-      static InputControllerTest* test;
       static std::deque<InputControl*> changed;
-      static std::map<ushort, InputWeightControl> inputControls;
+      static std::map<ushort, InputWeightControl> inputWeightControls;
     public:
-      static void SetTest(InputControllerTest* _test) { test = _test; }
       static void AddKeyButton(ushort keyCode, InputControl* control, float weight, bool overrideValue, uint index);
       static void AddMouseButton(ushort mouseCode, InputControl* control, float weight, bool overrideValue, uint index);
       static void AddMouseMotion(ushort mouseCode, InputControl* control, float weight, bool overrideValue, uint index);
@@ -33,6 +28,7 @@ namespace Greet
       static void AddGamepadAxis(ushort gamepadCode, InputControl* control, float weight, bool overrideValue, uint index);
 
     private:
+      static void AddInput(ushort code, InputControl* control, float weight, bool overrideValue, uint index);
       static void KeyButton(ushort keyCode, float value);
       static void MouseButton(ushort mouseCode, float value);
       static void MouseMotion(ushort mouseCode, float value);

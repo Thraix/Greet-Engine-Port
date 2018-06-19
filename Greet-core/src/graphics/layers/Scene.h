@@ -1,8 +1,11 @@
 #pragma once
 
+#include <event/InputControlListener.h>
+#include <event/InputControl.h>
+
 namespace Greet
 {
-  class Scene
+  class Scene : public InputControlListener
   {
     public:
       virtual void PreRender() const {}
@@ -11,9 +14,6 @@ namespace Greet
       virtual void PreUpdate(float timeElapsed) {}
       virtual void Update(float timeElapsed) = 0;
       virtual void PostUpdate(float timeElapsed) {}
-
-
-
-      // TODO: Add mouse,key listeners
+      virtual InputControlRequest OnInputChanged(const InputControl* control) override { return InputControlRequest::NOTHING;}
   };
 }

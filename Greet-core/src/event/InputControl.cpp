@@ -113,9 +113,8 @@ namespace Greet
     {
       deltas[index]-=values[index];
       values[index]+=value;
-      Greet::Math::Clamp(&values[index], -1,1);
+      //Greet::Math::Clamp(&values[index], -1,1);
       deltas[index]+=values[index];
-
       isDirty = true;
     }
   }
@@ -133,7 +132,7 @@ namespace Greet
     {
       deltas[index]= values[index];
       values[index] = value;
-      Greet::Math::Clamp(&values[index], -1,1);
+      //Greet::Math::Clamp(&values[index], -1,1);
       deltas[index] = values[index] - deltas[index];
       isDirty = true;
     }

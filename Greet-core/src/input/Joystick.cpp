@@ -1,140 +1,99 @@
 #include "Joystick.h"
 
 #include <logging/Log.h>
+#include <event/InputController.h>
+#include <cstring>
 
 namespace Greet {
-	Joystick::Joystick(uint jsNum, float calibrateLeft, float calibrateRight)
-		: m_jsNum(jsNum), m_calibrateLeft(calibrateLeft), m_calibrateRight(calibrateRight)
-	{
-		ClearInput();
-		m_connected = false;
-		m_wasConnected = false;
-		for (uint i = 0; i < GLFW_JOYSTICK_BUTTONS; i++)
-		{
-			m_mapping.push_back(i);
-		}
-	}
+  Joystick::Joystick(uint jsNum, float calibrateLeft, float calibrateRight)
+    : m_jsNum(jsNum)
+  {
+    m_connected = false;
+    m_wasConnected = false;
+    previousButtons = NULL;
+  }
 
-	void Joystick::Update()
-	{
-		m_wasConnected = m_connected;
-		if (m_connected)
-		{
-			int count;
-			const float* axes = glfwGetJoystickAxes(m_jsNum, &count);
-			if (count == 0)
-			{
-				m_connected = false;
-				ClearInput();
-				return;
-			}
-			ASSERT((count == GLFW_JOYSTICK_AXES), "CONTROLLER NOT SUPPORTED. INVALID AMOUNT OF AXES, found ", count, ", wanted ", GLFW_JOYSTICK_AXES, ".");
-			m_leftStick = Vec2(axes[0], axes[1]);
-			if (m_leftStick.Length()<m_calibrateLeft)
-				m_leftStick = Vec2(0, 0);
+  Joystick::~Joystick()
+  {
+    if(previousButtons != NULL)
+      delete[] previousButtons;
+  }
 
-			m_rightStick = Vec2(axes[3], axes[4]);
-			if (m_rightStick.Length()<m_calibrateRight)
-				m_rightStick = Vec2(0, 0);
+  void Joystick::SetState(bool connected)
+  {
+    if(connected)
+    {
+      axes = glfwGetJoystickAxes(m_jsNum, &axisCount);
+      buttons = glfwGetJoystickButtons(m_jsNum, &buttonCount);
+      previousButtons = new unsigned char[buttonCount];
+      memcpy(previousButtons,buttons,buttonCount);
+      m_connected = true;
+      m_wasConnected = true;
+      Log::Info("Connected Joystick (axes=",axisCount,", buttons=",buttonCount);
+    }
+    else
+    {
+      axes = NULL;
+      buttons = NULL;
+      if(previousButtons != NULL)
+        delete[] previousButtons;
+      previousButtons = NULL;
+      m_connected = false;
+      m_wasConnected = false;
+    }
+  }
 
-			const unsigned char* buttons = glfwGetJoystickButtons(m_jsNum,&count);
-			if (count == 0)
-			{
-				m_connected = false;
-				ClearInput();
-				return;
-			}
-			ASSERT((count == GLFW_JOYSTICK_BUTTONS), "CONTROLLER NOT SUPPORTED. INVALID AMOUNT OF BUTTONS, found ", count, ", wanted ", GLFW_JOYSTICK_BUTTONS, ".");
+  void Joystick::Update()
+  {
+    m_wasConnected = m_connected;
+    if (m_connected)
+    {
+      axes = glfwGetJoystickAxes(m_jsNum,&axisCount);
+      if(axisCount == 0)
+      {
+        SetState(false);
+        return;
+      }
 
-			for (int i = 0; i < GLFW_JOYSTICK_BUTTONS;i++)
-			{
-				buttonPas[i] = buttonCur[i];
-				buttonCur[i] = buttons[i]==GLFW_PRESS;
-			}
-		}
-	}
+      for (int i = 0; i < axisCount;i++)
+      {
+        InputController::GamepadAxis(i,axes[i]);
+      }
 
-	void Joystick::RemapButton(uint button, uint rebind)
-	{
-		
-		uint b = m_mapping[button];
-		for (int i = 0; i < GLFW_JOYSTICK_BUTTONS; i++)
-		{
-			if (m_mapping[i] == rebind)
-			{
-				m_mapping[i] = button;
-				break;
-			}
-		}
-		m_mapping[button] = rebind;
-	}
-	bool Joystick::CheckConnect()
-	{
-		m_wasConnected = m_connected;
-		m_connected = glfwJoystickPresent(m_jsNum);
-		return m_connected;
-	}
+      int count;
+      buttons = glfwGetJoystickButtons(m_jsNum,&count);
+      if(buttonCount != count)
+      {
+        Log::Info("wrong buttonCount");
+        if(count == 0)
+        {
+          SetState(false);
+          return;
+        }
+        else
+        {
+          delete[] previousButtons;
+          previousButtons = new unsigned char[count];
+          buttonCount = count;
+        }
+      }
 
-	void Joystick::ClearInput()
-	{
-		memset(buttonPas, false, GLFW_JOYSTICK_BUTTONS);
-		memset(buttonCur, false, GLFW_JOYSTICK_BUTTONS);
-		m_leftStick = Vec2(0, 0);
-		m_rightStick = Vec2(0, 0);
-	}
+      for (int i = 0; i < buttonCount;i++)
+      {
+        if(previousButtons[i] != buttons[i])
+        {
+          Log::Info("button pressed");
+          InputController::GamepadButton(i,buttons[i] == GLFW_PRESS ? 1 : -1);
+          previousButtons[i] = buttons[i];
+        }
+      }
+    }
+  }
 
-	bool Joystick::ButtonExists(uint buttoncode) const
-	{
-		if (buttoncode >= GLFW_JOYSTICK_BUTTONS)
-		{
-			Log::Error("Joystick button could not be found: ", buttoncode);
-			return false;
-		}
-		return true;
-	}
-
-	bool Joystick::IsButtonPressed(uint buttoncode) const
-	{
-		buttoncode = m_mapping[buttoncode];
-		if (ButtonExists(buttoncode))
-			return buttonCur[buttoncode] && !buttonPas[buttoncode];
-		return false;
-	}
-
-	bool Joystick::IsButtonReleased(uint buttoncode) const
-	{
-		buttoncode = m_mapping[buttoncode];
-		if (ButtonExists(buttoncode))
-			return !buttonCur[buttoncode] && buttonPas[buttoncode];
-		return false;
-	}
-
-	bool Joystick::IsButtonDown(uint buttoncode) const
-	{
-		buttoncode = m_mapping[buttoncode];
-		if (ButtonExists(buttoncode))
-			return buttonCur[buttoncode];
-		return false;
-	}
-
-	bool Joystick::IsRealButtonPressed(uint buttoncode) const
-	{
-		if (ButtonExists(buttoncode))
-			return buttonCur[buttoncode] && !buttonPas[buttoncode];
-		return false;
-	}
-
-	bool Joystick::IsRealButtonReleased(uint buttoncode) const
-	{
-		if (ButtonExists(buttoncode))
-			return !buttonCur[buttoncode] && buttonPas[buttoncode];
-		return false;
-	}
-
-	bool Joystick::IsRealButtonDown(uint buttoncode) const
-	{
-		if (ButtonExists(buttoncode))
-			return buttonCur[buttoncode];
-		return false;
-	}
+  bool Joystick::CheckConnect()
+  {
+    m_wasConnected = m_connected;
+    m_connected = glfwJoystickPresent(m_jsNum);
+    return m_connected;
+  }
 }

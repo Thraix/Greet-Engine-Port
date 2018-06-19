@@ -232,17 +232,12 @@ namespace Greet {
 	{
 		focus = state == GL_TRUE;
 		for (uint i = 0;i < windowFocus.size();i++)
-			windowFocus[i]->WindowFocus(state);
-		if (!focus){
-			for (int i = 0; i < MAX_JOYSTICKS; i++)
-			{
-				joysticks[i].ClearInput();
-			}
-		}
+			windowFocus[i]->WindowFocus(focus);
 	}
 
 	void Window::joystick_callback(int joy, int event)
 	{
+    joysticks[joy].SetState(event == GLFW_CONNECTED);
 		for (uint i = 0;i < joystickState.size();i++)
 			joystickState[i]->JoystickState(joy, event == GLFW_CONNECTED);
 	}

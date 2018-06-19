@@ -68,12 +68,15 @@ class Core : public App, public KeyListener, public MouseListener, public InputC
       InputControl* mousePos = new InputControl("mousePos",2);
       EventDispatcher::AddKeyListener(DISPATCHER_GUI+1, *this);
       EventDispatcher::AddMouseListener(DISPATCHER_GUI + 1, *this);
-      InputController::AddKeyButton(GLFW_KEY_W, mousePos, 1,false,1);
-      InputController::AddKeyButton(GLFW_KEY_S, mousePos, -1,false,1);
-      InputController::AddKeyButton(GLFW_KEY_D, mousePos, 1,false,0);
-      InputController::AddKeyButton(GLFW_KEY_A, mousePos, -1,false,0);
+      InputController::AddKeyButton(GLFW_KEY_W, move, 1,false,1);
+      InputController::AddKeyButton(GLFW_KEY_S, move, -1,false,1);
+      InputController::AddKeyButton(GLFW_KEY_D, move, 1,false,0);
+      InputController::AddKeyButton(GLFW_KEY_A, move, -1,false,0);
       InputController::AddMouseMotion(0, mousePos, 1,true,0);
       InputController::AddMouseMotion(1, mousePos, 1,true,1);
+      InputController::AddGamepadAxis(0, mousePos, 0.01,false,0);
+      InputController::AddGamepadAxis(1, mousePos, -0.01,false,1);
+
       TextureManager::Add("stall",Texture2D("res/textures/stallTexture.png"));
       TextureManager::Add("cursor",Texture2D("res/textures/cursor.png"));
       TextureManager::Add("mask",Texture2D("res/textures/mask.png"));
