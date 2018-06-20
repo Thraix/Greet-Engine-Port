@@ -83,13 +83,12 @@ namespace Greet {
 		Draw(renderable->GetPosition(),renderable->GetSize(), texPos, texSize, ts, color, mts,maskTexPos,maskTexSize);
 	}
 
-	void BatchRenderer::SubmitString(const std::string& text, const Vec2& position, Font* font, const uint& color)
+	void BatchRenderer::SubmitString(const std::string& text, const Vec2& position, Font* font, const uint& color, float scale)
 	{
 		using namespace ftgl;
 		uint ts = GetTextureSlot(font->GetFontAtlasId());
     FontAtlas* atlas = font->GetFontAtlas();
 		float x = position.x;
-		const Vec2& scale = Vec2(1, 1);//font->getScale();
 		Vec2 pos;
 		Vec2 size;
 		Vec2 uv0;
@@ -99,8 +98,8 @@ namespace Greet {
       const Glyph& glyph = atlas->GetGlyph(text[i]);
       pos.x = x;
       pos.y = position.y - glyph.ascending;
-      size.x = glyph.width / scale.x;
-      size.y = glyph.height / scale.y;
+      size.x = glyph.width * scale;
+      size.y = glyph.height * scale;
 
       float u0 = glyph.textureCoords.left;
       float v0 = 1 - glyph.textureCoords.top;
@@ -108,15 +107,15 @@ namespace Greet {
         float v1 = 1 - glyph.textureCoords.bottom;
 
       float x0 = x;
-      float y0 = position.y - glyph.ascending / scale.y;
-      float x1 = x0 + glyph.width / scale.x;
-      float y1 = y0 + glyph.height / scale.y;
+      float y0 = position.y - glyph.ascending * scale;
+      float x1 = x0 + glyph.width * scale;
+      float y1 = y0 + glyph.height * scale;
         
       AppendVertexBuffer(Vec2(x0,y0),Vec2(u0,v0),ts,color, 0, Vec2(0, 0));
       AppendVertexBuffer(Vec2(x0,y1),Vec2(u0,v1),ts,color, 0, Vec2(0, 0));
       AppendVertexBuffer(Vec2(x1,y1),Vec2(u1,v1),ts,color, 0, Vec2(0, 0));
       AppendVertexBuffer(Vec2(x1,y0),Vec2(u1,v0),ts,color, 0, Vec2(0, 0));
-    x += glyph.advanceX / scale.x;
+    x += glyph.advanceX * scale;
       AddIndicesPoly(4);
       m_iboSize += 6;
 		}

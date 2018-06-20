@@ -15,5 +15,8 @@ namespace Greet
       virtual void Update(float timeElapsed) = 0;
       virtual void PostUpdate(float timeElapsed) {}
       virtual InputControlRequest OnInputChanged(const InputControl* control) override { return InputControlRequest::NOTHING;}
+      virtual void WindowResize(int width, int height) {}
+      virtual void WindowFocus(bool focus) {}
+      virtual void OnFocused(bool focus) {}
   };
 }

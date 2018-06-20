@@ -6,6 +6,7 @@
 #include <event/EventDispatcher.h>
 #include <internal/OpenGLObjectHandler.h>
 #include <event/InputController.h>
+#include <graphics/RenderEngine.h>
 
 namespace Greet {
 
@@ -171,6 +172,7 @@ namespace Greet {
 		glViewport(0, 0, width, height);
 		Window::width = width;
 		Window::height = height;
+    RenderEngine::WindowResize(width,height);
 		for (uint i = 0;i < Window::windowResize.size();i++)
 			windowResize[i]->WindowResize(width,height);
 	}
@@ -237,6 +239,7 @@ namespace Greet {
 	void Window::window_focus_callback(GLFWwindow* window,int state)
 	{
 		focus = state == GL_TRUE;
+    RenderEngine::WindowFocus(focus);
 		for (uint i = 0;i < windowFocus.size();i++)
 			windowFocus[i]->WindowFocus(focus);
 	}

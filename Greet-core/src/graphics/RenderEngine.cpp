@@ -103,7 +103,29 @@ namespace Greet {
       if(req == InputControlRequest::DONE)
         return;
     }
-
   }
 
+  void RenderEngine::WindowResize(int width, int height)
+  {
+    for (auto it = m_scenes3d.begin(); it != m_scenes3d.end(); it++)
+    {
+      it->second->WindowResize(width,height);
+    }
+    for (auto it = m_scenes2d.rbegin(); it != m_scenes2d.rend(); it++)
+    {
+      it->second->WindowResize(width,height);
+    }
+  }
+
+  void RenderEngine::WindowFocus(bool focus)
+  {
+    for (auto it = m_scenes3d.begin(); it != m_scenes3d.end(); it++)
+    {
+      it->second->WindowFocus(focus);
+    }
+    for (auto it = m_scenes2d.rbegin(); it != m_scenes2d.rend(); it++)
+    {
+      it->second->WindowFocus(focus);
+    }
+  }
 }
