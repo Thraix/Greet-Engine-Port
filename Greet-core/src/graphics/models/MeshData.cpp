@@ -19,16 +19,16 @@ namespace Greet {
 		delete m_indices;
 	}
 
-	void MeshData::AddAttribute(AttributeData* data)
+	void MeshData::AddAttribute(AttributeDataBase* data)
 	{
 		m_data.push_back(data);
 	}
 
-	AttributeData* MeshData::GetAttribute(AttributeDefaults defaults) const
+	AttributeDataBase* MeshData::GetAttribute(AttributeDefaults defaults) const
 	{
 		for (auto it = m_data.begin(); it != m_data.end(); it++)
 		{
-			if ((*it)->location == defaults.location)
+			if (((AttributeDataBase*)*it)->location == defaults.location)
 			{
 				return *it;
 			}

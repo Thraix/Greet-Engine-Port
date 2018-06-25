@@ -197,7 +197,7 @@ namespace Greet {
 
 	}
 
-	void Mesh::AddAttribute(AttributeData* data)
+	void Mesh::AddAttribute(AttributeDataBase* data)
 	{
 		if (m_vbos.find(data->location) != m_vbos.end())
 		{
