@@ -11,8 +11,6 @@ namespace Greet {
 		return normal;
 	}
 
-  
-
 	void MeshFactory::CalculateNormals(Vec3* vertices, uint vertexCount, uint* indices, uint indexCount, Vec3* normals)
 	{
 		Vec3 faceNormal;
@@ -53,8 +51,8 @@ namespace Greet {
     Vec3* vertices = new Vec3[count];
     Vec3* normals = new Vec3[count];
     uint* indices = new uint[indexCount];
-    
     float radius = 0;
+    
     // 180 * (count - 2) / count
     float cornerAngle = M_PI * (1 - 2 / (float)count);
 

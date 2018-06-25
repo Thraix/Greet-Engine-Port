@@ -1,38 +1,206 @@
 #include "MeshData.h"
 #include <logging/Log.h>
+#include <fstream>
+#include <graphics/models/MeshFactory.h>
 
 namespace Greet {
 
-	MeshData::MeshData(Vec3* vertices, uint vertexCount, uint* indices, uint indexCount)
-		: m_vertices(vertices), m_indices(indices), m_vertexCount(vertexCount), m_indexCount(indexCount)
-	{
-		
-	}
+  MeshData::MeshData(Vec3* vertices, uint vertexCount, uint* indices, uint indexCount)
+    : m_vertices(vertices), m_indices(indices), m_vertexCount(vertexCount), m_indexCount(indexCount)
+  {
 
-	MeshData::~MeshData()
-	{
-		for (uint i = 0;i < m_data.size();i++)
-		{
-			delete m_data[i];
-		}
-		delete m_vertices;
-		delete m_indices;
-	}
+  }
 
-	void MeshData::AddAttribute(AttributeDataBase* data)
-	{
-		m_data.push_back(data);
-	}
+  MeshData::~MeshData()
+  {
+    for (uint i = 0;i < m_data.size();i++)
+    {
+      delete m_data[i];
+    }
+    delete m_vertices;
+    delete m_indices;
+  }
 
-	AttributeDataBase* MeshData::GetAttribute(AttributeDefaults defaults) const
-	{
-		for (auto it = m_data.begin(); it != m_data.end(); it++)
-		{
-			if (((AttributeDataBase*)*it)->location == defaults.location)
-			{
-				return *it;
-			}
-		}
-		return NULL;
-	}
+  void MeshData::AddAttribute(AttributeDataBase* data)
+  {
+    m_data.push_back(data);
+  }
+
+  AttributeDataBase* MeshData::GetAttribute(AttributeDefaults defaults) const
+  {
+    for (auto it = m_data.begin(); it != m_data.end(); it++)
+    {
+      if (((AttributeDataBase*)*it)->location == defaults.location)
+      {
+        return *it;
+      }
+    }
+    return NULL;
+  }
+
+  void MeshData::WriteToFile(const std::string& filename) const
+  {
+    std::ofstream fout(filename);
+
+    // Write signature
+    fout.write("MESH",4*sizeof(char));
+
+    size_t dataCount = m_data.size();
+
+    // Write how many vertices we have 
+    fout.write((char*)&m_vertexCount,sizeof(uint));
+    // Write how many indices we have 
+    fout.write((char*)&m_indexCount,sizeof(uint));
+    // Write how many attributes we have
+    fout.write((char*)&dataCount,sizeof(size_t));
+
+    // Write the different data of the mesh
+    for(auto it = m_data.begin();it != m_data.end(); ++it)
+    {
+      fout.write((char*)&(*it)->location,sizeof(uint));
+      fout.write((char*)&(*it)->vertexValueSize,sizeof(uint));
+      fout.write((char*)&(*it)->memoryValueSize,sizeof(uint));
+      fout.write((char*)&(*it)->glType,sizeof(uint));
+      fout.write((char*)&(*it)->normalized,sizeof(bool));
+    }
+
+    // Write all vertex data.
+    fout.write((char*)m_vertices, m_vertexCount * sizeof(Vec3));
+
+    // Write index data.
+    fout.write((char*)m_indices, m_indexCount * sizeof(uint)); 
+
+
+    // Write all attribute data
+    for(auto it = m_data.begin();it != m_data.end(); ++it)
+    {
+      fout.write((char*)(*it)->data, (*it)->memoryValueSize * m_vertexCount);
+    }
+    fout.close();
+  }
+
+  MeshData* MeshData::ReadFromFile(const std::string& filename)
+  {
+    // Small buffer for initial stuffs
+    char buffer[1024];
+    std::ifstream fin(filename);
+
+    // Determine size of the file and reset to beginning.
+    int fileSize = fin.tellg();
+    fin.seekg(0,std::ios::end);
+    fileSize = (uint)fin.tellg() - fileSize;
+    fin.seekg(0,std::ios::beg);
+
+    // Check if the file is big enough to contain signature, vertex count, index count and attribute count
+    fileSize -= 4 * sizeof(char) + 2 * sizeof(uint) + sizeof(size_t);
+    if(fileSize < 0)
+    {
+      Log::Error("Could not read MESH file, file is too small to contain signature.");
+      return MeshFactory::Cube(0,0,0,1,1,1);
+    }
+
+    // Read signature
+    fin.read(buffer, 4 * sizeof(char));
+
+    if(std::string(buffer, 4) != "MESH")
+    {
+      Log::Error("Could not read MESH file, signature invalid.");
+      return MeshFactory::Cube(0,0,0,1,1,1);
+    }
+    // Read how many attributes we have. 
+    uint vertexCount;
+    fin.read((char*)&vertexCount,sizeof(uint));
+    fileSize -= vertexCount * sizeof(Vec3);
+    if(fileSize < 0)
+    {
+      Log::Error("Could not read MESH file, file is too small to contain vertex data");
+      return MeshFactory::Cube(0,0,0,1,1,1);
+    }
+
+    // Read how many attributes we have. 
+    uint indexCount;
+    fin.read((char*)&indexCount,sizeof(uint));
+    fileSize -= indexCount * sizeof(uint);
+    if(fileSize < 0)
+    {
+      Log::Error("Could not read MESH file, file is too small to contain vertex data");
+      return MeshFactory::Cube(0,0,0,1,1,1);
+    }
+
+    // Read how many attributes we have. 
+    size_t attributeCount;
+    fin.read((char*)&attributeCount,sizeof(size_t));
+
+    // Check if the file is big enough to contain attribute parameters.
+    int attribLength = (sizeof(uint) * 4 + sizeof(bool));
+    int attribsLength = attributeCount * attribLength; 
+
+    // Remove attribLength from fileSize to easier check sizes later.
+    fileSize -= attribsLength;
+
+    if(fileSize < 0)
+    {
+      Log::Error("Could not read MESH file, file is too small to contain attribute parameters");
+      return MeshFactory::Cube(0,0,0,1,1,1);
+    }
+
+    std::vector<AttributeDefaults> attributeParameters;
+
+    if(attribLength > 1024)
+    {
+      Log::Error("Could not read MESH file, too many attributes.");
+      return MeshFactory::Cube(0,0,0,1,1,1);
+    }
+    fin.read(buffer,attribsLength);
+
+    const char* pointer = buffer;
+    for(size_t i = 0;i<attributeCount;i++)
+    {
+      // Read uints
+      uint location = ((uint*)pointer)[0];
+      uint vertexValueSize = ((uint*)pointer)[1];
+      uint memoryValueSize = ((uint*)pointer)[2];
+      uint glType = ((uint*)pointer)[3];
+
+      // Move pointer
+      pointer += sizeof(uint)*4;
+
+      // Read bool
+      bool normalized = ((bool*)buffer)[0];
+
+      // Move pointer
+      pointer += sizeof(bool);
+
+      attributeParameters.push_back(AttributeDefaults(location,vertexValueSize, memoryValueSize,glType,normalized));
+      fileSize -= memoryValueSize * vertexCount;
+      if(fileSize < 0)
+      {
+        Log::Error("Could not read MESH file, file is too small to contain attribute data");
+        return MeshFactory::Cube(0,0,0,1,1,1);
+      }
+    }
+    if(fileSize != 0)
+      Log::Warning("MESH file is larger than expected. Something might be wrong...");
+
+    // Read vertices
+    Vec3* vertices = new Vec3[vertexCount];
+    fin.read((char*)vertices,vertexCount*sizeof(Vec3));
+
+    // Read indices 
+    uint* indices = new uint[indexCount];
+    fin.read((char*)indices,indexCount*sizeof(uint));
+
+    MeshData* meshData = new MeshData(vertices, vertexCount,indices,indexCount);
+
+    // Read attribute data
+    for(auto it = attributeParameters.begin();it!=attributeParameters.end();++it)
+    {
+      char* data = new char[it->memoryValueSize * vertexCount];
+      fin.read(data,it->memoryValueSize * vertexCount);
+      meshData->AddAttribute(new AttributeData<char>(*it, data));
+    }
+
+    fin.close();
+    return meshData;
+  }
 }

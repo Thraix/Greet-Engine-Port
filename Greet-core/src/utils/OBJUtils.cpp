@@ -2,6 +2,7 @@
 
 #include <utils/FileUtils.h>
 #include <utils/StringUtils.h>
+#include <graphics/models/MeshFactory.h>
 
 #define GOBJ_VECTOR3_SIZE sizeof(float) * 3 // 13
 #define GOBJ_VECTOR2_SIZE sizeof(float) * 2 // 9
@@ -11,9 +12,9 @@
 namespace Greet {
 
 
-  Mesh* OBJUtils::ErrorModel()
+  MeshData* OBJUtils::ErrorModel()
   {
-    return NULL;// TODO return cube
+    return MeshFactory::Cube(0,0,0,1,1,1);// TODO return cube
   }
 
   void OBJUtils::ProcessVertex(const std::vector<std::string>& vertexData, std::vector<uint>& indices, std::vector<uint>& indicesArray, const std::vector<Vec2>& texCoords, const std::vector<Vec3>& normals, Vec2* texCoordsArray, Vec3* normalsArray)
@@ -44,7 +45,7 @@ namespace Greet {
     normalsArray[currentVertex] = currentNormal;
   }
 
-  Mesh* OBJUtils::ConvertToGobj(const std::string& filename)
+  MeshData* OBJUtils::ConvertToGobj(const std::string& filename)
   {
     std::vector<std::string> dataLine;
 
@@ -160,9 +161,9 @@ namespace Greet {
     }
     fwrite("GOBJ", 1, 4, file);
     fclose(file);
-    Mesh* mesh = new Mesh(verticesArray, vertices.size(), indicesArray, indices.size());
-    mesh->AddAttribute(MESH_NORMALS_LOCATION, normalsArray);
-    mesh->AddAttribute(MESH_TEXCOORDS_LOCATION, texCoordsArray);
+    MeshData* mesh = new MeshData(verticesArray, vertices.size(), indicesArray, indices.size());
+    mesh->AddAttribute(new AttributeData<Vec3>(ATTRIBUTE_NORMAL, normalsArray));
+    mesh->AddAttribute(new AttributeData<Vec2>(ATTRIBUTE_TEXCOORD, texCoordsArray));
     return mesh;
   }
 
@@ -206,7 +207,7 @@ namespace Greet {
     delete[] data;
   }
 
-  Mesh* OBJUtils::LoadObj(const std::string& filename)
+  MeshData* OBJUtils::LoadObj(const std::string& filename)
   {
 
     FILE *file = fopen(filename.c_str(), "rb");
@@ -267,9 +268,10 @@ namespace Greet {
     ReadVec3s(file, normals, normalCount);
     ReadUints(file, indices, indexCount, normalsArray, texCoordsArray, normals, texCoords);
     fclose(file);
-    Mesh* mesh = new Mesh(vertices, vertexCount, indices, indexCount);
-    mesh->AddAttribute(MESH_NORMALS_LOCATION, normalsArray); 
-    mesh->AddAttribute(MESH_TEXCOORDS_LOCATION, texCoordsArray);
+
+    MeshData* mesh = new MeshData(vertices, vertexCount, indices, indexCount);
+    mesh->AddAttribute(new AttributeData<Vec3>(ATTRIBUTE_NORMAL, normalsArray)); 
+    mesh->AddAttribute(new AttributeData<Vec2>(ATTRIBUTE_TEXCOORD, texCoordsArray));
     return mesh;
   }
 

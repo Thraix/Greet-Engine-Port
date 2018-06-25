@@ -34,6 +34,7 @@ namespace Greet {
     protected:
       AttributeDataBase(AttributeDefaults defaults, void* data) : location(defaults.location), vertexValueSize(defaults.vertexValueSize), memoryValueSize(defaults.memoryValueSize), glType(defaults.glType), normalized(defaults.normalized), data(data){}
 
+
     public:
       virtual ~AttributeDataBase() {}
   };
@@ -75,9 +76,12 @@ namespace Greet {
     uint* GetIndices() const { return m_indices; }
     uint GetVertexCount() const { return m_vertexCount; }
     uint GetIndexCount() const { return m_indexCount; }
+
+    void WriteToFile(const std::string& filename) const;
+    static MeshData* ReadFromFile(const std::string& filename);
   };
 }
 
 #define ATTRIBUTE_COLOR		AttributeDefaults(MESH_COLORS_LOCATION, 4, sizeof(uint), GL_UNSIGNED_BYTE,GL_TRUE)
-#define ATTRIBUTE_NORMAL	AttributeDefaults(MESH_NORMALS_LOCATION,3, sizeof(float) * 3,GL_FLOAT,GL_FALSE)
-#define ATTRIBUTE_TEXCOORD	AttributeDefaults(MESH_TEXCOORDS_LOCATION,2, sizeof(float) * 2,GL_FLOAT,GL_FALSE)
+#define ATTRIBUTE_NORMAL	AttributeDefaults(MESH_NORMALS_LOCATION,3, sizeof(Vec3) ,GL_FLOAT,GL_FALSE)
+#define ATTRIBUTE_TEXCOORD	AttributeDefaults(MESH_TEXCOORDS_LOCATION,2, sizeof(Vec2),GL_FLOAT,GL_FALSE)
