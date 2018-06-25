@@ -1,14 +1,13 @@
 #include <Greet.h>
 
 #include <graphics/renderers/GUIRenderer.h>
-#include <event/InputController.h>
 #include "keyboardcontrol.h"
 #include "tree.h"
 #include <random>
 
 using namespace Greet;
 
-class Core : public App, public KeyListener, public MouseListener, public InputControllerTest
+class Core : public App, public KeyListener, public MouseListener
 {
   private:
     BatchRenderer3D* renderer3d;
@@ -63,7 +62,6 @@ class Core : public App, public KeyListener, public MouseListener, public InputC
 
     void Init() override
     {
-      InputController::SetTest(this);
       InputControl* move = new InputControl("movement",2);
       InputControl* mousePos = new InputControl("mousePos",2);
       EventDispatcher::AddKeyListener(DISPATCHER_GUI+1, *this);
@@ -133,12 +131,14 @@ class Core : public App, public KeyListener, public MouseListener, public InputC
       tetrahedron = new EntityModel(tetrahedronModelMaterial, Vec3(30, 0, 10), Vec3(1, 1, 1), Vec3(0, 0, 0));
       delete tetrahedronMesh;
 
-      Mesh* stallMesh = ObjUtils::LoadObj("res/objs/stall.obj.gobj");
+      // MEMORY LEAK WITH MESHDATA
+      Mesh* stallMesh = new Mesh(OBJUtils::LoadObj("res/objs/stall.obj"));
       stallMaterial->SetReflectivity(0.1)->SetShineDamper(1);
       MaterialModel* stallModelMaterial = new MaterialModel(stallMesh, stallMaterial);
       stall = new EntityModel(stallModelMaterial, Vec3(0.0f, 0.0f, -25), Vec3(1.0f, 1.0f, 1.0f), Vec3(0.0f, 0.0f, 0.0f));
 
-      Mesh* dragonMesh = ObjUtils::LoadObj("res/objs/dragon.obj.gobj");
+      // MEMORY LEAK WITH MESHDATA
+      Mesh* dragonMesh = new Mesh(OBJUtils::LoadObj("res/objs/dragon.obj"));
       MaterialModel* dragonModelMaterial = new MaterialModel(dragonMesh, modelMaterial);
       dragon = new EntityModel(dragonModelMaterial, Vec3(10.0f, 0.0f, -25), Vec3(1.0f, 1.0f, 1.0f), Vec3(0.0f, 0.0f, 0.0f));
 
@@ -285,7 +285,7 @@ class Core : public App, public KeyListener, public MouseListener, public InputC
       Vec3* vertices = data->GetVertices();
       uint indexCount = data->GetIndexCount();
       uint* indices = data->GetIndices();
-      Vec3* normals = (Vec3*)data->GetAttribute(ATTRIBUTE_NORMAL)->floats;
+      Vec3* normals = (Vec3*)data->GetAttribute(ATTRIBUTE_NORMAL)->data;
       for (int i = 0;i < indexCount;i+=3)
       {
         RecalcPositions(&vertices[indices[i]]);
@@ -299,7 +299,7 @@ class Core : public App, public KeyListener, public MouseListener, public InputC
         normals[indices[i]] = MeshFactory::CalculateNormal(vertices[indices[i]], vertices[indices[i + 1]], vertices[indices[i + 2]]);
         RecalcColors(vertices[indices[i]], vertices[indices[i+1]], vertices[indices[i+2]], &colors[indices[i]]);
       }
-      data->AddAttribute(new AttributeData(ATTRIBUTE_COLOR, colors));
+      data->AddAttribute(new AttributeData<uint>(ATTRIBUTE_COLOR, colors));
     }
 
 
@@ -460,7 +460,7 @@ class Core : public App, public KeyListener, public MouseListener, public InputC
 
     void OnMoved(const MouseMovedEvent& e) override
     {
-      //cursor->SetPosition(Vec2(e.GetX(), e.GetY()));
+      cursor->SetPosition(Vec2(e.GetX(), e.GetY()));
     }
 
     void OnScroll(const MouseScrollEvent& e) override
@@ -490,17 +490,6 @@ class Core : public App, public KeyListener, public MouseListener, public InputC
         Log::Info("Controller ", joy, " connected!");
       else
         Log::Info("Controller ", joy, " disconnected!");
-    }
-
-    void OnInputChanged(InputControl* control) override
-    {
-      if(control->GetName() == "mousePos")
-      {
-        const Vec2& pos = control->GetValueAsVec2();
-        const Vec2& delta = control->GetDeltaAsVec2();
-        Mat3 mat = (~uilayer->GetProjectionMatrix());
-        cursor->SetPosition(mat * pos);
-      }
     }
 };
 
