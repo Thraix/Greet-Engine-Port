@@ -22,7 +22,6 @@ namespace Greet {
 
 	App::~App()
 	{
-		delete m_timer;
 		Window::DestroyWindow();
 	}
 

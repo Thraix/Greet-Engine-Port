@@ -3,10 +3,6 @@
 
 #include <utils/LogUtils.h>
 
-#ifndef GLEW_STATIC
-#define GLEW_STATIC
-#endif // !GLEW_STATIC
-
 #include <logging/Log.h>
 
 #include <ft2build.h>
