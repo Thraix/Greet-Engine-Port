@@ -27,7 +27,7 @@ namespace Greet
     private:
       FT_Library library;
       FT_Face face;
-      Texture2D* atlas;
+      Texture2D atlas;
       uint width;
       uint height;
       uint fontSize;
@@ -43,7 +43,7 @@ namespace Greet
       virtual ~FontAtlas();
 
       const Glyph& GetGlyph(char character);
-      uint GetTextureId() const { return atlas->GetTexId();}
+      uint GetTextureId() const { return atlas.GetTexId();}
     private:
       const Glyph& AddGlyph(char character);
   };

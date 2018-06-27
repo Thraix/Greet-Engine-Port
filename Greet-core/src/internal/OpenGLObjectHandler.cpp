@@ -138,6 +138,7 @@ namespace Greet {
         Log::Warning("Objects were not deleted, possible leak (type=",OpenGLTypeName(mapIt->first),")");
       for(auto objIt = mapIt->second.begin();objIt!=mapIt->second.end();++objIt)
       {
+        Log::Warning("Id of object: ", objIt->first);
         DeleteOpenGLObject(mapIt->first,mapIt, objIt);
       }
     }

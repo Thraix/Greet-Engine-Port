@@ -17,7 +17,7 @@ namespace Greet
 
     FT_Set_Pixel_Sizes(face, 0, fontSize);
 
-    atlas = new Texture2D(width,height,32); 
+    atlas = Texture2D(width,height,32); 
     m_pixels = new char[width*height*4];
     memset(m_pixels, width*height*4, 0);
   }
@@ -77,7 +77,7 @@ namespace Greet
     g.textureCoords = Vec4(yPos / (float)height, xPos / (float)width, (yPos+pixelHeight)/(float)height, (xPos+pixelWidth)/(float)width);
     xPos += pixelWidth + 1;
     std::pair<std::map<char,  Glyph>::iterator, bool> ret = glyphs.emplace(character, g);
-    atlas->SetPixels(m_pixels);
+    atlas.SetPixels(m_pixels);
     //Log::Info(g.width," ",g.kerning, " ", g.advanceX," ",g.advanceY, " ", g.height," ", g.ascending," ",g.descending);
     return ret.first->second;
   }

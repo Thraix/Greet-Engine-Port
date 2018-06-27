@@ -8,6 +8,10 @@ namespace Greet{
   {
     Init();
   }
+  Font::~Font()
+  {
+    delete m_atlas;
+  }
 
   void Font::Init()
   {

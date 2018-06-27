@@ -21,6 +21,7 @@ namespace Greet{
 		
 	public:
 		Font(FontContainer* container, uint size);
+    virtual ~Font();
 		void Init();
 		inline FontAtlas* GetFontAtlas() const { return m_atlas;}
     inline uint GetFontAtlasId() const { return m_atlas->GetTextureId();}
