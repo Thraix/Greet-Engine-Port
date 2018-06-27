@@ -8,6 +8,10 @@ namespace Greet
   InputControl::InputControl(const std::string& name, uint size)
     : name(name), size(size), isDirty(false), values(new float[size]), deltas(new float[size])
   {
+    for(uint i = 0;i<size;i++)
+    {
+      values[i] = 0;
+    }
 
   }
 
