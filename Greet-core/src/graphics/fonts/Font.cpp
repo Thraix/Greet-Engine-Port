@@ -31,7 +31,7 @@ namespace Greet{
        */
   }
 
-  float Font::GetWidthOfText(const std::string& text, uint startPos, uint endPos) const
+  float Font::GetWidthOfText(const std::string& text, uint startPos, uint endPos, float scale) const
   {
     float width = 0;
     if (startPos > text.size() || endPos < startPos || endPos > text.size())
@@ -49,15 +49,15 @@ namespace Greet{
       else
         width += glyph.advanceX;
     }
-    return width;
+    return width*scale;
   }
 
-  float Font::GetWidthOfText(const std::string& text) const
+  float Font::GetWidthOfText(const std::string& text, float scale) const
   {
-    return GetWidthOfText(text,0,text.size());
+    return GetWidthOfText(text,0,text.size(),scale);
   }
 
-  float* Font::GetPartialWidths(const std::string& text)
+  float* Font::GetPartialWidths(const std::string& text, float scale)
   {
     float width = 0;
 
@@ -66,7 +66,7 @@ namespace Greet{
     for (uint i = 0;i < text.size();i++)
     {
       const Glyph& glyph = m_atlas->GetGlyph(text[i]);
-      widths[i] = width;
+      widths[i] = width*scale;
       // If it is the last char do not include the advancment
       if(i == text.size()- 1)
         width += glyph.width;

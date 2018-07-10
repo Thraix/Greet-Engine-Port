@@ -77,6 +77,11 @@ namespace Greet{
 		bool operator!=(const Vec2 &other);
 		bool operator==(const Vec2 &other);
 
+    bool operator<(const Vec2& other);
+    bool operator>(const Vec2& other);
+    bool operator<=(const Vec2& other);
+    bool operator>=(const Vec2& other);
+
 		friend std::ostream& operator<<(std::ostream& stream, const Vec2& vec);
 
 		inline float toRadians(float degrees)

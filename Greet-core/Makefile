@@ -1,14 +1,14 @@
-# This Makefile was generated using MakeGen v1.0.5 made by Tim Håkansson
+# This Makefile was generated using MakeGen v1.0.6 made by Tim Håkansson
 # and is licensed under MIT. Full source of the project can be found at
 # https://github.com/Thraix/MakeGen
 CC=@g++
-CO=@ar rs
+CO=@g++ -shared -o
 BIN=bin/
 OBJPATH=$(BIN)intermediates
 INCLUDES=-I./../deps/includes/ -I./src/ 
 OBJECTS=$(OBJPATH)/AudioChannel.o $(OBJPATH)/AudioChannelManager.o $(OBJPATH)/Sound.o $(OBJPATH)/SoundManager.o $(OBJPATH)/Driver.o $(OBJPATH)/DriverDispatcher.o $(OBJPATH)/LinearDriver.o $(OBJPATH)/RectDriver.o $(OBJPATH)/Event.o $(OBJPATH)/EventDispatcher.o $(OBJPATH)/InputControl.o $(OBJPATH)/InputController.o $(OBJPATH)/KeyListener.o $(OBJPATH)/MouseListener.o $(OBJPATH)/Animation.o $(OBJPATH)/FrameBufferObject.o $(OBJPATH)/ParticlePool.o $(OBJPATH)/RenderEngine.o $(OBJPATH)/Skybox.o $(OBJPATH)/Window.o $(OBJPATH)/Atlas.o $(OBJPATH)/AtlasManager.o $(OBJPATH)/BatchIndexBuffer.o $(OBJPATH)/Buffer.o $(OBJPATH)/IndexBuffer.o $(OBJPATH)/VertexArray.o $(OBJPATH)/Font.o $(OBJPATH)/FontAtlas.o $(OBJPATH)/FontContainer.o $(OBJPATH)/FontManager.o $(OBJPATH)/Button.o $(OBJPATH)/Container.o $(OBJPATH)/Content.o $(OBJPATH)/FrameContainer.o $(OBJPATH)/GLayer.o $(OBJPATH)/GUIProperty.o $(OBJPATH)/GUIUtils.o $(OBJPATH)/Label.o $(OBJPATH)/Group.o $(OBJPATH)/Layer3D.o $(OBJPATH)/EntityModel.o $(OBJPATH)/Material.o $(OBJPATH)/MaterialModel.o $(OBJPATH)/Mesh.o $(OBJPATH)/MeshData.o $(OBJPATH)/MeshFactory.o $(OBJPATH)/TPCamera.o $(OBJPATH)/BatchRenderer.o $(OBJPATH)/BatchRenderer3D.o $(OBJPATH)/GUIRenderer.o $(OBJPATH)/Renderer3D.o $(OBJPATH)/Shader.o $(OBJPATH)/ShaderFactory.o $(OBJPATH)/CubeMap.o $(OBJPATH)/ImageFactory.o $(OBJPATH)/Texture.o $(OBJPATH)/Texture2D.o $(OBJPATH)/TextureManager.o $(OBJPATH)/Joystick.o $(OBJPATH)/App.o $(OBJPATH)/OpenGLObjectHandler.o $(OBJPATH)/Log.o $(OBJPATH)/LogStream.o $(OBJPATH)/Logger.o $(OBJPATH)/Mat3.o $(OBJPATH)/Mat4.o $(OBJPATH)/Quaternion.o $(OBJPATH)/Vec2.o $(OBJPATH)/Vec3.o $(OBJPATH)/Vec4.o $(OBJPATH)/ErrorHandle.o $(OBJPATH)/Noise.o $(OBJPATH)/OBJUtils.o $(OBJPATH)/UUID.o $(OBJPATH)/JSON.o $(OBJPATH)/JSONArray.o $(OBJPATH)/JSONLoader.o $(OBJPATH)/JSONObject.o $(OBJPATH)/XML.o $(OBJPATH)/XMLObject.o 
-CFLAGS=$(INCLUDES) -std=c++17 -c -w -g3 -D_DEBUG -D_USE_MATH_DEFINES 
-OUTPUT=$(BIN)libgreet.a
+CFLAGS=$(INCLUDES) -fPIC -std=c++17 -c -w -g3 -D_DEBUG -D_USE_MATH_DEFINES 
+OUTPUT=$(BIN)libgreet.so
 all: $(OUTPUT)
 rebuild: clean all
 clean:
@@ -19,7 +19,7 @@ $(OUTPUT): $(OBJECTS)
 	$(CO) $(OUTPUT) $(OBJECTS)
 install: all
 	$(info Installing Greet Engine to /usr/bin/)
-	@cp $(OUTPUT) /usr/bin/libgreet.a
+	@cp $(OUTPUT) /usr/bin/libgreet.so
 $(OBJPATH)/AudioChannel.o : src/audio/AudioChannel.cpp src/audio/AudioChannel.h src/utils/StringUtils.h src/audio/SoundManager.h src/audio/Sound.h  src/audio/AudioChannelManager.h  src/internal/GreetTypes.h src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  src/utils/ErrorHandle.h  src/utils/Utils.h src/internal/GreetGL.h  src/utils/LogUtils.h      
 	$(info -[1%]- $<)
 	$(CC) $(CFLAGS) -o $@ $<
@@ -152,7 +152,7 @@ $(OBJPATH)/MaterialModel.o : src/graphics/models/MaterialModel.cpp src/graphics/
 $(OBJPATH)/Mesh.o : src/graphics/models/Mesh.cpp src/graphics/models/Mesh.h src/graphics/models/MeshData.h src/internal/GreetGL.h src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  src/utils/LogUtils.h src/internal/GreetTypes.h    src/math/Maths.h src/math/Mat3.h src/math/Vec2.h src/math/Vec3.h src/math/Vec4.h   src/math/Mat4.h   src/math/MathFunc.h    src/math/Quaternion.h  src/math/Transform.h     src/graphics/textures/Texture.h     src/utils/ErrorHandle.h  src/utils/Utils.h   src/internal/OpenGLObjectHandler.h 
 	$(info -[55%]- $<)
 	$(CC) $(CFLAGS) -o $@ $<
-$(OBJPATH)/MeshData.o : src/graphics/models/MeshData.cpp src/graphics/models/MeshData.h src/internal/GreetGL.h src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  src/utils/LogUtils.h src/internal/GreetTypes.h    src/math/Maths.h src/math/Mat3.h src/math/Vec2.h src/math/Vec3.h src/math/Vec4.h   src/math/Mat4.h   src/math/MathFunc.h    src/math/Quaternion.h  src/math/Transform.h     
+$(OBJPATH)/MeshData.o : src/graphics/models/MeshData.cpp src/graphics/models/MeshData.h src/internal/GreetGL.h src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  src/utils/LogUtils.h src/internal/GreetTypes.h    src/math/Maths.h src/math/Mat3.h src/math/Vec2.h src/math/Vec3.h src/math/Vec4.h   src/math/Mat4.h   src/math/MathFunc.h    src/math/Quaternion.h  src/math/Transform.h     src/graphics/models/MeshFactory.h   
 	$(info -[56%]- $<)
 	$(CC) $(CFLAGS) -o $@ $<
 $(OBJPATH)/MeshFactory.o : src/graphics/models/MeshFactory.cpp src/graphics/models/MeshFactory.h src/graphics/models/MeshData.h src/internal/GreetGL.h src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  src/utils/LogUtils.h src/internal/GreetTypes.h    src/math/Maths.h src/math/Mat3.h src/math/Vec2.h src/math/Vec3.h src/math/Vec4.h   src/math/Mat4.h   src/math/MathFunc.h    src/math/Quaternion.h  src/math/Transform.h      
@@ -236,7 +236,7 @@ $(OBJPATH)/ErrorHandle.o : src/utils/ErrorHandle.cpp src/utils/ErrorHandle.h src
 $(OBJPATH)/Noise.o : src/utils/Noise.cpp src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  src/utils/Noise.h src/internal/GreetTypes.h
 	$(info -[90%]- $<)
 	$(CC) $(CFLAGS) -o $@ $<
-$(OBJPATH)/OBJUtils.o : src/utils/OBJUtils.cpp src/utils/FileUtils.h src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  src/utils/OBJUtils.h src/graphics/models/Mesh.h src/graphics/models/MeshData.h src/internal/GreetGL.h  src/utils/LogUtils.h src/internal/GreetTypes.h    src/math/Maths.h src/math/Mat3.h src/math/Vec2.h src/math/Vec3.h src/math/Vec4.h   src/math/Mat4.h   src/math/MathFunc.h    src/math/Quaternion.h  src/math/Transform.h     src/graphics/textures/Texture.h     src/utils/ErrorHandle.h  src/utils/Utils.h   src/utils/StringUtils.h
+$(OBJPATH)/OBJUtils.o : src/utils/OBJUtils.cpp src/graphics/models/MeshFactory.h src/graphics/models/MeshData.h src/internal/GreetGL.h src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  src/utils/LogUtils.h src/internal/GreetTypes.h    src/math/Maths.h src/math/Mat3.h src/math/Vec2.h src/math/Vec3.h src/math/Vec4.h   src/math/Mat4.h   src/math/MathFunc.h    src/math/Quaternion.h  src/math/Transform.h      src/utils/FileUtils.h  src/utils/OBJUtils.h src/graphics/models/Mesh.h  src/graphics/textures/Texture.h     src/utils/ErrorHandle.h  src/utils/Utils.h   src/utils/StringUtils.h
 	$(info -[91%]- $<)
 	$(CC) $(CFLAGS) -o $@ $<
 $(OBJPATH)/UUID.o : src/utils/UUID.cpp src/graphics/Window.h src/input/Joystick.h src/internal/GreetGL.h src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  src/utils/LogUtils.h src/internal/GreetTypes.h   src/math/Maths.h src/math/Mat3.h src/math/Vec2.h src/math/Vec3.h src/math/Vec4.h   src/math/Mat4.h   src/math/MathFunc.h    src/math/Quaternion.h  src/math/Transform.h      src/listeners/JoystickState.h  src/listeners/WindowListener.h src/listeners/WindowFocus.h src/listeners/WindowResize.h src/utils/UUID.h 

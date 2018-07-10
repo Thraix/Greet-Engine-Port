@@ -26,9 +26,9 @@ namespace Greet{
 		inline FontAtlas* GetFontAtlas() const { return m_atlas;}
     inline uint GetFontAtlasId() const { return m_atlas->GetTextureId();}
 		inline float GetSize() const {return m_size;}
-		float GetWidthOfText(const std::string& text, uint startPos, uint endPos) const;
-		float GetWidthOfText(const std::string& text) const;
-		float* GetPartialWidths(const std::string& text);
+		float GetWidthOfText(const std::string& text, uint startPos, uint endPos, float scale=1) const;
+		float GetWidthOfText(const std::string& text, float scale=1) const;
+		float* GetPartialWidths(const std::string& text, float scale=1);
 
 		friend bool operator<(const Font& f1, const Font& f2)
 		{

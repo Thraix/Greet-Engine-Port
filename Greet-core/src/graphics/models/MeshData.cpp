@@ -2,6 +2,8 @@
 #include <logging/Log.h>
 #include <fstream>
 #include <graphics/models/MeshFactory.h>
+#include <set>
+#include <map>
 
 namespace Greet {
 
@@ -36,6 +38,105 @@ namespace Greet {
       }
     }
     return NULL;
+  }
+
+  MeshData* MeshData::LowPolify()
+  {
+    std::set<uint> usedProvokingVertices; 
+    std::map<uint,uint> usedIndices; 
+    std::vector<Vec3> newVertices;
+    std::vector<uint> newIndices;
+
+    // Loop through all triangles
+    for(uint i = 0;i<m_indexCount;i+=3)
+    {
+      bool foundProvoking = true;
+      uint provokingOffset = 0;
+
+      // Check if the first vertex has been used as a provoking vertex
+      if(usedProvokingVertices.count(m_indices[i]) == 0)
+      {
+        provokingOffset = 0;
+      }
+      else if(usedProvokingVertices.count(m_indices[i+1]) == 0)
+      {
+        provokingOffset = 1;
+      }
+      else if(usedProvokingVertices.count(m_indices[i+2]) == 0)
+      {
+        provokingOffset = 2;
+      }
+      else
+      {
+        foundProvoking = false;
+      }
+
+      // First (provoking) vertex
+      if(foundProvoking)
+      {
+        uint provokingIndex = m_indices[i+provokingOffset];
+        Vec3 provokingVertex = m_vertices[provokingIndex];
+        usedProvokingVertices.emplace(provokingIndex);
+
+        auto vertex = usedIndices.find(provokingIndex);
+        if(!foundProvoking || vertex == usedIndices.end())
+        {
+          newIndices.push_back(newVertices.size());
+          usedIndices.emplace(provokingIndex, newVertices.size());
+          newVertices.push_back(provokingVertex);
+        }
+        else
+        {
+          newIndices.push_back(usedIndices.find(provokingIndex)->second);
+        }
+      }
+      else
+      {
+
+        newIndices.push_back(newVertices.size());
+        newVertices.push_back(m_vertices[m_indices[i]]);
+      }
+
+      // Second vertex
+      uint index = m_indices[i+((provokingOffset+1)%3)];
+      auto vertex = usedIndices.find(index);
+      if(vertex == usedIndices.end())
+      {
+        newIndices.push_back(newVertices.size());
+        usedIndices.emplace(index, newVertices.size());
+        newVertices.push_back(m_vertices[index]);
+      }
+      else
+      {
+        newIndices.push_back(usedIndices.find(index)->second);
+      }
+
+      // Third vertex
+      index = m_indices[i+((provokingOffset+2)%3)];
+      vertex = usedIndices.find(index);
+      if(vertex == usedIndices.end())
+      {
+        newIndices.push_back(newVertices.size());
+        usedIndices.emplace(index, newVertices.size());
+        newVertices.push_back(m_vertices[index]);
+      }
+      else
+      {
+        newIndices.push_back(usedIndices.find(index)->second);
+      }
+    }
+
+    uint* indices = new uint[newIndices.size()];
+    for(uint i = 0;i<newIndices.size();i++)
+    {
+      indices[i] = newIndices[i];
+    }
+    Vec3* vertices = new Vec3[newVertices.size()];
+    for(uint i = 0;i<newVertices.size();i++)
+    {
+      vertices[i] = newVertices[i];
+    }
+    return new MeshData(vertices, newVertices.size(), indices, newIndices.size());
   }
 
   void MeshData::WriteToFile(const std::string& filename) const

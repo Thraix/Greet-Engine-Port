@@ -42,7 +42,7 @@ namespace Greet {
 
   // Implementation of AttributeDataBase (mainly destructor)
   template <typename T>
-  struct AttributeData : public AttributeDataBase
+    struct AttributeData : public AttributeDataBase
   {
 
     AttributeData(AttributeDefaults defaults, T* data) 
@@ -76,6 +76,8 @@ namespace Greet {
     uint* GetIndices() const { return m_indices; }
     uint GetVertexCount() const { return m_vertexCount; }
     uint GetIndexCount() const { return m_indexCount; }
+
+    MeshData* LowPolify();
 
     void WriteToFile(const std::string& filename) const;
     static MeshData* ReadFromFile(const std::string& filename);

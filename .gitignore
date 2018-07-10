@@ -1,7 +1,11 @@
 **/bin/*.a
+**/bin/*.so
 **/bin/intermediates/*
+**screenshot*.png
 *.logging
 *.swp
 *.swo
 deps/libs/*
 *Makefile.backup
+installation/glfw*
+
