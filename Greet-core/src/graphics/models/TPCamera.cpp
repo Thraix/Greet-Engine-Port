@@ -14,7 +14,7 @@ namespace Greet {
 	}
 
 	TPCamera::TPCamera(Vec3 position, float distance, float height, float rotation, float distanceMin, float distanceMax, float heightMin, float heightMax)
-		: TPCamera(position, distance, height, rotation, distanceMin, distanceMax, heightMin, heightMax, 0.5f, 0.01f, 0.005f)
+		: TPCamera(position, distance, height, rotation, distanceMin, distanceMax, heightMin, heightMax, 1000, 10, 10)
 	{
 	}
 
@@ -29,12 +29,17 @@ namespace Greet {
 		SetDistanceClamp(distanceMin, distanceMax);
 		SetHeightClamp(heightMin, heightMax);
 		CalculateInformation();
-		EventDispatcher::AddMouseListener(0, *this);
+
+    // Default input controls
+    inputCameraRotate = "mouseMiddle";
+    inputCameraZoom = "mouseScroll";
+    inputCameraXZ = "mouseLeft";
+    inputCameraY = "mouseRight";
+    inputCameraMove = "mousePos";
 	}
 
 	TPCamera::~TPCamera()
 	{
-		EventDispatcher::RemoveMouseListener(*this);
 	}
 
 	void TPCamera::Update(float timeElapsed)
@@ -100,12 +105,12 @@ namespace Greet {
 		m_distanceMax = max < 0 ? 0 : max;
 		if (m_distanceWanted < m_distanceMin)
 		{
-			Log::Info("Distance outside of clamp, reclamping.");
+			Log::Warning("Distance outside of clamp, reclamping.");
 			m_distanceWanted = m_distanceMin;
 		}
 		else if (m_distanceWanted > m_distanceMax)
 		{
-			Log::Info("Distance outside of clamp, reclamping.");
+			Log::Warning("Distance outside of clamp, reclamping.");
 			m_distanceWanted = m_distanceMax;
 		}
 	}
@@ -150,63 +155,54 @@ namespace Greet {
 		CalculateViewMatrix();
 	}
 
-	bool TPCamera::OnPressed(const MousePressedEvent& e){
-		if (e.GetButton() == GLFW_MOUSE_BUTTON_1)
-		{
-			m_mouse1 = true;
-			//Mat4 inv = ~m_viewMatrix;
-			//Vec3 worldCoord = inv * Vec3(e.getX(), e.getY(), 1.0f);
-			//Log::info(worldCoord.x," ", worldCoord.y);
-		}
-		else if (e.GetButton() == GLFW_MOUSE_BUTTON_3)
-		{
-			m_mouse3 = true;
-		}
-		else if (e.GetButton() == GLFW_MOUSE_BUTTON_2)
-		{
-			m_mouse2 = true;
-		}
-		return false;
-	}
-
-	void TPCamera::OnReleased(const MouseReleasedEvent& e)
-	{
-		if (e.GetButton() == GLFW_MOUSE_BUTTON_1)
-		{
-			m_mouse1 = false;
-		}
-		else if (e.GetButton() == GLFW_MOUSE_BUTTON_2)
-		{
-			m_mouse2 = false;
-		}
-		else if (e.GetButton() == GLFW_MOUSE_BUTTON_3)
-		{
-			m_mouse3 = false;
-		}
-	}
-
-	void TPCamera::OnMoved(const MouseMovedEvent& e) {
+	void TPCamera::Move(const Vec2& delta) {
 		if (m_mouse3) {
-			m_heightWanted += e.GetDY() * m_heightSpeed;
+			m_heightWanted -= delta.y * m_heightSpeed;
 			Math::Clamp(&m_heightWanted, m_heightMin, m_heightMax);
-			m_rotationWanted += m_rotationSpeed * e.GetDX();
+			m_rotationWanted += m_rotationSpeed * delta.x;
 		}
 		if (m_mouse2)
 		{
-			m_positionWanted.y += e.GetDeltaPosition().y * 0.1f;
+			m_positionWanted.y += delta.y * 0.1f;
 		}
 		else if (m_mouse1)
 		{
-			Vec2 dpos = e.GetDeltaPosition();
-			dpos.Rotate(m_rotation);
-			m_positionWanted.x += dpos.y * m_distanceSpeed * m_distance;
-			m_positionWanted.z -= dpos.x * m_distanceSpeed * m_distance;
+			Vec2 deltaR = Vec2(delta).Rotate(m_rotation);
+			m_positionWanted.x += deltaR.y * m_distanceSpeed * m_distance;
+			m_positionWanted.z -= deltaR.x * m_distanceSpeed * m_distance;
 		}
 	}
 
-	void TPCamera::OnScroll(const MouseScrollEvent& e) {
-		m_distanceWanted -= e.GetScroll();
+  void TPCamera::Zoom(float delta)
+  {
+		m_distanceWanted += delta;
 		Math::Clamp(&m_distanceWanted, m_distanceMin, m_distanceMax);
-	}
+  }
+
+  InputControlRequest TPCamera::OnInputChanged(const InputControl* control)
+  {
+    if(control->GetName() == inputCameraXZ) 
+    {
+      m_mouse1 = control->GetValue(0) > 0.5;
+    }
+    else if(control->GetName() == inputCameraY)
+    {
+      m_mouse2 = control->GetValue(0) > 0.5;
+    }
+    else if(control->GetName() == inputCameraRotate)
+    {
+      m_mouse3 = control->GetValue(0) > 0.5;
+    }
+    else if(control->GetName() == inputCameraMove)
+    {
+      Move(control->GetDeltaAsVec2());
+    }
+    else if(control->GetName() == inputCameraZoom)
+    {
+      Zoom(control->GetDelta(0));
+    }
+  
+    return m_mouse1 | m_mouse2 | m_mouse3 ? InputControlRequest::DONE : InputControlRequest::NOTHING;
+  }
 
 }

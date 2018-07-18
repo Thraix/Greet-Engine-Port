@@ -5,12 +5,21 @@
 #include <event/MouseListener.h>
 #include <internal/GreetGL.h>
 #include <event/EventDispatcher.h>
+#include <event/InputControlListener.h>
 
 namespace Greet {
 
-	class TPCamera : public Camera, public MouseListener
+	class TPCamera : public Camera
 	{
 	private:
+
+    std::string inputCameraRotate;
+    std::string inputCameraZoom;
+    std::string inputCameraXZ;
+    std::string inputCameraY;
+    std::string inputCameraMove;
+
+
 		bool m_mouse1 = false;
 		bool m_mouse2 = false;
 		bool m_mouse3 = false;
@@ -71,10 +80,10 @@ namespace Greet {
 		void SetDistanceClamp(float min, float max);
 		void SetHeightClamp(float min, float max);
 
-		bool OnPressed(const MousePressedEvent& e) override;
-		void OnReleased(const MouseReleasedEvent& e) override;
-		void OnMoved(const MouseMovedEvent& e) override;
-		void OnScroll(const MouseScrollEvent& e) override;
+		void Move(const Vec2& delta);
+		void Zoom(float delta);
+    InputControlRequest OnInputChanged(const InputControl* control);
+
 	};
 
 }
