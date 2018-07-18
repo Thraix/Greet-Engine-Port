@@ -175,7 +175,7 @@ namespace Greet {
 
   void TPCamera::Zoom(float delta)
   {
-		m_distanceWanted += delta;
+		m_distanceWanted -= delta;
 		Math::Clamp(&m_distanceWanted, m_distanceMin, m_distanceMax);
   }
 

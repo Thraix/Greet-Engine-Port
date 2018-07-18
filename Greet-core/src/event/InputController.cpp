@@ -80,6 +80,7 @@ namespace Greet
 
   void InputController::MouseWheel(ushort mouseCode, float value)
   {
+    UpdateInputControl(mouseCode | MOUSE_WHEEL_BITS,0);
     UpdateInputControl(mouseCode | MOUSE_WHEEL_BITS,value);
   }
 

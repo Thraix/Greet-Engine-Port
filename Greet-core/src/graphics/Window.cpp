@@ -228,7 +228,10 @@ namespace Greet {
 
 	void Window::mouse_scroll_callback(GLFWwindow* window, double scrollX, double scrollY)
 	{
+
 		EventDispatcher::OnMouseScrolled(MouseScrollEvent(scrollY));
+    InputController::MouseWheel(0,scrollY);
+    InputController::MouseWheel(1,scrollX);
 	}
 
 	void Window::key_char_callback(GLFWwindow* window, uint charCode)
