@@ -5,70 +5,121 @@
 
 namespace Greet {
 
-  Texture2D::Texture2D(uint width, uint height, uint bpp)
-    : Texture(GL_TEXTURE_2D)
+  Texture2D::Texture2D(uint width, uint height, TextureParams params)
+    : Texture(GL_TEXTURE_2D), m_params(params)
   {
-    GenTexture(width,height,bpp);
-  }
-  
-  Texture2D::Texture2D(const std::string& filename)
-		:Texture(GL_TEXTURE_2D)
-	{
-		LoadTexture(filename);
-	}
-
-	Texture2D::Texture2D(BYTE* bits, uint width, uint height, uint bpp)
-		: Texture(GL_TEXTURE_2D), m_width(width), m_height(height)
-	{
-		GenTexture(bits, bpp);
-		delete[] bits;
-	}
-
-  Texture2D::Texture2D()
-    : Texture(GL_TEXTURE_2D,false)
-  {
-    
+    GenTexture(width,height);
   }
 
-	Texture2D::Texture2D(uint texId, uint width, uint height, uint bpp)
-		:Texture(texId, (uint)GL_TEXTURE_2D), m_width(width), m_height(height), m_bpp(bpp)
-	{
+  Texture2D::Texture2D(const std::string& filename, TextureParams params)
+    :Texture(GL_TEXTURE_2D), m_params(params)
+  {
+    LoadTexture(filename);
+  }
 
-	}
+  Texture2D::Texture2D(BYTE* bits, uint width, uint height, TextureParams params)
+    : Texture(GL_TEXTURE_2D), m_width(width), m_height(height), m_params(params)
+  {
+    GenTexture(bits);
+    delete[] bits;
+  }
 
-	Texture2D::~Texture2D()
-	{
-	
-	}
+  Texture2D::Texture2D(TextureParams params)
+    : Texture(GL_TEXTURE_2D,false), m_params(params)
+  {
 
-	void Texture2D::LoadTexture(const std::string& filename)
-	{
-		uint bpp = 0;
-		BYTE* bits = ImageUtils::loadImage(filename.c_str(),&m_width,&m_height,&bpp);
-		GenTexture(bits, bpp);
-		delete[] bits;
-	}
+  }
 
-	void Texture2D::GenTexture(uint width, uint height, uint bpp)
-	{
-		m_width = width;
-		m_height = height;
-    m_bpp = bpp;
-		GenTexture(NULL,bpp);
-	}
+  Texture2D::Texture2D(uint texId, uint width, uint height, TextureParams params)
+    :Texture(texId, (uint)GL_TEXTURE_2D), m_width(width), m_height(height), m_params(params)
+  {
 
-	void Texture2D::GenTexture(BYTE* bits, uint bpp)
-	{
-		GLCall(glBindTexture(GL_TEXTURE_2D, m_texId));
-		GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
-		GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
-		GLCall(glTexImage2D(GL_TEXTURE_2D, 0, bpp == 32 ? GL_RGBA : GL_RGB, m_width, m_height, 0, bpp == 32 ? GL_BGRA : GL_BGR, GL_UNSIGNED_BYTE, bits));
-		GLCall(glBindTexture(GL_TEXTURE_2D, 0));
-	}
+  }
+
+  Texture2D::~Texture2D()
+  {
+
+  }
+
+  void Texture2D::LoadTexture(const std::string& filename)
+  {
+    uint bpp = 0;
+    BYTE* bits = ImageUtils::loadImage(filename.c_str(),&m_width,&m_height,&bpp);
+    switch(bpp)
+    {
+      case 8:
+        if(m_params.internalFormat != TextureInternalFormat::RED && m_params.internalFormat != TextureInternalFormat::DEPTH_COMPONENT && m_params.internalFormat != TextureInternalFormat::DEPTH_STENCIL)
+        {
+          Log::Warning("Image bpp is 8 but TextureInternalFormat is not RED, DEPTH_COMPONENT or DEPTH_STENCIL");
+        }
+        break;
+      case 24:
+        if(m_params.internalFormat != TextureInternalFormat::RGB)
+        {
+          Log::Warning("Image bpp is 24 but TextureInternalFormat is not RGB");
+        }
+        break;
+      case 32:
+        if(m_params.internalFormat != TextureInternalFormat::RGBA)
+        {
+          Log::Warning("Image bpp is 32 but TextureInternalFormat is not RGBA");
+        }
+        break;
+      default:
+        Log::Warning("Image bpp is invalid (bpp=",bpp,")");
+    }
+
+    GenTexture(bits);
+    delete[] bits;
+  }
+
+  void Texture2D::GenTexture(uint width, uint height)
+  {
+    m_width = width;
+    m_height = height;
+    GenTexture(NULL);
+  }
+
+  void Texture2D::GenTexture(BYTE* bits)
+  {
+    GLCall(glBindTexture(GL_TEXTURE_2D, m_texId));
+    if(m_params.filter != TextureFilter::NONE)
+    {
+      GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,  (uint)m_params.filter));
+      GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, (uint)m_params.filter));
+    }
+    GLCall(glTexImage2D(GL_TEXTURE_2D, 0, (uint)m_params.internalFormat, m_width, m_height, 0, GetFormat(), GL_UNSIGNED_BYTE, bits));
+    GLCall(glBindTexture(GL_TEXTURE_2D, 0));
+  }
 
   void Texture2D::SetPixels(const void* pixels) const
   {
     Enable();
-    GLCall(glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, m_width, m_height, m_bpp == 32 ? GL_BGRA : GL_BGR,GL_UNSIGNED_BYTE, pixels));
+    GLCall(glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, m_width, m_height, GetFormat(),GL_UNSIGNED_BYTE, pixels));
+  }
+
+  uint Texture2D::GetFormat() const
+  {
+    bool inverted = m_params.format == TextureFormat::INVERTED? true : false;
+    if(m_params.internalFormat == TextureInternalFormat::RGBA)
+    {
+      return inverted ? GL_BGRA : GL_RGBA;
+    }
+    else if(m_params.internalFormat == TextureInternalFormat::RGB)
+    {
+      return inverted ? GL_BGR : GL_RGB;
+    }
+    else if(m_params.internalFormat == TextureInternalFormat::RED)
+    {
+      return GL_RED;
+    }
+    else if(m_params.internalFormat == TextureInternalFormat::DEPTH_COMPONENT)
+    {
+      return GL_DEPTH_COMPONENT;
+    }
+    else //if(m_params.internalFormat == TextureInternalFormat::DEPTH_STENCIL)
+    {
+      return GL_DEPTH_STENCIL;
+    }
   }
 }

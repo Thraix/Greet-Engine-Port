@@ -3,8 +3,8 @@
 namespace Greet {
 
 	Atlas::Atlas(uint atlasSize, uint textureSize)
-		: Texture2D(atlasSize,atlasSize,32), m_textureSize(textureSize)
-	{
+		: Texture2D(atlasSize,atlasSize,TextureParams(TextureFilter::NEAREST,TextureWrap::NONE,TextureInternalFormat::RGBA,TextureFormat::INVERTED)), m_textureSize(textureSize)
+  {
 		ASSERT(atlasSize > m_textureSize, "ATLAS", "Atlas size must be greater than the textures sizes");
 		ASSERT(!(atlasSize == 0) && !(atlasSize & (atlasSize - 1)),"ATLAS", "Atlas size must be a power of two");
 		ASSERT(!(textureSize == 0) && !(m_textureSize & (m_textureSize - 1)), "ATLAS", "Texture size must be a power of two");
@@ -25,7 +25,8 @@ namespace Greet {
 			m_occupied.push_back(false);
 		}
 
-		GenTexture(m_bits,4);
+
+		//GenTexture(m_bits);
 		UpdateTexture();
 	}
 

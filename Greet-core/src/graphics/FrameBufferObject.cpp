@@ -28,12 +28,7 @@ namespace Greet {
 	{
 		GLCall(glDeleteFramebuffers(1, &m_fbo));
 		GLCall(glDeleteBuffers(1,&m_depthBuffer));
-		for (auto it = m_colorTextures.begin();it != m_colorTextures.end();it++)
-		{
-			delete it->second;
-		}
 		m_colorTextures.clear();
-		delete m_depthTexture;
 	}
 
 	void FrameBufferObject::AttachColorTexture(uint attachmentId)
@@ -48,14 +43,9 @@ namespace Greet {
 			Log::Error("The given attachment is already in use: ", attachmentId);
 		}
 		GLCall(glBindFramebuffer(GL_FRAMEBUFFER, m_fbo));
-		uint texId;
-		GLCall(glGenTextures(1, &texId));
-		GLCall(glBindTexture(GL_TEXTURE_2D, texId));
-		GLCall(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_width, m_height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL));
-		GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
-		GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
-		GLCall(glFramebufferTexture2D(GL_FRAMEBUFFER, attachmentId, GL_TEXTURE_2D, texId, 0));
-		m_colorTextures.emplace(attachmentId,new Texture2D(texId,m_width,m_height,24));
+    Texture2D colorTexture(m_width,m_height,TextureParams(TextureFilter::LINEAR,TextureWrap::NONE,TextureInternalFormat::RGB,TextureFormat::NORMAL));
+		GLCall(glFramebufferTexture2D(GL_FRAMEBUFFER, attachmentId, GL_TEXTURE_2D, colorTexture.GetTexId(), 0));
+		m_colorTextures.emplace(attachmentId,colorTexture);
 		uint size = m_colorTextures.size();
 		uint* colorBuffers = new uint[size];
 		uint i = 0;
@@ -69,16 +59,8 @@ namespace Greet {
 	void FrameBufferObject::AttachDepthTexture()
 	{
 		GLCall(glBindFramebuffer(GL_FRAMEBUFFER, m_fbo));
-
-		uint texId;
-		GLCall(glGenTextures(1, &texId));
-		GLCall(glBindTexture(GL_TEXTURE_2D, texId));
-		GLCall(glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, m_width, m_height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL));
-		GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST));
-		GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
-		//GLCall(glTexParameteri(GL_TEXTURE_2D,GL_DEPTH_TEXTURE_MODE,GL_INTENSITY);
-		m_depthTexture = new Texture2D(texId,m_width,m_height,32);
-		GLCall(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, texId, 0));
+		m_depthTexture = Texture2D(m_width,m_height,TextureParams(TextureFilter::NEAREST,TextureWrap::NONE,TextureInternalFormat::DEPTH_COMPONENT,TextureFormat::NORMAL));
+		GLCall(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_depthTexture.GetTexId(), 0));
 		GLCall(glBindFramebuffer(GL_FRAMEBUFFER,0));
 	}
 
@@ -96,7 +78,7 @@ namespace Greet {
 		GLCall(glViewport(0,0,Window::GetWidth(),Window::GetHeight()));
 	}
 
-	Texture2D* FrameBufferObject::GetColorTexture(uint attachmentId) const 
+	const Texture2D& FrameBufferObject::GetColorTexture(uint attachmentId) const 
 	{ 
 		auto it = m_colorTextures.find(attachmentId);
 		if (it != m_colorTextures.end())

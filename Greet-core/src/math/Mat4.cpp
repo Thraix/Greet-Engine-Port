@@ -53,9 +53,10 @@ namespace Greet {
 
 		result.elements[_0_0] = 2.0f / (right - left);
 		result.elements[_1_1] = 2.0f / (top - bottom);
-		result.elements[_3_1] = -(right + left) / (right - left);
-		result.elements[_3_2] = -(top + bottom) / (top - bottom);
-		result.elements[_3_3] = -(far + near) / (far - near);
+		result.elements[_2_2] = -2.0f / (far- near);
+		result.elements[_3_0] = -(right + left) / (right - left);
+		result.elements[_3_1] = -(top + bottom) / (top - bottom);
+		result.elements[_3_2] = -(far + near) / (far - near);
 
 		return result;
 	}

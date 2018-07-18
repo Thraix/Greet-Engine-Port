@@ -59,6 +59,7 @@ namespace Greet{
 		virtual void End() {};
 
 		inline const Mat4& GetProjectionMatrix() const { return m_projectionMatrix; }
+    inline void SetProjectionMatrix(const Mat4& mat) { m_projectionMatrix = mat;}
 		inline const Camera& GetCamera() const { return *m_camera; }
 
 		Vec3 GetScreenCoordination(const Vec3& coordinate, uint screenWidth, uint screenHeight) const;
