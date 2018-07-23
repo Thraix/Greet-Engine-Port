@@ -74,13 +74,24 @@ namespace Greet {
 		return it->second;
 	}
 
+	int JSONObject::GetValueAsInt(const std::string& key) const
+	{
+		auto it = m_values.find(key);
+		if (it == m_values.end())
+		{
+			Log::Error("Key does not exist in JSONObject: ", key);
+			return 0;
+		}
+		return std::stoi(it->second.c_str());
+	}
+
 	uint JSONObject::GetValueAsUint(const std::string& key) const
 	{
 		auto it = m_values.find(key);
 		if (it == m_values.end())
 		{
 			Log::Error("Key does not exist in JSONObject: ", key);
-			return 0.0f;
+			return 0;
 		}
 		return std::stoul(it->second.c_str());
 	}
@@ -102,7 +113,7 @@ namespace Greet {
 		if (it == m_values.end())
 		{
 			Log::Error("Key does not exist in JSONObject: ", key);
-			return 0.0f;
+			return false;
 		}
 		return it->second == "true";
 	}
@@ -113,7 +124,7 @@ namespace Greet {
 		if (it == m_values.end())
 		{
 			Log::Error("Key does not exist in JSONObject: ", key);
-			return 0.0f;
+			return true;
 		}
 		return it->second == "null";
 	}

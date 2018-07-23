@@ -3,13 +3,13 @@
 namespace Greet {
 
 	Material::Material(const Shader& shader, const Texture2D& texture)
-		: m_shader(shader), m_texture(texture)
+		: m_shader(shader), m_texture(texture), m_color(0xffffffff)
 	{
 		UpdateTexture();
 	}
 
 	Material::Material(const Shader& shader)
-		: m_shader(shader), m_texture(Texture2D())
+		: m_shader(shader), m_texture(Texture2D()), m_color(0xffffffff)
   {
 		UpdateTexture();
 	}

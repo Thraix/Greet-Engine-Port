@@ -84,6 +84,6 @@ namespace Greet {
   };
 }
 
-#define ATTRIBUTE_COLOR		AttributeDefaults(MESH_COLORS_LOCATION, 4, sizeof(uint), GL_UNSIGNED_BYTE,GL_TRUE)
-#define ATTRIBUTE_NORMAL	AttributeDefaults(MESH_NORMALS_LOCATION,3, sizeof(Vec3) ,GL_FLOAT,GL_FALSE)
-#define ATTRIBUTE_TEXCOORD	AttributeDefaults(MESH_TEXCOORDS_LOCATION,2, sizeof(Vec2),GL_FLOAT,GL_FALSE)
+#define ATTRIBUTE_COLOR		Greet::AttributeDefaults(MESH_COLORS_LOCATION, 4, sizeof(unsigned int), GL_UNSIGNED_BYTE,GL_TRUE)
+#define ATTRIBUTE_NORMAL	Greet::AttributeDefaults(MESH_NORMALS_LOCATION,3, sizeof(Greet::Vec3) ,GL_FLOAT,GL_FALSE)
+#define ATTRIBUTE_TEXCOORD	Greet::AttributeDefaults(MESH_TEXCOORDS_LOCATION,2, sizeof(Greet::Vec2),GL_FLOAT,GL_FALSE)

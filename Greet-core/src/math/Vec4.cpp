@@ -102,22 +102,22 @@ namespace Greet{
 		return x == other.x && y == other.y && z == other.z && w == other.w;
 	}
 
-	Vec4& operator+(const Vec4& first, const Vec4 &second)
+	Vec4 operator+(const Vec4& first, const Vec4 &second)
 	{
 		return Vec4(first).Add(second);
 	}
 
-	Vec4& operator-(const Vec4& first, const Vec4 &second)
+	Vec4 operator-(const Vec4& first, const Vec4 &second)
 	{
 		return Vec4(first).Subtract(second);
 	}
 
-	Vec4& operator*(const Vec4& first, const Vec4 &second)
+	Vec4 operator*(const Vec4& first, const Vec4 &second)
 	{
 		return Vec4(first).Multiply(second);
 	}
 
-	Vec4& operator/(const Vec4& first, const Vec4 &second)
+	Vec4 operator/(const Vec4& first, const Vec4 &second)
 	{
 		return Vec4(first).Divide(second);
 	}

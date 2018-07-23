@@ -43,10 +43,10 @@ namespace Greet{
 
 		bool Compare(const Vec4& other);
 
-		friend Vec4& operator+(Vec4& first, const Vec4 &second);
-		friend Vec4& operator-(Vec4& first, const Vec4 &second);
-		friend Vec4& operator*(Vec4& first, const Vec4 &second);
-		friend Vec4& operator/(Vec4& first, const Vec4 &second);
+		friend Vec4 operator+(const Vec4& first, const Vec4 &second);
+		friend Vec4 operator-(const Vec4& first, const Vec4 &second);
+		friend Vec4 operator*(const Vec4& first, const Vec4 &second);
+		friend Vec4 operator/(const Vec4& first, const Vec4 &second);
 
 		friend Vec4 operator+(const Vec4& first, const float c);
 		friend Vec4 operator-(const Vec4& first, const float c);

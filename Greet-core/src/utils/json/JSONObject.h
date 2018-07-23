@@ -33,6 +33,7 @@ namespace Greet {
 
 		const std::string& GetValue(const std::string& key) const;
 		uint GetValueAsUint(const std::string& key) const;
+		int GetValueAsInt(const std::string& key) const;
 		float GetValueAsFloat(const std::string& key) const;
 		bool GetValueAsBool(const std::string& key) const;
 		bool IsNull(const std::string& key) const;
