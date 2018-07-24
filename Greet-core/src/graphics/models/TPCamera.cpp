@@ -1,5 +1,7 @@
 #include "TPCamera.h"
 
+#include <graphics/Window.h>
+
 namespace Greet {
 
 	TPCamera::TPCamera()
@@ -167,8 +169,8 @@ namespace Greet {
 		}
 		else if (m_mouse1)
 		{
-			Vec2 deltaR = Vec2(delta).Rotate(m_rotation);
-			m_positionWanted.x += deltaR.y * m_distanceSpeed * m_distance;
+			Vec2 deltaR = Vec2(delta).Rotate(-m_rotation);
+			m_positionWanted.x -= deltaR.y * m_distanceSpeed * m_distance * (Window::GetHeight()/(float)Window::GetWidth());
 			m_positionWanted.z -= deltaR.x * m_distanceSpeed * m_distance;
 		}
 	}
