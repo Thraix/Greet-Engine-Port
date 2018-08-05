@@ -26,10 +26,9 @@ namespace Greet{
 		bool AddTexture(std::string name, std::string filePath);
 		void RemoveTexture(std::string textureName);
 		void AddTexture(BYTE* bits, uint bpp, std::string name);
-		Sprite* GetSprite(std::string name);
-		Sprite* GetSpriteFromSheet(std::string sheetName, Vec2 texPos, Vec2 texSize);
+		Sprite GetSprite(std::string name) const;
+		Sprite GetSpriteFromSheet(std::string sheetName, Vec2 texPos, Vec2 texSize) const;
 	private:
-		void FillTexture(uint x, uint y, BYTE* bits, uint bpp);
-		void UpdateTexture();
+		void GenTexture(BYTE* bits);
 	};
 }

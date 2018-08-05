@@ -109,12 +109,13 @@ namespace Greet {
 		return meshdata;
 	}
 	// x, y, z
-	MeshData* MeshFactory::Cube(float x, float y, float z, float width, float length, float height)
+	MeshData* MeshFactory::Cube(float x, float y, float z, float width, float height, float length)
 	{
 		Vec3* vertices = new Vec3[8];
 		float halfWidth = width / 2.0f;
-		float halfLength = length / 2.0f;
 		float halfHeight = height / 2.0f;
+		float halfLength = length / 2.0f;
+
 		vertices[0]  = Vec3(x-halfWidth, y-halfHeight, z-halfLength);
 		vertices[1]  = Vec3(x-halfWidth, y+halfHeight, z-halfLength);
 		vertices[2]  = Vec3(x-halfWidth, y+halfHeight, z+halfLength);
@@ -149,12 +150,12 @@ namespace Greet {
 	}
 
 	// x, y, z
-	MeshData* MeshFactory::Cube2(float x, float y, float z, float width, float length, float height)
+	MeshData* MeshFactory::Cube2(float x, float y, float z, float width, float height, float length)
 	{
 		Vec3* vertices = new Vec3[24];
 		float halfWidth = width / 2.0f;
-		float halfLength = length / 2.0f;
 		float halfHeight = height / 2.0f;
+		float halfLength = length / 2.0f;
 
 
 		vertices[0] = Vec3(x - halfWidth, y - halfHeight, z - halfLength);

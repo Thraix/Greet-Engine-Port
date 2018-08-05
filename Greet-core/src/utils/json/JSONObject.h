@@ -31,12 +31,12 @@ namespace Greet {
 		void AddArray(std::string key, JSONArray value);
 		void AddObject(std::string key, JSONObject value);
 
-		const std::string& GetValue(const std::string& key) const;
-		uint GetValueAsUint(const std::string& key) const;
-		int GetValueAsInt(const std::string& key) const;
-		float GetValueAsFloat(const std::string& key) const;
-		bool GetValueAsBool(const std::string& key) const;
-		bool IsNull(const std::string& key) const;
+		const std::string& GetValue(const std::string& key, const std::string& defaultValue = "") const;
+		uint GetValueAsUint(const std::string& key, uint defaultValue = 0) const;
+		int GetValueAsInt(const std::string& key, int defaultValue = 0) const;
+		float GetValueAsFloat(const std::string& key, float defaultValue = 0.0) const;
+		bool GetValueAsBool(const std::string& key, bool defaultValue = false) const;
+		bool IsNull(const std::string& key, bool defaultValue = true) const;
 
 		const JSONArray& GetArray(const std::string& key) const;
 		const JSONObject& GetObject(const std::string& key) const;

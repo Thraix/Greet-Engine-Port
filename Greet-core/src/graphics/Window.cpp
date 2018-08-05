@@ -2,6 +2,7 @@
 
 #include <graphics/fonts/FontManager.h>
 #include <graphics/textures/TextureManager.h>
+#include <graphics/atlas/AtlasManager.h>
 #include <internal/GreetGL.h>
 #include <event/EventDispatcher.h>
 #include <internal/OpenGLObjectHandler.h>
@@ -51,6 +52,7 @@ namespace Greet {
 	{
 		FontManager::Destroy();
 		TextureManager::Destroy();
+    AtlasManager::Destroy();
 		glfwTerminate();
     OpenGLObjectHandler::Destroy();
 	}

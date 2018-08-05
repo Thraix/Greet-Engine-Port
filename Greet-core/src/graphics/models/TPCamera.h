@@ -80,6 +80,12 @@ namespace Greet {
 		void SetDistanceClamp(float min, float max);
 		void SetHeightClamp(float min, float max);
 
+    void SetInputRotation(const std::string& inputName);
+    void SetInputZoom(const std::string& inputName);
+    void SetInputXZ(const std::string& inputName);
+    void SetInputY(const std::string& inputName);
+    void SetInputMove(const std::string& inputName);
+
 		void Move(const Vec2& delta);
 		void Zoom(float delta);
     InputControlRequest OnInputChanged(const InputControl* control);

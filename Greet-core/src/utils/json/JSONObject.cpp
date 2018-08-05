@@ -63,68 +63,62 @@ namespace Greet {
 		m_objects[key] = value;
 	}
 
-	const std::string& JSONObject::GetValue(const std::string& key) const
+	const std::string& JSONObject::GetValue(const std::string& key, const std::string& defaultValue) const
 	{
 		auto it = m_values.find(key);
 		if (it == m_values.end())
 		{
-			Log::Error("Key does not exist in JSONObject: ", key);
-			return valueNull;
+			return defaultValue;
 		}
 		return it->second;
 	}
 
-	int JSONObject::GetValueAsInt(const std::string& key) const
+	int JSONObject::GetValueAsInt(const std::string& key, int defaultValue) const
 	{
 		auto it = m_values.find(key);
 		if (it == m_values.end())
 		{
-			Log::Error("Key does not exist in JSONObject: ", key);
-			return 0;
+			return defaultValue;
 		}
 		return std::stoi(it->second.c_str());
 	}
 
-	uint JSONObject::GetValueAsUint(const std::string& key) const
+	uint JSONObject::GetValueAsUint(const std::string& key, uint defaultValue) const
 	{
 		auto it = m_values.find(key);
 		if (it == m_values.end())
 		{
-			Log::Error("Key does not exist in JSONObject: ", key);
-			return 0;
+			return defaultValue;
 		}
 		return std::stoul(it->second.c_str());
 	}
 
-	float JSONObject::GetValueAsFloat(const std::string& key) const
+	float JSONObject::GetValueAsFloat(const std::string& key, float defaultValue) const
 	{
 		auto it = m_values.find(key);
 		if (it == m_values.end())
 		{
-			Log::Error("Key does not exist in JSONObject: ", key);
-			return 0.0f;
+			return defaultValue;
 		}
 		return atof(it->second.c_str());
 	}
 	
-	bool JSONObject::GetValueAsBool(const std::string& key) const
+	bool JSONObject::GetValueAsBool(const std::string& key, bool defaultValue) const
 	{
 		auto it = m_values.find(key);
 		if (it == m_values.end())
 		{
-			Log::Error("Key does not exist in JSONObject: ", key);
-			return false;
+			return defaultValue;
 		}
 		return it->second == "true";
 	}
 
-	bool JSONObject::IsNull(const std::string& key) const
+	bool JSONObject::IsNull(const std::string& key, bool defaultValue) const
 	{
 		auto it = m_values.find(key);
 		if (it == m_values.end())
 		{
-			Log::Error("Key does not exist in JSONObject: ", key);
-			return true;
+			return defaultValue;
 		}
 		return it->second == "null";
 	}
