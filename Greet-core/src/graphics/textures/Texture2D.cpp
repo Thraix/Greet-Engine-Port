@@ -56,13 +56,13 @@ namespace Greet {
       case 24:
         if(m_params.internalFormat != TextureInternalFormat::RGB)
         {
-          Log::Warning("Image bpp is 24 but TextureInternalFormat is not RGB");
+          Log::Warning("Image bpp is 24 but TextureInternalFormat is not RGB (filename=",filename,")");
         }
         break;
       case 32:
         if(m_params.internalFormat != TextureInternalFormat::RGBA)
         {
-          Log::Warning("Image bpp is 32 but TextureInternalFormat is not RGBA");
+          Log::Warning("Image bpp is 32 but TextureInternalFormat is not RGBA (filename=",filename,")");
         }
         break;
       default:

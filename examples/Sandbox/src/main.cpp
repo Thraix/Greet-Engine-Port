@@ -43,7 +43,7 @@ class Core : public App, public KeyListener, public MouseListener
     Core()
       : App("Best Game Ever", 960, 540)
     {
-      SetFrameCap(144);
+      SetFrameCap(60);
     }
 
     ~Core()
@@ -64,8 +64,19 @@ class Core : public App, public KeyListener, public MouseListener
     {
       InputControl* move = new InputControl("movement",2);
       InputControl* mousePos = new InputControl("mousePos",2);
+      InputControl* mouseMiddle = new InputControl("mouseMiddle",1);
+      InputControl* mouseScroll = new InputControl("mouseScroll",1);
+      InputControl* mouseLeft = new InputControl("mouseLeft",1);
+      InputControl* mouseRight = new InputControl("mouseRight",1);
+
       EventDispatcher::AddKeyListener(DISPATCHER_GUI+1, *this);
       EventDispatcher::AddMouseListener(DISPATCHER_GUI + 1, *this);
+
+      InputController::AddMouseButton(0, mouseLeft, 1,false,0);
+      InputController::AddMouseButton(1, mouseRight, 1,false,0);
+      InputController::AddMouseButton(2, mouseMiddle, 1,false,0);
+      InputController::AddMouseWheel(0, mouseScroll, 1,false,0);
+
       InputController::AddKeyButton(GLFW_KEY_W, move, 1,false,1);
       InputController::AddKeyButton(GLFW_KEY_S, move, -1,false,1);
       InputController::AddKeyButton(GLFW_KEY_D, move, 1,false,0);
@@ -451,6 +462,7 @@ class Core : public App, public KeyListener, public MouseListener
 
     bool OnPressed(const MousePressedEvent& e)  override
     {
+      Log::Info(e.GetButton());
       return false;
     }
 

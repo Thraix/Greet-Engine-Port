@@ -7,4 +7,4 @@ cd build
 sudo cmake ../ -DBUILD_SHARED_LIBS:BOOL=true
 sudo make install
 cd ../../
-rm -rf freetype-2.9
+sudo m -rf freetype-2.9*

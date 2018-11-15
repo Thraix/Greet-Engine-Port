@@ -1,4 +1,4 @@
-# This Makefile was generated using MakeGen v1.0.6 made by Tim Håkansson
+# This Makefile was generated using MakeGen v1.0.5 made by Tim Håkansson
 # and is licensed under MIT. Full source of the project can be found at
 # https://github.com/Thraix/MakeGen
 CC=@g++
@@ -9,7 +9,7 @@ INCLUDES=-I./../../Greet-core/src/ -I./../../deps/includes/
 OBJECTS=$(OBJPATH)/main.o 
 CFLAGS=$(INCLUDES) -std=c++17 -c -w -g3 -D_DEBUG 
 LIBDIR=-L./../../deps/libs/unix/ -L./../../Greet-core/bin/ 
-LIBS=$(LIBDIR) -lgreet -lGL -lGLEW -lglfw -lfreeimage -lfreetype-gl -lfreetype 
+LIBS=$(LIBDIR) -lgreet -lGL -lGLEW -lglfw -lfreeimage -lfreetype 
 OUTPUT=$(BIN)Sandbox.a
 all: $(OUTPUT)
 rebuild: clean all

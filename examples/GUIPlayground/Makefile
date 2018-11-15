@@ -9,7 +9,7 @@ INCLUDES=-I./../../Greet-core/src/ -I./../../deps/includes/
 OBJECTS=$(OBJPATH)/GuiTesting.o 
 CFLAGS=$(INCLUDES) -std=c++17 -c -w -g3 -D_DEBUG 
 LIBDIR=-L./../../deps/libs/unix/ -L./../../Greet-core/bin/ 
-LIBS=$(LIBDIR) -lgreet -lGL -lGLEW -lglfw -lfreeimage -lfreetype-gl -lfreetype 
+LIBS=$(LIBDIR) -lgreet -lGL -lGLEW -lglfw -lfreeimage -lfreetype 
 OUTPUT=$(BIN)Sandbox.a
 all: $(OUTPUT)
 rebuild: clean all

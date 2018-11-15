@@ -5,6 +5,7 @@
 #include <graphics/renderers/GUIRenderer.h>
 #include <event/MouseEvent.h>
 #include <event/KeyEvent.h>
+#include <graphics/gui/Style.h>
 
 #include <vector>
 
@@ -16,9 +17,11 @@ namespace Greet {
       Content* m_focused;
       bool isFocused;
 
-      Vec4 margin;
-      Vec4 border;
-      Vec4 padding;
+      Style* currentStyle;
+
+      Style normalStyle;
+      Style hoverStyle;
+      Style pressStyle;
 
       XMLObject xmlObject;
 
@@ -26,8 +29,6 @@ namespace Greet {
 
       Vec2 size;
       Content* parent;
-      Vec4 backgroundColor;
-      Vec4 borderColor;
       std::vector<Content*> m_contents;
 
     public:
@@ -71,6 +72,8 @@ namespace Greet {
       virtual float GetHeight() const;
       virtual float GetPotentialWidth() const;
       virtual float GetPotentialHeight() const;
+
+      const XMLObject& GetXMLObject() const;
 
       void SetMargins(float left, float right, float top, float bottom);
     private:

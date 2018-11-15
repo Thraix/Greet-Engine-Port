@@ -6,19 +6,18 @@
 namespace Greet {
 
   Content::Content()
-    : m_focused(NULL), parent(NULL), margin(Vec4(0,0,0,0)), border(Vec4(0,0,0,0)), ySpacing(10), size(Vec2(100, 100)), xmlObject(XMLObject())
+    : m_focused(NULL), parent(NULL), ySpacing(10), size(Vec2(100, 100)), xmlObject(XMLObject())
   {
     m_isFocusable = false;
   }
 
   Content::Content(const XMLObject& object, Content* parent)
-    : parent(parent), m_focused(NULL), xmlObject(object.GetStrippedXMLObject())
+    : parent(parent), m_focused(NULL), xmlObject(object.GetStrippedXMLObject()) 
   {
     size = Vec2(100, 100);
-    margin = Vec4(0,0,0,0);
-    padding = Vec4(10,10,10,10);
-    border = Vec4(0,0,0,0);
     ySpacing = 10;
+    Style temp;
+    currentStyle = &temp;
     if (object.HasProperty("width"))
     {
       size.w = GUIUtils::CalcSize(object.GetProperty("width"), GetPotentialWidth());
@@ -31,77 +30,25 @@ namespace Greet {
     {
       ySpacing = GUIUtils::CalcSize(object.GetProperty("spacing"), GetPotentialHeight());
     }
-    if (object.HasProperty("backgroundColor"))
-    {
-      backgroundColor = GUIUtils::GetColor(object.GetProperty("backgroundColor"));
-    }
-    if (object.HasProperty("marginTop"))
-    {
-      margin.top = GUIUtils::CalcSize(object.GetProperty("marginTop"), GetPotentialHeight());
-    }
-    if (object.HasProperty("marginLeft"))
-    {
-      margin.left  = GUIUtils::CalcSize(object.GetProperty("marginLeft"), GetPotentialWidth());
-    }
-    if (object.HasProperty("marginBottom"))
-    {
-      margin.bottom  = GUIUtils::CalcSize(object.GetProperty("marginBottom"), GetPotentialHeight());
-    }
-    if (object.HasProperty("marginRight"))
-    {
-      margin.right = GUIUtils::CalcSize(object.GetProperty("marginRight"), GetPotentialWidth());
-    }
-    if (object.HasProperty("paddingTop"))
-    {
-      padding.top = GUIUtils::CalcSize(object.GetProperty("paddingTop"), GetPotentialHeight());
-    }
-    if (object.HasProperty("paddingLeft"))
-    {
-      padding.left = GUIUtils::CalcSize(object.GetProperty("paddingLeft"), GetPotentialWidth());
-    }
-    if (object.HasProperty("paddingBottom"))
-    {
-      padding.bottom = GUIUtils::CalcSize(object.GetProperty("paddingBottom"), GetPotentialHeight());
-    }
-    if (object.HasProperty("paddingRight"))
-    {
-      padding.right = GUIUtils::CalcSize(object.GetProperty("paddingRight"), GetPotentialWidth());
-    }
-    if (object.HasProperty("borderTop"))
-    {
-      border.top = GUIUtils::CalcSize(object.GetProperty("borderTop"), GetPotentialHeight());
-    }
-    if (object.HasProperty("borderLeft"))
-    {
-      border.left = GUIUtils::CalcSize(object.GetProperty("borderLeft"), GetPotentialWidth());
-    }
-    if (object.HasProperty("borderBottom"))
-    {
-      border.bottom = GUIUtils::CalcSize(object.GetProperty("borderBottom"), GetPotentialHeight());
-    }
-    if (object.HasProperty("borderRight"))
-    {
-      border.right = GUIUtils::CalcSize(object.GetProperty("borderRight"), GetPotentialWidth());
-    }
-    if (object.HasProperty("borderColor"))
-    {
-      borderColor = GUIUtils::GetColor(object.GetProperty("borderColor"));
-    }
+    normalStyle.Load("",*this);
+    hoverStyle.Load("hover_",*this,&normalStyle);
+    pressStyle.Load("press_",*this,&normalStyle);
+    currentStyle = &normalStyle;
   }
 
   void Content::RenderHandle(GUIRenderer* renderer, const Vec2& position) const
   {
     // Border around Content 
     if (xmlObject.HasProperty("borderColor"))
-      renderer->SubmitRect(position, size + Vec2(margin.left, margin.top), borderColor, false);
+      renderer->SubmitRect(position, size + Vec2(currentStyle->margin.left, currentStyle->margin.top), currentStyle->borderColor, false);
     // Content background
     if (xmlObject.HasProperty("backgroundColor"))
-      renderer->SubmitRect(position + Vec2(border.left, border.top), size - Vec2(border.left + border.right, border.top + border.bottom), backgroundColor, false);
+      renderer->SubmitRect(position + Vec2(currentStyle->border.left, currentStyle->border.top), size - Vec2(currentStyle->border.left + currentStyle->border.right, currentStyle->border.top + currentStyle->border.bottom), currentStyle->backgroundColor, false);
     Render(renderer, position);
-    Vec2 childOffset(position.x + border.left + padding.left, position.y +padding.top + border.top);
+    Vec2 childOffset(position.x + currentStyle->border.left + currentStyle->padding.left, position.y +currentStyle->padding.top + currentStyle->border.top);
     for (auto it = m_contents.begin(); it != m_contents.end(); ++it)
     {
-      (*it)->RenderHandle(renderer, childOffset+ Vec2((*it)->margin.left, (*it)->margin.top));
+      (*it)->RenderHandle(renderer, childOffset+ Vec2((*it)->currentStyle->margin.left, (*it)->currentStyle->margin.top));
       childOffset += GetChildOffset(*it);
     }
   }
@@ -179,11 +126,11 @@ namespace Greet {
       OnMousePressed(event,translatedPos);
       Content* lastFocus = m_focused;
       m_focused = NULL;
-      Vec2 childOffset(translatedPos.x - border.left - padding.left, translatedPos.y -padding.top - border.top);
+      Vec2 childOffset(translatedPos.x - currentStyle->border.left - currentStyle->padding.left, translatedPos.y -currentStyle->padding.top - currentStyle->border.top);
       for (auto it = m_contents.begin(); it != m_contents.end(); ++it)
       {
         // Translate the mouse.
-        bool mouseInside = (*it)->MousePressHandle(event, childOffset - Vec2((*it)->margin.left, (*it)->margin.top));
+        bool mouseInside = (*it)->MousePressHandle(event, childOffset - Vec2((*it)->currentStyle->margin.left, (*it)->currentStyle->margin.top));
         if (mouseInside)
         {
           // We always set the value since we want the "top" element, incase Contents overlap
@@ -213,12 +160,12 @@ namespace Greet {
     if (m_focused != NULL)
     {
       // Calculate the focused yPos
-      Vec2 childOffset(translatedPos.x - border.left - padding.left, translatedPos.y -padding.top - border.top);
+      Vec2 childOffset(translatedPos.x - currentStyle->border.left - currentStyle->padding.left, translatedPos.y -currentStyle->padding.top - currentStyle->border.top);
       for (auto it = m_contents.begin(); it != m_contents.end(); ++it)
       {
         if (m_focused == *it)
         {
-          m_focused->MouseReleaseHandle(event, childOffset - Vec2((*it)->margin.left, (*it)->margin.top));
+          m_focused->MouseReleaseHandle(event, childOffset - Vec2((*it)->currentStyle->margin.left, (*it)->currentStyle->margin.top));
           //if (m_focused->IsMouseInside(translatedPos - Vec2(margin.left, yPos)))
           {
             //listener.OnMouseClicked(m_focused);
@@ -235,12 +182,12 @@ namespace Greet {
     if(m_focused != NULL)
     {
       // We loop since we need to calculate the yPos 
-      Vec2 childOffset(translatedPos.x - border.left - padding.left, translatedPos.y -padding.top - border.top);
+      Vec2 childOffset(translatedPos.x - currentStyle->border.left - currentStyle->padding.left, translatedPos.y -currentStyle->padding.top - currentStyle->border.top);
       for (auto it = m_contents.begin(); it != m_contents.end(); ++it)
       {
         if (m_focused == *it)
         {
-          m_focused->MouseMoveHandle(event, childOffset - Vec2((*it)->margin.left, (*it)->margin.top));
+          m_focused->MouseMoveHandle(event, childOffset - Vec2((*it)->currentStyle->margin.left, (*it)->currentStyle->margin.top));
         }
         childOffset -= GetChildOffset(*it);
       }
@@ -328,7 +275,7 @@ namespace Greet {
       {
         maxWidth = Math::Max((*it)->GetWidth(), maxWidth);
       }
-      return maxWidth + margin.left + margin.right;
+      return maxWidth + currentStyle->margin.left + currentStyle->margin.right;
     }
   }
 
@@ -351,7 +298,7 @@ namespace Greet {
     }
     else
     {
-      float height = margin.top + margin.bottom;
+      float height = currentStyle->margin.top + currentStyle->margin.bottom;
       for (auto it = m_contents.begin(); it != m_contents.end(); ++it)
       {
         if (it != m_contents.begin())
@@ -369,18 +316,18 @@ namespace Greet {
       const std::string& w = xmlObject.GetProperty("width");
       if (GUIUtils::IsStaticSize(w))
       {
-        return size.w - padding.right - padding.left - border.right - border.left;
+        return size.w - currentStyle->padding.right - currentStyle->padding.left - currentStyle->border.right - currentStyle->border.left;
       }
       else
       {
         if (parent == NULL)
           return GUIUtils::CalcSize(w, Window::GetWidth());
         // No need to check for parent since the top parent doesn't have an xml object.
-        return GUIUtils::CalcSize(w, parent->GetPotentialWidth()-margin.left-margin.right);
+        return GUIUtils::CalcSize(w, parent->GetPotentialWidth()-currentStyle->margin.left-currentStyle->margin.right);
       }
     }
     if (parent == NULL)
-      return size.w - padding.right - padding.left - border.right - border.left;
+      return size.w - currentStyle->padding.right - currentStyle->padding.left - currentStyle->border.right - currentStyle->border.left;
     return parent->GetPotentialWidth();
   }
 
@@ -391,7 +338,7 @@ namespace Greet {
       const std::string& h = xmlObject.GetProperty("height");
       if (GUIUtils::IsStaticSize(h))
       {
-        return size.h - margin.top - margin.bottom;
+        return size.h - currentStyle->margin.top - currentStyle->margin.bottom;
       }
       else
       {
@@ -402,20 +349,25 @@ namespace Greet {
       }
     }
     if (parent == NULL)
-      return size.h - margin.top - margin.bottom;
+      return size.h - currentStyle->margin.top - currentStyle->margin.bottom;
     return parent->GetPotentialHeight();
+  }
+
+  const XMLObject& Content::GetXMLObject() const
+  {
+    return xmlObject;
   }
 
   void Content::SetMargins(float left, float right, float top, float bottom)
   {
-    margin.left = left;
-    margin.right = right;
-    margin.top = top;
-    margin.bottom = bottom;
+    currentStyle->margin.left = left;
+    currentStyle->margin.right = right;
+    currentStyle->margin.top = top;
+    currentStyle->margin.bottom = bottom;
   }
 
   Vec2 Content::GetChildOffset(const Content* child) const
   {
-    return Vec2(0,ySpacing + child->GetHeight() + child->margin.top + child->margin.bottom);
+    return Vec2(0,ySpacing + child->GetHeight() + child->currentStyle->margin.top + child->currentStyle->margin.bottom);
   }
 }

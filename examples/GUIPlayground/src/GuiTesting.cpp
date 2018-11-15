@@ -11,8 +11,9 @@ public:
   Core()
     : App("Gui Playground", 960, 540)
   {
-		SetFrameCap(10);
+		SetFrameCap(60);
   }
+
 	~Core()
 	{
 		GLayer::DestroyInstance();
