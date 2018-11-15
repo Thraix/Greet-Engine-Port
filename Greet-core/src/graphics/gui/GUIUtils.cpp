@@ -1,35 +1,34 @@
 #include "GUIUtils.h"
 
-#include "Container.h"
+#include "Frame.h"
 #include "Content.h"
 #include "Button.h"
 
 namespace Greet
 {
-	Container* GUIUtils::GetContainer(const XMLObject& object)
+	Frame* GUIUtils::GetFrame(const XMLObject& object)
 	{
-		if (object.GetName() == "Container")
+		if (object.GetName() == "Frame")
 		{
-			return new Container(object);
+			return new Frame(object);
 		}
-		else if (object.GetName() == "FrameContainer")
+		else if (object.GetName() == "FrameHeader")
 		{
 
 		}
-
 		Log::Warning("Could not read XML object ", object.GetName(), ".");
-		return new Container();
+		return new Frame();
 	}
 
-	Content* GUIUtils::GetContent(const XMLObject& object, Content* parent)
+	Component* GUIUtils::GetComponent(const XMLObject& object, Component* parent)
 	{
 		if (object.GetName() == "Button")
 		{
-			return new Button(object,parent);
+			return new Button(object, parent);
 		}
-		if (object.GetName() == "Content")
+		if (object.GetName() == "Component")
 		{
-			return new Content(object, parent);
+			return new Component(object, parent);
 		}
 		Log::Warning("Could not read XML object ", object.GetName(), ".");
 		return new Content(); // Return plain content to avoid crash.

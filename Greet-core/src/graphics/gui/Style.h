@@ -5,7 +5,7 @@
 namespace Greet
 {
 
-  class Content;
+  class Component;
 
   struct Style
   {
@@ -22,11 +22,11 @@ namespace Greet
 
       }
 
-      void Load(const std::string& prefix, const Content& content)
+      void Load(const std::string& prefix, const Component& content)
       {
         Load(prefix,content,nullptr);
       }
 
-      void Load(const std::string& prefix, const Content& content, Style const * inherit);
+      void Load(const std::string& prefix, const Component& content, Style const * inherit);
   };
 }

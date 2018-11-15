@@ -1,6 +1,7 @@
 #pragma once
 
-#include "Container.h"
+#include <graphics/gui/Frame.h>
+#include <graphics/gui/Content.h>
 #include <graphics/shaders/Shader.h>
 #include <event/MouseListener.h>
 #include <event/KeyListener.h>
@@ -12,9 +13,10 @@ namespace Greet {
 	class GLayer : public MouseListener, public KeyListener, public WindowResizeListener
 	{
 	private:
-		static std::map<std::string, Container*> containers;
+		static std::map<std::string, Frame*> frames;
 		static GLayer* instance;
-		Container* m_focused;
+		Content* m_focused;
+		Content* m_hovered;
 		GUIRenderer* m_renderer;
 		Shader m_shader;
 
@@ -37,10 +39,10 @@ namespace Greet {
 		static void Render();
 		static void Update(float timeElapsed);
 
-		static void AddContainer(Container* container, const std::string& name);
-		static Container* RemoveContainer(const std::string& name);
-		static Container* RemoveContainer(Container* container);
-		static Container* GetContainer(const std::string& name);
+		static void AddFrame(Frame* frame, const std::string& name);
+		static Frame* RemoveFrame(const std::string& name);
+		static Frame* RemoveFrame(Frame* frame);
+		static Frame* GetFrame(const std::string& name);
 
 	};
 }

@@ -31,7 +31,7 @@ public:
 		//content->AddContent(new Button(Vec2(80, 20), "Press me!"));
 		//container = new FrameContainer(Vec2(50, 50), Vec2(200, 200), content, "Debug");
 		//GLayer::AddContainer(container, "Debug");
-		GLayer::AddContainer(GUIUtils::GetContainer(XML::FromFile("res/guis/gui.xml")), "testing");
+		GLayer::AddFrame(GUIUtils::GetFrame(XML::FromFile("res/guis/gui.xml")), "testing");
 	}
 
 	void Tick() override

@@ -7,15 +7,15 @@
 
 namespace Greet {
 
-	class Content;
-	class Container;
+	class Frame;
+  class Component;
 
 	class GUIUtils
 	{
 	public:
 
-		static Container* GetContainer(const XMLObject& object);
-		static Content* GetContent(const XMLObject& object, Content* parent);
+		static Frame* GetFrame(const XMLObject& object);
+		static Component* GetComponent(const XMLObject& object, Component* parent);
 
 		static bool GetBoolean(const std::string& str)
 		{

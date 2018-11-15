@@ -3,7 +3,7 @@
 #include <graphics/fonts/FontManager.h>
 
 namespace Greet {
-  Button::Button(const XMLObject& object, Content* parent)
+  Button::Button(const XMLObject& object, Component* parent)
     : Content(object, parent)
   {
     textColor = Vec4(0.0,0.0,0.0,1.0);

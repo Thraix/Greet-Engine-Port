@@ -1,21 +1,21 @@
 #include "Style.h"
 
-#include <graphics/gui/Content.h>
+#include <graphics/gui/Component.h>
 
 namespace Greet
 {
-  void Style::Load(const std::string& prefix, const Content& content, Style const * inherit)
+  void Style::Load(const std::string& prefix, const Component& component, Style const * inherit)
   {
-    margin.Load(prefix+"margin", content.GetXMLObject(), content.GetPotentialWidth(), content.GetPotentialHeight());
-    padding.Load(prefix+"padding", content.GetXMLObject(), content.GetPotentialWidth(), content.GetPotentialHeight());
-    border.Load(prefix+"border", content.GetXMLObject(), content.GetPotentialWidth(), content.GetPotentialHeight());
-    if (content.GetXMLObject().HasProperty("backgroundColor"))
+    margin.Load(prefix+"margin", component.GetXMLObject(), component.GetPotentialWidth(), component.GetPotentialHeight());
+    padding.Load(prefix+"padding", component.GetXMLObject(), component.GetPotentialWidth(), component.GetPotentialHeight());
+    border.Load(prefix+"border", component.GetXMLObject(), component.GetPotentialWidth(), component.GetPotentialHeight());
+    if (component.GetXMLObject().HasProperty("backgroundColor"))
     {
-      backgroundColor = GUIUtils::GetColor(content.GetXMLObject().GetProperty("backgroundColor"));
+      backgroundColor = GUIUtils::GetColor(component.GetXMLObject().GetProperty("backgroundColor"));
     }
-    if (content.GetXMLObject().HasProperty("borderColor"))
+    if (component.GetXMLObject().HasProperty("borderColor"))
     {
-      borderColor = GUIUtils::GetColor(content.GetXMLObject().GetProperty("borderColor"));
+      borderColor = GUIUtils::GetColor(component.GetXMLObject().GetProperty("borderColor"));
     }
   }
 }

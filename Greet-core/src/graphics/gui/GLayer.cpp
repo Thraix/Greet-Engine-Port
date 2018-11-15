@@ -5,13 +5,14 @@
 
 namespace Greet {
 
-	std::map<std::string, Container*> GLayer::containers;
+	std::map<std::string, Frame*> GLayer::frames;
 	GLayer* GLayer::instance;
 
 	GLayer::GLayer(GUIRenderer* renderer, const Shader& shader)
 		: m_renderer(renderer), m_shader(shader)
 	{
-		m_focused = NULL;
+		m_focused = nullptr;
+    m_hovered = nullptr;
 		EventDispatcher::AddKeyListener(100, *this);
 		EventDispatcher::AddMouseListener(100, *this);
 		Window::AddResizeCallback(this);
@@ -29,51 +30,73 @@ namespace Greet {
 
 	bool GLayer::OnPressed(const MousePressedEvent& event)
 	{
-		for (auto it = containers.rbegin(); it != containers.rend(); ++it)
+		for (auto it = frames.rbegin(); it != frames.rend(); ++it)
 		{
-			if (it->second->MousePressHandle(event, event.GetPosition() - it->second->GetPosition()))
+      Content* c = it->second->OnMousePressed(event, event.GetPosition() - it->second->GetPosition());
+			if (c)
 			{
-				if (it->second != m_focused)
+				if (c != m_focused)
 				{
-					if (m_focused != NULL)
+					if (m_focused)
 						m_focused->OnUnfocused();
-					it->second->OnFocused();
-					m_focused = it->second;
+					c->OnFocused();
+					m_focused = c;
 				}
 				return true;
 			}
 		}
 
-		if (m_focused != NULL)
+		if (m_focused)
 		{
 			m_focused->OnUnfocused();
-			m_focused = NULL;
+			m_focused = nullptr;
 		}
 		return false;
 	}
 
 	void GLayer::OnReleased(const MouseReleasedEvent& event)
 	{
-		if (m_focused != NULL)
-			m_focused->MouseReleaseHandle(event, event.GetPosition() - m_focused->GetPosition());
+		if (m_focused != nullptr)
+			m_focused->MouseReleased(event, event.GetPosition() - m_focused->GetPosition());
 	}
 
 	void GLayer::OnMoved(const MouseMovedEvent& event)
 	{
-		if (m_focused != NULL)
-			m_focused->MouseMoveHandle(event, event.GetPosition() - m_focused->GetPosition());
+		if (m_focused != nullptr)
+			m_focused->MouseMoved(event, event.GetPosition() - m_focused->GetPosition());
+		for (auto it = frames.rbegin(); it != frames.rend(); ++it)
+		{
+      Content* c = it->second->OnMouseMoved(event, event.GetPosition() - it->second->GetPosition());
+			if (c)
+			{
+				if (c != m_hovered)
+				{
+					if (m_hovered != nullptr)
+						m_hovered->MouseExited();
+					c->MouseEntered();
+					m_hovered = c;
+				}
+				return;
+			}
+		}
+
+		if (m_hovered != nullptr)
+		{
+			m_hovered->MouseExited();
+			m_hovered = nullptr;
+		}
 	}
 
 	void GLayer::OnPressed(const KeyPressedEvent& event)
 	{
-		if (m_focused != NULL)
-			m_focused->KeyPressedHandle(event);
+		if (m_focused != nullptr)
+			m_focused->KeyPressed(event);
 	}
 
 	void GLayer::OnReleased(const KeyReleasedEvent& event)
 	{
-		if (m_focused != NULL)
-			m_focused->KeyReleasedHandle(event);
+		if (m_focused != nullptr)
+			m_focused->KeyReleased(event);
 	}
 
 	void GLayer::WindowResize(int width, int height)
@@ -81,7 +104,7 @@ namespace Greet {
 		m_shader.Enable();
 		m_shader.SetUniformMat3("pr_matrix", Mat3::Orthographic(0, Window::GetWidth(), 0, Window::GetHeight()));
 		m_shader.Disable();
-		for (auto it = containers.begin(); it != containers.end(); ++it)
+		for (auto it = frames.begin(); it != frames.end(); ++it)
 		{
 			it->second->OnWindowResize(width, height);
 		}
@@ -108,10 +131,10 @@ namespace Greet {
 		const Shader& shader = GetInstance()->m_shader;
 		shader.Enable();
 		renderer->Begin();
-		for (auto it = containers.begin(); it != containers.end(); ++it)
+		for (auto it = frames.begin(); it != frames.end(); ++it)
 		{
 			it->second->PreRender(renderer);
-			it->second->RenderHandle(renderer, it->second->GetPosition());
+			it->second->RenderHandle(renderer);
 			it->second->PostRender(renderer);
 		}
 		renderer->End();
@@ -121,47 +144,47 @@ namespace Greet {
 
 	void GLayer::Update(float timeElapsed)
 	{
-		for (auto it = containers.begin(); it != containers.end(); ++it)
+		for (auto it = frames.begin(); it != frames.end(); ++it)
 		{
 			it->second->UpdateHandle(timeElapsed);
 		}
 	}
 
-	void GLayer::AddContainer(Container* container, const std::string& name)
+	void GLayer::AddFrame(Frame* frame, const std::string& name)
 	{
-		if (container == NULL)
+		if (frame == nullptr)
 		{
-			Log::Warning("Cannot add NULL to containers");
+			Log::Warning("Cannot add nullptr to frames");
 			return;
 		}
-		containers.emplace(name, container);
+		frames.emplace(name, frame);
 	}
 
-	Container* GLayer::RemoveContainer(const std::string& name)
+	Frame* GLayer::RemoveFrame(const std::string& name)
 	{
-		auto it = containers.find(name);
-		containers.erase(it);
+		auto it = frames.find(name);
+		frames.erase(it);
 		return it->second;
 	}
 
-	Container* GLayer::RemoveContainer(Container* container)
+	Frame* GLayer::RemoveFrame(Frame* frame)
 	{
-		for (auto it = containers.begin(); it != containers.end();++it)
+		for (auto it = frames.begin(); it != frames.end();++it)
 		{
-			if (it->second == container)
+			if (it->second == frame)
 			{
-				containers.erase(it);
-				return container;
+				frames.erase(it);
+				return frame;
 			}
 		}
-		return NULL;
+		return nullptr;
 	}
 
-	Container* GLayer::GetContainer(const std::string& name)
+	Frame* GLayer::GetFrame(const std::string& name)
 	{
-		auto it = containers.find(name);
-		if (it == containers.end())
-			return NULL;
+		auto it = frames.find(name);
+		if (it == frames.end())
+			return nullptr;
 		return it->second;
 	}
 }

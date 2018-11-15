@@ -10,7 +10,7 @@ namespace Greet {
       float fontSize;
       Vec4 textColor;
     public:
-      Button(const XMLObject& object, Content* parent);
+      Button(const XMLObject& object, Component* parent);
       virtual ~Button();
       void Render(GUIRenderer* renderer, const Vec2& position) const override;
 
