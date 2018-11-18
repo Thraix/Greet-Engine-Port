@@ -203,7 +203,7 @@ namespace Greet
 			return m_viewports.top();
 		else
 		{
-			Log::Warning("No viewport");
+			//Log::Warning("No viewport");
 			Vec4 viewport;;
 			Vec2 temp = GetMatrix() * Vec2(pos1.x, pos1.y);
 			viewport.x = temp.x;

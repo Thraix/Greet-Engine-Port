@@ -30,6 +30,7 @@ namespace Greet
     hoverStyle.Load("hover_",*this,&normalStyle);
     pressStyle.Load("press_",*this,&normalStyle);
     currentStyle = &normalStyle;
+    Log::Info("Size: ", size);
   }
 
   // Push translation to renderer
@@ -39,11 +40,11 @@ namespace Greet
 
     // Border around Component 
     if (xmlObject.HasProperty("borderColor"))
-      renderer->SubmitRect(Vec2(0,0), size + currentStyle->border.LeftTop() + currentStyle->border.RightBottom(), currentStyle->borderColor, false);
+      renderer->SubmitRect(pos + Vec2(0,0), size + currentStyle->border.LeftTop() + currentStyle->border.RightBottom(), currentStyle->borderColor, false);
 
     // Component background
     if (xmlObject.HasProperty("backgroundColor"))
-      renderer->SubmitRect(currentStyle->border.LeftTop(), size, currentStyle->backgroundColor, false);
+      renderer->SubmitRect(pos + currentStyle->border.LeftTop(), size, currentStyle->backgroundColor, false);
   }
 
   // Render component
@@ -68,6 +69,11 @@ namespace Greet
   Vec2 Component::GetPosition() const
   {
     return pos;
+  }
+
+  void Component::SetPosition(const Vec2& pos) 
+  {
+    this->pos = pos;
   }
 
   Vec2 Component::GetSize() const

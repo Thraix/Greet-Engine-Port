@@ -16,14 +16,12 @@ namespace Greet {
       Container(const XMLObject& object, Component* parent);
       virtual ~Container();
 
+      void RenderHandle(GUIRenderer* renderer) const override;
+
       void AddComponent(Component* component);
       Component* RemoveComponent(uint index);
       Component* RemoveComponent(Component* component);
       Component* GetComponent(uint index);
-
-      virtual void PreRender(GUIRenderer* renderer) const;
-      virtual void PostRender(GUIRenderer* renderer) const;
-
 
       virtual Content* OnMousePressed(const MousePressedEvent& event, const Vec2& translatedPos) override;
       virtual void OnMouseReleased(const MouseReleasedEvent& event, const Vec2& translatedPos) override { Log::Warning("Called mouse release event on Container");}

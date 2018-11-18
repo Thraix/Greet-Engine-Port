@@ -1,7 +1,6 @@
 #pragma once
 
-#include "GUIMouseListener.h"
-#include "GUIUtils.h"
+#include <graphics/gui/GUIUtils.h>
 #include <graphics/gui/Component.h>
 #include <graphics/renderers/GUIRenderer.h>
 #include <event/MouseEvent.h>

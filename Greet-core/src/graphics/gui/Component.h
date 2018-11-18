@@ -32,7 +32,7 @@ namespace Greet
       void PreRender(GUIRenderer* renderer, const Vec2& translation) const;
 
       // Render component
-      void RenderHandle(GUIRenderer* renderer) const;
+      virtual void RenderHandle(GUIRenderer* renderer) const;
       virtual void Render(GUIRenderer* renderer) const{}
 
       // Pop translation from renderer
@@ -42,14 +42,15 @@ namespace Greet
       virtual void Update(float timeElapsed){}
 
       // Returns the focused content
-      virtual Content* OnMousePressed(const MousePressedEvent& event, const Vec2& translatedPos){}
+      virtual Content* OnMousePressed(const MousePressedEvent& event, const Vec2& translatedPos){return nullptr;}
       virtual void OnMouseReleased(const MouseReleasedEvent& event, const Vec2& translatedPos){}
       // Returns the hovered content
-      virtual Content* OnMouseMoved(const MouseMovedEvent& event, const Vec2& translatedPos){}
+      virtual Content* OnMouseMoved(const MouseMovedEvent& event, const Vec2& translatedPos){return nullptr;}
       virtual void OnKeyPressed(const KeyPressedEvent& event){}
       virtual void OnKeyReleased(const KeyReleasedEvent& event){}
 
       Vec2 GetPosition() const;
+      void SetPosition(const Vec2& pos);
       Vec2 GetSize() const;
       void SetSize(const Vec2& size);
       virtual float GetWidth() const;

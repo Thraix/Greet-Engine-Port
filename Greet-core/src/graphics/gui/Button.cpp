@@ -25,8 +25,8 @@ namespace Greet {
 
   void Button::Render(GUIRenderer* renderer, const Vec2& position) const
   {
-    Font* font = FontManager::Get("roboto",fontSize);
-    renderer->SubmitString(xmlObject.GetText(), position+Vec2((GetWidth() - font->GetWidthOfText(xmlObject.GetText()))/2,GetHeight()/2 + fontSize*0.333f), font, textColor,false);
+    //Font* font = FontManager::Get("roboto",fontSize);
+    //renderer->SubmitString(xmlObject.GetText(), position+Vec2((GetWidth() - font->GetWidthOfText(xmlObject.GetText()))/2,GetHeight()/2 + fontSize*0.333f), font, textColor,false);
   }
 
   bool Button::IsFocusable() const

@@ -3,6 +3,7 @@
 #include "GUIUtils.h"
 #include <utils/Utils.h>
 #include <utils/AABBUtils.h>
+#include <graphics/gui/Content.h>
 
 namespace Greet {
 
@@ -27,14 +28,17 @@ namespace Greet {
 
   }
 
-  void Container::PreRender(GUIRenderer* renderer) const
+  void Container::RenderHandle(GUIRenderer* renderer) const
   {
-    renderer->PushViewport(pos, size, false);
-  }
+    // Render rest of component
+    Render(renderer);
 
-  void Container::PostRender(GUIRenderer* renderer) const
-  {
-    renderer->PopViewport();
+    for(auto it{m_components.begin()}; it != m_components.end();++it)
+    {
+      (*it)->PreRender(renderer, currentStyle->border.LeftTop() + currentStyle->padding.LeftTop());
+      (*it)->RenderHandle(renderer);
+      (*it)->PostRender(renderer);
+    }
   }
 
   void Container::AddComponent(Component* component)
@@ -43,6 +47,11 @@ namespace Greet {
     {
       Log::Warning("Cannot add NULL to component");
       return;
+    }
+    if(m_components.size() > 0)
+    {
+      Component* last = *m_components.rbegin();
+      component->SetPosition(Vec2(0,last->GetPosition().y + last->GetSize().y + 10));
     }
     m_components.push_back(component);
   }

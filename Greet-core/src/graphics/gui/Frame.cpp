@@ -55,25 +55,10 @@ namespace Greet {
       if (!GUIUtils::GetBoolean(object.GetProperty("resizeBottom")))
         m_resizableFlags &= ~RESIZING_BOTTOM;
     }
-    pos = Vec2(0, 0);
-    for (uint i = 0;i < object.GetObjectCount();i++)
-    {
-      AddComponent(GUIUtils::GetComponent(object.GetObject(i), this));
-    }
   }
 
   Frame::~Frame()
   {
-  }
-
-  void Frame::PreRender(GUIRenderer* renderer) const
-  {
-    renderer->PushViewport(pos, size, false);
-  }
-
-  void Frame::PostRender(GUIRenderer* renderer) const
-  {
-    renderer->PopViewport();
   }
 
   bool Frame::CheckResize(const Vec2& mousePos)

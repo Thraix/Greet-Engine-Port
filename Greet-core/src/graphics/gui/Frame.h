@@ -32,14 +32,10 @@ namespace Greet {
     public:
       bool visible;
 
-      Vec2 pos;
-
     public:
       Frame();
       Frame(const XMLObject& object);
       virtual ~Frame();
-      virtual void PreRender(GUIRenderer* renderer) const;
-      virtual void PostRender(GUIRenderer* renderer) const;
 
       virtual bool IsMouseInside(const Vec2& mousePos) const override;
 
@@ -53,7 +49,6 @@ namespace Greet {
       void ResizeScreenClamp();
 
       // Getters and setters
-      const Vec2& GetPosition() const {return pos;}
       virtual Vec2 GetContentPosition() const { return Vec2(currentStyle->margin.left + currentStyle->border.left, currentStyle->margin.top + currentStyle->border.top); };
       virtual Vec2 GetContentSize() const { return size - GetContentPosition() - Vec2(currentStyle->margin.right + currentStyle->border.right, currentStyle->margin.bottom + currentStyle->border.bottom); }
 

@@ -133,7 +133,7 @@ namespace Greet {
 		renderer->Begin();
 		for (auto it = frames.begin(); it != frames.end(); ++it)
 		{
-			it->second->PreRender(renderer);
+			it->second->PreRender(renderer, Vec2(0,0));
 			it->second->RenderHandle(renderer);
 			it->second->PostRender(renderer);
 		}
