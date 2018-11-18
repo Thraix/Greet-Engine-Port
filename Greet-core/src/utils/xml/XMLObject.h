@@ -32,6 +32,10 @@ namespace Greet
 		const std::string& GetText() const;
 		XMLObject GetStrippedXMLObject() const;
 
+    void SetName(const std::string& name);
+    void SetText(const std::string& text);
+    void AddProperty(const std::string& property, const std::string& value);
+
 	private:
 		std::string GetClosingTag(const std::string& string, int* posPointer, int* linePointer);
 		// Returns true if the head contained closing tag.

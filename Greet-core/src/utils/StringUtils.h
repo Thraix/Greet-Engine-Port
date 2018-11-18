@@ -72,6 +72,16 @@ namespace Greet { namespace StringUtils{
 		return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
 	}
 
+  inline static bool IsWord(const std::string& string)
+  {
+    for(auto it{string.begin()}; it != string.end();++it)
+    {
+      if(!IsLetter(*it))
+        return false;
+    }
+    return true;
+  }
+
 	inline std::string GetWord(const std::string& string, int startPos = 0)
 	{
 		if (startPos >= string.length())

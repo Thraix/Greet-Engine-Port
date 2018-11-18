@@ -44,6 +44,8 @@ namespace Greet
 
       const Glyph& GetGlyph(char character);
       uint GetTextureId() const { return atlas.GetTexId();}
+
+      uint GetAscender() const { return face->ascender / 64.0;}
     private:
       const Glyph& AddGlyph(char character);
   };

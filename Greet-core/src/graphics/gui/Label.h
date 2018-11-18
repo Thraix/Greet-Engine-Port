@@ -2,6 +2,7 @@
 
 #include "Component.h"
 #include <graphics/fonts/Font.h>
+#include <graphics/fonts/FontManager.h>
 
 namespace Greet {
 	class Label : public Component 
@@ -11,11 +12,13 @@ namespace Greet {
 	public:
 		float maxWidth;
 		std::string str;
+    float fontSize;
 		Font* font;
 		Vec4 color;
 
 	public:
-		Label(const std::string& str, Font* font, const Vec4& color);
+    Label();
+    Label(const XMLObject& object, Component* parent);
 		void Render(GUIRenderer* renderer) const override;
 
 		float GetWidth() const override;

@@ -22,7 +22,7 @@ public:
 
 	void Init() override
 	{
-		//FontManager::Add(new FontContainer("/usr/share/fonts/truetype/ubuntu/Ubuntu-C.ttf","roboto"));
+		FontManager::Add(new FontContainer("/usr/share/fonts/truetype/ubuntu/Ubuntu-C.ttf","roboto"));
 		GLayer::CreateInstance(new GUIRenderer(), Shader(Shader::FromFile("res/shaders/gui.shader")));
 		//content = new Content();
 		//content->SetMargins(0, 0, 0, 0);

@@ -37,12 +37,12 @@ namespace Greet
     renderer->PushMatrix(Mat3::Translate(translation));
 
     // Border around Component 
-    //if (xmlObject.HasProperty("borderColor"))
-    renderer->SubmitRect(pos + Vec2(0,0), size, currentStyle->borderColor, false);
+    if (xmlObject.HasProperty("borderColor"))
+      renderer->SubmitRect(pos + Vec2(0,0), size, currentStyle->borderColor, false);
 
     // Component background
-    //if (xmlObject.HasProperty("backgroundColor"))
-    renderer->SubmitRect(pos + currentStyle->border.LeftTop(), size-GetBorder().LeftTop()-GetBorder().RightBottom(), currentStyle->backgroundColor, false);
+    if (xmlObject.HasProperty("backgroundColor"))
+      renderer->SubmitRect(pos + currentStyle->border.LeftTop(), size-GetBorder().LeftTop()-GetBorder().RightBottom(), currentStyle->backgroundColor, false);
   }
 
   // Render component

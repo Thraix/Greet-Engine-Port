@@ -2,6 +2,7 @@
 
 #include "XMLException.h"
 #include <utils/StringUtils.h>
+#include <logging/Log.h>
 
 namespace Greet
 {
@@ -65,6 +66,28 @@ namespace Greet
   const std::string& XMLObject::GetText() const
   {
     return text;
+  }
+
+  void XMLObject::SetName(const std::string& name)
+  {
+    if(StringUtils::IsWord(name))
+      this->name = name;
+    else
+      Log::Error("XML Head can only be made up of letters");
+  }
+
+  void XMLObject::SetText(const std::string& text)
+  {
+    this->text= text;
+  }
+
+  void XMLObject::AddProperty(const std::string& property, const std::string& value)
+  {
+    if(StringUtils::IsWord(property))
+      properties.emplace(property, value);
+    else
+      Log::Error("XML property name can only be made up of letters");
+  
   }
 
   XMLObject XMLObject::GetStrippedXMLObject() const

@@ -60,7 +60,7 @@ namespace Greet
 
       const XMLObject& GetXMLObject() const;
       virtual bool IsMouseInside(const Vec2& parentMouse) const;
-      void SetPosition(const Vec2& pos);
+      virtual void SetPosition(const Vec2& pos);
       void SetSize(const Vec2& size);
 
       // These four will only be called if the component is focusable

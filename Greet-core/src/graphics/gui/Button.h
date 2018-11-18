@@ -9,10 +9,13 @@ namespace Greet {
     protected:
       float fontSize;
       Vec4 textColor;
+      Label label;
     public:
       Button(const XMLObject& object, Component* parent);
       virtual ~Button();
       void Render(GUIRenderer* renderer) const override;
+
+      virtual void SetPosition(const Vec2& pos) override;
 
 
       void OnFocused() override;

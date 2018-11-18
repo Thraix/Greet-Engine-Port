@@ -25,7 +25,11 @@ namespace Greet
 		{
 			return new Button(object, parent);
 		}
-		if (object.GetName() == "Component")
+    else if(object.GetName() == "Label")
+    {
+      return new Label(object,parent);
+    }
+		else if (object.GetName() == "Component")
 		{
 			return new Component(object, parent);
 		}

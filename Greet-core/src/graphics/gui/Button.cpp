@@ -6,6 +6,16 @@ namespace Greet {
   Button::Button(const XMLObject& object, Component* parent)
     : Component(object, parent)
   {
+    XMLObject labelObject;
+    labelObject.SetName("Label");
+    labelObject.SetText(object.GetText());
+
+    labelObject.AddProperty("font", object.GetProperty("font"));
+    labelObject.AddProperty("color", object.GetProperty("color"));
+    labelObject.AddProperty("fontSize", object.GetProperty("fontSize"));
+
+    label = Label(object, this);
+    label.SetPosition(pos);
     textColor = Vec4(0.0,0.0,0.0,1.0);
     fontSize = 20;
     m_isFocusable = true;
@@ -26,8 +36,12 @@ namespace Greet {
 
   void Button::Render(GUIRenderer* renderer) const
   {
-    //Font* font = FontManager::Get("roboto",fontSize);
-    //renderer->SubmitString(xmlObject.GetText(), position+Vec2((GetWidth() - font->GetWidthOfText(xmlObject.GetText()))/2,GetHeight()/2 + fontSize*0.333f), font, textColor,false);
+    label.Render(renderer);
+  }
+  void Button::SetPosition(const Vec2& pos)
+  {
+    Component::SetPosition(pos);
+    label.SetPosition(pos + (size - label.GetSize())/2);
   }
 
   void Button::OnFocused()
@@ -37,12 +51,12 @@ namespace Greet {
   void Button::OnUnfocused()
   {
   }
-  
+
   void Button::MouseEntered()
   {
     currentStyle = &hoverStyle;
   }
-  
+
   void Button::MouseExited()
   {
     currentStyle = &normalStyle;
