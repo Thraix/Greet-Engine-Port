@@ -17,7 +17,7 @@ namespace Greet
       Vec4 borderColor;
 
       Style()
-        :margin(0,0,0,0), padding(10,10,10,10), border(0,0,0,0), backgroundColor(Vec4(1,1,1,1)), borderColor(Vec4(0,0,0,0))
+        : margin(0,0,0,0), padding(10,10,10,10), border(0,0,0,0), backgroundColor(Vec4(1,1,1,1)), borderColor(Vec4(0,0,0,0))
       {
 
       }

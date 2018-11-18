@@ -49,8 +49,8 @@ namespace Greet {
       void ResizeScreenClamp();
 
       // Getters and setters
-      virtual Vec2 GetContentPosition() const { return Vec2(currentStyle->margin.left + currentStyle->border.left, currentStyle->margin.top + currentStyle->border.top); };
-      virtual Vec2 GetContentSize() const { return size - GetContentPosition() - Vec2(currentStyle->margin.right + currentStyle->border.right, currentStyle->margin.bottom + currentStyle->border.bottom); }
+      virtual Vec2 GetComponentPosition() const { return Vec2(currentStyle->margin.left + currentStyle->border.left, currentStyle->margin.top + currentStyle->border.top); };
+      virtual Vec2 GetComponentSize() const { return size - GetComponentPosition() - Vec2(currentStyle->margin.right + currentStyle->border.right, currentStyle->margin.bottom + currentStyle->border.bottom); }
 
       // Set listeners
       void SetGUIMouseListener(GUIMouseListener* listener);
@@ -58,12 +58,12 @@ namespace Greet {
       // Listeners
       virtual void OnWindowResize(int width, int height);
 
-      virtual Content* OnMousePressed(const MousePressedEvent& event, const Vec2& translatedPos) override;
-      virtual void OnMouseReleased(const MouseReleasedEvent& event, const Vec2& translatedPos) override;
-      virtual Content* OnMouseMoved(const MouseMovedEvent& event, const Vec2& translatedPos) override;
+      virtual void MousePressed(const MousePressedEvent& event, const Vec2& translatedPos) override;
+      virtual void MouseReleased(const MouseReleasedEvent& event, const Vec2& translatedPos) override;
+      virtual void MouseMoved(const MouseMovedEvent& event, const Vec2& translatedPos) override;
 
-      virtual void OnFocused();
-      virtual void OnUnfocused();
+      virtual void OnFocused() override;
+      virtual void OnUnfocused() override;
 
   };
 }

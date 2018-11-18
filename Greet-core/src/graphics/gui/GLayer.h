@@ -1,7 +1,6 @@
 #pragma once
 
 #include <graphics/gui/Frame.h>
-#include <graphics/gui/Content.h>
 #include <graphics/shaders/Shader.h>
 #include <event/MouseListener.h>
 #include <event/KeyListener.h>
@@ -15,8 +14,8 @@ namespace Greet {
 	private:
 		static std::map<std::string, Frame*> frames;
 		static GLayer* instance;
-		Content* m_focused;
-		Content* m_hovered;
+		Component* m_focused;
+		Component* m_hovered;
 		GUIRenderer* m_renderer;
 		Shader m_shader;
 

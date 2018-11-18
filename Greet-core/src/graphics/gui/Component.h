@@ -7,7 +7,6 @@
 
 namespace Greet
 {
-  class Content;
 
   class Component
   {
@@ -24,6 +23,9 @@ namespace Greet
       // Might get dirty?
       Vec2 pos;
       Vec2 size;
+
+      bool m_isFocusable;
+      bool isFocused;
 
     public:
       Component();
@@ -42,24 +44,43 @@ namespace Greet
       virtual void Update(float timeElapsed){}
 
       // Returns the focused content
-      virtual Content* OnMousePressed(const MousePressedEvent& event, const Vec2& translatedPos){return nullptr;}
+      virtual Component* OnMousePressed(const MousePressedEvent& event, const Vec2& translatedPos);
       virtual void OnMouseReleased(const MouseReleasedEvent& event, const Vec2& translatedPos){}
       // Returns the hovered content
-      virtual Content* OnMouseMoved(const MouseMovedEvent& event, const Vec2& translatedPos){return nullptr;}
+      virtual Component* OnMouseMoved(const MouseMovedEvent& event, const Vec2& translatedPos);
       virtual void OnKeyPressed(const KeyPressedEvent& event){}
       virtual void OnKeyReleased(const KeyReleasedEvent& event){}
 
       Vec2 GetPosition() const;
-      void SetPosition(const Vec2& pos);
       Vec2 GetSize() const;
-      void SetSize(const Vec2& size);
       virtual float GetWidth() const;
       virtual float GetHeight() const;
       virtual float GetPotentialWidth() const;
       virtual float GetPotentialHeight() const;
 
       const XMLObject& GetXMLObject() const;
-
       virtual bool IsMouseInside(const Vec2& parentMouse) const;
+      void SetPosition(const Vec2& pos);
+      void SetSize(const Vec2& size);
+
+      // These four will only be called if the component is focusable
+      virtual void OnFocused(){}
+      virtual void OnUnfocused(){}
+      virtual void MouseEntered(){}
+      virtual void MouseExited(){}
+
+
+      // These functions will only be called if the component is focused
+      virtual void MousePressed(const MousePressedEvent& event, const Vec2& translatedPos){}
+      virtual void MouseReleased(const MouseReleasedEvent& event, const Vec2& translatedPos){}
+      virtual void MouseMoved(const MouseMovedEvent& event, const Vec2& translatedPos){}
+      virtual void KeyPressed(const KeyPressedEvent& event){}
+      virtual void KeyReleased(const KeyReleasedEvent& event){}
+
+
+      Vec2 GetTotalPadding() const;
+      const TLBR& GetMargin() const;
+      const TLBR& GetPadding() const;
+      const TLBR& GetBorder() const;
   };
 }

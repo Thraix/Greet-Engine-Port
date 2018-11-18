@@ -4,10 +4,10 @@
   paddingTop="10px" paddinglLeft="10px" paddingBottom="10px" paddingRight="10px"
   borderTop="1px" borderLeft="1px" borderBottom="1px" borderRight="1px"
   borderColor="#ff00ff" backgroundColor="#000077">
-  <Button width="100%" height="40px" hoverbackgroundColor="#20aa44" backgroundColor="#20aa44" fontColor="#44ee77" fontSize="30px">Button!</Button>
   <Component
     borderColor="#00ff00" borderTop="1px" borderLeft="1px" borderBottom="1px" borderRight="1px"
     minWidth="150px" width="100%" height="50px" backgroundColor="#ff00ff">Press me!</Component>
+  <Button width="100%" height="40px" hoverborderColor="#153cd8" borderColor="#153cd8" hoverbackgroundColor="#4265f4" backgroundColor="#4265f4" fontColor="#44ee77" fontSize="30px" hoverborderTop="4px" hoverborderLeft="4px" hoverborderBottom="4px" hoverborderRight="4px" borderTop="0px" borderLeft="4px" borderBottom="4px" borderRight="4px">Button!</Button>
   <Component
     width="100%" height="50px" backgroundColor="#ff0000">Press me!</Component>
   <Component

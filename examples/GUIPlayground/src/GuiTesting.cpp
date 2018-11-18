@@ -2,10 +2,10 @@
 
 using namespace Greet;
 
-class Core : public App, public KeyListener, public MouseListener, public OnClickListener
+class Core : public App, public KeyListener, public MouseListener
 {
 private:
-	Content* content;
+	Component* content;
 	//Container* container;
 public:
   Core()

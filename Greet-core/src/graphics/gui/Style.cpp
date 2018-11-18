@@ -9,13 +9,13 @@ namespace Greet
     margin.Load(prefix+"margin", component.GetXMLObject(), component.GetPotentialWidth(), component.GetPotentialHeight());
     padding.Load(prefix+"padding", component.GetXMLObject(), component.GetPotentialWidth(), component.GetPotentialHeight());
     border.Load(prefix+"border", component.GetXMLObject(), component.GetPotentialWidth(), component.GetPotentialHeight());
-    if (component.GetXMLObject().HasProperty("backgroundColor"))
+    if (component.GetXMLObject().HasProperty(prefix+"backgroundColor"))
     {
-      backgroundColor = GUIUtils::GetColor(component.GetXMLObject().GetProperty("backgroundColor"));
+      backgroundColor = GUIUtils::GetColor(component.GetXMLObject().GetProperty(prefix+"backgroundColor"));
     }
-    if (component.GetXMLObject().HasProperty("borderColor"))
+    if (component.GetXMLObject().HasProperty(prefix+"borderColor"))
     {
-      borderColor = GUIUtils::GetColor(component.GetXMLObject().GetProperty("borderColor"));
+      borderColor = GUIUtils::GetColor(component.GetXMLObject().GetProperty(prefix+"borderColor"));
     }
   }
 }

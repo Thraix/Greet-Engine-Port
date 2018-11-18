@@ -1,7 +1,6 @@
 #include "Component.h"
 
 #include <utils/AABBUtils.h>
-#include <graphics/gui/Content.h>
 
 namespace Greet
 {
@@ -27,10 +26,9 @@ namespace Greet
     }
 
     normalStyle.Load("",*this);
-    hoverStyle.Load("hover_",*this,&normalStyle);
-    pressStyle.Load("press_",*this,&normalStyle);
+    hoverStyle.Load("hover",*this,&normalStyle);
+    pressStyle.Load("press",*this,&normalStyle);
     currentStyle = &normalStyle;
-    Log::Info("Size: ", size);
   }
 
   // Push translation to renderer
@@ -39,12 +37,12 @@ namespace Greet
     renderer->PushMatrix(Mat3::Translate(translation));
 
     // Border around Component 
-    if (xmlObject.HasProperty("borderColor"))
-      renderer->SubmitRect(pos + Vec2(0,0), size + currentStyle->border.LeftTop() + currentStyle->border.RightBottom(), currentStyle->borderColor, false);
+    //if (xmlObject.HasProperty("borderColor"))
+    renderer->SubmitRect(pos + Vec2(0,0), size, currentStyle->borderColor, false);
 
     // Component background
-    if (xmlObject.HasProperty("backgroundColor"))
-      renderer->SubmitRect(pos + currentStyle->border.LeftTop(), size, currentStyle->backgroundColor, false);
+    //if (xmlObject.HasProperty("backgroundColor"))
+    renderer->SubmitRect(pos + currentStyle->border.LeftTop(), size-GetBorder().LeftTop()-GetBorder().RightBottom(), currentStyle->backgroundColor, false);
   }
 
   // Render component
@@ -64,6 +62,28 @@ namespace Greet
   {
     size = Vec2(GetWidth(), GetHeight());
     Update(timeElapsed);
+  }
+
+  Component* Component::OnMousePressed(const MousePressedEvent& event, const Vec2& translatedPos)
+  {
+    if(m_isFocusable)
+    {
+      MousePressed(event,translatedPos);
+      return this;
+    }
+    return nullptr;
+
+  }
+
+  Component* Component::OnMouseMoved(const MouseMovedEvent& event, const Vec2& translatedPos)
+  {
+    if(m_isFocusable)
+    {
+      MouseMoved(event,translatedPos);
+      return this;
+    }
+    return nullptr;
+
   }
 
   Vec2 Component::GetPosition() const
@@ -193,6 +213,7 @@ namespace Greet
       return size.h - currentStyle->margin.top - currentStyle->margin.bottom;
     return parent->GetPotentialHeight();
   }
+
   const XMLObject& Component::GetXMLObject() const
   {
     return xmlObject;
@@ -200,6 +221,26 @@ namespace Greet
 
   bool Component::IsMouseInside(const Vec2& parentMouse) const
   {
-    return AABBUtils::PointInsideBox(parentMouse, Vec2(0, 0), size);
+    return AABBUtils::PointInsideBox(parentMouse, pos, size);
+  }
+
+  Vec2 Component::GetTotalPadding() const
+  {
+    return GetPadding().LeftTop() + GetBorder().LeftTop();
+  }
+
+  const TLBR& Component::GetMargin() const
+  {
+    return currentStyle->margin;
+  }
+
+  const TLBR& Component::GetPadding() const
+  {
+    return currentStyle->padding;
+  }
+
+  const TLBR& Component::GetBorder() const
+  {
+    return currentStyle->border;
   }
 }

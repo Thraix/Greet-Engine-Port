@@ -1,8 +1,7 @@
 #include "GUIUtils.h"
 
-#include "Frame.h"
-#include "Content.h"
-#include "Button.h"
+#include <graphics/gui/Frame.h>
+#include <graphics/gui/Button.h>
 
 namespace Greet
 {
@@ -31,6 +30,6 @@ namespace Greet
 			return new Component(object, parent);
 		}
 		Log::Warning("Could not read XML object ", object.GetName(), ".");
-		return new Content(); // Return plain content to avoid crash.
+		return new Component(); // Return plain content to avoid crash.
 	}
 }

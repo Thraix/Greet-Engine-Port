@@ -32,7 +32,7 @@ namespace Greet {
 	{
 		for (auto it = frames.rbegin(); it != frames.rend(); ++it)
 		{
-      Content* c = it->second->OnMousePressed(event, event.GetPosition() - it->second->GetPosition());
+      Component* c = it->second->OnMousePressed(event, event.GetPosition() - it->second->GetPosition());
 			if (c)
 			{
 				if (c != m_focused)
@@ -66,7 +66,7 @@ namespace Greet {
 			m_focused->MouseMoved(event, event.GetPosition() - m_focused->GetPosition());
 		for (auto it = frames.rbegin(); it != frames.rend(); ++it)
 		{
-      Content* c = it->second->OnMouseMoved(event, event.GetPosition() - it->second->GetPosition());
+      Component* c = it->second->OnMouseMoved(event, event.GetPosition() - it->second->GetPosition());
 			if (c)
 			{
 				if (c != m_hovered)

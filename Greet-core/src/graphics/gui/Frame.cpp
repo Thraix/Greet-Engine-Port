@@ -25,6 +25,7 @@ namespace Greet {
     m_resizableFlags = RESIZING_LEFT | RESIZING_RIGHT | RESIZING_TOP | RESIZING_BOTTOM;
     m_resizing = 0;
     minSize = Vec2(100, 100);
+    m_isFocusable = true;
 
     // This is super ugly, need to find a better way to initialize these...
     if (object.HasProperty("minWidth"))
@@ -170,12 +171,8 @@ namespace Greet {
     }
   }
 
-  Content* Frame::OnMousePressed(const MousePressedEvent& event, const Vec2& translatedPos)
+  void Frame::MousePressed(const MousePressedEvent& event, const Vec2& translatedPos)
   {
-    Content* focused = Container::OnMousePressed(event,translatedPos);
-    if(focused)
-      return focused;
-
     if (event.GetButton() == GLFW_MOUSE_BUTTON_1)
     {
       m_posOrigin = pos;
@@ -183,10 +180,9 @@ namespace Greet {
       m_clickPos = event.GetPosition();
       CheckResize(event.GetPosition());
     }
-    return nullptr;
   }
 
-  void Frame::OnMouseReleased(const MouseReleasedEvent& event, const Vec2& translatedPos)
+  void Frame::MouseReleased(const MouseReleasedEvent& event, const Vec2& translatedPos)
   {
     if (event.GetButton() == GLFW_MOUSE_BUTTON_1)
     {
@@ -194,19 +190,14 @@ namespace Greet {
     }
   }
 
-  Content* Frame::OnMouseMoved(const MouseMovedEvent& event, const Vec2& translatedPos)
+  void Frame::MouseMoved(const MouseMovedEvent& event, const Vec2& translatedPos)
   {
     if (m_resizing)
     {
+      
       Resize(event.GetPosition());
+      // TODO: Recalculate children size if they are relative
     }
-    else
-    {
-      Content* hovered = Container::OnMouseMoved(event,translatedPos);
-      if(hovered)
-        return hovered;
-    }
-    return nullptr;
   }
 
   bool Frame::IsMouseInside(const Vec2& mousePos) const

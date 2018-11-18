@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Content.h"
+#include "Component.h"
 #include <graphics/fonts/Font.h>
 
 namespace Greet {
-	class Label : public Content
+	class Label : public Component 
 	{
 	private:
 		bool hasMaxWidth;
@@ -16,7 +16,7 @@ namespace Greet {
 
 	public:
 		Label(const std::string& str, Font* font, const Vec4& color);
-		void Render(GUIRenderer* renderer, const Vec2& position) const override;
+		void Render(GUIRenderer* renderer) const override;
 
 		float GetWidth() const override;
 		float GetHeight() const override;

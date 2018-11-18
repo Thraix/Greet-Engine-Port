@@ -8,7 +8,7 @@ namespace Greet {
 		hasMaxWidth = false;
 	}
 
-	void Label::Render(GUIRenderer* renderer, const Vec2& position) const
+	void Label::Render(GUIRenderer* renderer) const
 	{
 		//renderer->SubmitString(str, position + Vec2(0, font->GetAscender()), font, color, true);
 	}

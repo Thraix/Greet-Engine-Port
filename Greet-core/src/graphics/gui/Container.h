@@ -23,8 +23,8 @@ namespace Greet {
       Component* RemoveComponent(Component* component);
       Component* GetComponent(uint index);
 
-      virtual Content* OnMousePressed(const MousePressedEvent& event, const Vec2& translatedPos) override;
+      virtual Component* OnMousePressed(const MousePressedEvent& event, const Vec2& translatedPos) override;
       virtual void OnMouseReleased(const MouseReleasedEvent& event, const Vec2& translatedPos) override { Log::Warning("Called mouse release event on Container");}
-      virtual Content* OnMouseMoved(const MouseMovedEvent& event, const Vec2& translatedPos) override;
+      virtual Component* OnMouseMoved(const MouseMovedEvent& event, const Vec2& translatedPos) override;
   };
 }

@@ -44,12 +44,12 @@ namespace Greet
         return stream<< "(" << tlbr.top << ", " << tlbr.left << ", " << tlbr.bottom  << ", "<< tlbr.right << ")";
       }
 
-      Vec2 LeftTop()
+      Vec2 LeftTop() const
       {
         return Vec2(left, top);
       }
 
-      Vec2 RightBottom()
+      Vec2 RightBottom() const
       {
         return Vec2(right, bottom);
       }
