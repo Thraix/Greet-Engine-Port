@@ -20,23 +20,51 @@ namespace Greet
 
       void Load(const std::string& prefix, const XMLObject& object, float baseWidth, float baseHeight)
       {
-        if (object.HasProperty(prefix+"Top"))
+        if (object.HasProperty(prefix))
         {
-          top = GUIUtils::CalcSize(object.GetProperty(prefix+"Top"), baseHeight);
+          std::vector<std::string> strings = StringUtils::split_string(object.GetProperty(prefix)," ");
+          if(strings.size() == 4)
+          {
+            top = GUIUtils::CalcSize(strings.at(0), baseHeight);
+            left = GUIUtils::CalcSize(strings.at(1), baseWidth);
+            bottom = GUIUtils::CalcSize(strings.at(2), baseHeight);
+            right = GUIUtils::CalcSize(strings.at(3), baseWidth);
+          }
+          else if(strings.size() == 2)
+          {
+            top = bottom = GUIUtils::CalcSize(strings.at(0), baseHeight);
+            left = right = GUIUtils::CalcSize(strings.at(1), baseWidth);
+          }
+          else if(strings.size() == 1)
+          {
+            top = bottom = GUIUtils::CalcSize(strings.at(0), baseHeight);
+            left = right = GUIUtils::CalcSize(strings.at(0), baseHeight);
+          }
+          else
+          {
+            Log::Error("TLBR:: Invalid parameter for ", prefix);
+          }
         }
-        if (object.HasProperty(prefix+"Left"))
+        else
         {
-          left  = GUIUtils::CalcSize(object.GetProperty(prefix+"Left"), baseWidth);
+          if (object.HasProperty(prefix+"Top"))
+          {
+            top = GUIUtils::CalcSize(object.GetProperty(prefix+"Top"), baseHeight);
+          }
+          if (object.HasProperty(prefix+"Left"))
+          {
+            left  = GUIUtils::CalcSize(object.GetProperty(prefix+"Left"), baseWidth);
+          }
+          if (object.HasProperty(prefix+"Bottom"))
+          {
+            bottom  = GUIUtils::CalcSize(object.GetProperty(prefix+"Bottom"), baseHeight);
+          }
+          if (object.HasProperty(prefix+"Right"))
+          {
+            right = GUIUtils::CalcSize(object.GetProperty(prefix+"Right"), baseWidth);
+          }
         }
-        if (object.HasProperty(prefix+"Bottom"))
-        {
-          bottom  = GUIUtils::CalcSize(object.GetProperty(prefix+"Bottom"), baseHeight);
-        }
-        if (object.HasProperty(prefix+"Right"))
-        {
-          right = GUIUtils::CalcSize(object.GetProperty(prefix+"Right"), baseWidth);
-        }
-      
+
       }
 
       friend std::ostream& operator<<(std::ostream& stream, const TLBR& tlbr)

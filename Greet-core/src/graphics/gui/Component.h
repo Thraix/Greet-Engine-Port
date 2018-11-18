@@ -69,14 +69,12 @@ namespace Greet
       virtual void MouseEntered(){}
       virtual void MouseExited(){}
 
-
       // These functions will only be called if the component is focused
       virtual void MousePressed(const MousePressedEvent& event, const Vec2& translatedPos){}
       virtual void MouseReleased(const MouseReleasedEvent& event, const Vec2& translatedPos){}
       virtual void MouseMoved(const MouseMovedEvent& event, const Vec2& translatedPos){}
       virtual void KeyPressed(const KeyPressedEvent& event){}
       virtual void KeyReleased(const KeyReleasedEvent& event){}
-
 
       Vec2 GetTotalPadding() const;
       const TLBR& GetMargin() const;
