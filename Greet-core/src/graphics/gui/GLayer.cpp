@@ -187,4 +187,12 @@ namespace Greet {
 			return nullptr;
 		return it->second;
 	}
+    float GLayer::GetWidth()
+    {
+      return Window::GetWidth();
+    }
+    float GLayer::GetHeight()
+    {
+      return Window::GetHeight();
+    }
 }

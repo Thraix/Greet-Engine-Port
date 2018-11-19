@@ -11,7 +11,8 @@ namespace Greet {
     : Component(object, parent), str{object.GetText()}, color{0,0,0,1}, hasMaxWidth{false}
   {
     if (object.HasProperty("fontSize"))
-      fontSize = GUIUtils::CalcSize(object.GetProperty("fontSize"), GetPotentialHeight());
+      fontSize = GUIUtils::CalcSize(object.GetProperty("fontSize"), parent->GetHeight());
+    Style temp; currentStyle = &temp;
   
     if (object.HasProperty("font"))
       font = FontManager::Get(object.GetProperty("font"),fontSize);

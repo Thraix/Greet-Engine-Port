@@ -43,5 +43,8 @@ namespace Greet {
 		static Frame* RemoveFrame(Frame* frame);
 		static Frame* GetFrame(const std::string& name);
 
+    static float GetWidth();
+    static float GetHeight();
+
 	};
 }

@@ -1,5 +1,5 @@
 **/bin/*.a
-**/bin/*.so
+**/bin/*.so*
 **/bin/intermediates/*
 **screenshot*.png
 *.logging

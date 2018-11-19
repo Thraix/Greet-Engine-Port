@@ -1,6 +1,7 @@
 #include "Component.h"
 
 #include <utils/AABBUtils.h>
+#include <graphics/gui/GLayer.h>
 
 namespace Greet
 {
@@ -13,17 +14,7 @@ namespace Greet
   Component::Component(const XMLObject& object, Component* parent)
     : xmlObject(object.GetStrippedXMLObject()), parent(parent)
   {
-    size = Vec2(100, 100);
-    Style temp;
-    currentStyle = &temp;
-    if (object.HasProperty("width"))
-    {
-      size.w = GUIUtils::CalcSize(object.GetProperty("width"), GetPotentialWidth());
-    }
-    if (object.HasProperty("height"))
-    {
-      size.h = GUIUtils::CalcSize(object.GetProperty("height"), GetPotentialHeight());
-    }
+    size = Vec2(CalculateWidth(), CalculateHeight());
 
     normalStyle.Load("",*this);
     hoverStyle.Load("hover",*this,&normalStyle);
@@ -91,6 +82,11 @@ namespace Greet
     return pos;
   }
 
+  Component* Component::GetParent() const
+  {
+    return parent;
+  }
+
   void Component::SetPosition(const Vec2& pos) 
   {
     this->pos = pos;
@@ -106,112 +102,39 @@ namespace Greet
     this->size = size;
   }
 
-  float Component::GetWidth() const
+  float Component::GetWidth() const 
   {
-    if (xmlObject.HasProperty("width"))
-    {
-      const std::string& w = xmlObject.GetProperty("width");
-      if (!GUIUtils::IsStaticSize(w))
-      {
-        if (parent == NULL)
-          return GUIUtils::CalcSize(w, Window::GetWidth());
-        return GUIUtils::CalcSize(w, parent->GetPotentialWidth());
-      }
-      return size.w;
-    }
-    else if (parent == NULL)
-    {
-      return size.w;
-    }
-#if 0
-    else
-    {
-      float maxWidth = 0;
-      for (auto it = m_components.begin(); it != m_contents.end(); ++it)
-      {
-        maxWidth = Math::Max((*it)->GetWidth(), maxWidth);
-      }
-      return maxWidth + currentStyle->margin.left + currentStyle->margin.right;
-    }
-#endif
     return size.w;
   }
 
-  float Component::GetHeight() const
+  float Component::GetHeight() const 
   {
-    if (xmlObject.HasProperty("height"))
-    {
-      const std::string& h = xmlObject.GetProperty("height");
-      if (!GUIUtils::IsStaticSize(h))
-      {
-        if (parent == NULL)
-          return GUIUtils::CalcSize(h, Window::GetHeight());
-        return GUIUtils::CalcSize(h, parent->GetPotentialHeight());
-      }
-      return size.h;
-    }
-    else if (parent == NULL)
-    {
-      return size.h;
-    }
-#if 0
-    else
-    {
-      float height = currentStyle->margin.top + currentStyle->margin.bottom;
-      for (auto it = m_contents.begin(); it != m_contents.end(); ++it)
-      {
-        if (it != m_contents.begin())
-          height += ySpacing;
-        height += (*it)->GetHeight();
-      }
-      return height;
-    }
-#endif
     return size.h;
   }
 
-  float Component::GetPotentialWidth() const
+  float Component::CalculateWidth() const
   {
     if (xmlObject.HasProperty("width"))
     {
       const std::string& w = xmlObject.GetProperty("width");
-      if (GUIUtils::IsStaticSize(w))
-      {
-        return size.w - currentStyle->padding.right - currentStyle->padding.left - currentStyle->border.right - currentStyle->border.left;
-      }
-      else
-      {
-        if (parent == NULL)
-          return GUIUtils::CalcSize(w, Window::GetWidth());
-        // No need to check for parent since the top parent doesn't have an xml object.
-        return GUIUtils::CalcSize(w, parent->GetPotentialWidth()-currentStyle->margin.left-currentStyle->margin.right);
-      }
+      if (parent == NULL)
+        return GUIUtils::CalcSize(w, GLayer::GetWidth());
+      return GUIUtils::CalcSize(w, parent->GetWidth() - parent->GetPadding().GetWidth() - parent->GetBorder().GetWidth());
     }
-    if (parent == NULL)
-      return size.w - currentStyle->padding.right - currentStyle->padding.left - currentStyle->border.right - currentStyle->border.left;
-    return parent->GetPotentialWidth();
+    return size.w;
   }
 
-  float Component::GetPotentialHeight() const
+  float Component::CalculateHeight() const
   {
     if (xmlObject.HasProperty("height"))
     {
       const std::string& h = xmlObject.GetProperty("height");
-      if (GUIUtils::IsStaticSize(h))
-      {
-        return size.h - currentStyle->margin.top - currentStyle->margin.bottom;
-      }
-      else
-      {
-        if (parent == NULL)
-          return GUIUtils::CalcSize(h, Window::GetHeight());
-        // No need to check for parent since the top parent doesn't have an xml object.
-        return GUIUtils::CalcSize(h, parent->GetPotentialHeight());
-      }
+      // If parent is nullptr it is the top component so use the window size
+      if (parent == NULL)
+        return GUIUtils::CalcSize(h, GLayer::GetHeight());
+      return GUIUtils::CalcSize(h, parent->GetHeight() - parent->GetPadding().GetHeight() - parent->GetBorder().GetHeight());
     }
-    if (parent == NULL)
-      return size.h - currentStyle->margin.top - currentStyle->margin.bottom;
-    return parent->GetPotentialHeight();
+    return size.h;
   }
 
   const XMLObject& Component::GetXMLObject() const

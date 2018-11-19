@@ -53,10 +53,15 @@ namespace Greet
 
       Vec2 GetPosition() const;
       Vec2 GetSize() const;
+      Component* GetParent() const;
+
+      // Will return the stored value
       virtual float GetWidth() const;
       virtual float GetHeight() const;
-      virtual float GetPotentialWidth() const;
-      virtual float GetPotentialHeight() const;
+
+      // Will return a newly calculated value
+      virtual float CalculateWidth() const;
+      virtual float CalculateHeight() const;
 
       const XMLObject& GetXMLObject() const;
       virtual bool IsMouseInside(const Vec2& parentMouse) const;

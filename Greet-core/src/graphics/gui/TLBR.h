@@ -81,5 +81,15 @@ namespace Greet
       {
         return Vec2(right, bottom);
       }
+
+      float GetWidth() const
+      {
+        return left + right;
+      }
+
+      float GetHeight() const
+      {
+        return top + bottom;
+      }
   };
 }

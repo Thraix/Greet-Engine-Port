@@ -13,7 +13,6 @@ namespace Greet {
 
   }
 
-  // These are usually the top element so no parent is needed
   Container::Container(const XMLObject& object, Component* parent)
     : Component(object, parent)
   {
