@@ -1,8 +1,8 @@
 #pragma once
 
 #include <vector>
-#include "Container.h"
-#include "GUIMouseListener.h"
+#include <graphics/gui/Container.h>
+#include <graphics/gui/GUIMouseListener.h>
 #include <utils/xml/XML.h>
 
 namespace Greet {

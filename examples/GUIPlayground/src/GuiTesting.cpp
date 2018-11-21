@@ -6,6 +6,7 @@ class Core : public App, public KeyListener, public MouseListener
 {
 private:
 	Component* content;
+  float progressBarValue;
 	//Container* container;
 public:
   Core()
@@ -24,14 +25,16 @@ public:
 	{
 		FontManager::Add(new FontContainer("/usr/share/fonts/truetype/ubuntu/Ubuntu-C.ttf","roboto"));
 		GLayer::CreateInstance(new GUIRenderer(), Shader(Shader::FromFile("res/shaders/gui.shader")));
-		//content = new Content();
-		//content->SetMargins(0, 0, 0, 0);
-		//content->AddContent(new Label("test1", FontManager::Get("roboto", 24), Vec4(0.5, 1, 1, 1)));
-		//content->AddContent(new Label("test2", FontManager::Get("roboto", 12), Vec4(0.5, 1, 1, 1)));
-		//content->AddContent(new Button(Vec2(80, 20), "Press me!"));
-		//container = new FrameContainer(Vec2(50, 50), Vec2(200, 200), content, "Debug");
-		//GLayer::AddContainer(container, "Debug");
 		GLayer::AddFrame(GUIUtils::GetFrame(XML::FromFile("res/guis/gui.xml")), "testing");
+    Frame* frame = GLayer::GetFrame("testing");
+    ((ProgressBar*)frame->GetComponentByName("progressBar"))
+      ->AttachValueReference(&progressBarValue);
+    ((ProgressBar*)frame->GetComponentByName("progressBarVertical"))
+      ->AttachValueReference(&progressBarValue);
+    ((ProgressBar*)frame->GetComponentByName("progressBarReverse"))
+      ->AttachValueReference(&progressBarValue);
+    ((ProgressBar*)frame->GetComponentByName("progressBarVerticalReverse"))
+      ->AttachValueReference(&progressBarValue);
 	}
 
 	void Tick() override
@@ -43,6 +46,10 @@ public:
 	void Update(float elapsedTime) override
 	{
 		GLayer::Update(elapsedTime);
+    progressBarValue += elapsedTime * 0.5;
+    if(progressBarValue >= 1.5)
+      progressBarValue -= 1.5;
+
 	}
 
 	void Render() override

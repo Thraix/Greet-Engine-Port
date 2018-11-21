@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Component.h"
+#include <graphics/gui/Component.h>
 #include <graphics/fonts/Font.h>
 #include <graphics/fonts/FontManager.h>
 

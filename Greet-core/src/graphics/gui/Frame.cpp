@@ -87,6 +87,7 @@ namespace Greet {
 
   void Frame::Resize(const Vec2& mousePos)
   {
+    Vec2 oldSize = size;
     Vec2 diff = m_posOrigin - (m_clickPos - mousePos);
     if (m_resizingFlags & RESIZING_LEFT)
     {
@@ -121,6 +122,8 @@ namespace Greet {
         size.y = minSize.y;
     }
     ResizeScreenClamp();
+    if(oldSize != size)
+      Resized();
   }
 
   void Frame::ResizeScreenClamp()

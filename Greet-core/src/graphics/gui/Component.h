@@ -17,6 +17,8 @@ namespace Greet
       Style hoverStyle;
       Style pressStyle;
 
+      std::string name;
+
       XMLObject xmlObject;
       Component* parent;
 
@@ -45,11 +47,8 @@ namespace Greet
 
       // Returns the focused content
       virtual Component* OnMousePressed(const MousePressedEvent& event, const Vec2& translatedPos);
-      virtual void OnMouseReleased(const MouseReleasedEvent& event, const Vec2& translatedPos){}
       // Returns the hovered content
       virtual Component* OnMouseMoved(const MouseMovedEvent& event, const Vec2& translatedPos);
-      virtual void OnKeyPressed(const KeyPressedEvent& event){}
-      virtual void OnKeyReleased(const KeyReleasedEvent& event){}
 
       Vec2 GetPosition() const;
       Vec2 GetSize() const;
@@ -68,6 +67,8 @@ namespace Greet
       virtual void SetPosition(const Vec2& pos);
       void SetSize(const Vec2& size);
 
+      virtual Component* GetComponentByName(const std::string& name);
+
       // These four will only be called if the component is focusable
       virtual void OnFocused(){}
       virtual void OnUnfocused(){}
@@ -81,9 +82,13 @@ namespace Greet
       virtual void KeyPressed(const KeyPressedEvent& event){}
       virtual void KeyReleased(const KeyReleasedEvent& event){}
 
+      virtual void ParentResized(const Vec2& parentSize);
+      virtual void Resized(){}
+
       Vec2 GetTotalPadding() const;
       const TLBR& GetMargin() const;
       const TLBR& GetPadding() const;
       const TLBR& GetBorder() const;
+      Vec2 GetContentSize() const;
   };
 }

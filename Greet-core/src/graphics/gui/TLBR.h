@@ -91,5 +91,10 @@ namespace Greet
       {
         return top + bottom;
       }
+
+      Vec2 GetSize() const
+      {
+        return Vec2(GetWidth(), GetHeight());
+      }
   };
 }

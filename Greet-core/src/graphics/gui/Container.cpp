@@ -40,6 +40,16 @@ namespace Greet {
     }
   }
 
+  void Container::UpdateHandle(float timeElapsed)
+  {
+    Update(timeElapsed);
+
+    for(auto it{m_components.begin()}; it != m_components.end();++it)
+    {
+      (*it)->UpdateHandle(timeElapsed);
+    }
+  }
+
   void Container::AddComponent(Component* component)
   {
     if (component == NULL)
@@ -91,6 +101,20 @@ namespace Greet {
     return *(m_components.begin() + index);
   }
 
+  Component* Container::GetComponentByName(const std::string& name)
+  {
+    Component* comp = Component::GetComponentByName(name);
+    if(comp)
+      return comp;
+    for(auto it{m_components.begin()}; it != m_components.end();++it)
+    {
+      comp = (*it)->GetComponentByName(name);
+      if(comp)
+        return comp;
+    }
+    return nullptr;
+  }
+
   Component* Container::OnMousePressed(const MousePressedEvent& event, const Vec2& translatedPos)
   {
     for(auto it = m_components.rbegin(); it != m_components.rend();++it)
@@ -119,5 +143,13 @@ namespace Greet {
       }
     }
     return Component::OnMouseMoved(event,translatedPos);
+  }
+
+  void Container::Resized()
+  {
+    for(auto it{m_components.begin()}; it != m_components.end();++it)
+    {
+      (*it)->ParentResized(size);
+    }
   }
 }

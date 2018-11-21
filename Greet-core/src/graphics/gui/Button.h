@@ -15,9 +15,6 @@ namespace Greet {
       virtual ~Button();
       void Render(GUIRenderer* renderer) const override;
 
-      virtual void SetPosition(const Vec2& pos) override;
-
-
       void OnFocused() override;
       void OnUnfocused() override;
       void MouseEntered() override;

@@ -2,6 +2,7 @@
 
 #include <utils/AABBUtils.h>
 #include <graphics/gui/GLayer.h>
+#include <utils/UUID.h>
 
 namespace Greet
 {
@@ -15,6 +16,10 @@ namespace Greet
     : xmlObject(object.GetStrippedXMLObject()), parent(parent)
   {
     size = Vec2(CalculateWidth(), CalculateHeight());
+    if(xmlObject.HasProperty("name"))
+      name = xmlObject.GetProperty("name");
+    else
+      name = "Component#" + std::to_string(UUID::GetInstance().GetUUID());
 
     normalStyle.Load("",*this);
     hoverStyle.Load("hover",*this,&normalStyle);
@@ -137,6 +142,22 @@ namespace Greet
     return size.h;
   }
 
+  Component* Component::GetComponentByName(const std::string& name)
+  {
+    if(name == this->name)
+      return this;
+    return nullptr;
+  }
+
+  void Component::ParentResized(const Vec2& parentSize)
+  {
+    Vec2 oldSize = size;
+    size.w = CalculateWidth();
+    size.h = CalculateHeight();
+    if(oldSize != size)
+      Resized();
+  }
+
   const XMLObject& Component::GetXMLObject() const
   {
     return xmlObject;
@@ -150,6 +171,11 @@ namespace Greet
   Vec2 Component::GetTotalPadding() const
   {
     return GetPadding().LeftTop() + GetBorder().LeftTop();
+  }
+
+  Vec2 Component::GetContentSize() const
+  {
+    return size - GetPadding().GetSize() - GetBorder().GetSize();
   }
 
   const TLBR& Component::GetMargin() const

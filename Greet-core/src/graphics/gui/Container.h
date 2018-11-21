@@ -1,8 +1,7 @@
 #pragma once
 
 #include <vector>
-#include "Component.h"
-#include "GUIMouseListener.h"
+#include <graphics/gui/Component.h>
 #include <utils/xml/XML.h>
 
 namespace Greet {
@@ -16,15 +15,20 @@ namespace Greet {
       Container(const XMLObject& object, Component* parent);
       virtual ~Container();
 
-      void RenderHandle(GUIRenderer* renderer) const override;
+      virtual void RenderHandle(GUIRenderer* renderer) const override;
+      virtual void UpdateHandle(float timeElapsed) override;
 
       void AddComponent(Component* component);
       Component* RemoveComponent(uint index);
       Component* RemoveComponent(Component* component);
       Component* GetComponent(uint index);
 
+      Component* GetComponentByName(const std::string& name) override;
+
+
       virtual Component* OnMousePressed(const MousePressedEvent& event, const Vec2& translatedPos) override;
-      virtual void OnMouseReleased(const MouseReleasedEvent& event, const Vec2& translatedPos) override { Log::Warning("Called mouse release event on Container");}
       virtual Component* OnMouseMoved(const MouseMovedEvent& event, const Vec2& translatedPos) override;
+
+      virtual void Resized() override;
   };
 }

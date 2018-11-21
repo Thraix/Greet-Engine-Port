@@ -36,12 +36,9 @@ namespace Greet {
 
   void Button::Render(GUIRenderer* renderer) const
   {
+    renderer->PushMatrix(Mat3::Translate(pos + (size - label.GetSize())/2));
     label.Render(renderer);
-  }
-  void Button::SetPosition(const Vec2& pos)
-  {
-    Component::SetPosition(pos);
-    label.SetPosition(pos + (size - label.GetSize())/2);
+    renderer->PopMatrix();
   }
 
   void Button::OnFocused()
