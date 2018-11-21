@@ -24,14 +24,19 @@
     backgroundColor="#aaaaaa" borderColor="#707070"
     border="4px" padding="0"
     minValue="0.25" maxValue="1.25" reverseProgress="true"/>
-  <ProgressBar
-    width="50px" height="50px" name="progressBarVertical"
-    backgroundColor="#aaaaaa" borderColor="#707070"
-    border="4px" padding="0"
-    minValue="0.25" maxValue="1.25" vertical="true"/>
-  <ProgressBar
-    width="50px" height="50px" name="progressBarVerticalReverse"
-    backgroundColor="#aaaaaa" borderColor="#707070"
-    border="4px" padding="0"
-    minValue="0.25" maxValue="1.25" vertical="true" reverseProgress="true"/>
+  <Container 
+    width="100%"
+    height="200px"
+    verticalAlign="false" padding="0">
+    <ProgressBar
+      width="40px" height="200px" name="progressBarVertical"
+      backgroundColor="#aaaaaa" borderColor="#707070"
+      border="4px" padding="0"
+      minValue="0.25" maxValue="1.25" vertical="true"/>
+    <ProgressBar
+      width="40px" height="200px" name="progressBarVerticalReverse"
+      backgroundColor="#aaaaaa" borderColor="#707070"
+      border="4px" padding="0"
+      minValue="0.25" maxValue="1.25" vertical="true" reverseProgress="true"/>
+  </Container>
 </Frame>

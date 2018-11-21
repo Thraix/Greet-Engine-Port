@@ -14,8 +14,10 @@ namespace Greet {
   }
 
   Container::Container(const XMLObject& object, Component* parent)
-    : Component(object, parent)
+    : Component(object, parent), vertical(true)
   {
+    if(object.HasProperty("verticalAlign"))
+      vertical = GUIUtils::GetBoolean(object.GetProperty("verticalAlign"));
     for (uint i = 0;i < object.GetObjectCount();i++)
     {
       AddComponent(GUIUtils::GetComponent(object.GetObject(i), this));
@@ -29,6 +31,7 @@ namespace Greet {
 
   void Container::RenderHandle(GUIRenderer* renderer) const
   {
+    renderer->PushMatrix(Mat3::Translate(pos));
     // Render rest of component
     Render(renderer);
 
@@ -38,6 +41,7 @@ namespace Greet {
       (*it)->RenderHandle(renderer);
       (*it)->PostRender(renderer);
     }
+    renderer->PopMatrix();
   }
 
   void Container::UpdateHandle(float timeElapsed)
@@ -60,7 +64,10 @@ namespace Greet {
     if(m_components.size() > 0)
     {
       Component* last = *m_components.rbegin();
-      component->SetPosition(Vec2(0,last->GetPosition().y + last->GetSize().y + 10));
+      if(vertical)
+        component->SetPosition(Vec2(0,last->GetPosition().y + last->GetSize().y + 10));
+      else
+        component->SetPosition(Vec2(last->GetPosition().x + last->GetSize().x + 10,0));
     }
     m_components.push_back(component);
   }

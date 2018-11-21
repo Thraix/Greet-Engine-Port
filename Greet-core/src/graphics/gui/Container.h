@@ -9,6 +9,7 @@ namespace Greet {
   {
     protected:
       std::vector<Component*> m_components;
+      bool vertical;
 
     public:
       Container();

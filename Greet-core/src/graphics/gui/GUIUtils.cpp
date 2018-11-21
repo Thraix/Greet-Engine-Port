@@ -5,6 +5,7 @@
 #include <graphics/gui/Button.h>
 #include <graphics/gui/Label.h>
 #include <graphics/gui/ProgressBar.h>
+#include <graphics/gui/Container.h>
 
 namespace Greet
 {
@@ -39,6 +40,10 @@ namespace Greet
     else if (object.GetName() == "Component")
     {
       return new Component(object, parent);
+    }
+    else if(object.GetName() == "Container")
+    {
+      return new Container(object, parent);
     }
     Log::Warning("Could not read XML object ", object.GetName(), ".");
     return new Component(); // Return plain content to avoid crash.
