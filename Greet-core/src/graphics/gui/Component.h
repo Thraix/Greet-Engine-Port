@@ -33,14 +33,14 @@ namespace Greet
       Component();
       Component(const XMLObject& object, Component* parent);
       // Push translation to renderer
-      void PreRender(GUIRenderer* renderer, const Vec2& translation) const;
+      virtual void PreRender(GUIRenderer* renderer, const Vec2& translation) const;
 
       // Render component
       virtual void RenderHandle(GUIRenderer* renderer) const;
       virtual void Render(GUIRenderer* renderer) const{}
 
       // Pop translation from renderer
-      void PostRender(GUIRenderer* renderer) const;
+      virtual void PostRender(GUIRenderer* renderer) const;
 
       virtual void UpdateHandle(float timeElapsed);
       virtual void Update(float timeElapsed){}
