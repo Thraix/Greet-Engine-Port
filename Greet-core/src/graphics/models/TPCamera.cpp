@@ -124,8 +124,8 @@ namespace Greet {
       Log::Error("Height clamp: min greater than max.");
       return;
     }
-    Math::Clamp(&min, -1, 1);
-    Math::Clamp(&max, -1, 1);
+    Math::Clamp(&min, -1.0f, 1.0f);
+    Math::Clamp(&max, -1.0f, 1.0f);
     m_heightMin = min;
     m_heightMax = max;
     if (m_heightWanted < m_heightMin)

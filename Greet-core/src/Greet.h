@@ -108,6 +108,8 @@
 #include <graphics/gui/GUIUtils.h>
 #include <graphics/gui/Frame.h>
 #include <graphics/gui/ProgressBar.h>
+#include <graphics/gui/Divider.h>
+#include <graphics/gui/TextBox.h>
 #include <graphics/gui/GUIMouseListener.h>
 #include <graphics/textures/TextureManager.h>
 #include <graphics/textures/Texture.h>

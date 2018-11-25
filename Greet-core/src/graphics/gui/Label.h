@@ -5,23 +5,31 @@
 #include <graphics/fonts/FontManager.h>
 
 namespace Greet {
-	class Label : public Component 
-	{
-	private:
-		bool hasMaxWidth;
-	public:
-		float maxWidth;
-		std::string str;
-    float fontSize;
-		Font* font;
-		Vec4 color;
+  class Label : public Component 
+  {
+    private:
+      bool hasMaxWidth;
+      float maxWidth;
+      std::string str;
+      float fontSize;
+      Font* font;
+      Vec4 color;
 
-	public:
-    Label();
-    Label(const XMLObject& object, Component* parent);
-		void Render(GUIRenderer* renderer) const override;
+    public:
+      Label();
+      Label(const XMLObject& object, Component* parent);
+      void Render(GUIRenderer* renderer) const override;
 
-		float GetWidth() const override;
-		float GetHeight() const override;
-	};
+
+      void SetText(const std::string& text);
+      const std::string& GetText() const;
+
+      virtual float CalculateWidth() const override;
+      virtual float CalculateHeight() const override;
+
+      const Vec4& GetColor() const;
+
+      const Font* GetFont() const;
+
+  };
 }

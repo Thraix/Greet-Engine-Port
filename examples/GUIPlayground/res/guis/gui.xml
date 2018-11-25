@@ -26,6 +26,12 @@
     backgroundColor="#aaaaaa" borderColor="#707070"
     border="4px" padding="0"
     minValue="0.25" maxValue="1.25" reverseProgress="true"/>
+  <TextBox
+    width="100%" height="50px"
+    backgroundColor="#eeeeee" borderColor="#aaaaaa"
+    border="2px" font="roboto" fontSize="24px" color="#000000"
+    padding="1px"
+    />
   <Container 
     width="100%"
     height="200px"

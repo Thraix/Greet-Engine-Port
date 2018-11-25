@@ -7,6 +7,7 @@
 #include <graphics/gui/ProgressBar.h>
 #include <graphics/gui/Container.h>
 #include <graphics/gui/Divider.h>
+#include <graphics/gui/TextBox.h>
 
 namespace Greet
 {
@@ -45,6 +46,10 @@ namespace Greet
     else if (object.GetName() == "Divider")
     {
       return new Divider(object, parent);
+    }
+    else if (object.GetName() == "TextBox")
+    {
+      return new TextBox(object, parent);
     }
     else if(object.GetName() == "Container")
     {

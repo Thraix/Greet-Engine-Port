@@ -70,8 +70,10 @@ namespace Greet
       virtual Component* GetComponentByName(const std::string& name);
 
       // These four will only be called if the component is focusable
-      virtual void OnFocused(){}
-      virtual void OnUnfocused(){}
+      virtual void OnFocused();
+      virtual void OnUnfocused();
+      virtual void Focused(){}
+      virtual void Unfocused(){}
       virtual void MouseEntered(){}
       virtual void MouseExited(){}
 
@@ -81,6 +83,7 @@ namespace Greet
       virtual void MouseMoved(const MouseMovedEvent& event, const Vec2& translatedPos){}
       virtual void KeyPressed(const KeyPressedEvent& event){}
       virtual void KeyReleased(const KeyReleasedEvent& event){}
+      virtual void KeyTyped(const KeyTypedEvent& event){}
 
       virtual void ParentResized(const Vec2& parentSize);
       virtual void Resized(){}

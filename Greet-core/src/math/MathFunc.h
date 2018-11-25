@@ -53,7 +53,8 @@ namespace Greet{ namespace Math {
 	}
 
 	//struct Vec2;
-	inline void Clamp(float* value, float min, float max)
+  template<typename T>
+	inline void Clamp(T* value, const T& min, const T& max)
 	{
 		if(min < max)
 			*value = *value < min ? min : (*value > max ? max : *value);

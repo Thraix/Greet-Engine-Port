@@ -28,6 +28,7 @@ namespace Greet {
 		void OnMoved(const MouseMovedEvent& event) override;
 		void OnPressed(const KeyPressedEvent& event) override;
 		void OnReleased(const KeyReleasedEvent& event) override;
+    void OnTyped(const KeyTypedEvent& event) override;
 		void WindowResize(int width, int height) override;
 
 

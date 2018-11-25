@@ -81,6 +81,17 @@ namespace Greet
     return nullptr;
 
   }
+  void Component::OnFocused()
+  {
+    isFocused = true;
+    Focused();
+  }
+
+  void Component::OnUnfocused()
+  {
+    isFocused = false;
+    Unfocused();
+  }
 
   Vec2 Component::GetPosition() const
   {

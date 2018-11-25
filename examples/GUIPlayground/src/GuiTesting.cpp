@@ -49,7 +49,6 @@ public:
     progressBarValue += elapsedTime * 0.5;
     if(progressBarValue >= 1.5)
       progressBarValue -= 1.5;
-
 	}
 
 	void Render() override
