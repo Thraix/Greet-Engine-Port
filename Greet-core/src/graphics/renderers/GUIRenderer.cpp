@@ -168,7 +168,7 @@ namespace Greet
 
       AppendQuad(pos, size, uv0, uv1, ts, color, isHsv);
 
-      x += glyph.advanceX * scale.x;
+      x += (glyph.advanceX - glyph.kerning )* scale.x;
 		}
 	}
 

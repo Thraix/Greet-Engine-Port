@@ -47,7 +47,7 @@ namespace Greet{
       if(i == endPos - 1)
         width += glyph.width;
       else
-        width += glyph.advanceX;
+        width += glyph.advanceX - glyph.kerning;
     }
     return width*scale;
   }
