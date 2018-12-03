@@ -5,8 +5,7 @@ namespace Greet
   Divider::Divider(const XMLObject& object, Component* parent)
     : Component(object,parent), vertical(false)
   {
-    if(xmlObject.HasProperty("vertical"))
-      vertical = GUIUtils::GetBoolean(xmlObject.GetProperty("vertical"));
+    vertical = GUIUtils::GetBooleanFromXML(xmlObject,"vertical", false);
 
     if(vertical)
     {

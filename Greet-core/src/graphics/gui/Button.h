@@ -9,7 +9,7 @@ namespace Greet {
     protected:
       float fontSize;
       Vec4 textColor;
-      Label label;
+      Label* label;
     public:
       Button(const XMLObject& object, Component* parent);
       virtual ~Button();

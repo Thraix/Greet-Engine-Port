@@ -30,7 +30,6 @@ namespace Greet
       bool isFocused;
 
     public:
-      Component();
       Component(const XMLObject& object, Component* parent);
       // Push translation to renderer
       virtual void PreRender(GUIRenderer* renderer, const Vec2& translation) const;

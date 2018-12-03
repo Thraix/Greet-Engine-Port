@@ -16,8 +16,7 @@ namespace Greet {
   Container::Container(const XMLObject& object, Component* parent)
     : Component(object, parent), vertical(true)
   {
-    if(object.HasProperty("verticalAlign"))
-      vertical = GUIUtils::GetBoolean(object.GetProperty("verticalAlign"));
+    vertical = GUIUtils::GetBooleanFromXML(object,"verticalAlign",true);
     for (uint i = 0;i < object.GetObjectCount();i++)
     {
       AddComponent(GUIUtils::GetComponent(object.GetObject(i), this));
@@ -26,7 +25,10 @@ namespace Greet {
 
   Container::~Container()
   {
-
+    for(auto it{m_components.begin()}; it != m_components.end();++it)
+    {
+      delete *it;
+    }
   }
 
   void Container::RenderHandle(GUIRenderer* renderer) const

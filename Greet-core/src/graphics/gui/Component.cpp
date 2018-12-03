@@ -6,12 +6,6 @@
 
 namespace Greet
 {
-  Component::Component()
-    : xmlObject(XMLObject()), parent(nullptr)
-  {
-
-  }
-
   Component::Component(const XMLObject& object, Component* parent)
     : xmlObject(object.GetStrippedXMLObject()), parent(parent), m_isFocusable(false),isFocused(false)
   {

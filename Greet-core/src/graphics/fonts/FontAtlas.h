@@ -43,9 +43,8 @@ namespace Greet
       virtual ~FontAtlas();
 
       const Glyph& GetGlyph(char character);
-      uint GetTextureId() const { return atlas.GetTexId();}
-
-      uint GetAscender() const { return face->ascender / 64.0;}
+      uint GetTextureId() const;
+      uint GetBaselineOffset() const;
     private:
       const Glyph& AddGlyph(char character);
   };

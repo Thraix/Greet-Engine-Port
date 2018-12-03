@@ -11,10 +11,9 @@ namespace Greet
       min = atof(object.GetProperty("minValue").c_str()); 
     if(object.HasProperty("maxValue"))
       max = atof(object.GetProperty("maxValue").c_str()); 
-    if(object.HasProperty("vertical"))
-      vertical = GUIUtils::GetBoolean(object.GetProperty("vertical")); 
-    if(object.HasProperty("reverseProgress"))
-      reverse = GUIUtils::GetBoolean(object.GetProperty("reverseProgress")); 
+
+    vertical = GUIUtils::GetBooleanFromXML(object,"vertical", false); 
+    reverse = GUIUtils::GetBooleanFromXML(object,"reverseProgress", false); 
   }
 
   void ProgressBar::Render(GUIRenderer* renderer) const

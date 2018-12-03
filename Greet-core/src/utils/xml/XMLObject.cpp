@@ -20,13 +20,13 @@ namespace Greet
       ReadBodyTail(string, pos, line);
   }
 
-  XMLObject::XMLObject(const std::string& name, const std::map<std::string, std::string> properties, const std::string& text)
+  XMLObject::XMLObject(const std::string& name, const std::map<std::string, std::string>& properties, const std::string& text)
     :name(name), properties(properties), text(text)
   {
 
   }
 
-  XMLObject::XMLObject(const std::string& name, const std::map<std::string, std::string> properties, const std::vector<XMLObject> objects)
+  XMLObject::XMLObject(const std::string& name, const std::map<std::string, std::string>& properties, const std::vector<XMLObject>& objects)
     : name(name), properties(properties), objects(objects)
   {
 

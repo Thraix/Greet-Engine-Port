@@ -1,28 +1,21 @@
 #include "Label.h"
 
 namespace Greet {
-  Label::Label()
-    : Component()
-  {
-
-  }
 
   Label::Label(const XMLObject& object, Component* parent)
     : Component(object, parent), str{object.GetText()}, color{0,0,0,1}, hasMaxWidth{false}
   {
     fontSize = GUIUtils::GetSizeFromXML(object, "fontSize", 20, parent->GetHeight());
-
-    if (object.HasProperty("font"))
-      font = FontManager::Get(object.GetProperty("font"),fontSize);
-    else
-      font = FontManager::Get("",fontSize);
+    font = FontManager::Get(GUIUtils::GetStringFromXML(object,"font",""),fontSize);
 
     size = Vec2(CalculateWidth(), CalculateHeight());
     color = GUIUtils::GetColorFromXML(object,"color",Vec4(0,0,0,1));
   }
+
   void Label::Render(GUIRenderer* renderer) const
   {
-    renderer->SubmitString(str, pos + Vec2(0, font->GetAscender()), font, color, false);
+    // Top of the text will be at 0
+    renderer->SubmitString(str, pos + GetTotalPadding() + Vec2(0, font->GetBaselineOffset()), font, color, false);
   }
 
   void Label::SetText(const std::string& text)

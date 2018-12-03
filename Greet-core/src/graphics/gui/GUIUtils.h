@@ -21,6 +21,7 @@ namespace Greet {
     static bool GetBooleanFromXML(const XMLObject& object, const std::string& key, bool defaultValue);
 		static Vec4 GetColorFromXML(const XMLObject& object, const std::string& key, const Vec4& defaultValue);
 		static float GetSizeFromXML(const XMLObject& object, const std::string& key, float defaultValue, float parentSize);
+		static std::string GetStringFromXML(const XMLObject& object, const std::string& key, const std::string& defaultValue);
 
 		static bool GetBoolean(const std::string& str);
 		static Vec4 GetColor(const std::string& str);

@@ -11,28 +11,49 @@ namespace Greet
     m_isFocusable = true;
     XMLObject labelObject;
     labelObject.SetName("Label");
+    labelObject.AddProperty("font", GUIUtils::GetStringFromXML(object, "font",""));
+    labelObject.AddProperty("color", GUIUtils::GetStringFromXML(object, "color","#000000"));
+    labelObject.AddProperty("fontSize", GUIUtils::GetStringFromXML(object, "fontSize","20px"));
+    labelObject.AddProperty("padding", "0px");
 
-    labelObject.AddProperty("font", object.GetProperty("font"));
-    labelObject.AddProperty("color", object.GetProperty("color"));
-    labelObject.AddProperty("fontSize", object.GetProperty("fontSize"));
+    XMLObject hintLabelObject;
+    hintLabelObject.AddProperty("font", 
+        GUIUtils::GetStringFromXML(object, "hintFont",labelObject.GetProperty("font")));
+    hintLabelObject.AddProperty("color", 
+        GUIUtils::GetStringFromXML(object, "hintColor",labelObject.GetProperty("color")));
+    hintLabelObject.AddProperty("fontSize", 
+        GUIUtils::GetStringFromXML(object, "hintFontSize",labelObject.GetProperty("fontSize")));
+    hintLabelObject.AddProperty("padding", "0px");
 
-    text = Label(object, this);
-    text.SetPosition(pos);
+    text = new Label(labelObject, this);
+    hintText = new Label(hintLabelObject, this);
+
     password = GUIUtils::GetBooleanFromXML(object, "password", false);
     SetText(object.GetText());
+    hintText->SetText(GUIUtils::GetStringFromXML(object, "hintText", ""));
+  }
+
+  TextBox::~TextBox()
+  {
+    delete text;
+    delete hintText;
   }
 
   void TextBox::Render(GUIRenderer* renderer) const
   {
-    renderer->PushMatrix(Mat3::Translate(pos + Vec2(GetTotalPadding().w,GetContentSize().h/2)));
-    text.Render(renderer);
+    Vec2 p = pos + GetTotalPadding() +  Vec2(0, (GetContentSize().h-text->GetFont()->GetBaselineOffset())/2);
+    renderer->PushMatrix(Mat3::Translate(p));
+    if(text->GetText().length() == 0)
+      hintText->Render(renderer);
+    else
+      text->Render(renderer);
     renderer->PopMatrix();
 
     if(isFocused && cursorBlinkTimer < 0.5)
     {
-      float p = text.GetFont()->GetWidthOfText(text.GetText(),0, cursorPos);
-      Vec2 curPos = pos + GetTotalPadding() + Vec2(p, (GetContentSize().h - text.GetHeight())/2);
-      renderer->SubmitRect(curPos,Vec2(1,text.GetHeight()),text.GetColor(),false);
+      float p = text->GetFont()->GetWidthOfText(text->GetText(),0, cursorPos);
+      Vec2 curPos = pos + GetTotalPadding() + Vec2(p, (GetContentSize().h - text->GetHeight())/2);
+      renderer->SubmitRect(curPos,Vec2(1,text->GetHeight()),text->GetColor(),false);
     }
   }
 
@@ -99,7 +120,7 @@ namespace Greet
     }
     else if(event.GetButton() == GLFW_KEY_END)
     {
-      cursorPos = text.GetText().length();
+      cursorPos = text->GetText().length();
     }
     else if(event.GetButton() == GLFW_KEY_PAGE_UP)
     {
@@ -109,7 +130,7 @@ namespace Greet
     else if(event.GetButton() == GLFW_KEY_PAGE_DOWN)
     {
       // TODO: When multiline is implemented move to bottom of page
-      cursorPos = text.GetText().length();
+      cursorPos = text->GetText().length();
     }
   }
 
@@ -123,22 +144,22 @@ namespace Greet
 
   const std::string& TextBox::GetText() const
   {
-    return text.GetText();
+    return text->GetText();
   }
 
   void TextBox::SetText(const std::string& text)
   {
     if(password)
-      this->text.SetText(StringUtils::Passwordify(text));
+      this->text->SetText(StringUtils::Passwordify(text));
     else
-      this->text.SetText(text);
+      this->text->SetText(text);
     str = text;
   }
 
   void TextBox::MoveCursor(int delta)
   {
     cursorPos += delta;
-    Math::Clamp<int>(&cursorPos, 0, text.GetText().length());
+    Math::Clamp<int>(&cursorPos, 0, text->GetText().length());
   }
 
   void TextBox::MoveCursorWord(bool forward)
@@ -148,26 +169,25 @@ namespace Greet
 
     if(!forward)
       cursorPos+=delta;
-    StringUtils::CharType type = StringUtils::GetCharType(text.GetText()[cursorPos]);
-    while(type == StringUtils::GetCharType(text.GetText()[cursorPos]) && cursorPos >= 0 && cursorPos < text.GetText().length())
+    StringUtils::CharType type = StringUtils::GetCharType(text->GetText()[cursorPos]);
+    while(type == StringUtils::GetCharType(text->GetText()[cursorPos]) && cursorPos >= 0 && cursorPos < text->GetText().length())
     {
       cursorPos += delta;
     }
-    Math::Clamp<int>(&cursorPos, 0, text.GetText().length());
-    if(type != StringUtils::GetCharType(text.GetText()[cursorPos]) && !forward)
+    Math::Clamp<int>(&cursorPos, 0, text->GetText().length());
+    if(type != StringUtils::GetCharType(text->GetText()[cursorPos]) && !forward)
       cursorPos -= delta;
 
     // If it was a whitespace character we keep going
     if(type == StringUtils::GetCharType(' '))
       MoveCursorWord(forward);
-
   }
 
   int TextBox::GetCursorPos() const
   {
     return cursorPos;
-
   }
+
   int TextBox::GetSelectionPos() const
   {
     return selectionPos;

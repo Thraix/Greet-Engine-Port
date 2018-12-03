@@ -48,9 +48,9 @@ namespace Greet
         else
         {
           top = GUIUtils::GetSizeFromXML(object, prefix+"Top", top, baseHeight);
-          left = GUIUtils::GetSizeFromXML(object, prefix+"Left", top, baseWidth);
-          bottom = GUIUtils::GetSizeFromXML(object, prefix+"Bottom", top, baseHeight);
-          right = GUIUtils::GetSizeFromXML(object, prefix+"Right", top, baseWidth);
+          left = GUIUtils::GetSizeFromXML(object, prefix+"Left", left, baseWidth);
+          bottom = GUIUtils::GetSizeFromXML(object, prefix+"Bottom", bottom, baseHeight);
+          right = GUIUtils::GetSizeFromXML(object, prefix+"Right", right, baseWidth);
         }
 
       }

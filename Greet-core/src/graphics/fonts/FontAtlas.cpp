@@ -81,4 +81,14 @@ namespace Greet
     //Log::Info(g.width," ",g.kerning, " ", g.advanceX," ",g.advanceY, " ", g.height," ", g.ascending," ",g.descending);
     return ret.first->second;
   }
+
+  uint FontAtlas::GetTextureId() const 
+  {
+    return atlas.GetTexId();
+  }
+
+  uint FontAtlas::GetBaselineOffset() const 
+  {
+    return (face->size->metrics.descender+ face->size->metrics.ascender) / 64.0f;
+  }
 }

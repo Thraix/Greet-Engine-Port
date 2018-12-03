@@ -56,7 +56,8 @@ namespace Greet
       return new Container(object, parent);
     }
     Log::Warning("Could not read XML object ", object.GetName(), ".");
-    return new Component(); // Return plain content to avoid crash.
+    XMLObject o;
+    return new Component(o,nullptr); // Return plain content to avoid crash.
   }
     bool GUIUtils::GetBooleanFromXML(const XMLObject& object, const std::string& key, bool defaultValue)
     {
@@ -76,6 +77,12 @@ namespace Greet
     {
       if(object.HasProperty(key))
         return GetSize(object.GetProperty(key), parentSize);
+      return defaultValue;
+    }
+		std::string GUIUtils::GetStringFromXML(const XMLObject& object, const std::string& key, const std::string& defaultValue)
+    {
+      if(object.HasProperty(key))
+        return object.GetProperty(key);
       return defaultValue;
     }
 

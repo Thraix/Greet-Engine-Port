@@ -3,18 +3,34 @@
   resizeTop="false" resizeLeft="false" resizeBottom="false" resizeRight="true"
   padding="10px" border="1px"
   borderColor="#ff00ff" backgroundColor="#000077">
-  <Label fontSize="18px" font="roboto" color="#ffffff">Frame header</Label>
+  <Label 
+    padding="0px"
+    fontSize="18px" font="roboto" color="#ffffff">Frame header</Label>
   <Divider backgroundColor="#ffffff"/>
   <Component
     borderColor="#00ff00" border="1px"
     minWidth="150px" width="100%" height="50px" backgroundColor="#ff00ff">Press me!</Component>
-  <Button width="100%" height="40px" 
+  <Button width="100%" height="30px" 
     hoverborderColor="#153cd8" borderColor="#153cd8" 
     hoverbackgroundColor="#4265f4" backgroundColor="#4265f4" 
-    color="#44ee77" fontSize="20px" font="roboto"
+    color="#44ee77" fontSize="24px" font="roboto"
     hoverborder="4px"
+    padding="0px"
     border="0px 4px 4px 4px">Button!</Button>
+  <TextBox
+    width="100%" height="30px"
+    backgroundColor="#eeeeee" borderColor="#aaaaaa"
+    border="2px" font="roboto" fontSize="24px" color="#000000"
+    hintColor="#999999" hintText="Username"
+    padding="0px 10px"></TextBox>
+  <TextBox
+    width="100%" height="30px"
+    backgroundColor="#eeeeee" borderColor="#aaaaaa"
+    border="2px" font="roboto" fontSize="24px" color="#000000"
+    hintColor="#999999" hintText="Password"
+    padding="0px 10px" password="true" ></TextBox>
   <Label
+    padding="0"
     fontSize="12px" font="roboto" color="#ffffff">Test label</Label>
   <ProgressBar
     width="100%" height="50px" name="progressBar" 
@@ -26,16 +42,6 @@
     backgroundColor="#aaaaaa" borderColor="#707070"
     border="4px" padding="0"
     minValue="0.25" maxValue="1.25" reverseProgress="true"/>
-  <TextBox
-    width="100%" height="50px"
-    backgroundColor="#eeeeee" borderColor="#aaaaaa"
-    border="2px" font="roboto" fontSize="24px" color="#000000"
-    padding="1px">TestBox</TextBox>
-  <TextBox
-    width="100%" height="50px"
-    backgroundColor="#eeeeee" borderColor="#aaaaaa"
-    border="2px" font="roboto" fontSize="24px" color="#000000"
-    padding="1px" password="true">TestBox</TextBox>
   <Container 
     width="100%"
     height="200px"

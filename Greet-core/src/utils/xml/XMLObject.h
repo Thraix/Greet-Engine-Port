@@ -21,8 +21,8 @@ namespace Greet
 		XMLObject() {}
 		XMLObject(const std::string& string);
 		XMLObject(const std::string& string, int* pos, int* line);
-		XMLObject(const std::string& name, const std::map<std::string, std::string> properties, const std::string& text);
-		XMLObject(const std::string& name, const std::map<std::string, std::string> properties, const std::vector<XMLObject> objects);
+		XMLObject(const std::string& name, const std::map<std::string, std::string>& properties, const std::string& text);
+		XMLObject(const std::string& name, const std::map<std::string, std::string>& properties, const std::vector<XMLObject>& objects);
 
 		bool HasProperty(const std::string& property) const;
 		const std::string& GetProperty(const std::string& property) const;

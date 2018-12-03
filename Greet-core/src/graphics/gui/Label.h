@@ -16,10 +16,8 @@ namespace Greet {
       Vec4 color;
 
     public:
-      Label();
       Label(const XMLObject& object, Component* parent);
       void Render(GUIRenderer* renderer) const override;
-
 
       void SetText(const std::string& text);
       const std::string& GetText() const;

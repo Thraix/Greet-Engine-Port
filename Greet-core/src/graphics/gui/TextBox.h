@@ -8,7 +8,9 @@ namespace Greet
   class TextBox : public Component
   {
     protected:
-      Label text;
+      Label* text;
+      Label* hintText;
+
       int cursorPos;
       int selectionPos;
       float cursorBlinkTimer;
@@ -18,8 +20,10 @@ namespace Greet
       bool password;
       std::string str;
 
+
     public:
       TextBox(const XMLObject& object, Component* parent);
+      virtual ~TextBox();
 
       void Render(GUIRenderer* renderer) const override;
       void Update(float timeElapsed) override;
