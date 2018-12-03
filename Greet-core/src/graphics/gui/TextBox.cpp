@@ -114,6 +114,25 @@ namespace Greet
         }
       }
     }
+    else if(event.GetButton() == GLFW_KEY_DELETE)
+    {
+      if(cursorPos < str.length())
+      {
+        if(ctrlDown)
+        {
+          int lastCursorPos = cursorPos;
+          MoveCursorWord(true);
+          str.erase(lastCursorPos,cursorPos-lastCursorPos);
+          cursorPos = lastCursorPos;
+          SetText(str);
+        }
+        else
+        {
+          str.erase(cursorPos,1);
+          SetText(str);
+        }
+      }
+    }
     else if(event.GetButton() == GLFW_KEY_HOME)
     {
       cursorPos = 0;
