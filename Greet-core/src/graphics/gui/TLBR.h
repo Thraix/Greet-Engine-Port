@@ -25,20 +25,20 @@ namespace Greet
           std::vector<std::string> strings = StringUtils::split_string(object.GetProperty(prefix)," ");
           if(strings.size() == 4)
           {
-            top = GUIUtils::CalcSize(strings.at(0), baseHeight);
-            left = GUIUtils::CalcSize(strings.at(1), baseWidth);
-            bottom = GUIUtils::CalcSize(strings.at(2), baseHeight);
-            right = GUIUtils::CalcSize(strings.at(3), baseWidth);
+            top = GUIUtils::GetSize(strings.at(0), baseHeight);
+            left = GUIUtils::GetSize(strings.at(1), baseWidth);
+            bottom = GUIUtils::GetSize(strings.at(2), baseHeight);
+            right = GUIUtils::GetSize(strings.at(3), baseWidth);
           }
           else if(strings.size() == 2)
           {
-            top = bottom = GUIUtils::CalcSize(strings.at(0), baseHeight);
-            left = right = GUIUtils::CalcSize(strings.at(1), baseWidth);
+            top = bottom = GUIUtils::GetSize(strings.at(0), baseHeight);
+            left = right = GUIUtils::GetSize(strings.at(1), baseWidth);
           }
           else if(strings.size() == 1)
           {
-            top = bottom = GUIUtils::CalcSize(strings.at(0), baseHeight);
-            left = right = GUIUtils::CalcSize(strings.at(0), baseHeight);
+            top = bottom = GUIUtils::GetSize(strings.at(0), baseHeight);
+            left = right = GUIUtils::GetSize(strings.at(0), baseHeight);
           }
           else
           {
@@ -47,22 +47,10 @@ namespace Greet
         }
         else
         {
-          if (object.HasProperty(prefix+"Top"))
-          {
-            top = GUIUtils::CalcSize(object.GetProperty(prefix+"Top"), baseHeight);
-          }
-          if (object.HasProperty(prefix+"Left"))
-          {
-            left  = GUIUtils::CalcSize(object.GetProperty(prefix+"Left"), baseWidth);
-          }
-          if (object.HasProperty(prefix+"Bottom"))
-          {
-            bottom  = GUIUtils::CalcSize(object.GetProperty(prefix+"Bottom"), baseHeight);
-          }
-          if (object.HasProperty(prefix+"Right"))
-          {
-            right = GUIUtils::CalcSize(object.GetProperty(prefix+"Right"), baseWidth);
-          }
+          top = GUIUtils::GetSizeFromXML(object, prefix+"Top", top, baseHeight);
+          left = GUIUtils::GetSizeFromXML(object, prefix+"Left", top, baseWidth);
+          bottom = GUIUtils::GetSizeFromXML(object, prefix+"Bottom", top, baseHeight);
+          right = GUIUtils::GetSizeFromXML(object, prefix+"Right", top, baseWidth);
         }
 
       }

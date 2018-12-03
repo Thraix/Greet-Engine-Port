@@ -10,15 +10,15 @@ namespace Greet {
   Label::Label(const XMLObject& object, Component* parent)
     : Component(object, parent), str{object.GetText()}, color{0,0,0,1}, hasMaxWidth{false}
   {
-    if (object.HasProperty("fontSize"))
-      fontSize = GUIUtils::CalcSize(object.GetProperty("fontSize"), parent->GetHeight());
+    fontSize = GUIUtils::GetSizeFromXML(object, "fontSize", 20, parent->GetHeight());
 
     if (object.HasProperty("font"))
       font = FontManager::Get(object.GetProperty("font"),fontSize);
+    else
+      font = FontManager::Get("",fontSize);
 
     size = Vec2(CalculateWidth(), CalculateHeight());
-    if(object.HasProperty("color"))
-      color = GUIUtils::GetColor(object.GetProperty("color"));
+    color = GUIUtils::GetColorFromXML(object,"color",Vec4(0,0,0,1));
   }
   void Label::Render(GUIRenderer* renderer) const
   {

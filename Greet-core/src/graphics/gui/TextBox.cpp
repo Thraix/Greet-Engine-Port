@@ -18,8 +18,7 @@ namespace Greet
 
     text = Label(object, this);
     text.SetPosition(pos);
-    if(object.HasProperty("password"))
-      password = GUIUtils::GetBoolean(object.GetProperty("password"));
+    password = GUIUtils::GetBooleanFromXML(object, "password", false);
     SetText(object.GetText());
   }
 

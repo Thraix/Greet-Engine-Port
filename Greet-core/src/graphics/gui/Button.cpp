@@ -17,16 +17,9 @@ namespace Greet {
     label = Label(object, this);
     label.SetPosition(pos);
     textColor = Vec4(0.0,0.0,0.0,1.0);
-    fontSize = 20;
     m_isFocusable = true;
-    if (object.HasProperty("fontSize"))
-    {
-      fontSize = GUIUtils::CalcSize(object.GetProperty("fontSize"), GetHeight());
-    }
-    if (object.HasProperty("fontColor"))
-    {
-      textColor = GUIUtils::GetColor(object.GetProperty("fontColor"));
-    }
+    fontSize = GUIUtils::GetSizeFromXML(object, "fontSize", 20, GetHeight());
+    textColor = GUIUtils::GetColorFromXML(object, "fontColor", Vec4(0,0,0,1));
   }
 
   Button::~Button()

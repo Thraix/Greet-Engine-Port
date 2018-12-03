@@ -134,8 +134,8 @@ namespace Greet
     {
       const std::string& w = xmlObject.GetProperty("width");
       if (parent == NULL)
-        return GUIUtils::CalcSize(w, GLayer::GetWidth());
-      return GUIUtils::CalcSize(w, parent->GetWidth() - parent->GetPadding().GetWidth() - parent->GetBorder().GetWidth());
+        return GUIUtils::GetSize(w, GLayer::GetWidth());
+      return GUIUtils::GetSize(w, parent->GetWidth() - parent->GetPadding().GetWidth() - parent->GetBorder().GetWidth());
     }
     return size.w;
   }
@@ -147,8 +147,8 @@ namespace Greet
       const std::string& h = xmlObject.GetProperty("height");
       // If parent is nullptr it is the top component so use the window size
       if (parent == NULL)
-        return GUIUtils::CalcSize(h, GLayer::GetHeight());
-      return GUIUtils::CalcSize(h, parent->GetHeight() - parent->GetPadding().GetHeight() - parent->GetBorder().GetHeight());
+        return GUIUtils::GetSize(h, GLayer::GetHeight());
+      return GUIUtils::GetSize(h, parent->GetHeight() - parent->GetPadding().GetHeight() - parent->GetBorder().GetHeight());
     }
     return size.h;
   }

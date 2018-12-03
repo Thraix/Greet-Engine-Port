@@ -30,8 +30,8 @@ namespace Greet
       //virtual void MousePressed(const MousePressedEvent& event, const Vec2& translatedPos);
       // virtual void MouseReleased(const MouseReleasedEvent& event, const Vec2& translatedPos);
       //  virtual void MouseMoved(const MouseMovedEvent& event, const Vec2& translatedPos);
-      virtual void KeyPressed(const KeyPressedEvent& event);
-      virtual void KeyReleased(const KeyReleasedEvent& event);
+      virtual void KeyPressed(const KeyPressedEvent& event) override;
+      virtual void KeyReleased(const KeyReleasedEvent& event) override;
       virtual void KeyTyped(const KeyTypedEvent& event) override;
 
     protected:

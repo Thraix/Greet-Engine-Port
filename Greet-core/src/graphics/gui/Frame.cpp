@@ -27,35 +27,18 @@ namespace Greet {
     minSize = Vec2(100, 100);
     m_isFocusable = true;
 
-    // This is super ugly, need to find a better way to initialize these...
-    if (object.HasProperty("minWidth"))
-    {
-      minSize.x = GUIUtils::CalcSize(object.GetProperty("minWidth"), Window::GetWidth());
-    }
-    if (object.HasProperty("minHeight"))
-    {
-      minSize.y = GUIUtils::CalcSize(object.GetProperty("minHeight"), Window::GetHeight());
-    }
-    if (object.HasProperty("resizeLeft"))
-    {
-      if (!GUIUtils::GetBoolean(object.GetProperty("resizeLeft")))
+    minSize.x = GUIUtils::GetSizeFromXML(object,"minWidth", 100, Window::GetWidth());
+    minSize.y = GUIUtils::GetSizeFromXML(object,"minHeight", 100, Window::GetHeight());
+
+    // This can still look better
+    if(!GUIUtils::GetBooleanFromXML(object,"resizeLeft", false))
         m_resizableFlags &= ~RESIZING_LEFT;
-    }
-    if (object.HasProperty("resizeRight"))
-    {
-      if (!GUIUtils::GetBoolean(object.GetProperty("resizeRight")))
+    if(!GUIUtils::GetBooleanFromXML(object,"resizeRight", false))
         m_resizableFlags &= ~RESIZING_RIGHT;
-    }
-    if (object.HasProperty("resizeTop"))
-    {
-      if (!GUIUtils::GetBoolean(object.GetProperty("resizeTop")))
+    if(!GUIUtils::GetBooleanFromXML(object,"resizeTop", false))
         m_resizableFlags &= ~RESIZING_TOP;
-    }
-    if (object.HasProperty("resizeBottom"))
-    {
-      if (!GUIUtils::GetBoolean(object.GetProperty("resizeBottom")))
+    if(!GUIUtils::GetBooleanFromXML(object,"resizeBottom", false))
         m_resizableFlags &= ~RESIZING_BOTTOM;
-    }
   }
 
   Frame::~Frame()
@@ -161,7 +144,7 @@ namespace Greet {
       const std::string& w = xmlObject.GetProperty("width");
       if (!GUIUtils::IsStaticSize(w))
       {
-        size.w = GUIUtils::CalcSize(w, width);
+        size.w = GUIUtils::GetSize(w, width);
       }
     }
     if (xmlObject.HasProperty("height"))
@@ -169,7 +152,7 @@ namespace Greet {
       const std::string& h = xmlObject.GetProperty("height");
       if (!GUIUtils::IsStaticSize(h))
       {
-        size.h = GUIUtils::CalcSize(h, height);
+        size.h = GUIUtils::GetSize(h, height);
       }
     }
   }
