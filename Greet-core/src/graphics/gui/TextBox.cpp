@@ -41,17 +41,26 @@ namespace Greet
 
   void TextBox::Render(GUIRenderer* renderer) const
   {
-    Vec2 p = pos + GetTotalPadding() +  Vec2(0, (GetContentSize().h-text->GetFont()->GetBaselineOffset())/2);
-    renderer->PushMatrix(Mat3::Translate(p));
+    renderer->PushViewport(pos+GetTotalPadding(), GetContentSize(), true);
     if(text->GetText().length() == 0)
+    {
+      Vec2 p = pos + GetTotalPadding() +  Vec2(-textOffset, (GetContentSize().h-text->GetFont()->GetBaselineOffset())/2);
+      renderer->PushMatrix(Mat3::Translate(p));
       hintText->Render(renderer);
+    }
     else
+    {
+      Vec2 p = pos + GetTotalPadding() +  Vec2(-textOffset, (GetContentSize().h-hintText->GetFont()->GetBaselineOffset())/2);
+      renderer->PushMatrix(Mat3::Translate(p));
       text->Render(renderer);
+    }
+
+    renderer->PopViewport();
     renderer->PopMatrix();
 
     if(isFocused && cursorBlinkTimer < 0.5)
     {
-      float p = text->GetFont()->GetWidthOfText(text->GetText(),0, cursorPos);
+      float p = text->GetFont()->GetWidthOfText(text->GetText(),0, cursorPos)-textOffset;
       Vec2 curPos = pos + GetTotalPadding() + Vec2(p, (GetContentSize().h - text->GetHeight())/2);
       renderer->SubmitRect(curPos,Vec2(1,text->GetHeight()),text->GetColor(),false);
     }
@@ -70,7 +79,7 @@ namespace Greet
     std::advance(it, cursorPos);
     str.insert(it, (char)event.GetCharCode());
     SetText(str);
-    cursorPos++;
+    MoveCursor(1);
   }  
 
   void TextBox::KeyPressed(const KeyPressedEvent& event)
@@ -103,14 +112,12 @@ namespace Greet
         {
           int lastCursorPos = cursorPos;
           MoveCursorWord(false);
-          str.erase(cursorPos,lastCursorPos-cursorPos);
-          SetText(str);
+          RemoveText(cursorPos, lastCursorPos - cursorPos);
         }
         else
         {
-          str.erase(cursorPos-1,1);
-          SetText(str);
-          cursorPos--;
+          RemoveText(cursorPos-1,1);
+          MoveCursor(-1);
         }
       }
     }
@@ -121,35 +128,36 @@ namespace Greet
         if(ctrlDown)
         {
           int lastCursorPos = cursorPos;
+
+          // Save the last offset since we dont want MoveCursor to update it
           MoveCursorWord(true);
-          str.erase(lastCursorPos,cursorPos-lastCursorPos);
+
+          RemoveText(lastCursorPos,cursorPos - lastCursorPos);
           cursorPos = lastCursorPos;
-          SetText(str);
         }
         else
         {
-          str.erase(cursorPos,1);
-          SetText(str);
+          RemoveText(cursorPos,1);
         }
       }
     }
     else if(event.GetButton() == GLFW_KEY_HOME)
     {
-      cursorPos = 0;
+      MoveCursor(-cursorPos);
     }
     else if(event.GetButton() == GLFW_KEY_END)
     {
-      cursorPos = text->GetText().length();
+      MoveCursor(text->GetText().length()-cursorPos);
     }
     else if(event.GetButton() == GLFW_KEY_PAGE_UP)
     {
       // TODO: When multiline is implemented move to top of page
-      cursorPos = 0;
+      MoveCursor(-cursorPos);
     }
     else if(event.GetButton() == GLFW_KEY_PAGE_DOWN)
     {
       // TODO: When multiline is implemented move to bottom of page
-      cursorPos = text->GetText().length();
+      MoveCursor(text->GetText().length()-cursorPos);
     }
   }
 
@@ -175,10 +183,41 @@ namespace Greet
     str = text;
   }
 
+  void TextBox::RemoveText(uint start, uint n = -1)
+  {
+    if(n == -1)
+      n = str.length()-start;
+    str.erase(start,n);
+    SetText(str);
+  }
+
+  void TextBox::RecenterText()
+  {
+    float cursorTextWidth = text->GetFont()->GetWidthOfText(text->GetText(),0,cursorPos);
+    float textWidth = text->GetFont()->GetWidthOfText(text->GetText());
+    if(cursorTextWidth - textOffset > GetContentSize().w)
+    {
+      textOffset = cursorTextWidth - GetContentSize().w;
+    }
+    else if(cursorTextWidth - textOffset < 0)
+    {
+      textOffset = cursorTextWidth;
+    }
+    else if(textWidth >= GetContentSize().w && textWidth - textOffset - GetContentSize().w < 0)
+    {
+      textOffset = textWidth - GetContentSize().w;
+    }
+    else if(textWidth <= GetContentSize().w)
+    {
+      textOffset = 0;
+    }
+  }
+
   void TextBox::MoveCursor(int delta)
   {
     cursorPos += delta;
     Math::Clamp<int>(&cursorPos, 0, text->GetText().length());
+    RecenterText();
   }
 
   void TextBox::MoveCursorWord(bool forward)
@@ -200,6 +239,7 @@ namespace Greet
     // If it was a whitespace character we keep going
     if(type == StringUtils::GetCharType(' '))
       MoveCursorWord(forward);
+    RecenterText();
   }
 
   int TextBox::GetCursorPos() const

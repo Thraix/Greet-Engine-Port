@@ -36,7 +36,7 @@ namespace Greet{
     float width = 0;
     if (startPos > text.size() || endPos < startPos || endPos > text.size())
     {
-      Log::Error("Invalid start and endpos.");
+      Log::Error("Invalid start and endpos (start=", startPos, ", end=", endPos, ", strlen=", text.size(), ")");
       return 0;
     }
 

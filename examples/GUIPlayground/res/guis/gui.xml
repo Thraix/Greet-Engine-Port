@@ -18,13 +18,13 @@
     padding="0px"
     border="0px 4px 4px 4px">Button!</Button>
   <TextBox
-    width="100%" height="30px"
+    width="100%" height="40px"
     backgroundColor="#eeeeee" borderColor="#aaaaaa"
     border="2px" font="roboto" fontSize="24px" color="#000000"
     hintColor="#999999" hintText="Username"
     padding="0px 10px"></TextBox>
   <TextBox
-    width="100%" height="30px"
+    width="100%" height="40px"
     backgroundColor="#eeeeee" borderColor="#aaaaaa"
     border="2px" font="roboto" fontSize="24px" color="#000000"
     hintColor="#999999" hintText="Password"

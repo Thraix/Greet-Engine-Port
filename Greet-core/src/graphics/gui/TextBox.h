@@ -13,6 +13,7 @@ namespace Greet
 
       int cursorPos;
       int selectionPos;
+      float textOffset;
       float cursorBlinkTimer;
       bool ctrlDown;
       bool shiftDown;
@@ -39,6 +40,8 @@ namespace Greet
       virtual void KeyTyped(const KeyTypedEvent& event) override;
 
     protected:
+      void RemoveText(uint start, uint n);
+      void RecenterText();
       void MoveCursor(int delta);
       void MoveCursorWord(bool forward);
       int GetCursorPos() const;
