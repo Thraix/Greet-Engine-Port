@@ -12,6 +12,8 @@ namespace Greet
       int cursorPos;
       int selectionPos;
       float cursorBlinkTimer;
+      bool ctrlDown;
+      bool shiftDown;
 
     public:
       TextBox(const XMLObject& object, Component* parent);
@@ -26,11 +28,12 @@ namespace Greet
       // virtual void MouseReleased(const MouseReleasedEvent& event, const Vec2& translatedPos);
       //  virtual void MouseMoved(const MouseMovedEvent& event, const Vec2& translatedPos);
       virtual void KeyPressed(const KeyPressedEvent& event);
-      //virtual void KeyReleased(const KeyReleasedEvent& event);
+      virtual void KeyReleased(const KeyReleasedEvent& event);
       virtual void KeyTyped(const KeyTypedEvent& event) override;
 
     protected:
       void MoveCursor(int delta);
+      void MoveCursorWord(bool forward);
       int GetCursorPos() const;
       int GetSelectionPos() const;
   };

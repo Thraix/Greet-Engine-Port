@@ -10,7 +10,7 @@ private:
 	//Container* container;
 public:
   Core()
-    : App("Gui Playground", 960, 540)
+    : App("GUI Testing", 960, 540)
   {
 		SetFrameCap(60);
   }
@@ -24,7 +24,10 @@ public:
 	void Init() override
 	{
 		FontManager::Add(new FontContainer("/usr/share/fonts/truetype/ubuntu/Ubuntu-C.ttf","roboto"));
+
+    // TODO: This should be done by the engine
 		GLayer::CreateInstance(new GUIRenderer(), Shader(Shader::FromFile("res/shaders/gui.shader")));
+
 		GLayer::AddFrame(GUIUtils::GetFrame(XML::FromFile("res/guis/gui.xml")), "testing");
     Frame* frame = GLayer::GetFrame("testing");
     ((ProgressBar*)frame->GetComponentByName("progressBar"))
@@ -40,11 +43,12 @@ public:
 	void Tick() override
 	{
 		std::string s = StringUtils::to_string(GetFPS()) + " fps | " + StringUtils::to_string(GetUPS()) + " ups";
-		Window::SetTitle("GreetTemplateMain | " + s);
+		Window::SetTitle("GUI Testing | " + s);
 	}
 
 	void Update(float elapsedTime) override
 	{
+    // TODO: This should be done by the engine
 		GLayer::Update(elapsedTime);
     progressBarValue += elapsedTime * 0.5;
     if(progressBarValue >= 1.5)
@@ -53,6 +57,7 @@ public:
 
 	void Render() override
 	{
+    // TODO: This should be done by the engine
 		GLayer::Render();
 	}
 
@@ -99,5 +104,4 @@ int main()
 		Core game;
 		game.Start();
 	}
-	Log::Info("Game closed, hope you had fun :)");
 }

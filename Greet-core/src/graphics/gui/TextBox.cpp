@@ -1,4 +1,5 @@
 #include "TextBox.h"
+#include <utils/StringUtils.h>
 
 namespace Greet
 {
@@ -54,7 +55,11 @@ namespace Greet
   {
     // Easier to type if the blinker is turned on while typing
     cursorBlinkTimer = 0;
-    if(event.GetButton() == GLFW_KEY_BACKSPACE)
+    if(event.GetButton() == GLFW_KEY_LEFT_CONTROL)
+    {
+      ctrlDown = true;
+    }
+    else if(event.GetButton() == GLFW_KEY_LEFT_CONTROL)
     {
       if(cursorPos > 0)
       {
@@ -66,15 +71,37 @@ namespace Greet
     }
     else if(event.GetButton() == GLFW_KEY_LEFT)
     {
-      cursorPos--;
-      if(cursorPos < 0)
-        cursorPos = 0;
+      if(ctrlDown)
+        MoveCursorWord(false);
+      else
+        MoveCursor(-1);
     }
     else if(event.GetButton() == GLFW_KEY_RIGHT)
     {
-      cursorPos++;
-      if(cursorPos > text.GetText().length())
-        cursorPos = text.GetText().length();
+      if(ctrlDown)
+        MoveCursorWord(true);
+      else
+        MoveCursor(1);
+    }
+    else if(event.GetButton() == GLFW_KEY_BACKSPACE)
+    {
+      if(cursorPos > 0)
+      {
+        std::string str = text.GetText();
+        if(ctrlDown)
+        {
+          int lastCursorPos = cursorPos;
+          MoveCursorWord(false);
+          str.erase(cursorPos,lastCursorPos-cursorPos);
+          text.SetText(str);
+        }
+        else
+        {
+          str.erase(cursorPos-1,1);
+          text.SetText(str);
+          cursorPos--;
+        }
+      }
     }
     else if(event.GetButton() == GLFW_KEY_HOME)
     {
@@ -83,6 +110,13 @@ namespace Greet
     else if(event.GetButton() == GLFW_KEY_END)
     {
       cursorPos = text.GetText().length();
+    }
+  }
+  void TextBox::KeyReleased(const KeyReleasedEvent& event)
+  {
+    if(event.GetButton() == GLFW_KEY_LEFT_CONTROL)
+    {
+      ctrlDown = false;
     }
   }
 
@@ -100,6 +134,24 @@ namespace Greet
   {
     cursorPos += delta;
     Math::Clamp<int>(&cursorPos, 0, text.GetText().length());
+  }
+
+  void TextBox::MoveCursorWord(bool forward)
+  {
+    int delta = forward ? 1 : -1;
+    // Offset the cursor to make it easier to use with delta
+
+    if(!forward)
+      cursorPos+=delta;
+    StringUtils::CharType type = StringUtils::GetCharType(text.GetText()[cursorPos]);
+    while(type == StringUtils::GetCharType(text.GetText()[cursorPos]) && cursorPos >= 0 && cursorPos < text.GetText().length())
+    {
+      cursorPos += delta;
+    }
+    Math::Clamp<int>(&cursorPos, 0, text.GetText().length());
+    if(type != StringUtils::GetCharType(text.GetText()[cursorPos]) && !forward)
+      cursorPos -= delta;
+
   }
 
   int TextBox::GetCursorPos() const

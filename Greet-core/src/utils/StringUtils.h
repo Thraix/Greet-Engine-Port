@@ -6,6 +6,10 @@
 #include <regex>
 
 namespace Greet { namespace StringUtils{
+  enum CharType
+  {
+    LETTER, NUMBER, SPACE, SYMBOL
+  };
 
 	template <typename T>
 	inline std::string to_string(T t)
@@ -108,6 +112,18 @@ namespace Greet { namespace StringUtils{
 		}
 		return string.substr(start, end - start);
 	}
+
+  inline CharType GetCharType(char c)
+  {
+    if(IsLetter(c))
+      return CharType::LETTER;
+    else if(c >= '0' && c <= '9')
+      return CharType::NUMBER;
+    else if(c == ' ' || c == '\t')
+      return CharType::SPACE;
+    else
+      return CharType::SYMBOL;
+  }
 
 
 }}

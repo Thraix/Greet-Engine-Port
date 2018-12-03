@@ -44,7 +44,7 @@ namespace Greet{
     {
       const Glyph& glyph = m_atlas->GetGlyph(text[i]);
       // If it is the last char do not include the advancment
-      if(i == endPos - 1)
+      if(i == endPos - 1 && text[i] != ' ')
         width += glyph.width;
       else
         width += glyph.advanceX - glyph.kerning;
