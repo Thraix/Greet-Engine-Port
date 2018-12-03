@@ -19,6 +19,11 @@ namespace Greet { namespace StringUtils{
 		return ss.str().c_str();
 	}
 
+  inline std::string Passwordify(const std::string& string)
+  {
+    return std::string(string.length(),'*');
+  }
+
 	inline bool is_number(const std::string& str)
 	{
 		return std::regex_match(str, std::regex("[-+]?[0-9]*\.?[0-9]*"));

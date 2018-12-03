@@ -1,15 +1,16 @@
 #include "TextBox.h"
+
 #include <utils/StringUtils.h>
 
 namespace Greet
 {
   TextBox::TextBox(const XMLObject& object, Component* parent)
-    : Component(object,parent), cursorPos(0), selectionPos(0)
+    : Component(object,parent), cursorPos(0), selectionPos(0), cursorBlinkTimer(0)
+
   {
     m_isFocusable = true;
     XMLObject labelObject;
     labelObject.SetName("Label");
-    labelObject.SetText(object.GetText());
 
     labelObject.AddProperty("font", object.GetProperty("font"));
     labelObject.AddProperty("color", object.GetProperty("color"));
@@ -17,7 +18,9 @@ namespace Greet
 
     text = Label(object, this);
     text.SetPosition(pos);
-
+    if(object.HasProperty("password"))
+      password = GUIUtils::GetBoolean(object.GetProperty("password"));
+    SetText(object.GetText());
   }
 
   void TextBox::Render(GUIRenderer* renderer) const
@@ -43,11 +46,10 @@ namespace Greet
 
   void TextBox::KeyTyped(const KeyTypedEvent& event)
   {
-    std::string str = text.GetText();
     auto it = str.begin();
     std::advance(it, cursorPos);
     str.insert(it, (char)event.GetCharCode());
-    text.SetText(str);
+    SetText(str);
     cursorPos++;
   }  
 
@@ -58,16 +60,6 @@ namespace Greet
     if(event.GetButton() == GLFW_KEY_LEFT_CONTROL)
     {
       ctrlDown = true;
-    }
-    else if(event.GetButton() == GLFW_KEY_LEFT_CONTROL)
-    {
-      if(cursorPos > 0)
-      {
-        std::string str = text.GetText();
-        str.erase(cursorPos-1,1);
-        text.SetText(str);
-        cursorPos--;
-      }
     }
     else if(event.GetButton() == GLFW_KEY_LEFT)
     {
@@ -87,18 +79,17 @@ namespace Greet
     {
       if(cursorPos > 0)
       {
-        std::string str = text.GetText();
         if(ctrlDown)
         {
           int lastCursorPos = cursorPos;
           MoveCursorWord(false);
           str.erase(cursorPos,lastCursorPos-cursorPos);
-          text.SetText(str);
+          SetText(str);
         }
         else
         {
           str.erase(cursorPos-1,1);
-          text.SetText(str);
+          SetText(str);
           cursorPos--;
         }
       }
@@ -111,7 +102,18 @@ namespace Greet
     {
       cursorPos = text.GetText().length();
     }
+    else if(event.GetButton() == GLFW_KEY_PAGE_UP)
+    {
+      // TODO: When multiline is implemented move to top of page
+      cursorPos = 0;
+    }
+    else if(event.GetButton() == GLFW_KEY_PAGE_DOWN)
+    {
+      // TODO: When multiline is implemented move to bottom of page
+      cursorPos = text.GetText().length();
+    }
   }
+
   void TextBox::KeyReleased(const KeyReleasedEvent& event)
   {
     if(event.GetButton() == GLFW_KEY_LEFT_CONTROL)
@@ -127,7 +129,11 @@ namespace Greet
 
   void TextBox::SetText(const std::string& text)
   {
-    this->text.SetText(text);
+    if(password)
+      this->text.SetText(StringUtils::Passwordify(text));
+    else
+      this->text.SetText(text);
+    str = text;
   }
 
   void TextBox::MoveCursor(int delta)
@@ -151,6 +157,10 @@ namespace Greet
     Math::Clamp<int>(&cursorPos, 0, text.GetText().length());
     if(type != StringUtils::GetCharType(text.GetText()[cursorPos]) && !forward)
       cursorPos -= delta;
+
+    // If it was a whitespace character we keep going
+    if(type == StringUtils::GetCharType(' '))
+      MoveCursorWord(forward);
 
   }
 

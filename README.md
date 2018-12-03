@@ -20,13 +20,6 @@ In case the operating system doesn't have this package (because of too new or ol
   sudo sh freetypeInstall.sh
 ```
 
-### Install FreeType-gl
-This library allows the engine to load fonts into OpenGL using VAOs.
-```
-  cd installation
-  sudo sh freetypeglInstall.sh
-```
-
 ### Install FreeImage
 This library allows the engine to load images to easier be able to render them.
 ```

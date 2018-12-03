@@ -15,6 +15,9 @@ namespace Greet
       bool ctrlDown;
       bool shiftDown;
 
+      bool password;
+      std::string str;
+
     public:
       TextBox(const XMLObject& object, Component* parent);
 

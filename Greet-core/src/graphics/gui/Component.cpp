@@ -13,7 +13,7 @@ namespace Greet
   }
 
   Component::Component(const XMLObject& object, Component* parent)
-    : xmlObject(object.GetStrippedXMLObject()), parent(parent)
+    : xmlObject(object.GetStrippedXMLObject()), parent(parent), m_isFocusable(false),isFocused(false)
   {
     size = Vec2(CalculateWidth(), CalculateHeight());
     if(xmlObject.HasProperty("name"))
