@@ -32,8 +32,8 @@ namespace Greet
       const std::string& GetText() const;
       void SetText(const std::string& text);
 
-      //virtual void MousePressed(const MousePressedEvent& event, const Vec2& translatedPos);
-      // virtual void MouseReleased(const MouseReleasedEvent& event, const Vec2& translatedPos);
+      virtual void MousePressed(const MousePressedEvent& event, const Vec2& translatedPos) override;
+      //virtual void MouseReleased(const MouseReleasedEvent& event, const Vec2& translatedPos);
       //  virtual void MouseMoved(const MouseMovedEvent& event, const Vec2& translatedPos);
       virtual void KeyPressed(const KeyPressedEvent& event) override;
       virtual void KeyReleased(const KeyReleasedEvent& event) override;

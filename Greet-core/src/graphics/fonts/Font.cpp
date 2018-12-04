@@ -57,23 +57,23 @@ namespace Greet{
     return GetWidthOfText(text,0,text.size(),scale);
   }
 
-  float* Font::GetPartialWidths(const std::string& text, float scale)
+  std::vector<float> Font::GetPartialWidths(const std::string& text, float scale) const
   {
     float width = 0;
 
-    float* widths = new float[text.size()+1];
+    std::vector<float> widths;
 
     for (uint i = 0;i < text.size();i++)
     {
       const Glyph& glyph = m_atlas->GetGlyph(text[i]);
-      widths[i] = width*scale;
+      widths.push_back(width*scale);
       // If it is the last char do not include the advancment
-      if(i == text.size()- 1)
+      if(i == text.size()- 1 && text[i] != ' ')
         width += glyph.width;
       else
-        width += glyph.advanceX;
+        width += glyph.advanceX - glyph.kerning;
     }
-    widths[text.size()] = width;
+    widths.push_back(text.size());
     return widths;
   }
 }

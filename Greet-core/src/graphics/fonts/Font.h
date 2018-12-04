@@ -29,7 +29,7 @@ namespace Greet{
     inline float GetBaselineOffset() const { return m_atlas->GetBaselineOffset();}
 		float GetWidthOfText(const std::string& text, uint startPos, uint endPos, float scale=1) const;
 		float GetWidthOfText(const std::string& text, float scale=1) const;
-		float* GetPartialWidths(const std::string& text, float scale=1);
+    std::vector<float> GetPartialWidths(const std::string& text, float scale=1) const;
 
 		friend bool operator<(const Font& f1, const Font& f2)
 		{

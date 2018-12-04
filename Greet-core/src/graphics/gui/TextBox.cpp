@@ -5,7 +5,7 @@
 namespace Greet
 {
   TextBox::TextBox(const XMLObject& object, Component* parent)
-    : Component(object,parent), cursorPos(0), selectionPos(0), cursorBlinkTimer(0)
+    : Component(object,parent), cursorPos(0), selectionPos(0), cursorBlinkTimer(0), textOffset{0}
 
   {
     m_isFocusable = true;
@@ -71,6 +71,29 @@ namespace Greet
     cursorBlinkTimer += timeElapsed;
     if(cursorBlinkTimer >= 1)
       cursorBlinkTimer -= 1;
+  }
+
+  void TextBox::MousePressed(const MousePressedEvent& event, const Vec2& translatedPos)
+  {
+    if(event.GetButton() == GLFW_MOUSE_BUTTON_1)
+    {
+      // TODO: In the future we probably want to do some smart, average character length
+      // to determain around where the cursor should be.
+      std::vector<float> widths{text->GetFont()->GetPartialWidths(str)};
+      auto it{widths.begin()};
+      float w = -textOffset + GetTotalPadding().w;
+      uint index = 0;
+      while(it != widths.end() && w+*it <= translatedPos.x)
+      {
+        ++it; 
+        index++;
+      }
+      // The cursor should be at the cursor behind
+      // Maybe change to the nearest cursor?
+      index--;
+      MoveCursor(index - cursorPos);
+      cursorBlinkTimer = 0;
+    }
   }
 
   void TextBox::KeyTyped(const KeyTypedEvent& event)
