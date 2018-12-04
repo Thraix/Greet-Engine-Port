@@ -53,6 +53,7 @@ namespace Greet
 		void SubmitString(const std::string& text, const Vec2& position, Font* font, const Vec4& color, bool isHsv = true);
 		void SubmitTriangle(const Vec2& pos1, const Vec2& pos2, const Vec2& pos3, const Vec4& color, bool isHsv = true);
 		void SubmitRect(const Vec2& pos, const Vec2& size, const Vec4& color, bool isHsv = true);
+		void SubmitRoundedRect(const Vec2& pos, const Vec2& size, const Vec4& color, float radius, uint precision, bool isHsv = true);
 		void SubmitRect(const Vec2& pos, const Vec2& size, const Vec4& color1, const Vec4& color2, const Vec4& color3, const Vec4& color4, bool isHsv = true);
 
 		void PushViewport(const Vec2& pos, const Vec2& size, bool overwrite=false);
@@ -62,6 +63,8 @@ namespace Greet
 		bool NeedFlush(uint indices, uint vertices);
 		Vec4 GetViewport(const Vec2& pos1, const Vec2& pos2) const;
 		void AppendTriangle(const Vec2& pos1, const Vec2& pos2, const Vec2& pos3, const Vec4& color, bool isHsv);
+  void AppendRoundedQuad(const Vec2& position, const Vec2& size, const Vec4& color, bool hsb, float radius, uint precision);
+  void AppendQuaterCircle(const Vec2& center, const Vec4& color, bool isHsv, float radius, uint precision, bool top, bool left);
 		void AppendQuad(const Vec2& position, const Vec2& size, const Vec2& texCoord1, const Vec2& texCoord2, float texID, const Vec4& color1, const Vec4& color2, const Vec4& color3, const Vec4& color4, bool isHsv);
 		void AppendQuad(const Vec2& position, const Vec2& size, const Vec2& texCoord1, const Vec2& texCoord2, float texID, const Vec4& color, bool isHsv);
 		void AppendVertexBuffer(const Vec2& position, const Vec2& texCoord, float texID, const Vec4& color, const Vec4& viewport, bool isHsv);

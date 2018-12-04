@@ -28,11 +28,12 @@ namespace Greet
 
     // Border around Component 
     if (xmlObject.HasProperty("borderColor"))
-      renderer->SubmitRect(pos + Vec2(0,0), size, currentStyle->borderColor, false);
+      //renderer->SubmitRect(pos + Vec2(0,0), size, currentStyle->borderColor, false);
+     renderer->SubmitRoundedRect(pos+Vec2(0,0),size, currentStyle->borderColor, 10, 3, false);
 
     // Component background
     if (xmlObject.HasProperty("backgroundColor"))
-      renderer->SubmitRect(pos + currentStyle->border.LeftTop(), size-GetBorder().LeftTop()-GetBorder().RightBottom(), currentStyle->backgroundColor, false);
+      renderer->SubmitRoundedRect(pos + currentStyle->border.LeftTop(), size-GetBorder().LeftTop()-GetBorder().RightBottom(), currentStyle->backgroundColor, 10,3,false);
   }
 
   // Render component

@@ -28,9 +28,9 @@ namespace Greet
     Vec2 progressPos = pos + GetBorder().LeftTop() + GetPadding().LeftTop(); 
 
     if(reverse)
-      renderer->SubmitRect(progressPos + (GetContentSize() - localSize), localSize, Vec4(0,1,0,1), false);
+      renderer->SubmitRoundedRect(progressPos + (GetContentSize() - localSize), localSize, Vec4(0,1,0,1), 10,3,false);
     else
-      renderer->SubmitRect(progressPos,  localSize, Vec4(0,1,0,1), false);
+      renderer->SubmitRoundedRect(progressPos,  localSize, Vec4(0,1,0,1), 10,3,false);
   }
 
   void ProgressBar::Update(float timeElapsed)
