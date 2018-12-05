@@ -33,7 +33,7 @@ namespace Greet
 
     // Component background
     if (xmlObject.HasProperty("backgroundColor"))
-      renderer->SubmitRoundedRect(pos + currentStyle->border.LeftTop(), size-GetBorder().LeftTop()-GetBorder().RightBottom(), currentStyle->backgroundColor, 10,3,false);
+      renderer->SubmitRoundedRect(pos + currentStyle->border.LeftTop(), size-GetBorder().LeftTop()-GetBorder().RightBottom(), currentStyle->backgroundColor, 8,3,false);
   }
 
   // Render component

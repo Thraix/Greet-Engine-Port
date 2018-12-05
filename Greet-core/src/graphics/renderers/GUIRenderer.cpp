@@ -261,10 +261,22 @@ namespace Greet
 
   void GUIRenderer::AppendRoundedQuad(const Vec2& position, const Vec2& size, const Vec4& color, bool isHsv, float radius, uint precision)
   {
+    if(precision == 0)
+    {
+      AppendQuad(position, size, Vec2(),Vec2(),0, color, isHsv);
+    }
+    PushViewport(position,size/2);
     AppendQuaterCircle(position+radius, color,isHsv,radius, precision,true,true);
+    PopViewport();
+    PushViewport(position+Vec2(size.x/2,0),size/2);
     AppendQuaterCircle(position+Vec2(size.x-radius,radius), color,isHsv,radius, precision,false,true);
+    PopViewport();
+    PushViewport(position+Vec2(size.x/2,size.y/2),size/2);
     AppendQuaterCircle(position+size-radius, color, isHsv, radius,precision,false,false);
+    PopViewport();
+    PushViewport(position+Vec2(0,size.y/2),size/2);
     AppendQuaterCircle(position+Vec2(radius,size.y-radius), color,isHsv,radius, precision,true,false);
+    PopViewport();
     AppendQuad(position+Vec2(radius,0),Vec2(size.x-radius*2,size.y), Vec2(0,0), Vec2(0,0),0,color,isHsv);
     AppendQuad(position+Vec2(0,radius),Vec2(size.x,size.y-radius*2), Vec2(0,0), Vec2(0,0),0,color,isHsv);
   }
