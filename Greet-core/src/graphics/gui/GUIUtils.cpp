@@ -59,80 +59,88 @@ namespace Greet
     XMLObject o;
     return new Component(o,nullptr); // Return plain content to avoid crash.
   }
-    bool GUIUtils::GetBooleanFromXML(const XMLObject& object, const std::string& key, bool defaultValue)
+  bool GUIUtils::GetBooleanFromXML(const XMLObject& object, const std::string& key, bool defaultValue)
+  {
+    if(object.HasProperty(key))
+      return GetBoolean(object.GetProperty(key));
+    return defaultValue;
+  }
+
+  Vec4 GUIUtils::GetColorFromXML(const XMLObject& object, const std::string& key, const Vec4& defaultValue)
+  {
+    if(object.HasProperty(key))
+      return GetColor(object.GetProperty(key));
+    return defaultValue;
+  }
+
+  float GUIUtils::GetSizeFromXML(const XMLObject& object, const std::string& key, float defaultValue, float parentSize)
+  {
+    if(object.HasProperty(key))
+      return GetSize(object.GetProperty(key), parentSize);
+    return defaultValue;
+  }
+  std::string GUIUtils::GetStringFromXML(const XMLObject& object, const std::string& key, const std::string& defaultValue)
+  {
+    if(object.HasProperty(key))
+      return object.GetProperty(key);
+    return defaultValue;
+  }
+  int GUIUtils::GetIntFromXML(const XMLObject& object, const std::string& key, int defaultValue)
+  {
+    if(object.HasProperty(key))
+      return atoi(object.GetProperty(key).c_str());
+    return defaultValue;
+  }
+
+
+
+  bool GUIUtils::GetBoolean(const std::string& str)
+  {
+    if (str == "true")
+      return true;
+    return false;
+  }
+
+
+  Vec4 GUIUtils::GetColor(const std::string& str)
+  {
+    if (str[0] == '#')
     {
-      if(object.HasProperty(key))
-        return GetBoolean(object.GetProperty(key));
-      return defaultValue;
+      std::string color = str.substr(1);
+      if (color.length() != 6 && color.length() != 8)
+      {
+        Log::Error("Invalid length for color: ", str);
+        return Vec4(1, 0, 1, 1); // Invalid color pink since its very visible
+      }
+      if (color.length() == 6)
+        color = "FF" + color; // Add alpha to color
+      uint colori = LogUtils::HexToDec(color);
+      return ColorUtils::ColorHexToVec4(colori);
     }
+    Log::Error("Invalid starting character for  color: ", str);
+    return Vec4(1, 0, 1, 1); // Invalid color pink since its very visible
+  }
 
-		Vec4 GUIUtils::GetColorFromXML(const XMLObject& object, const std::string& key, const Vec4& defaultValue)
+  bool GUIUtils::IsPercentageSize(const std::string& size)
+  {
+    return StringUtils::ends_with(size, "%");
+  }
+
+  bool GUIUtils::IsStaticSize(const std::string& size)
+  {
+    return !StringUtils::ends_with(size, "%") || StringUtils::ends_with(size, "s%");
+  }
+
+  float GUIUtils::GetSize(const std::string& size, float parentSize)
+  {
+    float sizeF = atof(size.c_str());
+    if (StringUtils::ends_with(size, "%"))
     {
-      if(object.HasProperty(key))
-        return GetColor(object.GetProperty(key));
-      return defaultValue;
+      return sizeF * parentSize * 0.01f; // Convert 100 -> 1
     }
-
-		float GUIUtils::GetSizeFromXML(const XMLObject& object, const std::string& key, float defaultValue, float parentSize)
+    else // if (StringUtils::ends_with(size, "px")) // if there is no ending it counts as pixels.
     {
-      if(object.HasProperty(key))
-        return GetSize(object.GetProperty(key), parentSize);
-      return defaultValue;
+      return sizeF;
     }
-		std::string GUIUtils::GetStringFromXML(const XMLObject& object, const std::string& key, const std::string& defaultValue)
-    {
-      if(object.HasProperty(key))
-        return object.GetProperty(key);
-      return defaultValue;
-    }
-
-		bool GUIUtils::GetBoolean(const std::string& str)
-		{
-			if (str == "true")
-				return true;
-			return false;
-		}
-
-
-		Vec4 GUIUtils::GetColor(const std::string& str)
-		{
-			if (str[0] == '#')
-			{
-				std::string color = str.substr(1);
-				if (color.length() != 6 && color.length() != 8)
-				{
-					Log::Error("Invalid length for color: ", str);
-					return Vec4(1, 0, 1, 1); // Invalid color pink since its very visible
-				}
-				if (color.length() == 6)
-					color = "FF" + color; // Add alpha to color
-				uint colori = LogUtils::HexToDec(color);
-				return ColorUtils::ColorHexToVec4(colori);
-			}
-			Log::Error("Invalid starting character for  color: ", str);
-			return Vec4(1, 0, 1, 1); // Invalid color pink since its very visible
-		}
-
-		bool GUIUtils::IsPercentageSize(const std::string& size)
-		{
-			return StringUtils::ends_with(size, "%");
-		}
-
-		bool GUIUtils::IsStaticSize(const std::string& size)
-		{
-			return !StringUtils::ends_with(size, "%") || StringUtils::ends_with(size, "s%");
-		}
-
-		float GUIUtils::GetSize(const std::string& size, float parentSize)
-		{
-			float sizeF = atof(size.c_str());
-			if (StringUtils::ends_with(size, "%"))
-			{
-				return sizeF * parentSize * 0.01f; // Convert 100 -> 1
-			}
-			else // if (StringUtils::ends_with(size, "px")) // if there is no ending it counts as pixels.
-			{
-				return sizeF;
-			}
-		}
+  }
 }

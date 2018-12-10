@@ -22,6 +22,11 @@ namespace Greet
     margin.Load(prefix+"margin", component.GetXMLObject(), w, h);
     padding.Load(prefix+"padding", component.GetXMLObject(), w, h);
     border.Load(prefix+"border", component.GetXMLObject(), w, h);
+
+    radius = GUIUtils::GetSizeFromXML(component.GetXMLObject(), prefix+"borderRadius",0,w);
+    borderRadius = GUIUtils::GetSizeFromXML(component.GetXMLObject(), prefix+"borderRadius",radius,w);
+    roundedPrecision = GUIUtils::GetIntFromXML(component.GetXMLObject(), prefix+"roundedPrecision", 3);
+
     backgroundColor = GUIUtils::GetColorFromXML(component.GetXMLObject(), prefix+"backgroundColor",Vec4(0,0,0,1));
     borderColor = GUIUtils::GetColorFromXML(component.GetXMLObject(), prefix+"borderColor",Vec4(0,0,0,1));
   }

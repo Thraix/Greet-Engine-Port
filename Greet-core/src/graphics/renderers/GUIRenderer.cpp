@@ -261,10 +261,13 @@ namespace Greet
 
   void GUIRenderer::AppendRoundedQuad(const Vec2& position, const Vec2& size, const Vec4& color, bool isHsv, float radius, uint precision)
   {
-    if(precision == 0)
+    // If precision is 0 or radius is too little, just draw a normal quad
+    if(precision == 0 || radius <= 0)
     {
       AppendQuad(position, size, Vec2(),Vec2(),0, color, isHsv);
+      return;
     }
+
     PushViewport(position,size/2);
     AppendQuaterCircle(position+radius, color,isHsv,radius, precision,true,true);
     PopViewport();
