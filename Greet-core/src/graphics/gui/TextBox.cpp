@@ -136,6 +136,7 @@ namespace Greet
           int lastCursorPos = cursorPos;
           MoveCursorWord(false);
           RemoveText(cursorPos, lastCursorPos - cursorPos);
+          RecenterText();
         }
         else
         {
@@ -157,6 +158,7 @@ namespace Greet
 
           RemoveText(lastCursorPos,cursorPos - lastCursorPos);
           cursorPos = lastCursorPos;
+          RecenterText();
         }
         else
         {
