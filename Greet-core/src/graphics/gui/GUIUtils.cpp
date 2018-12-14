@@ -8,6 +8,7 @@
 #include <graphics/gui/Container.h>
 #include <graphics/gui/Divider.h>
 #include <graphics/gui/TextBox.h>
+#include <graphics/gui/Slider.h>
 
 namespace Greet
 {
@@ -50,6 +51,10 @@ namespace Greet
     else if (object.GetName() == "TextBox")
     {
       return new TextBox(object, parent);
+    }
+    else if(object.GetName() == "Slider")
+    {
+      return new Slider(object, parent);
     }
     else if(object.GetName() == "Container")
     {

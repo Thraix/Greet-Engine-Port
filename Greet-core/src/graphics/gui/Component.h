@@ -50,6 +50,7 @@ namespace Greet
       virtual Component* OnMouseMoved(const MouseMovedEvent& event, const Vec2& translatedPos);
 
       Vec2 GetPosition() const;
+      Vec2 GetRealPosition() const;
       Vec2 GetSize() const;
       Component* GetParent() const;
 

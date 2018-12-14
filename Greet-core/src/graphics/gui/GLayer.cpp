@@ -32,7 +32,7 @@ namespace Greet {
   {
     for (auto it = frames.rbegin(); it != frames.rend(); ++it)
     {
-      Component* c = it->second->OnMousePressed(event, event.GetPosition() - it->second->GetPosition());
+      Component* c = it->second->OnMousePressed(event, event.GetPosition() - it->second->GetPosition() - it->second->GetMargin().LeftTop());
       if (c)
       {
         if (c != m_focused)
@@ -57,16 +57,19 @@ namespace Greet {
   void GLayer::OnReleased(const MouseReleasedEvent& event)
   {
     if (m_focused != nullptr)
-      m_focused->MouseReleased(event, event.GetPosition() - m_focused->GetPosition());
+      m_focused->MouseReleased(event, event.GetPosition() - m_focused->GetRealPosition());
   }
 
   void GLayer::OnMoved(const MouseMovedEvent& event)
   {
     if (m_focused != nullptr)
-      m_focused->MouseMoved(event, event.GetPosition() - m_focused->GetPosition());
+    {
+      m_focused->MouseMoved(event, event.GetPosition() - m_focused->GetRealPosition());
+      return;
+    }
     for (auto it = frames.rbegin(); it != frames.rend(); ++it)
     {
-      Component* c = it->second->OnMouseMoved(event, event.GetPosition() - it->second->GetPosition());
+      Component* c = it->second->OnMouseMoved(event, event.GetPosition() - it->second->GetPosition() - it->second->GetMargin().LeftTop());
       if (c)
       {
         if (c != m_hovered)

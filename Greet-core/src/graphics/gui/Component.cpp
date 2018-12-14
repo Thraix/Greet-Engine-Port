@@ -7,7 +7,7 @@
 namespace Greet
 {
   Component::Component(const XMLObject& object, Component* parent)
-    : xmlObject(object.GetStrippedXMLObject()), parent(parent), m_isFocusable(false),isFocused(false)
+    : xmlObject(object.GetStrippedXMLObject()), parent(parent), m_isFocusable(false),isFocused(false), pos(0,0)
   {
     size = Vec2(CalculateWidth(), CalculateHeight());
     if(xmlObject.HasProperty("name"))
@@ -29,7 +29,7 @@ namespace Greet
     // Border around Component 
     if (xmlObject.HasProperty("borderColor"))
       //renderer->SubmitRect(pos + Vec2(0,0), size, currentStyle->borderColor, false);
-     renderer->SubmitRoundedRect(pos+Vec2(0,0),size, currentStyle->borderColor, currentStyle->borderRadius, currentStyle->roundedPrecision, false);
+      renderer->SubmitRoundedRect(pos+Vec2(0,0),size, currentStyle->borderColor, currentStyle->borderRadius, currentStyle->roundedPrecision, false);
 
     // Component background
     if (xmlObject.HasProperty("backgroundColor"))
@@ -91,6 +91,11 @@ namespace Greet
   Vec2 Component::GetPosition() const
   {
     return pos;
+  }
+
+  Vec2 Component::GetRealPosition() const
+  {
+    return pos + GetMargin().LeftTop() + (parent ? parent->GetTotalPadding()+parent->GetRealPosition() : Vec2(0,0));
   }
 
   Component* Component::GetParent() const

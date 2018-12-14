@@ -67,9 +67,9 @@ namespace Greet {
     {
       Component* last = *m_components.rbegin();
       if(vertical)
-        component->SetPosition(Vec2(0,last->GetPosition().y + last->GetSize().y + 10));
+        component->SetPosition(Vec2(0,last->GetPosition().y + last->GetSize().y + last->GetMargin().GetHeight() + 10));
       else
-        component->SetPosition(Vec2(last->GetPosition().x + last->GetSize().x + 10,0));
+        component->SetPosition(Vec2(last->GetPosition().x + last->GetSize().x + last->GetMargin().GetWidth() + 10,0));
     }
     m_components.push_back(component);
   }
@@ -129,9 +129,9 @@ namespace Greet {
     for(auto it = m_components.rbegin(); it != m_components.rend();++it)
     {
       Component* c{*it};
-      if(c->IsMouseInside(translatedPos - GetTotalPadding()))
+      if(c->IsMouseInside(translatedPos - GetTotalPadding() - c->GetMargin().LeftTop()))
       {
-        Component* focused= c->OnMousePressed(event, translatedPos - GetTotalPadding() - c->GetPosition());
+        Component* focused= c->OnMousePressed(event, translatedPos - GetTotalPadding() - c->GetPosition() - c->GetMargin().LeftTop());
         if(focused)
           return focused;
       }
@@ -144,9 +144,9 @@ namespace Greet {
     for(auto it = m_components.rbegin(); it != m_components.rend();++it)
     {
       Component* c{*it};
-      if(c->IsMouseInside(translatedPos - GetTotalPadding()))
+      if(c->IsMouseInside(translatedPos - GetTotalPadding() - c->GetMargin().LeftTop()))
       {
-        Component* hovered = c->OnMouseMoved(event, translatedPos - GetTotalPadding() - c->GetPosition());
+        Component* hovered = c->OnMouseMoved(event, translatedPos - GetTotalPadding() - c->GetPosition() - c->GetMargin().LeftTop());
         if(hovered)
           return hovered;
       }

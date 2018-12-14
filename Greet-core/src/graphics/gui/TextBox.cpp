@@ -6,7 +6,6 @@ namespace Greet
 {
   TextBox::TextBox(const XMLObject& object, Component* parent)
     : Component(object,parent), cursorPos(0), selectionPos(0), cursorBlinkTimer(0), textOffset{0}
-
   {
     m_isFocusable = true;
     XMLObject labelObject;

@@ -297,7 +297,7 @@ namespace Greet
     if(NeedFlush(3*precision, 2+precision))
       Flush();
 
-    AppendVertexBuffer(center, Vec2(0,0), 0, color, viewport,false);
+    AppendVertexBuffer(center, Vec2(0, 0), 0, color, viewport,false);
     AppendVertexBuffer(Vec2(center.x+xRad, center.y), Vec2(0,0), 0, color, viewport,false);
 
     float angle = M_PI/2.0 / precision;
@@ -305,6 +305,11 @@ namespace Greet
     {
       float s = yRad*sin(angle*(i+1));
       float c = xRad*cos(angle*(i+1));
+      if(i == precision-1)
+      {
+        s = yRad;
+        c = 0;
+      }
       AppendVertexBuffer(Vec2(center.x+c, center.y+s), Vec2(0,0), 0, color, viewport,false);
       m_indices[m_iboCount++] = m_lastIndex;
       m_indices[m_iboCount++] = m_lastIndex + i+1;
