@@ -43,6 +43,8 @@ namespace Greet
   {
     GLCall(glBindBuffer(GL_ARRAY_BUFFER, m_vbo));
     GLCall(m_buffer = (GUIVertex*)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY));
+    //GLCall(glPolygonMode( GL_FRONT_AND_BACK, GL_LINE ));
+    //GLCall(glLineWidth(1));
 
     m_bufferBegin = m_buffer;
     m_lastIndex = 0;
@@ -268,20 +270,78 @@ namespace Greet
       return;
     }
 
-    PushViewport(position,size/2);
-    AppendQuaterCircle(position+radius, color,isHsv,radius, precision,true,true);
-    PopViewport();
-    PushViewport(position+Vec2(size.x/2,0),size/2);
-    AppendQuaterCircle(position+Vec2(size.x-radius,radius), color,isHsv,radius, precision,false,true);
-    PopViewport();
-    PushViewport(position+Vec2(size.x/2,size.y/2),size/2);
-    AppendQuaterCircle(position+size-radius, color, isHsv, radius,precision,false,false);
-    PopViewport();
-    PushViewport(position+Vec2(0,size.y/2),size/2);
-    AppendQuaterCircle(position+Vec2(radius,size.y-radius), color,isHsv,radius, precision,true,false);
-    PopViewport();
-    AppendQuad(position+Vec2(radius,0),Vec2(size.x-radius*2,size.y), Vec2(0,0), Vec2(0,0),0,color,isHsv);
-    AppendQuad(position+Vec2(0,radius),Vec2(size.x,size.y-radius*2), Vec2(0,0), Vec2(0,0),0,color,isHsv);
+    if(NeedFlush((precision+1) * 12, (precision+1) * 4 + 1))
+      Flush();
+
+    // Center
+    AppendVertexBuffer(position+size/2, Vec2(0,0), 0, color, GetViewport(position,position+size), isHsv);
+    float angle = M_PI/2.0/precision;
+
+    for(int i = 0;i<=precision;i++)
+    {
+      Vec2 circlePos{cos(angle*i)*radius,sin(angle*i)*radius};
+      // Unfunctional code that should reduce the roundedness if
+      // the size is too small
+      /*
+      Log::Info("circlePos ", circlePos, ", size: ",size, ", radius: ", radius);
+      Log::Info("Calc: ", -size.h/2 + radius);
+      if(radius*2 > size.x && radius-size.w/2 > circlePos.x)
+      {
+        float x = circlePos.x;
+        circlePos.x = radius - size.w/2;
+      
+        Vec2 nextCirclePos{cos(angle*(i+1))*radius,sin(angle*(i+1))*radius};
+        float t = (circlePos.x - x) / (nextCirclePos.x - x);
+        // L = (x1-x0)t + x0
+        circlePos.y = (nextCirclePos.y - circlePos.y) * t + circlePos.y;
+      }
+      if(radius*2 > size.y && radius-size.h/2 > circlePos.y)
+      {
+        float y = circlePos.y;
+        circlePos.y = radius - size.h/2;
+      
+        Vec2 nextCirclePos{cos(angle*(i+1))*radius,sin(angle*(i+1))*radius};
+        float t = (circlePos.y - y) / (nextCirclePos.y - y);
+        // L = (x1-x0)t + x0
+        circlePos.x = (nextCirclePos.x - circlePos.x) * t + circlePos.x;
+      }
+      */
+
+      AppendVertexBuffer(position+radius - circlePos, Vec2(0,0), 0, color, GetViewport(position,position+size), isHsv);
+      AppendVertexBuffer(position+Vec2(size.x-radius+circlePos.x,radius-circlePos.y), Vec2(0,0), 0, color, GetViewport(position,position+size), isHsv);
+      AppendVertexBuffer(position+size-radius + circlePos, Vec2(0,0), 0, color, GetViewport(position,position+size), isHsv);
+      AppendVertexBuffer(position+Vec2(radius-circlePos.x,size.y-radius+circlePos.y), Vec2(0,0), 0, color, GetViewport(position,position+size), isHsv);
+    
+    }
+
+    for(int i = 0;i<precision;i++)
+    {
+      for(int j = 1;j<=4;j++)
+      {
+        m_indices[m_iboCount++] = m_lastIndex;
+        m_indices[m_iboCount++] = m_lastIndex+i*4+j;
+        m_indices[m_iboCount++] = m_lastIndex+(i+1)*4+j;
+      }
+    }
+
+
+    m_indices[m_iboCount++] = m_lastIndex;
+    m_indices[m_iboCount++] = m_lastIndex+precision*4+1;
+    m_indices[m_iboCount++] = m_lastIndex+precision*4+2;
+
+    m_indices[m_iboCount++] = m_lastIndex;
+    m_indices[m_iboCount++] = m_lastIndex+2;
+    m_indices[m_iboCount++] = m_lastIndex+3;
+
+    m_indices[m_iboCount++] = m_lastIndex;
+    m_indices[m_iboCount++] = m_lastIndex+precision*4 + 3;
+    m_indices[m_iboCount++] = m_lastIndex+precision*4 + 4;
+
+    m_indices[m_iboCount++] = m_lastIndex;
+    m_indices[m_iboCount++] = m_lastIndex+4;
+    m_indices[m_iboCount++] = m_lastIndex+1;
+
+    m_lastIndex += (precision+1)*4 + 1;
   }
 
   void GUIRenderer::AppendQuaterCircle(const Vec2& center, const Vec4& color, bool isHsv, float radius, uint precision, bool left, bool top)

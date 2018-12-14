@@ -23,7 +23,7 @@ namespace Greet
     padding.Load(prefix+"padding", component.GetXMLObject(), w, h);
     border.Load(prefix+"border", component.GetXMLObject(), w, h);
 
-    radius = GUIUtils::GetSizeFromXML(component.GetXMLObject(), prefix+"borderRadius",0,w);
+    radius = GUIUtils::GetSizeFromXML(component.GetXMLObject(), prefix+"radius",0,w);
     borderRadius = GUIUtils::GetSizeFromXML(component.GetXMLObject(), prefix+"borderRadius",radius,w);
     roundedPrecision = GUIUtils::GetIntFromXML(component.GetXMLObject(), prefix+"roundedPrecision", 3);
 

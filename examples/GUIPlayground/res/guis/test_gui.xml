@@ -1,0 +1,17 @@
+<Frame
+  width="400px" height="100%" minWidth="100px" spacing="10px"
+  padding="100px"
+  >
+  <ProgressBar
+    backgroundColor="#ffffff"
+    name="progressBar"
+    margin="0px" padding="0" border="0"
+    radius="35px"
+    borderRadius="10px"
+    height="70px"
+    width="70px"
+    roundedPrecision="5"
+    vertical="true"
+    reverseProgress="false"
+    />
+  </Frame>
