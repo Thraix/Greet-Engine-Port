@@ -262,7 +262,7 @@ namespace Greet
   }
 
   // TODO: Improve this code, remove the center vertex and
-  // remove unnecessary verticies when width is too small
+ // remove unnecessary verticies when width is too small
   void GUIRenderer::AppendRoundedQuad(const Vec2& position, const Vec2& size, const Vec4& color, bool isHsv, float radius, uint precision)
   {
     // If precision is 0 or radius is too little, just draw a normal quad
@@ -277,54 +277,50 @@ namespace Greet
 
     float startAngle = 0;
     float endAngle = M_PI*0.5; // 90 deg
+
     if(radius*2 > size.w)
-    {
-      float x = radius - size.w*0.5;
-      float y = sqrt(radius*radius - x*x);
-      endAngle = atan(y / x);
-    }
+      endAngle = acos(1 - size.w * 0.5 / radius);
     if(radius*2 > size.h)
-    {
-      float y = radius - size.h*0.5;
-      float x = sqrt(radius*radius - y*y);
-      startAngle = atan(y / x);
-    }
+      startAngle = asin(1 - size.h * 0.5 / radius);
+
     float angle = M_PI*0.5/precision;
-    if(Math::RoundDown(endAngle,angle) < Math::RoundUp(startAngle,angle))
+    float aStart = Math::RoundUp(startAngle, angle);
+    float aEnd = Math::RoundDown(endAngle, angle);
+
+    if(aEnd < aStart)
       return;
-    float cornerPoints = (endAngle - startAngle)*2 * (precision) / M_PI;
+
+    Vec4 viewport{GetViewport(position, position+size)};
+
     // Center vertex (to make things easier)
     // TODO: Remove this and make another vertex the main one
     // Since the whole thing is non negative curvature any vertex should do
     // however needs to be checked and I was lazy now
-    AppendVertexBuffer(position+size*0.5, Vec2(0,0), 0, color, GetViewport(position,position+size), isHsv);
+    AppendVertexBuffer(position+size*0.5, Vec2(0,0), 0, color, viewport, isHsv);
 
-    Vec4 viewport{GetViewport(position, position+size)};
     for(int i = 0;i<=precision;i++)
     {
       Vec2 circlePos{cos(angle*i)*radius,sin(angle*i)*radius};
 
       float a = angle*i;
-      if(radius*2 > size.w && angle*i > endAngle)
+      if(angle*i > endAngle)
       {
         float x = circlePos.x;
         circlePos.x = radius - size.w*0.5;
 
-        a = Math::RoundDown(endAngle, angle);
+        a = aEnd; 
         Vec2 nextCirclePos{cos(a)*radius,sin(a)*radius};
         float t = (circlePos.x - x) / (nextCirclePos.x - x);
-        // L = (x1-x0)t + x0
         circlePos.y = (nextCirclePos.y - circlePos.y) * t + circlePos.y;
       }
-      if(radius*2 > size.h && a < startAngle)
+      if(a < startAngle)
       {
         float y = circlePos.y;
         circlePos.y = radius - size.h*0.5;
 
-        a = Math::RoundUp(startAngle, angle);
+        a = aStart; 
         Vec2 nextCirclePos{cos(a)*radius,sin(a)*radius};
         float t = (circlePos.y - y) / (nextCirclePos.y - y);
-        // L = (x1-x0)t + x0
         circlePos.x = (nextCirclePos.x - circlePos.x) * t + circlePos.x;
       }
 

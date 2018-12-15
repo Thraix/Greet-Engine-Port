@@ -3,17 +3,6 @@
   resizeTop="false" resizeLeft="false" resizeBottom="false" resizeRight="true"
   padding="10px" border="5px"
   borderColor="#3333ff" backgroundColor="#000077">
-
-  <Component
-    backgroundColor="#ffffff"
-    margin="0px" padding="0" border="0"
-    radius="60px"
-    borderRadius="10px"
-    height="100px"
-    width="200px"
-    roundedPrecision="2"
-    />
-
   <Label 
     padding="0px"
     fontSize="18px" font="roboto" color="#ffffff">Frame header</Label>
