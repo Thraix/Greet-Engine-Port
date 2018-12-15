@@ -23,6 +23,8 @@ public:
 
 	void Init() override
 	{
+    EventDispatcher::AddKeyListener(10,*this);
+    EventDispatcher::AddMouseListener(10,*this);
 		FontManager::Add(new FontContainer("/usr/share/fonts/truetype/ubuntu/Ubuntu-C.ttf","roboto"));
 
     // TODO: This should be done by the engine
@@ -77,6 +79,7 @@ public:
 
 	void OnMoved(const MouseMovedEvent& e) override
 	{
+    //progressBarValue = e.GetX();
 	}
 
 	void OnScroll(const MouseScrollEvent& e) override

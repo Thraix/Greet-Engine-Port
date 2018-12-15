@@ -8,19 +8,19 @@
     margin="0px" padding="0" border="0"
     radius="40px"
     borderRadius="10px"
-    height="3200px"
+    height="40px"
     width="200px"
-    roundedPrecision="2"
-    vertical="true"
+    roundedPrecision="9"
+    vertical="false"
     reverseProgress="false"
     minValue="0"
-    maxValue="40"
+    maxValue="1000"
     />
   <Component
     backgroundColor="#ffffff"
     margin="0px" padding="0" border="0"
     radius="40px"
     height="200px"
-    width="70px"
+    width="80px"
     />
   </Frame>
