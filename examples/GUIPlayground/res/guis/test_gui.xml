@@ -1,17 +1,26 @@
 <Frame
   width="400px" height="100%" minWidth="100px" spacing="10px"
-  padding="100px"
+  padding="50px"
   >
   <ProgressBar
     backgroundColor="#ffffff"
     name="progressBar"
     margin="0px" padding="0" border="0"
-    radius="35px"
+    radius="40px"
     borderRadius="10px"
-    height="70px"
-    width="70px"
-    roundedPrecision="5"
+    height="3200px"
+    width="200px"
+    roundedPrecision="2"
     vertical="true"
     reverseProgress="false"
+    minValue="0"
+    maxValue="40"
+    />
+  <Component
+    backgroundColor="#ffffff"
+    margin="0px" padding="0" border="0"
+    radius="40px"
+    height="200px"
+    width="70px"
     />
   </Frame>

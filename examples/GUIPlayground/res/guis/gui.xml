@@ -3,7 +3,7 @@
   resizeTop="false" resizeLeft="false" resizeBottom="false" resizeRight="true"
   padding="10px" border="5px"
   borderColor="#3333ff" backgroundColor="#000077">
-  
+
   <Component
     backgroundColor="#ffffff"
     margin="0px" padding="0" border="0"
@@ -73,6 +73,7 @@
       width="30px" height="100%" name="progressBarVertical"
       backgroundColor="#aaaaaa" borderColor="#707070"
       border="2px" padding="0"
+      radius="10"
       minValue="0.25" maxValue="1.25" vertical="true"/>
 
     <Divider backgroundColor="#ffffff" vertical="true"/>
@@ -81,6 +82,7 @@
       width="30px" height="100%" name="progressBarVerticalReverse"
       backgroundColor="#aaaaaa" borderColor="#707070"
       border="2px" padding="0"
+      radius="10"
       minValue="0.25" maxValue="1.25" vertical="true" reverseProgress="true"/>
   </Container>
 
@@ -88,11 +90,13 @@
     width="100%" height="30px" name="progressBar" 
     backgroundColor="#aaaaaa" borderColor="#707070" 
     border="2px" padding="0" 
+    radius="10"
     minValue="0.25" maxValue="1.25"/>
 
   <ProgressBar
     width="100%" height="30px" name="progressBarReverse"
     backgroundColor="#aaaaaa" borderColor="#707070"
     border="2px" padding="0"
+    radius="10"
     minValue="0.25" maxValue="1.25" reverseProgress="true"/>
 </Frame>

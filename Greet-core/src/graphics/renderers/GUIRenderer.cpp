@@ -273,50 +273,73 @@ namespace Greet
     if(NeedFlush((precision+1) * 12, (precision+1) * 4 + 1))
       Flush();
 
-    // Center
-    AppendVertexBuffer(position+size/2, Vec2(0,0), 0, color, GetViewport(position,position+size), isHsv);
-    float angle = M_PI/2.0/precision;
+    float startAngle = 0;
+    float endAngle = M_PI*0.5; // 90 deg
+    if(radius*2 > size.w)
+    {
+      float x = radius - size.w*0.5;
+      float y = sqrt(radius*radius - x*x);
+      endAngle = atan(y / x);
+    }
+    if(radius*2 > size.h)
+    {
+      float y = radius - size.h*0.5;
+      float x = sqrt(radius*radius - y*y);
+      startAngle = atan(y / x);
+    }
+    float cornerPoints = (endAngle - startAngle)*2 * (precision) / M_PI;
 
+    // Center vertex (to make things easier)
+    // TODO: Remove this and make another vertex the main one
+    // Since the whole thing is non negative curvature any vertex should do
+    // however needs to be checked and I was lazy now
+    AppendVertexBuffer(position+size*0.5, Vec2(0,0), 0, color, GetViewport(position,position+size), isHsv);
+    float angle = M_PI*0.5/precision;
+
+    Vec4 viewport{GetViewport(position, position+size)};
     for(int i = 0;i<=precision;i++)
     {
       Vec2 circlePos{cos(angle*i)*radius,sin(angle*i)*radius};
-      // Unfunctional code that should reduce the roundedness if
-      // the size is too small
-      /*
-      Log::Info("circlePos ", circlePos, ", size: ",size, ", radius: ", radius);
-      Log::Info("Calc: ", -size.h/2 + radius);
-      if(radius*2 > size.x && radius-size.w/2 > circlePos.x)
+
+      if(radius*2 > size.w && angle*i > endAngle)
       {
         float x = circlePos.x;
-        circlePos.x = radius - size.w/2;
-      
-        Vec2 nextCirclePos{cos(angle*(i+1))*radius,sin(angle*(i+1))*radius};
+        circlePos.x = radius - size.w*0.5;
+
+        float a = Math::RoundDown(endAngle, angle);
+        Vec2 nextCirclePos{cos(a)*radius,sin(a)*radius};
         float t = (circlePos.x - x) / (nextCirclePos.x - x);
         // L = (x1-x0)t + x0
         circlePos.y = (nextCirclePos.y - circlePos.y) * t + circlePos.y;
       }
-      if(radius*2 > size.y && radius-size.h/2 > circlePos.y)
+      if(radius*2 > size.h && angle*i < startAngle)
       {
         float y = circlePos.y;
-        circlePos.y = radius - size.h/2;
-      
-        Vec2 nextCirclePos{cos(angle*(i+1))*radius,sin(angle*(i+1))*radius};
+        circlePos.y = radius - size.h*0.5;
+
+        float a = Math::RoundUp(startAngle, angle);
+        Vec2 nextCirclePos{cos(a)*radius,sin(a)*radius};
         float t = (circlePos.y - y) / (nextCirclePos.y - y);
         // L = (x1-x0)t + x0
         circlePos.x = (nextCirclePos.x - circlePos.x) * t + circlePos.x;
       }
-      */
 
-      AppendVertexBuffer(position+radius - circlePos, Vec2(0,0), 0, color, GetViewport(position,position+size), isHsv);
-      AppendVertexBuffer(position+Vec2(size.x-radius+circlePos.x,radius-circlePos.y), Vec2(0,0), 0, color, GetViewport(position,position+size), isHsv);
-      AppendVertexBuffer(position+size-radius + circlePos, Vec2(0,0), 0, color, GetViewport(position,position+size), isHsv);
-      AppendVertexBuffer(position+Vec2(radius-circlePos.x,size.y-radius+circlePos.y), Vec2(0,0), 0, color, GetViewport(position,position+size), isHsv);
-    
+      // Top left
+      AppendVertexBuffer(position+radius - circlePos, Vec2(0,0), 0, color, viewport, isHsv);
+      // Top right 
+      AppendVertexBuffer(position+Vec2(size.x-radius+circlePos.x,radius-circlePos.y), Vec2(0,0), 0, color, viewport, isHsv);
+      // Bottom right 
+      AppendVertexBuffer(position+size-radius + circlePos, Vec2(0,0), 0, color, viewport, isHsv);
+      // bottom left
+      AppendVertexBuffer(position+Vec2(radius-circlePos.x,size.y-radius+circlePos.y), Vec2(0,0), 0, color, viewport, isHsv);
+
     }
 
-    for(int i = 0;i<precision;i++)
+    // All corner triangles
+    for(int j = 1;j<=4;j++)
     {
-      for(int j = 1;j<=4;j++)
+      // Precision parts of a corner
+      for(int i = 0;i<precision;i++)
       {
         m_indices[m_iboCount++] = m_lastIndex;
         m_indices[m_iboCount++] = m_lastIndex+i*4+j;
@@ -325,18 +348,22 @@ namespace Greet
     }
 
 
+    // Top triangle
     m_indices[m_iboCount++] = m_lastIndex;
     m_indices[m_iboCount++] = m_lastIndex+precision*4+1;
     m_indices[m_iboCount++] = m_lastIndex+precision*4+2;
 
+    // Right triangle
     m_indices[m_iboCount++] = m_lastIndex;
     m_indices[m_iboCount++] = m_lastIndex+2;
     m_indices[m_iboCount++] = m_lastIndex+3;
 
+    // Bottom triangle
     m_indices[m_iboCount++] = m_lastIndex;
     m_indices[m_iboCount++] = m_lastIndex+precision*4 + 3;
     m_indices[m_iboCount++] = m_lastIndex+precision*4 + 4;
 
+    // Left triangle
     m_indices[m_iboCount++] = m_lastIndex;
     m_indices[m_iboCount++] = m_lastIndex+4;
     m_indices[m_iboCount++] = m_lastIndex+1;
@@ -360,7 +387,7 @@ namespace Greet
     AppendVertexBuffer(center, Vec2(0, 0), 0, color, viewport,false);
     AppendVertexBuffer(Vec2(center.x+xRad, center.y), Vec2(0,0), 0, color, viewport,false);
 
-    float angle = M_PI/2.0 / precision;
+    float angle = M_PI*0.5 / precision;
     for(int i = 0;i < precision; i++)
     {
       float s = yRad*sin(angle*(i+1));
@@ -376,7 +403,7 @@ namespace Greet
       m_indices[m_iboCount++] = m_lastIndex + i+2;
     }
     m_lastIndex += precision+2;
-  
+
   }
 
   void GUIRenderer::AppendQuad(const Vec2& position, const Vec2& size, const Vec2& texCoord1, const Vec2& texCoord2, float texId, const Vec4& color, bool isHsv)
