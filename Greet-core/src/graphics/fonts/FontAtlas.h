@@ -37,7 +37,7 @@ namespace Greet
       uint yPos;
       uint xPos;
       uint nextYPos;
-      
+
     public:
       FontAtlas(const std::string& filename, uint width, uint height, uint fontSize);
       virtual ~FontAtlas();

@@ -54,28 +54,28 @@ namespace Greet {
     TextureFormat format;
   };
 
-	class Texture
-	{
-	protected:
-		uint m_texId;
-		uint m_textureType;
-	public:
-		Texture(uint textureType, bool generateTexture = true);
-		Texture(uint texId, uint textureType);
-		Texture(const Texture& texture);
-		Texture& operator=(const Texture& shader);
-		virtual ~Texture();
-		virtual void Enable() const;
-		virtual void Disable() const;
+  class Texture
+  {
+    protected:
+      uint m_texId;
+      uint m_textureType;
+    public:
+      Texture(uint textureType, bool generateTexture = true);
+      Texture(uint texId, uint textureType);
+      Texture(const Texture& texture);
+      Texture& operator=(const Texture& shader);
+      virtual ~Texture();
+      virtual void Enable() const;
+      virtual void Disable() const;
 
-		inline uint GetTexId() const { return m_texId; }
-    friend bool operator<(const Texture& tex1, const Texture& tex2)
-    {
-      return tex1.m_texId < tex2.m_texId;
-    }
+      inline uint GetTexId() const { return m_texId; }
+      friend bool operator<(const Texture& tex1, const Texture& tex2)
+      {
+        return tex1.m_texId < tex2.m_texId;
+      }
 
-	protected:
-		inline void SetTexId(uint texId) { m_texId = texId; }
-	};
+    protected:
+      inline void SetTexId(uint texId) { m_texId = texId; }
+  };
 
 }

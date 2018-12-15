@@ -30,11 +30,11 @@ public:
     // TODO: This should be done by the engine
 		GLayer::CreateInstance(new GUIRenderer(), Shader(Shader::FromFile("res/shaders/gui.shader")));
 
-		GLayer::AddFrame(GUIUtils::GetFrame(XML::FromFile("res/guis/gui.xml")), "testing");
+		GLayer::AddFrame(GUIUtils::GetFrame(XML::FromFile("res/guis/test_gui.xml")), "testing");
     Frame* frame = GLayer::GetFrame("testing");
+#if 0
     ((ProgressBar*)frame->GetComponentByName("progressBar"))
       ->AttachValueReference(&progressBarValue);
-#if 1
     ((ProgressBar*)frame->GetComponentByName("progressBarVertical"))
       ->AttachValueReference(&progressBarValue);
     ((ProgressBar*)frame->GetComponentByName("progressBarReverse"))

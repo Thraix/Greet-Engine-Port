@@ -2,6 +2,6 @@
 
 namespace Greet {
 
-	ulong ErrorHandle::errorCode = 0;
+  ulong ErrorHandle::errorCode = 0;
 
 }

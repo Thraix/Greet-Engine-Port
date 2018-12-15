@@ -10,21 +10,21 @@
 #include <gau.h>
 
 namespace Greet {
-	class SoundManager
-	{
-	private:
-		friend class Sound;
-		static gau_Manager* m_manager;
-		static ga_Mixer* m_mixer;
-		static std::vector<Sound*> m_sounds;
-	public:
-		static void Init();
-		static void Add(Sound* sound);
-		static Sound* Get(const std::string& soundname);
-		static void Destroy();
-		static void Update();
-	private:
-		SoundManager(){}
-	};
+  class SoundManager
+  {
+    private:
+      friend class Sound;
+      static gau_Manager* m_manager;
+      static ga_Mixer* m_mixer;
+      static std::vector<Sound*> m_sounds;
+    public:
+      static void Init();
+      static void Add(Sound* sound);
+      static Sound* Get(const std::string& soundname);
+      static void Destroy();
+      static void Update();
+    private:
+      SoundManager(){}
+  };
 }
 #endif

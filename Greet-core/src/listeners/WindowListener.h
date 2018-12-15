@@ -4,8 +4,8 @@
 #include "WindowResize.h"
 
 namespace Greet {
-	class WindowListener : public WindowFocusListener, public WindowResizeListener
-	{
+  class WindowListener : public WindowFocusListener, public WindowResizeListener
+  {
 
-	};
+  };
 }

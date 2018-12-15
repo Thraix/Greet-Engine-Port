@@ -6,17 +6,17 @@
 #include <graphics/models/Mesh.h>
 
 namespace Greet {
-	
-	class Skybox
-	{
-	private:
-		CubeMap m_map;
-		Shader m_shader;
-		Mesh* m_mesh;
-	public:
-		Skybox(const CubeMap& map);
-		const CubeMap& GetCubeMap() const { return m_map; };
-		virtual ~Skybox();
-		void Render(const Mat4& projectionMatrix, const Camera& camera) const;
-	};
+
+  class Skybox
+  {
+    private:
+      CubeMap m_map;
+      Shader m_shader;
+      Mesh* m_mesh;
+    public:
+      Skybox(const CubeMap& map);
+      const CubeMap& GetCubeMap() const { return m_map; };
+      virtual ~Skybox();
+      void Render(const Mat4& projectionMatrix, const Camera& camera) const;
+  };
 }

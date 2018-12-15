@@ -1,5 +1,5 @@
 #include "MouseListener.h"
 
 namespace Greet {
-	uint MouseListener::m_currentId;
+  uint MouseListener::m_currentId;
 }

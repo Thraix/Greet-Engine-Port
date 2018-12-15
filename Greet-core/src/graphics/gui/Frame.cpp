@@ -32,13 +32,13 @@ namespace Greet {
 
     // This can still look better
     if(!GUIUtils::GetBooleanFromXML(object,"resizeLeft", false))
-        m_resizableFlags &= ~RESIZING_LEFT;
+      m_resizableFlags &= ~RESIZING_LEFT;
     if(!GUIUtils::GetBooleanFromXML(object,"resizeRight", false))
-        m_resizableFlags &= ~RESIZING_RIGHT;
+      m_resizableFlags &= ~RESIZING_RIGHT;
     if(!GUIUtils::GetBooleanFromXML(object,"resizeTop", false))
-        m_resizableFlags &= ~RESIZING_TOP;
+      m_resizableFlags &= ~RESIZING_TOP;
     if(!GUIUtils::GetBooleanFromXML(object,"resizeBottom", false))
-        m_resizableFlags &= ~RESIZING_BOTTOM;
+      m_resizableFlags &= ~RESIZING_BOTTOM;
   }
 
   Frame::~Frame()
@@ -180,7 +180,7 @@ namespace Greet {
   {
     if (m_resizing)
     {
-      
+
       Resize(event.GetPosition());
       // TODO: Recalculate children size if they are relative
     }

@@ -61,6 +61,6 @@ namespace Greet
       Log::Warning("Setting value to ProgressBar when value reference exists");
     this->value = value;
     Math::Clamp(&this->value,min,max);
-  
+
   }
 }

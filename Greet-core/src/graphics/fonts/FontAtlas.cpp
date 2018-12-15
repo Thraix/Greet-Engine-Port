@@ -19,7 +19,7 @@ namespace Greet
 
     atlas = Texture2D(width,height,TextureParams(TextureFilter::LINEAR,TextureWrap::NONE,TextureInternalFormat::RGBA, TextureFormat::INVERTED)); 
     m_pixels = new char[width*height*4];
-    memset(m_pixels, width*height*4, 0);
+    memset(m_pixels, 0, width*height*4);
   }
 
   FontAtlas::~FontAtlas()

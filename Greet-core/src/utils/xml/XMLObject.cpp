@@ -87,7 +87,7 @@ namespace Greet
       properties.emplace(property, value);
     else
       Log::Error("XML property name can only be made up of letters");
-  
+
   }
 
   XMLObject XMLObject::GetStrippedXMLObject() const

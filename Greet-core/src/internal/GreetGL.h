@@ -37,26 +37,26 @@
 
 static void GLClearError()
 {
-	GLenum err;
-	while ((err = glGetError()) != GL_NO_ERROR);
+  GLenum err;
+  while ((err = glGetError()) != GL_NO_ERROR);
 }
 
 static void GLLogError(const char* glCall, const char* file, int line)
 {
-	GLenum err;
-	while ((err = glGetError()) != GL_NO_ERROR)
-	{
-		Greet::Log::Error("OpenGL error(0x", Greet::LogUtils::DecToHex(err), ")", " at ", file, ":", line, " using ", glCall);
-		ASSERT(false, "OpenGL error");
-	}
+  GLenum err;
+  while ((err = glGetError()) != GL_NO_ERROR)
+  {
+    Greet::Log::Error("OpenGL error(0x", Greet::LogUtils::DecToHex(err), ")", " at ", file, ":", line, " using ", glCall);
+    ASSERT(false, "OpenGL error");
+  }
 }
 
 
 
 #if defined _DEBUG
-	#define GLCall(x) GLClearError(); x; GLLogError(#x,__FILE__,__LINE__)
+#define GLCall(x) GLClearError(); x; GLLogError(#x,__FILE__,__LINE__)
 #else
-	#define GLCall(x) x
+#define GLCall(x) x
 #endif
 
 #endif // _GREETGL_H_

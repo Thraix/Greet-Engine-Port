@@ -1,26 +1,25 @@
 <Frame
   width="400px" height="100%" minWidth="100px" spacing="10px"
-  padding="50px"
+  padding="40px"
   >
-  <ProgressBar
-    backgroundColor="#ffffff"
-    name="progressBar"
-    margin="0px" padding="0" border="0"
-    radius="40px"
-    borderRadius="10px"
-    height="40px"
-    width="200px"
-    roundedPrecision="9"
-    vertical="false"
-    reverseProgress="false"
-    minValue="0"
-    maxValue="1000"
-    />
+
   <Component
-    backgroundColor="#ffffff"
-    margin="0px" padding="0" border="0"
-    radius="40px"
-    height="200px"
-    width="80px"
-    />
-  </Frame>
+    backgroundColor="#006600" borderColor="#ffffff"
+    margin="0px" padding="0" border="2"
+    width="40px" height="80px" radius="30px"/>
+
+  <Component
+    backgroundColor="#006600" borderColor="#ffffff"
+    margin="0px" padding="0" border="2"
+    width="80px" height="40px" radius="30px"/>
+
+  <Component
+    backgroundColor="#006600" borderColor="#ffffff"
+    margin="0px" padding="0" border="2"
+    width="20px" height="40px" radius="30px"/>
+
+  <Component
+    backgroundColor="#006600" borderColor="#ffffff"
+    margin="0px" padding="0" border="2"
+    width="20px" height="40px" radius="30px"/>
+</Frame>

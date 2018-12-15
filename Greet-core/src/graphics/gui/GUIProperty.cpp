@@ -39,7 +39,7 @@ namespace Greet
   {
     switch(property)
     {
-      
+
     }
   }
 }

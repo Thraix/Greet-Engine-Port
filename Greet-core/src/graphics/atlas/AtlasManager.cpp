@@ -1,21 +1,21 @@
 #include "AtlasManager.h"	
 
 namespace Greet{
-	std::map<std::string, Atlas> AtlasManager::m_atlas;
+  std::map<std::string, Atlas> AtlasManager::m_atlas;
 
-	void AtlasManager::Add(const std::string& name, const Atlas& atlas)
-	{
+  void AtlasManager::Add(const std::string& name, const Atlas& atlas)
+  {
     if(m_atlas.find(name) != m_atlas.end())
     {
       ErrorHandle::SetErrorCode(GREET_ERROR_MANAGER_ADD);
       Log::Error("Given atlas name already exists: ", name);
       return;
     }
-		m_atlas.emplace(name, atlas);
-	}
+    m_atlas.emplace(name, atlas);
+  }
 
-	const Atlas& AtlasManager::Get(const std::string& name)
-	{
+  const Atlas& AtlasManager::Get(const std::string& name)
+  {
     auto it = m_atlas.find(name);
     if(it == m_atlas.end())
     {
@@ -23,12 +23,12 @@ namespace Greet{
       Log::Error("Could not find the given atlas: ", name);
       return m_atlas.begin()->second; 
     }
-		return it->second;
-	}
+    return it->second;
+  }
 
-	void AtlasManager::Destroy()
-	{
+  void AtlasManager::Destroy()
+  {
     m_atlas.clear();
-	}
+  }
 
 }

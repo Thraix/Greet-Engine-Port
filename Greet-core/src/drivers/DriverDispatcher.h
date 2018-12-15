@@ -4,24 +4,22 @@
 #include <drivers/Driver.h>
 
 namespace Greet {
-	class App;
+  class App;
 }
 
 namespace Greet {
 
-	class DriverDispatcher
-	{
+  class DriverDispatcher
+  {
+    public:
+      friend class App;
+      static void AddDriver(Driver* driver);
 
-	friend class App;
+    private:
+      static std::vector<Driver*> m_drivers;
+      static void Update(float timeElapsed);
 
-	public:
-		static void AddDriver(Driver* driver);
 
-	private:
-		static std::vector<Driver*> m_drivers;
-		static void Update(float timeElapsed);
-
-		
-	};
+  };
 
 }

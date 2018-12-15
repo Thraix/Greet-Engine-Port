@@ -18,13 +18,13 @@
 #define GREET_ERROR_MANAGER_REMOVE	BIT(11)
 
 namespace Greet {
-	struct ErrorHandle
-	{
-	private:
-		static ulong errorCode;
-	public:
-		static void SetErrorCode(ulong errorCode) { ErrorHandle::errorCode |= errorCode; };
-		static ulong GetErrorCode() { return errorCode; }
-		static void ResetErrorCode() { ErrorHandle::errorCode = 0; }
-	};
+  struct ErrorHandle
+  {
+    private:
+      static ulong errorCode;
+    public:
+      static void SetErrorCode(ulong errorCode) { ErrorHandle::errorCode |= errorCode; };
+      static ulong GetErrorCode() { return errorCode; }
+      static void ResetErrorCode() { ErrorHandle::errorCode = 0; }
+  };
 }

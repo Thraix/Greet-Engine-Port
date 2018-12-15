@@ -262,7 +262,7 @@ namespace Greet
   }
 
   // TODO: Improve this code, remove the center vertex and
- // remove unnecessary verticies when width is too small
+  // remove unnecessary verticies when width is too small
   void GUIRenderer::AppendRoundedQuad(const Vec2& position, const Vec2& size, const Vec4& color, bool isHsv, float radius, uint precision)
   {
     // If precision is 0 or radius is too little, just draw a normal quad
@@ -323,7 +323,6 @@ namespace Greet
         float t = (circlePos.y - y) / (nextCirclePos.y - y);
         circlePos.x = (nextCirclePos.x - circlePos.x) * t + circlePos.x;
       }
-
 
       // Top left
       AppendVertexBuffer(position+radius - circlePos, Vec2(0,0), 0, color, viewport, isHsv);
