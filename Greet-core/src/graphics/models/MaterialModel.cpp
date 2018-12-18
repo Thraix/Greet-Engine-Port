@@ -21,7 +21,7 @@ namespace Greet {
 		GetMaterial().Bind();
 		GetMaterial().GetShader().SetUniformMat4("transformationMatrix", transformationMatrix);
 		GetMaterial().GetShader().SetUniformMat4("projectionMatrix", renderer->GetProjectionMatrix());
-		GetMaterial().GetShader().SetUniformMat4("viewMatrix", renderer->GetCamera().GetViewMatrix());
+		GetMaterial().GetShader().SetUniformMat4("viewMatrix", renderer->GetCamera()->GetViewMatrix());
   }
 
   void MaterialModel::Render(const Renderer3D* renderer, const Mat4& transformationMatrix) const
@@ -40,7 +40,7 @@ namespace Greet {
   {
 		GetMaterial().Bind();
 		GetMaterial().GetShader().SetUniformMat4("projectionMatrix", renderer->GetProjectionMatrix());
-		GetMaterial().GetShader().SetUniformMat4("viewMatrix", renderer->GetCamera().GetViewMatrix());
+		GetMaterial().GetShader().SetUniformMat4("viewMatrix", renderer->GetCamera()->GetViewMatrix());
   }
 
   void MaterialModel::Render(const Renderer3D* renderer) const

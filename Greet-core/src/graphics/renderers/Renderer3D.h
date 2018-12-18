@@ -60,7 +60,7 @@ namespace Greet{
 
       inline const Mat4& GetProjectionMatrix() const { return m_projectionMatrix; }
       inline void SetProjectionMatrix(const Mat4& mat) { m_projectionMatrix = mat;}
-      inline const Camera& GetCamera() const { return *m_camera; }
+      inline Camera* GetCamera() const { return m_camera; }
 
       Vec3 GetScreenCoordination(const Vec3& coordinate, uint screenWidth, uint screenHeight) const;
       void GetWorldCoordination(const Vec2& mousePos, Vec3* near, Vec3* direction) const;

@@ -24,7 +24,7 @@ namespace Greet{
 
   Vec3 Renderer3D::GetScreenCoordination(const Vec3& coordinate, uint screenWidth, uint screenHeight) const
   {
-    Vec4 point = (GetProjectionMatrix() * GetCamera().GetViewMatrix()) * coordinate;
+    Vec4 point = (GetProjectionMatrix() * GetCamera()->GetViewMatrix()) * coordinate;
     Vec3 p = Vec3(point.x, point.y, point.z) / (fabs(point.z) * 2.0f) + 0.5f;
     p.x *= screenWidth;
     p.y = screenHeight - p.y * screenHeight;
@@ -43,7 +43,7 @@ namespace Greet{
       Log::Error("Direction vector is NULL");
       return;
     }
-    Mat4 view = GetCamera().GetViewMatrix();
+    Mat4 view = GetCamera()->GetViewMatrix();
     Mat4 proj = GetProjectionMatrix();
     Vec4 nearRes = ~view * ~proj * Vec3(mousePos.x, mousePos.y, -1.0);
     *near = Vec3(nearRes) / nearRes.w;

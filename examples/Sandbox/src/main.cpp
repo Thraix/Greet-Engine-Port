@@ -62,20 +62,20 @@ class Core : public App, public KeyListener, public MouseListener
 
     void Init() override
     {
-      InputControl* move = new InputControl("movement",2);
-      InputControl* mousePos = new InputControl("mousePos",2);
-      InputControl* mouseMiddle = new InputControl("mouseMiddle",1);
-      InputControl* mouseScroll = new InputControl("mouseScroll",1);
-      InputControl* mouseLeft = new InputControl("mouseLeft",1);
-      InputControl* mouseRight = new InputControl("mouseRight",1);
-
       EventDispatcher::AddKeyListener(DISPATCHER_GUI+1, *this);
       EventDispatcher::AddMouseListener(DISPATCHER_GUI + 1, *this);
 
-      InputController::AddMouseButton(0, mouseLeft, 1,false,0);
-      InputController::AddMouseButton(1, mouseRight, 1,false,0);
+      InputControl* move = new InputControl("movement",2);
+      InputControl* mousePos = new InputControl("mousePos",2);
+      InputControl* mouseMiddle = new InputControl("mouseMiddle",1);
+      InputControl* mouseScroll = new InputControl("mouseScroll",2);
+      InputControl* mouseLeft = new InputControl("mouseLeft",1);
+      InputControl* mouseRight = new InputControl("mouseRight",1);
+
+      InputController::AddMouseButton(0, mouseLeft, 1,true,0);
+      InputController::AddMouseButton(1, mouseRight, 1,true,0);
       InputController::AddMouseButton(2, mouseMiddle, 1,false,0);
-      InputController::AddMouseWheel(0, mouseScroll, 1,false,0);
+      InputController::AddMouseWheel(0, mouseScroll, 1,true,0);
 
       InputController::AddKeyButton(GLFW_KEY_W, move, 1,false,1);
       InputController::AddKeyButton(GLFW_KEY_S, move, -1,false,1);
@@ -286,7 +286,7 @@ class Core : public App, public KeyListener, public MouseListener
       }
       else
       {
-        *color = 0xeffDCF2F2;
+        *color = 0xffDCF2F2;
       }
     }
 

@@ -88,7 +88,7 @@ namespace Greet {
 
 		void Move(const Vec2& delta);
 		void Zoom(float delta);
-    InputControlRequest OnInputChanged(const InputControl* control);
+    InputControlRequest OnInputChanged(const InputControl* control) override;
 
 	};
 
