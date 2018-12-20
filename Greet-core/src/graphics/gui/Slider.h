@@ -27,8 +27,10 @@ namespace Greet
       virtual void MouseReleased(const MouseReleasedEvent& event, const Vec2& translatedPos) override;
       virtual void MouseMoved(const MouseMovedEvent& event, const Vec2& translatedPos) override;
 
-      float GetSnappedSlider(float sliderValue);
-      float GetSliderValueFromPos(float pos);
-      float GetSliderPosFromValue(float value);
+      float GetValue() const;
+      void SetValue(float value);
+      float GetSnappedSlider(float sliderValue) const;
+      float GetSliderValueFromPos(float pos) const;
+      float GetSliderPosFromValue(float value) const;
   };
 }

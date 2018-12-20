@@ -1,3 +1,3 @@
 #/bin/sh
 export LD_LIBRARY_PATH=../../Greet-core/bin
-exec bin/Sandbox.a
+make -C ../../Greet-core && make && exec bin/Sandbox.a

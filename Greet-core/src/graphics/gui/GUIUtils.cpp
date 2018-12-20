@@ -97,6 +97,12 @@ namespace Greet
     return defaultValue;
   }
 
+  float GUIUtils::GetFloatFromXML(const XMLObject& object, const std::string& key, float defaultValue)
+  {
+    if(object.HasProperty(key))
+      return atof(object.GetProperty(key).c_str());
+    return defaultValue;
+  }
 
 
   bool GUIUtils::GetBoolean(const std::string& str)

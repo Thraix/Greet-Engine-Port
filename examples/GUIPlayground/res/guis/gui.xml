@@ -8,8 +8,6 @@
     fontSize="18px" font="roboto" color="#ffffff">Frame header</Label>
 
   <Divider backgroundColor="#ffffff"/>
-
-
   <Button width="100%" height="40px" 
     hoverborderColor="#153cd8" borderColor="#153cd8" 
     hoverbackgroundColor="#4265f4" backgroundColor="#4265f4" 
@@ -41,10 +39,10 @@
     borderColor="#aa00aa"
     border="2px"
     width="100%" height="40px" padding="0" margin="0"
-    minValue="10" maxValue="90" defaultValue="30">
+    minValue="10" maxValue="90" defaultValue="30" stepSize="10" indicatorInside="true">
     <Component
-      width="46px" height="46px" padding="0" margin="-2px"
-      border="4px" backgroundColor="#ff00ff"
+      width="46px" height="100%" padding="0" margin="0px"
+      border="4px" backgroundColor="#dd00dd"
       borderColor="#ffffff"
       radius="16px" borderRadius="20px" roundedPrecision="4" />
   </Slider>
