@@ -14,6 +14,7 @@ namespace Greet
 
     vertical = GUIUtils::GetBooleanFromXML(object,"vertical", false); 
     reverse = GUIUtils::GetBooleanFromXML(object,"reverseProgress", false); 
+    progressColor = GUIUtils::GetColorFromXML(object, "progressColor", Vec4(1,1,1,1));
   }
 
   void ProgressBar::Render(GUIRenderer* renderer) const
@@ -28,9 +29,9 @@ namespace Greet
     Vec2 progressPos = pos + GetBorder().LeftTop() + GetPadding().LeftTop(); 
 
     if(reverse)
-      renderer->SubmitRoundedRect(progressPos + (GetContentSize() - localSize), localSize, Vec4(0,1,0,1), currentStyle->radius,currentStyle->roundedPrecision,false);
+      renderer->SubmitRoundedRect(progressPos + (GetContentSize() - localSize), localSize, progressColor, currentStyle->radius,currentStyle->roundedPrecision,false);
     else
-      renderer->SubmitRoundedRect(progressPos,  localSize, Vec4(0,1,0,1), currentStyle->radius,currentStyle->roundedPrecision,false);
+      renderer->SubmitRoundedRect(progressPos,  localSize, progressColor, currentStyle->radius,currentStyle->roundedPrecision,false);
   }
 
   void ProgressBar::Update(float timeElapsed)
