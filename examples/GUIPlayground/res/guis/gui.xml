@@ -2,16 +2,18 @@
   width="400px" height="100%" minWidth="100px" spacing="10px"
   resizeTop="false" resizeLeft="false" resizeBottom="false" resizeRight="true"
   padding="10px" border="5px"
-  borderColor="#3333ff" backgroundColor="#000077">
+  borderColor="#37474f" 
+  backgroundColor="#263238" 
+  >
   <Label 
     padding="0px"
     fontSize="18px" font="roboto" color="#ffffff">Frame header</Label>
 
   <Divider backgroundColor="#ffffff"/>
   <Button width="100%" height="40px" 
-    hoverborderColor="#153cd8" borderColor="#153cd8" 
-    hoverbackgroundColor="#4265f4" backgroundColor="#4265f4" 
-    color="#44ee77" fontSize="24px" font="roboto"
+    backgroundColor="#37474f" borderColor="#455a64" 
+    hoverbackgroundColor="#37474f" hoverborderColor="#455a64" 
+    color="#90a4ae" fontSize="24px" font="roboto"
     hoverborder="4px"
     padding="0px"
     radius="5px" borderRadius="9px"
@@ -20,31 +22,32 @@
 
   <TextBox
     width="100%" height="40px"
-    backgroundColor="#eeeeee" borderColor="#aaaaaa"
-    border="2px" font="roboto" fontSize="24px" color="#000000"
-    hintColor="#999999" hintText="Username"
+    backgroundColor="#37474f" borderColor="#455a64" 
+    border="2px" font="roboto" fontSize="24px" color="#90a4ae"
+    hintColor="#263238" hintText="Username"
     radius="5px" borderRadius="7px"
     padding="0px 10px"></TextBox>
 
   <TextBox
     width="100%" height="40px"
-    backgroundColor="#eeeeee" borderColor="#aaaaaa"
-    border="2px" font="roboto" fontSize="24px" color="#000000"
-    hintColor="#999999" hintText="Password"
+    backgroundColor="#37474f" borderColor="#455a64" 
+    border="2px" font="roboto" fontSize="24px" color="#90a4ae"
+    hintColor="#263238" hintText="Password"
     radius="5px" borderRadius="7px"
     padding="0px 10px" password="true" ></TextBox>
 
   <Slider
-    backgroundColor="#ff00ff"
-    borderColor="#aa00aa"
+    backgroundColor="#37474f" 
+    borderColor="#455a64" 
     border="2px"
     width="100%" height="40px" padding="0" margin="0"
     minValue="10" maxValue="90" defaultValue="30" stepSize="10" indicatorInside="true">
     <Component
-      width="46px" height="100%" padding="0" margin="0px"
-      border="4px" backgroundColor="#dd00dd"
-      borderColor="#ffffff"
-      radius="16px" borderRadius="20px" roundedPrecision="4" />
+      borderColor="#263238" 
+      backgroundColor="#455a64" 
+      width="10px" height="100%" padding="0" margin="0px"
+      border="2px"
+      />
   </Slider>
 
   <Label
@@ -53,12 +56,13 @@
 
   <Container 
     width="100%"
-    height="100px"
+    height="200px"
     verticalAlign="false" padding="0">
 
     <ProgressBar
       width="30px" height="100%" name="progressBarVertical"
-      backgroundColor="#aaaaaa" borderColor="#707070"
+    backgroundColor="#37474f" 
+    borderColor="#455a64" 
       border="2px" padding="0"
       radius="10"
       minValue="0.25" maxValue="1.25" vertical="true"/>
@@ -67,22 +71,43 @@
 
     <ProgressBar
       width="30px" height="100%" name="progressBarVerticalReverse"
-      backgroundColor="#aaaaaa" borderColor="#707070"
+    backgroundColor="#37474f" 
+    borderColor="#455a64" 
       border="2px" padding="0"
       radius="10"
       minValue="0.25" maxValue="1.25" vertical="true" reverseProgress="true"/>
+
+    <Divider backgroundColor="#ffffff" vertical="true"/>
+
+    <Slider
+      backgroundColor="#37474f" 
+      borderColor="#455a64" 
+      border="2px"
+      vertical="true"
+      width="40px" height="100%" padding="0" margin="0"
+      minValue="10" maxValue="90" defaultValue="30" stepSize="10" indicatorInside="true">
+      <Component
+        borderColor="#263238" 
+        backgroundColor="#455a64" 
+        width="100%" height="10px" padding="0" margin="0px"
+        border="2px"
+        />
+    </Slider>
+
   </Container>
 
   <ProgressBar
     width="100%" height="30px" name="progressBar" 
-    backgroundColor="#aaaaaa" borderColor="#707070" 
+    backgroundColor="#37474f" 
+    borderColor="#455a64" 
     border="2px" padding="0" 
     radius="10"
     minValue="0.25" maxValue="1.25"/>
 
   <ProgressBar
     width="100%" height="30px" name="progressBarReverse"
-    backgroundColor="#aaaaaa" borderColor="#707070"
+    backgroundColor="#37474f" 
+    borderColor="#455a64" 
     border="2px" padding="0"
     radius="10"
     minValue="0.25" maxValue="1.25" reverseProgress="true"/>

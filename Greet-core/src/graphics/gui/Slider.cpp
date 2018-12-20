@@ -6,6 +6,7 @@ namespace Greet
 {
   uint Slider::SLIDER_FLAG_FORCE_INSIDE = BIT(0);
   uint Slider::SLIDER_FLAG_SNAP = BIT(1);
+  uint Slider::SLIDER_FLAG_VERTICAL = BIT(2);
 
   Slider::Slider(const XMLObject& xmlObject, Component* parent)
     : Component(xmlObject, parent), flags(0), mouseHeld(false), stepSize(5)
@@ -18,7 +19,8 @@ namespace Greet
     maxValue = GUIUtils::GetFloatFromXML(xmlObject, "maxValue", 100.0f);
     stepSize = GUIUtils::GetFloatFromXML(xmlObject, "stepSize", 0.0f);
 
-    flags |= GUIUtils::GetBooleanFromXML(xmlObject, "indicatorInside", false);
+    flags |= GUIUtils::GetBooleanFromXML(xmlObject, "indicatorInside", false) ? SLIDER_FLAG_FORCE_INSIDE : false;
+    flags |= GUIUtils::GetBooleanFromXML(xmlObject, "vertical", false) ? SLIDER_FLAG_VERTICAL : false;
 
     if(maxValue - minValue < 0)
     {
@@ -39,13 +41,20 @@ namespace Greet
     if(stepSize > 0)
       flags |= SLIDER_FLAG_SNAP;
 
+    // Resized initialized the min and max value of the positions
+    Resized();
+
     // Default defaultValue should be in the middle
     SetValue(GUIUtils::GetIntFromXML(xmlObject, "defaultValue", (maxValue-minValue)/2.0f));
   }
 
   void Slider::Render(GUIRenderer* renderer) const
   {
-    sliderComponent->PreRender(renderer, pos + GetTotalPadding() + sliderComponent->GetMargin().LeftTop() + Vec2(sliderPos - sliderComponent->GetWidth()/2.0, (GetContentSize().h - sliderComponent->GetHeight())/2.0));
+    Vec2 sliderOffset = pos + GetTotalPadding() + sliderComponent->GetMargin().LeftTop() - sliderComponent->GetSize()/2;
+    if(flags & SLIDER_FLAG_VERTICAL)
+      sliderComponent->PreRender(renderer,  sliderOffset + Vec2{GetContentSize().w/2, sliderPos});
+    else
+      sliderComponent->PreRender(renderer,  sliderOffset + Vec2{sliderPos, GetContentSize().h/2});
     sliderComponent->RenderHandle(renderer);
     sliderComponent->PostRender(renderer);
   }
@@ -55,7 +64,10 @@ namespace Greet
     if(event.GetButton() == GLFW_MOUSE_BUTTON_1)
     {
       mouseHeld = true;
-      SetValue(GetSliderValueFromPos(translatedPos.x));
+      if(flags & SLIDER_FLAG_VERTICAL)
+        SetValue(GetSliderValueFromPos(translatedPos.y));
+      else
+        SetValue(GetSliderValueFromPos(translatedPos.x));
     }
   }
 
@@ -71,8 +83,42 @@ namespace Greet
   {
     if(mouseHeld)
     {
-      SetValue(GetSliderValueFromPos(translatedPos.x));
+      if(flags & SLIDER_FLAG_VERTICAL)
+        SetValue(GetSliderValueFromPos(translatedPos.y));
+      else
+        SetValue(GetSliderValueFromPos(translatedPos.x));
     }
+  }
+
+  void Slider::Resized() 
+  { 
+    float value = GetValue();
+    // Is there a better way to do this. It is super sad.
+    if(flags & SLIDER_FLAG_FORCE_INSIDE)
+    {
+      if(flags & SLIDER_FLAG_VERTICAL)
+      {
+        minPos = sliderComponent->GetHeight()/2;
+        maxPos = size.h-GetBorder().GetHeight()-minPos;
+      }
+      else
+      {
+        minPos = sliderComponent->GetWidth()/2;
+        maxPos = size.w-GetBorder().GetWidth()-minPos;
+      }
+    }
+    else if(flags & SLIDER_FLAG_VERTICAL)
+    {
+      minPos = 0;
+      maxPos = size.h;
+    }
+    else
+    {
+      minPos = 0;
+      maxPos = size.w;
+    }
+
+    SetValue(value);
   }
 
   float Slider::GetValue() const
@@ -95,15 +141,11 @@ namespace Greet
 
   float Slider::GetSliderValueFromPos(float pos) const
   {
-    return (pos / size.x) * (maxValue-minValue) + minValue;
+    return ((pos - minPos) / (maxPos - minPos)) * (maxValue-minValue) + minValue;
   }
 
   float Slider::GetSliderPosFromValue(float value) const
   {
-    if(flags & SLIDER_FLAG_FORCE_INSIDE)
-    {
-      return (value - minValue) / (maxValue - minValue) * (size.w-GetBorder().GetWidth()-sliderComponent->GetWidth())+sliderComponent->GetWidth()/2;
-    }
-    return (value - minValue) / (maxValue - minValue) * size.x;
+    return (value - minValue) / (maxValue - minValue) * (maxPos-minPos) + minPos;
   }
 }
