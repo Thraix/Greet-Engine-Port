@@ -33,13 +33,13 @@ public:
 		GLayer::AddFrame(GUIUtils::GetFrame(XML::FromFile("res/guis/gui.xml")), "testing");
     Frame* frame = GLayer::GetFrame("testing");
 #if 1
-    ((ProgressBar*)frame->GetComponentByName("progressBar"))
+    frame->GetComponentByName<ProgressBar>("progressBar")
       ->AttachValueReference(&progressBarValue);
-    ((ProgressBar*)frame->GetComponentByName("progressBarVertical"))
+    frame->GetComponentByName<ProgressBar>("progressBarVertical")
       ->AttachValueReference(&progressBarValue);
-    ((ProgressBar*)frame->GetComponentByName("progressBarReverse"))
+    frame->GetComponentByName<ProgressBar>("progressBarReverse")
       ->AttachValueReference(&progressBarValue);
-    ((ProgressBar*)frame->GetComponentByName("progressBarVerticalReverse"))
+    frame->GetComponentByName<ProgressBar>("progressBarVerticalReverse")
       ->AttachValueReference(&progressBarValue);
 #endif
 	}

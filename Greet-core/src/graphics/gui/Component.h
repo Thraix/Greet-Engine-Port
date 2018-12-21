@@ -67,8 +67,6 @@ namespace Greet
       virtual void SetPosition(const Vec2& pos);
       void SetSize(const Vec2& size);
 
-      virtual Component* GetComponentByName(const std::string& name);
-
       // These four will only be called if the component is focusable
       virtual void OnFocused();
       virtual void OnUnfocused();
@@ -93,5 +91,16 @@ namespace Greet
       const TLBR& GetPadding() const;
       const TLBR& GetBorder() const;
       Vec2 GetContentSize() const;
+
+      template <typename T>
+        T* GetComponentByName(const std::string& name)
+        {
+          T* component = dynamic_cast<T*>(GetComponentByNameNoCast(name));
+          if(component == nullptr)
+            Log::Warning("Could not find Component with given type (name = ", name,")");
+          return component;
+        }
+
+      virtual Component* GetComponentByNameNoCast(const std::string& name);
   };
 }

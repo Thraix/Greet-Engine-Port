@@ -110,18 +110,23 @@ namespace Greet {
     return *(m_components.begin() + index);
   }
 
-  Component* Container::GetComponentByName(const std::string& name)
+  Component* Container::GetComponentByNameNoCast(const std::string& name)
   {
-    Component* comp = Component::GetComponentByName(name);
+    Component* comp = Component::GetComponentByNameNoCast(name);
     if(comp)
       return comp;
     for(auto it{m_components.begin()}; it != m_components.end();++it)
     {
-      comp = (*it)->GetComponentByName(name);
+      comp = (*it)->GetComponentByNameNoCast(name);
       if(comp)
         return comp;
     }
     return nullptr;
+  }
+
+  size_t Container::GetComponentCount() const
+  {
+    return m_components.size();
   }
 
   Component* Container::OnMousePressed(const MousePressedEvent& event, const Vec2& translatedPos)

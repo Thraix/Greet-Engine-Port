@@ -153,7 +153,7 @@ namespace Greet
     return size.h;
   }
 
-  Component* Component::GetComponentByName(const std::string& name)
+  Component* Component::GetComponentByNameNoCast(const std::string& name)
   {
     if(name == this->name)
       return this;

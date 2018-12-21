@@ -23,13 +23,15 @@ namespace Greet {
       Component* RemoveComponent(uint index);
       Component* RemoveComponent(Component* component);
       Component* GetComponent(uint index);
+      size_t GetComponentCount() const;
 
-      Component* GetComponentByName(const std::string& name) override;
 
 
       virtual Component* OnMousePressed(const MousePressedEvent& event, const Vec2& translatedPos) override;
       virtual Component* OnMouseMoved(const MouseMovedEvent& event, const Vec2& translatedPos) override;
 
       virtual void Resized() override;
+
+      virtual Component* GetComponentByNameNoCast(const std::string& name) override;
   };
 }
