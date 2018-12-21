@@ -1,4 +1,5 @@
 #include <Greet.h>
+#include <graphics/Color.h>
 
 using namespace Greet;
 
@@ -7,7 +8,6 @@ class Core : public App, public KeyListener, public MouseListener
 private:
 	Component* content;
   float progressBarValue;
-	//Container* container;
 public:
   Core()
     : App("GUI Testing", 960, 540)
@@ -18,7 +18,6 @@ public:
 	~Core()
 	{
 		GLayer::DestroyInstance();
-//		delete container;
 	}
 
 	void Init() override
@@ -63,6 +62,7 @@ public:
 	{
     // TODO: This should be done by the engine
 		GLayer::Render();
+
 	}
 
 	void OnPressed(const KeyPressedEvent& e) override
@@ -89,6 +89,7 @@ public:
 
 	void WindowResize(int width, int height) override
 	{
+
 	}
 
 	void JoystickState(uint joy, bool connected) override
@@ -108,5 +109,7 @@ int main()
 		//XMLObject obj = XML::FromFile("projtest.xml");
 		Core game;
 		game.Start();
+    
+
 	}
 }
