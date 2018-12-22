@@ -1,4 +1,5 @@
 #include <Greet.h>
+#include <functional>
 
 using namespace Greet;
 
@@ -35,6 +36,12 @@ public:
 #if 1
     frame->GetComponentByName<ProgressBar>("progressBar")
       ->AttachValueReference(&progressBarValue);
+    frame->GetComponentByName<Slider>("Slider")
+      ->SetOnClickCallback(std::bind(&Core::OnClickCallback, std::ref(*this), std::placeholders::_1));
+    frame->GetComponentByName<Slider>("Slider")
+      ->SetOnPressCallback(std::bind(&Core::OnPressCallback, std::ref(*this), std::placeholders::_1));
+    frame->GetComponentByName<Slider>("Slider")
+      ->SetOnReleaseCallback(std::bind(&Core::OnReleaseCallback, std::ref(*this), std::placeholders::_1));
     frame->GetComponentByName<ProgressBar>("progressBarVertical")
       ->AttachValueReference(&progressBarValue);
     frame->GetComponentByName<ProgressBar>("progressBarReverse")
@@ -43,6 +50,20 @@ public:
       ->AttachValueReference(&progressBarValue);
 #endif
 	}
+
+  void OnClickCallback(Component* component)
+  {
+    Log::Info("On click");
+  }
+  void OnPressCallback(Component* component)
+  {
+    Log::Info("On Press");
+  }
+
+  void OnReleaseCallback(Component* component)
+  {
+    Log::Info("On Release");
+  }
 
 	void Tick() override
 	{

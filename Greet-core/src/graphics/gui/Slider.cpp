@@ -9,7 +9,7 @@ namespace Greet
   uint Slider::SLIDER_FLAG_VERTICAL = BIT(2);
 
   Slider::Slider(const XMLObject& xmlObject, Component* parent)
-    : Component(xmlObject, parent), flags(0), mouseHeld(false), stepSize(5)
+    : Component(xmlObject, parent), flags(0), stepSize(5)
   {
     m_isFocusable = true;
     if(xmlObject.GetObjectCount() > 0)
@@ -61,9 +61,9 @@ namespace Greet
 
   void Slider::MousePressed(const MousePressedEvent& event, const Vec2& translatedPos)
   {
-    if(event.GetButton() == GLFW_MOUSE_BUTTON_1)
+    Component::MousePressed(event,translatedPos);
+    if(event.GetButton() == GLFW_MOUSE_BUTTON_1 && pressed)
     {
-      mouseHeld = true;
       if(flags & SLIDER_FLAG_VERTICAL)
         SetValue(GetSliderValueFromPos(translatedPos.y));
       else
@@ -71,17 +71,9 @@ namespace Greet
     }
   }
 
-  void Slider::MouseReleased(const MouseReleasedEvent& event, const Vec2& translatedPos)
-  {
-    if(event.GetButton() == GLFW_MOUSE_BUTTON_1)
-    {
-      mouseHeld = false;
-    }
-  }
-
   void Slider::MouseMoved(const MouseMovedEvent& event, const Vec2& translatedPos)
   {
-    if(mouseHeld)
+    if(pressed)
     {
       if(flags & SLIDER_FLAG_VERTICAL)
         SetValue(GetSliderValueFromPos(translatedPos.y));

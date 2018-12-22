@@ -74,6 +74,7 @@ namespace Greet
 
   void TextBox::MousePressed(const MousePressedEvent& event, const Vec2& translatedPos)
   {
+    Component::MousePressed(event,translatedPos);
     if(event.GetButton() == GLFW_MOUSE_BUTTON_1)
     {
       // TODO: In the future we probably want to do some smart, average character length

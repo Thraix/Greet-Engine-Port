@@ -159,6 +159,7 @@ namespace Greet {
 
   void Frame::MousePressed(const MousePressedEvent& event, const Vec2& translatedPos)
   {
+    Component::MousePressed(event,translatedPos);
     if (event.GetButton() == GLFW_MOUSE_BUTTON_1)
     {
       m_posOrigin = pos;
@@ -170,6 +171,7 @@ namespace Greet {
 
   void Frame::MouseReleased(const MouseReleasedEvent& event, const Vec2& translatedPos)
   {
+    Component::MouseReleased(event,translatedPos);
     if (event.GetButton() == GLFW_MOUSE_BUTTON_1)
     {
       m_resizing = false;

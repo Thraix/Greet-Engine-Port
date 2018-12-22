@@ -37,6 +37,7 @@
     padding="0px 10px" password="true" ></TextBox>
 
   <Slider
+    name="Slider"
     backgroundColor="#37474f" 
     borderColor="#455a64" 
     border="2px"

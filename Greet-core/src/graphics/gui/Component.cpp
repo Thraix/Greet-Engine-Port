@@ -3,11 +3,12 @@
 #include <utils/AABBUtils.h>
 #include <graphics/gui/GLayer.h>
 #include <utils/UUID.h>
+#include <functional>
 
 namespace Greet
 {
   Component::Component(const XMLObject& object, Component* parent)
-    : xmlObject(object.GetStrippedXMLObject()), parent(parent), m_isFocusable(false),isFocused(false), pos(0,0)
+    : xmlObject(object.GetStrippedXMLObject()), parent(parent), m_isFocusable(false),isFocused(false), pos(0,0), pressed(false)
   {
     size = Vec2(CalculateWidth(), CalculateHeight());
     if(xmlObject.HasProperty("name"))
@@ -76,6 +77,46 @@ namespace Greet
     return nullptr;
 
   }
+  void Component::SetOnClickCallback(OnClickCallback callback)
+  {
+    onClickCallback = callback;
+  }
+
+  void Component::SetOnPressCallback(OnPressCallback callback)
+  {
+    onPressCallback = callback;
+  }
+
+  void Component::SetOnReleaseCallback(OnReleaseCallback callback)
+  {
+    onReleaseCallback = callback;
+  }
+
+  void Component::MousePressed(const MousePressedEvent& event, const Vec2& translatedPos)
+  {
+    if(event.GetButton() == GLFW_MOUSE_BUTTON_1)
+    {
+      pressed = true;
+      if(onPressCallback)
+        onPressCallback(this);
+    }
+  }
+
+  void Component::MouseReleased(const MouseReleasedEvent& event, const Vec2& translatedPos)
+  {
+    if(event.GetButton() == GLFW_MOUSE_BUTTON_1)
+    {
+      if(pressed)
+      {
+        if(IsMouseInside(translatedPos+pos) && onClickCallback)
+          onClickCallback(this);
+        if(onReleaseCallback)
+          onReleaseCallback(this);
+      }
+      pressed = false;
+    }
+  }
+
   void Component::OnFocused()
   {
     isFocused = true;

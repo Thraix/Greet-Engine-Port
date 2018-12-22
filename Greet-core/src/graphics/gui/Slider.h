@@ -13,7 +13,6 @@ namespace Greet
 
       // The slider indicator component can be any component really
       Component* sliderComponent;
-      bool mouseHeld;
       float sliderPos;
       uint flags;
       float minValue;
@@ -29,7 +28,6 @@ namespace Greet
       virtual void Render(GUIRenderer* renderer) const override;
 
       virtual void MousePressed(const MousePressedEvent& event, const Vec2& translatedPos) override;
-      virtual void MouseReleased(const MouseReleasedEvent& event, const Vec2& translatedPos) override;
       virtual void MouseMoved(const MouseMovedEvent& event, const Vec2& translatedPos) override;
       virtual void Resized() override;
 

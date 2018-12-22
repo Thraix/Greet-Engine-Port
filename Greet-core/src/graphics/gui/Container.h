@@ -25,8 +25,6 @@ namespace Greet {
       Component* GetComponent(uint index);
       size_t GetComponentCount() const;
 
-
-
       virtual Component* OnMousePressed(const MousePressedEvent& event, const Vec2& translatedPos) override;
       virtual Component* OnMouseMoved(const MouseMovedEvent& event, const Vec2& translatedPos) override;
 

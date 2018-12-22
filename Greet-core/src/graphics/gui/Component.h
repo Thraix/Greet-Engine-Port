@@ -10,6 +10,11 @@ namespace Greet
 
   class Component
   {
+    public:
+      typedef std::function<void(Component*)> OnClickCallback;
+      typedef std::function<void(Component*)> OnPressCallback;
+      typedef std::function<void(Component*)> OnReleaseCallback;
+
     protected:
       Style* currentStyle;
 
@@ -28,6 +33,13 @@ namespace Greet
 
       bool m_isFocusable;
       bool isFocused;
+
+      bool pressed;
+
+      // Callbacks
+      OnClickCallback onClickCallback;
+      OnPressCallback onPressCallback;
+      OnReleaseCallback onReleaseCallback;
 
     public:
       Component(const XMLObject& object, Component* parent);
@@ -48,6 +60,11 @@ namespace Greet
       virtual Component* OnMousePressed(const MousePressedEvent& event, const Vec2& translatedPos);
       // Returns the hovered content
       virtual Component* OnMouseMoved(const MouseMovedEvent& event, const Vec2& translatedPos);
+
+      // Callbacks
+      void SetOnClickCallback(OnClickCallback callback);
+      void SetOnPressCallback(OnPressCallback callback);
+      void SetOnReleaseCallback(OnReleaseCallback callback);
 
       Vec2 GetPosition() const;
       Vec2 GetRealPosition() const;
@@ -76,8 +93,8 @@ namespace Greet
       virtual void MouseExited(){}
 
       // These functions will only be called if the component is focused
-      virtual void MousePressed(const MousePressedEvent& event, const Vec2& translatedPos){}
-      virtual void MouseReleased(const MouseReleasedEvent& event, const Vec2& translatedPos){}
+      virtual void MousePressed(const MousePressedEvent& event, const Vec2& translatedPos);
+      virtual void MouseReleased(const MouseReleasedEvent& event, const Vec2& translatedPos);
       virtual void MouseMoved(const MouseMovedEvent& event, const Vec2& translatedPos){}
       virtual void KeyPressed(const KeyPressedEvent& event){}
       virtual void KeyReleased(const KeyReleasedEvent& event){}

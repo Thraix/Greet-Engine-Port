@@ -7,6 +7,7 @@ namespace Greet
   ProgressBar::ProgressBar(const XMLObject& object, Component* parent)
     : Component(object,parent), min(0), max(1), value(0), valueReference(nullptr), vertical(false), reverse(false)
   {
+    m_isFocusable = true;
     if(object.HasProperty("minValue"))
       min = atof(object.GetProperty("minValue").c_str()); 
     if(object.HasProperty("maxValue"))

@@ -106,10 +106,15 @@
 #include <graphics/gui/FrameContainer.h>
 #include <graphics/gui/GLayer.h>
 #include <graphics/gui/GUIUtils.h>
+#include <graphics/gui/Component.h>
 #include <graphics/gui/Frame.h>
+#include <graphics/gui/Button.h>
+#include <graphics/gui/Label.h>
 #include <graphics/gui/ProgressBar.h>
+#include <graphics/gui/Container.h>
 #include <graphics/gui/Divider.h>
 #include <graphics/gui/TextBox.h>
+#include <graphics/gui/Slider.h>
 #include <graphics/gui/GUIMouseListener.h>
 #include <graphics/textures/TextureManager.h>
 #include <graphics/textures/Texture.h>
