@@ -47,5 +47,6 @@ namespace Greet
       float GetSliderPosFromValue(float value) const;
     protected:
       float GetSliderDirectionSize() const;
+      virtual void CallOnValueChangeCallback(float oldValue, float newValue);
   };
 }

@@ -70,8 +70,8 @@ namespace Greet
       else
         SetValue(GetSliderValueFromPos(translatedPos.x));
       float newValue = GetSliderValueFromPos(sliderPos);
-      if(oldValue != newValue && onValueChangeCallback)
-        onValueChangeCallback(this,oldValue, newValue);
+      if(oldValue != newValue)
+        CallOnValueChangeCallback(oldValue, newValue);
     }
   }
 
@@ -85,8 +85,8 @@ namespace Greet
       else
         SetValue(GetSliderValueFromPos(translatedPos.x));
       float newValue = GetSliderValueFromPos(sliderPos);
-      if(oldValue != newValue && onValueChangeCallback)
-        onValueChangeCallback(this,oldValue, newValue);
+      if(oldValue != newValue)
+        CallOnValueChangeCallback(oldValue, newValue);
     }
   }
 
@@ -124,6 +124,11 @@ namespace Greet
   void Slider::SetOnValueChangeCallback(OnValueChangeCallback callback)
   {
     onValueChangeCallback = callback;
+  }
+  void Slider::CallOnValueChangeCallback(float oldValue, float newValue)
+  {
+    if(onValueChangeCallback)
+      onValueChangeCallback(this, oldValue, newValue);
   }
 
   float Slider::GetValue() const
