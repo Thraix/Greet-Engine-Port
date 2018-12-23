@@ -64,10 +64,14 @@ namespace Greet
     Component::MousePressed(event,translatedPos);
     if(event.GetButton() == GLFW_MOUSE_BUTTON_1 && pressed)
     {
+      float oldValue = GetSliderValueFromPos(sliderPos);
       if(flags & SLIDER_FLAG_VERTICAL)
         SetValue(GetSliderValueFromPos(translatedPos.y));
       else
         SetValue(GetSliderValueFromPos(translatedPos.x));
+      float newValue = GetSliderValueFromPos(sliderPos);
+      if(oldValue != newValue && onValueChangeCallback)
+        onValueChangeCallback(this,oldValue, newValue);
     }
   }
 
@@ -75,10 +79,14 @@ namespace Greet
   {
     if(pressed)
     {
+      float oldValue = GetSliderValueFromPos(sliderPos);
       if(flags & SLIDER_FLAG_VERTICAL)
         SetValue(GetSliderValueFromPos(translatedPos.y));
       else
         SetValue(GetSliderValueFromPos(translatedPos.x));
+      float newValue = GetSliderValueFromPos(sliderPos);
+      if(oldValue != newValue && onValueChangeCallback)
+        onValueChangeCallback(this,oldValue, newValue);
     }
   }
 

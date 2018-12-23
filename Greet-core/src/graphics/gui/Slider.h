@@ -6,7 +6,9 @@ namespace Greet
 {
   class Slider : public Component
   {
-    private:
+    public:
+      typedef std::function<void(Component*, float oldValue, float newValue)> OnValueChangeCallback;
+    protected:
       static uint SLIDER_FLAG_FORCE_INSIDE;
       static uint SLIDER_FLAG_SNAP;
       static uint SLIDER_FLAG_VERTICAL;
@@ -22,6 +24,10 @@ namespace Greet
       float minPos;
       float maxPos;
 
+      OnValueChangeCallback onValueChangeCallback;
+
+
+
     public:
       Slider(const XMLObject& xmlObject, Component* parent);
 
@@ -31,12 +37,17 @@ namespace Greet
       virtual void MouseMoved(const MouseMovedEvent& event, const Vec2& translatedPos) override;
       virtual void Resized() override;
 
+      virtual void SetOnValueChangeCallback(OnValueChangeCallback callback)
+      {
+        onValueChangeCallback = callback;
+      }
+
       float GetValue() const;
       void SetValue(float value);
       float GetSnappedSlider(float sliderValue) const;
       float GetSliderValueFromPos(float pos) const;
       float GetSliderPosFromValue(float value) const;
-    private:
+    protected:
       float GetSliderDirectionSize() const;
   };
 }

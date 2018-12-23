@@ -34,14 +34,22 @@ public:
 		GLayer::AddFrame(GUIUtils::GetFrame(XML::FromFile("res/guis/gui.xml")), "testing");
     Frame* frame = GLayer::GetFrame("testing");
 #if 1
+    using namespace std::placeholders;
+    // Function callbacks 
+    // Somewhat ugly, might look into making function pointers easier, since the structure
+    // is always the same.
     frame->GetComponentByName<ProgressBar>("progressBar")
       ->AttachValueReference(&progressBarValue);
     frame->GetComponentByName<Slider>("Slider")
-      ->SetOnClickCallback(std::bind(&Core::OnClickCallback, std::ref(*this), std::placeholders::_1));
+      ->SetOnClickCallback(std::bind(&Core::OnClickCallback, std::ref(*this), _1));
     frame->GetComponentByName<Slider>("Slider")
-      ->SetOnPressCallback(std::bind(&Core::OnPressCallback, std::ref(*this), std::placeholders::_1));
+      ->SetOnPressCallback(std::bind(&Core::OnPressCallback, std::ref(*this), _1));
     frame->GetComponentByName<Slider>("Slider")
-      ->SetOnReleaseCallback(std::bind(&Core::OnReleaseCallback, std::ref(*this), std::placeholders::_1));
+      ->SetOnReleaseCallback(std::bind(&Core::OnReleaseCallback, std::ref(*this), _1));
+    frame->GetComponentByName<Slider>("Slider")
+      ->SetOnValueChangeCallback(std::bind(&Core::OnValueChangeCallback, std::ref(*this), _1, _2, _3));
+    frame->GetComponentByName<ProgressBar>("progressBar")
+      ->AttachValueReference(&progressBarValue);
     frame->GetComponentByName<ProgressBar>("progressBarVertical")
       ->AttachValueReference(&progressBarValue);
     frame->GetComponentByName<ProgressBar>("progressBarReverse")
@@ -51,10 +59,16 @@ public:
 #endif
 	}
 
+  void OnValueChangeCallback(Component* component, float oldValue, float newValue)
+  {
+    Log::Info("Slider changed value from ", oldValue, " to ", newValue);
+  }
+
   void OnClickCallback(Component* component)
   {
     Log::Info("On click");
   }
+
   void OnPressCallback(Component* component)
   {
     Log::Info("On Press");
