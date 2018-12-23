@@ -115,6 +115,8 @@
 #include <graphics/gui/Divider.h>
 #include <graphics/gui/TextBox.h>
 #include <graphics/gui/Slider.h>
+#include <graphics/gui/RadioGroup.h>
+#include <graphics/gui/RadioButton.h>
 #include <graphics/gui/GUIMouseListener.h>
 #include <graphics/textures/TextureManager.h>
 #include <graphics/textures/Texture.h>

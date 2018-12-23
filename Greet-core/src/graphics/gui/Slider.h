@@ -37,10 +37,8 @@ namespace Greet
       virtual void MouseMoved(const MouseMovedEvent& event, const Vec2& translatedPos) override;
       virtual void Resized() override;
 
-      virtual void SetOnValueChangeCallback(OnValueChangeCallback callback)
-      {
-        onValueChangeCallback = callback;
-      }
+      // Callbacks
+      virtual void SetOnValueChangeCallback(OnValueChangeCallback callback);
 
       float GetValue() const;
       void SetValue(float value);

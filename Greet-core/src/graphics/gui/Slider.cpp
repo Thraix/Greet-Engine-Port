@@ -121,6 +121,11 @@ namespace Greet
     SetValue(value);
   }
 
+  void Slider::SetOnValueChangeCallback(OnValueChangeCallback callback)
+  {
+    onValueChangeCallback = callback;
+  }
+
   float Slider::GetValue() const
   {
     return GetSliderValueFromPos(sliderPos);

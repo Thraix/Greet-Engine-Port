@@ -9,6 +9,8 @@
 #include <graphics/gui/Divider.h>
 #include <graphics/gui/TextBox.h>
 #include <graphics/gui/Slider.h>
+#include <graphics/gui/RadioGroup.h>
+#include <graphics/gui/RadioButton.h>
 
 namespace Greet
 {
@@ -59,6 +61,14 @@ namespace Greet
     else if(object.GetName() == "Container")
     {
       return new Container(object, parent);
+    }
+    else if(object.GetName() == "RadioGroup")
+    {
+      return new RadioGroup(object, parent);
+    }
+    else if(object.GetName() == "RadioButton")
+    {
+      return new RadioButton(object, parent);
     }
     Log::Warning("Could not read XML object ", object.GetName(), ".");
     XMLObject o;

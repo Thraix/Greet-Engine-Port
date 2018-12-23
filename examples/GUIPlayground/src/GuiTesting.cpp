@@ -40,6 +40,8 @@ public:
     // is always the same.
     frame->GetComponentByName<ProgressBar>("progressBar")
       ->AttachValueReference(&progressBarValue);
+    frame->GetComponentByName<RadioGroup>("Radio")
+      ->SetOnRadioChangeCallback(std::bind(&Core::OnRadioChangeCallback, std::ref(*this), _1));
     frame->GetComponentByName<Slider>("Slider")
       ->SetOnClickCallback(std::bind(&Core::OnClickCallback, std::ref(*this), _1));
     frame->GetComponentByName<Slider>("Slider")
@@ -58,6 +60,11 @@ public:
       ->AttachValueReference(&progressBarValue);
 #endif
 	}
+
+  void OnRadioChangeCallback(RadioButton* button)
+  {
+    Log::Info("Radio changed to ", button->GetName());
+  }
 
   void OnValueChangeCallback(Component* component, float oldValue, float newValue)
   {

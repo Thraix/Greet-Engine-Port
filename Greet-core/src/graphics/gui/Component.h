@@ -11,6 +11,7 @@ namespace Greet
   class Component
   {
     public:
+      // Typedef callbacks
       typedef std::function<void(Component*)> OnClickCallback;
       typedef std::function<void(Component*)> OnPressCallback;
       typedef std::function<void(Component*)> OnReleaseCallback;
@@ -108,6 +109,7 @@ namespace Greet
       const TLBR& GetPadding() const;
       const TLBR& GetBorder() const;
       Vec2 GetContentSize() const;
+      const std::string& GetName() const;
 
       template <typename T>
         T* GetComponentByName(const std::string& name)
@@ -119,5 +121,11 @@ namespace Greet
         }
 
       virtual Component* GetComponentByNameNoCast(const std::string& name);
+
+    protected:
+      virtual void CallOnClickCallback();
+      virtual void CallOnPressCallback();
+      virtual void CallOnReleaseCallback();
+
   };
 }

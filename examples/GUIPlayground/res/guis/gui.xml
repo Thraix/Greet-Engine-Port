@@ -10,6 +10,19 @@
     fontSize="18px" font="roboto" color="#90a4ae">Frame header</Label>
 
   <Divider backgroundColor="#90a4ae"/>
+
+  <RadioGroup name="Radio" width="20px" height="80px" padding="0" margin="0" spacing="10px">
+    <RadioButton width="20px" height="20px" 
+      backgroundColor="#263238" borderColor="#455a64" border="2px" 
+      activebackgroundColor="#455a64" activeborderColor="#455a64" activeborder="2px"/>
+    <RadioButton width="20px" height="20px" 
+      backgroundColor="#263238" borderColor="#455a64" border="2px" 
+      activebackgroundColor="#455a64" activeborderColor="#455a64" activeborder="2px"/>
+    <RadioButton width="20px" height="20px" 
+      backgroundColor="#263238" borderColor="#455a64" border="2px" 
+      activebackgroundColor="#455a64" activeborderColor="#455a64" activeborder="2px"/>
+  </RadioGroup>
+
   <Button width="100%" height="40px" 
     backgroundColor="#37474f" borderColor="#455a64" 
     hoverbackgroundColor="#37474f" hoverborderColor="#455a64" 

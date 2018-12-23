@@ -14,7 +14,7 @@ namespace Greet
     if(xmlObject.HasProperty("name"))
       name = xmlObject.GetProperty("name");
     else
-      name = "Component#" + std::to_string(UUID::GetInstance().GetUUID());
+      name = "Component#" + LogUtils::DecToHex(UUID::GetInstance().GetUUID(),8);
 
     normalStyle.Load("",*this);
     hoverStyle.Load("hover",*this,&normalStyle);
@@ -92,13 +92,30 @@ namespace Greet
     onReleaseCallback = callback;
   }
 
+  void Component::CallOnClickCallback()
+  {
+    if(onClickCallback)
+      onClickCallback(this);
+  }
+
+  void Component::CallOnPressCallback()
+  {
+    if(onPressCallback)
+      onPressCallback(this);
+  }
+
+  void Component::CallOnReleaseCallback()
+  {
+    if(onReleaseCallback)
+      onReleaseCallback(this);
+  }
+
   void Component::MousePressed(const MousePressedEvent& event, const Vec2& translatedPos)
   {
     if(event.GetButton() == GLFW_MOUSE_BUTTON_1)
     {
       pressed = true;
-      if(onPressCallback)
-        onPressCallback(this);
+      CallOnPressCallback();
     }
   }
 
@@ -108,10 +125,9 @@ namespace Greet
     {
       if(pressed)
       {
-        if(IsMouseInside(translatedPos+pos) && onClickCallback)
-          onClickCallback(this);
-        if(onReleaseCallback)
-          onReleaseCallback(this);
+        if(IsMouseInside(translatedPos+pos))
+          CallOnClickCallback();
+        CallOnReleaseCallback();
       }
       pressed = false;
     }
@@ -229,6 +245,11 @@ namespace Greet
   {
     return size - GetPadding().GetSize() - GetBorder().GetSize();
   }
+
+  const std::string& Component::GetName() const
+  {
+    return name;
+  }  
 
   const TLBR& Component::GetMargin() const
   {
