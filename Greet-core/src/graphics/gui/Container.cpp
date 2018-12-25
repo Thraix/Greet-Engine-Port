@@ -19,7 +19,11 @@ namespace Greet {
     vertical = GUIUtils::GetBooleanFromXML(object,"verticalAlign",true);
     for (uint i = 0;i < object.GetObjectCount();i++)
     {
-      AddComponent(GUIUtils::GetComponent(object.GetObject(i), this));
+      Component* component = GUIUtils::GetComponent(object.GetObject(i), this);
+      if(component->GetXMLObject().GetName() == "Failed")
+        Log::Error("Could not load Component, could not understand type. (type=",object.GetObject(i).GetName(),")");
+      else
+        AddComponent(component);
     }
   }
 

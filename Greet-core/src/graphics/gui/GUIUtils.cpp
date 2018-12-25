@@ -71,8 +71,8 @@ namespace Greet
       return new RadioButton(object, parent);
     }
     Log::Warning("Could not read XML object ", object.GetName(), ".");
-    XMLObject o;
-    return new Component(o,nullptr); // Return plain content to avoid crash.
+    XMLObject o("Failed", std::map<std::string, std::string>(), "");
+    return new Component(o,parent); // Return plain content to avoid crash.
   }
   bool GUIUtils::GetBooleanFromXML(const XMLObject& object, const std::string& key, bool defaultValue)
   {
