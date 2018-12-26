@@ -88,9 +88,17 @@ namespace Greet {
     for(auto&& comp : m_components)
     {
       if(this->vertical)
-        usedSpace += comp->GetSize().h + comp->GetMargin().GetHeight() + spacing;
+        usedSpace += comp->GetMargin().GetHeight() + spacing;
       else 
-        usedSpace += comp->GetSize().w + comp->GetMargin().GetWidth() + spacing;
+        usedSpace += comp->GetMargin().GetWidth() + spacing;
+
+      if(!comp->GetXMLObject().HasProperty("weight"))
+      {
+        if(this->vertical)
+          usedSpace += comp->GetSize().h;
+        else 
+          usedSpace += comp->GetSize().w;
+      }
     }
     if(usedSpace > 0)
       usedSpace -= spacing; // Remove the spacing after the last one

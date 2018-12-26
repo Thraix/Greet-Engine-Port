@@ -13,13 +13,13 @@
   <Divider name="divider" backgroundColor="#90a4ae"/>
 
   <RadioGroup name="Radio" width="fill_parent" height="80px" padding="0" margin="0" spacing="10px">
-    <RadioButton width="20px" height="20px" 
+    <RadioButton width="20px" weight="20px" 
       backgroundColor="#263238" borderColor="#455a64" border="2px" 
       activebackgroundColor="#455a64" activeborderColor="#455a64" activeborder="2px"/>
-    <RadioButton width="20px" height="20px" 
+    <RadioButton width="20px" weight="20px" 
       backgroundColor="#263238" borderColor="#455a64" border="2px" 
       activebackgroundColor="#455a64" activeborderColor="#455a64" activeborder="2px"/>
-    <RadioButton width="20px" height="20px" 
+    <RadioButton width="20px" weight="20px" 
       backgroundColor="#263238" borderColor="#455a64" border="2px" 
       activebackgroundColor="#455a64" activeborderColor="#455a64" activeborder="2px"/>
   </RadioGroup>
