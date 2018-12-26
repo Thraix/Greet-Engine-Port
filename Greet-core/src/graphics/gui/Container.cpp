@@ -94,9 +94,9 @@ namespace Greet {
 
       if(!comp->GetXMLObject().HasProperty("weight"))
       {
-        if(this->vertical)
+        if(this->vertical && comp->GetXMLObject().GetProperty("height","wrap_content") != "fill_parent")
           usedSpace += comp->GetSize().h;
-        else 
+        else if(!this->vertical && comp->GetXMLObject().GetProperty("width","wrap_content") != "fill_parent")
           usedSpace += comp->GetSize().w;
       }
     }
