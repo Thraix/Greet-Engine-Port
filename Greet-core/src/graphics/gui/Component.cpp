@@ -103,6 +103,10 @@ namespace Greet
     {
       size.w = parentEmptyWidth * weight / parentTotalWeight;
     }
+    else if(width == "fill_parent")
+    {
+      size.h = parentEmptyHeight / parentTotalWeight;
+    }
     // else we have already set the size in Measure
 
 
@@ -116,6 +120,10 @@ namespace Greet
     else if(weight > 0 && vertical )
     {
       size.h = parentEmptyHeight * weight / parentTotalWeight;
+    }
+    else if(height == "fill_parent")
+    {
+      size.h = parentEmptyHeight / parentTotalWeight;
     }
     // else we have already set the size in Measure
     //

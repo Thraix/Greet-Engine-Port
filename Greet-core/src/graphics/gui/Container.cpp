@@ -111,9 +111,19 @@ namespace Greet {
   float Container::GetMeasureTotalWeight()
   {
     float totalWeight = 0;
+    std::string propName = "width";
+    if(vertical)
+      propName = "height";
     for(auto&& comp : m_components)
     {
-      totalWeight += atof(comp->GetXMLObject().GetProperty("weight", "0").c_str());
+      if(comp->GetXMLObject().HasProperty("weight"))
+      {
+        totalWeight += atof(comp->GetXMLObject().GetProperty("weight").c_str());
+      }
+      else
+      {
+        totalWeight += comp->GetXMLObject().GetProperty(propName,"wrap_content") == "fill_parent" ? 1 : 0;
+      }
     }
     return totalWeight;
   }
@@ -226,10 +236,10 @@ namespace Greet {
         wrapSize.w += comp->GetSize().w + comp->GetMargin().left + spacing;
       }
     }
-      if(vertical && wrapSize.h > 0)
-        wrapSize.h -= spacing;
-      else if(!vertical && wrapSize.w > 0)
-        wrapSize.w -= spacing;
+    if(vertical && wrapSize.h > 0)
+      wrapSize.h -= spacing;
+    else if(!vertical && wrapSize.w > 0)
+      wrapSize.w -= spacing;
 
     return wrapSize+GetBorder().GetSize() + GetPadding().GetSize();
   }

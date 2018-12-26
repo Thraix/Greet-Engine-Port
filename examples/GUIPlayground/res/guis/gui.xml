@@ -1,6 +1,6 @@
 <Frame
   name="TopComponent"
-  width="400px" weight="1" minWidth="100px" spacing="10px"
+  width="400px" height="fill_parent" minWidth="100px" spacing="10px"
   resizeTop="false" resizeLeft="false" resizeBottom="false" resizeRight="true"
   padding="10px" border="5px"
   borderColor="#37474f" 
