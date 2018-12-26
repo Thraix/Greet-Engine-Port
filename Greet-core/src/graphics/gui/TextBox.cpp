@@ -38,6 +38,14 @@ namespace Greet
     delete hintText;
   }
 
+  void TextBox::OnMeasured()
+  {
+    text->Measure();
+    hintText->Measure();
+    text->MeasureFill(GetContentSize().w,GetContentSize().h, 1, true);
+    hintText->MeasureFill(GetContentSize().w,GetContentSize().h, 1, true);
+  }
+
   void TextBox::Render(GUIRenderer* renderer) const
   {
     renderer->PushViewport(pos+GetTotalPadding(), GetContentSize(), true);

@@ -26,6 +26,8 @@ namespace Greet
       TextBox(const XMLObject& object, Component* parent);
       virtual ~TextBox();
 
+      void OnMeasured() override;
+
       void Render(GUIRenderer* renderer) const override;
       void Update(float timeElapsed) override;
 
