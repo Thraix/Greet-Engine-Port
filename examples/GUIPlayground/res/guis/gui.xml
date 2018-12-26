@@ -12,7 +12,7 @@
 
   <Divider name="divider" backgroundColor="#90a4ae"/>
 
-  <RadioGroup name="Radio" width="fill_parent" height="80px" padding="0" margin="0" spacing="10px">
+  <RadioGroup name="Radio" width="fill_parent" height="80px" margin="0" spacing="10px">
     <RadioButton width="20px" weight="20px" 
       backgroundColor="#263238" borderColor="#455a64" border="2px" 
       activebackgroundColor="#455a64" activeborderColor="#455a64" activeborder="2px"/>
@@ -55,12 +55,12 @@
     backgroundColor="#37474f" 
     borderColor="#455a64" 
     border="2px"
-    width="fill_parent" height="40px" padding="0" margin="0"
+    width="fill_parent" height="40px" margin="0"
     minValue="10" maxValue="90" defaultValue="30" stepSize="10" indicatorInside="true">
     <Component
       borderColor="#263238" 
       backgroundColor="#455a64" 
-      width="10px" height="fill_parent" padding="0" margin="0px"
+      width="10px" height="fill_parent" margin="0px"
       border="2px"
       />
   </Slider>
@@ -101,12 +101,12 @@
       borderColor="#455a64" 
       border="2px"
       vertical="true"
-      width="40px" height="fill_parent" padding="0" margin="0"
+      width="40px" height="fill_parent" margin="0"
       minValue="10" maxValue="90" defaultValue="30" stepSize="10" indicatorInside="true">
       <Component
         borderColor="#263238" 
         backgroundColor="#455a64" 
-        width="fill_parent" height="10px" padding="0" margin="0px"
+        width="fill_parent" height="10px" margin="0px"
         border="2px"
         />
     </Slider>
@@ -118,7 +118,7 @@
     backgroundColor="#37474f" 
     borderColor="#455a64" 
     progressColor="#607d8b"
-    border="2px" padding="0" 
+    border="2px" 
     radius="10"
     minValue="0.25" maxValue="1.25"/>
 

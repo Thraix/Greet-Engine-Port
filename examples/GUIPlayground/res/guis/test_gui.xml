@@ -5,21 +5,21 @@
 
   <Component
     backgroundColor="#006600" borderColor="#ffffff"
-    margin="0px" padding="0" border="2"
+    margin="0px" border="2"
     width="40px" height="80px" radius="30px"/>
 
   <Component
     backgroundColor="#006600" borderColor="#ffffff"
-    margin="0px" padding="0" border="2"
+    margin="0px" border="2"
     width="80px" height="40px" radius="30px"/>
 
   <Component
     backgroundColor="#006600" borderColor="#ffffff"
-    margin="0px" padding="0" border="2"
+    margin="0px" border="2"
     width="20px" height="40px" radius="30px"/>
 
   <Component
     backgroundColor="#006600" borderColor="#ffffff"
-    margin="0px" padding="0" border="2"
+    margin="0px" border="2"
     width="20px" height="40px" radius="30px"/>
 </Frame>

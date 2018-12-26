@@ -2,10 +2,11 @@
   border="1"
   borderColor="#37474f" 
   backgroundColor="#263238" 
+  padding="10"
   verticalAlign="false">
-  <Component padding="0" width="200px" height="200px"
+  <Component width="200px" height="200px"
     backgroundColor="#37474f" borderColor="#455a64" />
-  <Slider padding="0" width="20px" height="fill_parent"
+  <Slider width="20px" height="fill_parent"
     backgroundColor="#37474f" borderColor="#455a64" vertical="true">
     <Component
       borderColor="#263238" 
@@ -13,59 +14,59 @@
       width="fill_parent" height="5"/>
   </Slider>
 
-  <Container padding="0" width="200px" height="fill_parent">
-    <Container padding="0" verticalAlign="false" width="fill_parent">
-      <Container padding="0" weight="1" verticalAlign="false">
-        <Label padding="0" font="roboto" fontSize="20">R</Label>
+  <Container width="200px" height="fill_parent">
+    <Container verticalAlign="false" width="fill_parent">
+      <Container weight="1" verticalAlign="false">
+        <Label font="roboto" fontSize="20">R</Label>
         <TextBox padding="0 5" radius="5px" borderRadius="7px" 
           border="2px" height="30px" weight="1" font="roboto"
           backgroundColor="#37474f" borderColor="#455a64" />
       </Container>
-      <Container padding="0" weight="1" verticalAlign="false">
-        <Label padding="0" font="roboto" fontSize="20">H</Label>
-        <TextBox padding="0 5" radius="5px" borderRadius="7px" 
-          border="2px" height="30px" weight="1" font="roboto"
-          backgroundColor="#37474f" borderColor="#455a64" />
-      </Container>
-    </Container>
-
-    <Container padding="0" verticalAlign="false" width="fill_parent">
-      <Container padding="0" weight="1" verticalAlign="false">
-        <Label padding="0" font="roboto" fontSize="20">G</Label>
-        <TextBox padding="0 5" radius="5px" borderRadius="7px" 
-          border="2px" height="30px" weight="1" font="roboto"
-          backgroundColor="#37474f" borderColor="#455a64" />
-      </Container>
-      <Container padding="0" weight="1" verticalAlign="false">
-        <Label padding="0" font="roboto" fontSize="20">S</Label>
+      <Container weight="1" verticalAlign="false">
+        <Label font="roboto" fontSize="20">H</Label>
         <TextBox padding="0 5" radius="5px" borderRadius="7px" 
           border="2px" height="30px" weight="1" font="roboto"
           backgroundColor="#37474f" borderColor="#455a64" />
       </Container>
     </Container>
 
-    <Container padding="0" verticalAlign="false" width="fill_parent">
-      <Container padding="0" weight="1" verticalAlign="false">
-        <Label padding="0" font="roboto" fontSize="20">B</Label>
+    <Container verticalAlign="false" width="fill_parent">
+      <Container weight="1" verticalAlign="false">
+        <Label font="roboto" fontSize="20">G</Label>
         <TextBox padding="0 5" radius="5px" borderRadius="7px" 
           border="2px" height="30px" weight="1" font="roboto"
           backgroundColor="#37474f" borderColor="#455a64" />
       </Container>
-      <Container padding="0" weight="1" verticalAlign="false">
-        <Label padding="0" font="roboto" fontSize="20">V</Label>
+      <Container weight="1" verticalAlign="false">
+        <Label font="roboto" fontSize="20">S</Label>
         <TextBox padding="0 5" radius="5px" borderRadius="7px" 
           border="2px" height="30px" weight="1" font="roboto"
           backgroundColor="#37474f" borderColor="#455a64" />
       </Container>
     </Container>
-    <Container padding="0" verticalAlign="false" width="fill_parent">
-      <Label padding="0" font="roboto" fontSize="20">#</Label>
+
+    <Container verticalAlign="false" width="fill_parent">
+      <Container weight="1" verticalAlign="false">
+        <Label font="roboto" fontSize="20">B</Label>
+        <TextBox padding="0 5" radius="5px" borderRadius="7px" 
+          border="2px" height="30px" weight="1" font="roboto"
+          backgroundColor="#37474f" borderColor="#455a64" />
+      </Container>
+      <Container weight="1" verticalAlign="false">
+        <Label font="roboto" fontSize="20">V</Label>
+        <TextBox padding="0 5" radius="5px" borderRadius="7px" 
+          border="2px" height="30px" weight="1" font="roboto"
+          backgroundColor="#37474f" borderColor="#455a64" />
+      </Container>
+    </Container>
+    <Container verticalAlign="false" width="fill_parent">
+      <Label font="roboto" fontSize="20">#</Label>
       <TextBox padding="0 5" radius="5px" borderRadius="7px" 
         border="2px" height="30px" weight="1" font="roboto"
         backgroundColor="#37474f" borderColor="#455a64" />
     </Container>
 
-    <Component padding="0" width="fill_parent" height="fill_parent"
+    <Component width="fill_parent" height="fill_parent"
       backgroundColor="#37474f" borderColor="#455a64" />
   </Container>
 </Frame>

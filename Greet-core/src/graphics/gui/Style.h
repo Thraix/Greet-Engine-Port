@@ -20,7 +20,7 @@ namespace Greet
       uint roundedPrecision;
 
       Style()
-        : margin(0,0,0,0), padding(10,10,10,10), border(0,0,0,0), backgroundColor(Vec4(1,1,1,1)), borderColor(Vec4(0,0,0,0)), borderRadius(0.0), radius(0.0), roundedPrecision(3)
+        : margin(0,0,0,0), padding(0,0,0,0), border(0,0,0,0), backgroundColor(Vec4(1,1,1,1)), borderColor(Vec4(0,0,0,0)), borderRadius(0.0), radius(0.0), roundedPrecision(3)
       {
 
       }
