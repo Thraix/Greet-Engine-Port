@@ -4,6 +4,7 @@
 #include <utils/Utils.h>
 #include <utils/AABBUtils.h>
 #include <graphics/gui/Component.h>
+#include <cstdlib>
 
 namespace Greet {
 
@@ -17,6 +18,7 @@ namespace Greet {
     : Component(object, parent), vertical(true)
   {
     vertical = GUIUtils::GetBooleanFromXML(object,"verticalAlign",true);
+    spacing = GUIUtils::GetFloatFromXML(object, "spacing", 10);
     for (uint i = 0;i < object.GetObjectCount();i++)
     {
       Component* component = GUIUtils::GetComponent(object.GetObject(i), this);
@@ -33,6 +35,79 @@ namespace Greet {
     {
       delete *it;
     }
+  }
+
+  void Container::PostConstruction() 
+  {
+    for(auto&& comp : m_components)
+    {
+      comp->PostConstruction();
+    }
+  }
+
+  void Container::Measure()
+  {
+    for(auto&& comp : m_components)
+    {
+      comp->Measure();
+    }
+    Component::Measure();
+  }
+
+  void Container::MeasureFill(float parentEmptyWidth, float parentEmptyHeight, float parentTotalWeight, bool vertical)
+  {
+    Component::MeasureFill(parentEmptyWidth, parentEmptyHeight, parentTotalWeight, vertical);
+
+    Vec2 emptySpace = GetMeasureFillSize();
+
+    for(auto&& comp : m_components)
+    {
+      comp->MeasureFill(emptySpace.w,emptySpace.h, GetMeasureTotalWeight(), this->vertical);
+    }
+
+    float offset = 0;
+    for(auto&& comp : m_components)
+    {
+      if(this->vertical)
+      {
+        comp->SetPosition(Vec2(0.0f,offset));
+        offset += comp->GetMargin().top + comp->GetSize().h + spacing;
+      }
+      else
+      {
+        comp->SetPosition(Vec2(offset,0.0f));
+        offset += comp->GetMargin().left + comp->GetSize().w + spacing;
+      }
+    }
+  }
+
+  Vec2 Container::GetMeasureFillSize()
+  {
+    float usedSpace = 0;
+
+    for(auto&& comp : m_components)
+    {
+      if(this->vertical)
+        usedSpace += comp->GetSize().h + comp->GetMargin().GetHeight() + spacing;
+      else 
+        usedSpace += comp->GetSize().w + comp->GetMargin().GetWidth() + spacing;
+    }
+    if(usedSpace > 0)
+      usedSpace -= spacing; // Remove the spacing after the last one
+    if(vertical)
+      return Vec2(GetContentSize().w, GetContentSize().h - usedSpace);
+    else
+      return Vec2(GetContentSize().w-usedSpace, GetContentSize().h);
+  }
+
+  float Container::GetMeasureTotalWeight()
+  {
+    float totalWeight = 0;
+    for(auto&& comp : m_components)
+    {
+      totalWeight += atof(comp->GetXMLObject().GetProperty("weight", "0").c_str());
+    }
+    return totalWeight;
   }
 
   void Container::RenderHandle(GUIRenderer* renderer) const
@@ -62,18 +137,10 @@ namespace Greet {
 
   void Container::AddComponent(Component* component)
   {
-    if (component == NULL)
+    if (component == nullptr)
     {
       Log::Warning("Cannot add NULL to component");
       return;
-    }
-    if(m_components.size() > 0)
-    {
-      Component* last = *m_components.rbegin();
-      if(vertical)
-        component->SetPosition(Vec2(0,last->GetPosition().y + last->GetSize().y + last->GetMargin().GetHeight() + 10));
-      else
-        component->SetPosition(Vec2(last->GetPosition().x + last->GetSize().x + last->GetMargin().GetWidth() + 10,0));
     }
     m_components.push_back(component);
   }
@@ -133,6 +200,37 @@ namespace Greet {
     return m_components.size();
   }
 
+  Vec2 Container::GetWrapSize() const
+  {
+    Vec2 wrapSize{0,0};
+    for(auto&& comp : m_components)
+    {
+      if(vertical)
+      {
+        if(wrapSize.w < comp->GetSize().w)
+          wrapSize.w = comp->GetSize().w;
+        wrapSize.h += comp->GetSize().h + comp->GetMargin().top + spacing;
+      }
+      else
+      {
+        if(wrapSize.h < comp->GetSize().h)
+          wrapSize.h = comp->GetSize().h;
+        wrapSize.w += comp->GetSize().w + comp->GetMargin().left + spacing;
+      }
+    }
+      if(vertical && wrapSize.h > 0)
+        wrapSize.h -= spacing;
+      else if(!vertical && wrapSize.w > 0)
+        wrapSize.w -= spacing;
+
+    return wrapSize+GetBorder().GetSize() + GetPadding().GetSize();
+  }
+
+  bool Container::IsVertical() const
+  {
+    return vertical;
+  }
+
   Component* Container::OnMousePressed(const MousePressedEvent& event, const Vec2& translatedPos)
   {
     for(auto it = m_components.rbegin(); it != m_components.rend();++it)
@@ -161,13 +259,5 @@ namespace Greet {
       }
     }
     return Component::OnMouseMoved(event,translatedPos);
-  }
-
-  void Container::Resized()
-  {
-    for(auto it{m_components.begin()}; it != m_components.end();++it)
-    {
-      (*it)->ParentResized(size);
-    }
   }
 }

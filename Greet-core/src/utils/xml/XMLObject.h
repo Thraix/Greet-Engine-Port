@@ -26,6 +26,7 @@ namespace Greet
 
       bool HasProperty(const std::string& property) const;
       const std::string& GetProperty(const std::string& property) const;
+      const std::string& GetProperty(const std::string& property, const std::string& defaultValue) const;
       unsigned int GetObjectCount() const;
       const XMLObject& GetObject(unsigned int i) const;
       const std::string& GetName() const;

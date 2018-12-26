@@ -16,8 +16,7 @@ namespace Greet
       Style activeStyle;
     public:
       RadioButton(const XMLObject& xmlObject, Component* component);
-
-      void Render(GUIRenderer* renderer) const override;
+      void PostConstruction() override;
 
       void CallOnClickCallback() override;
 

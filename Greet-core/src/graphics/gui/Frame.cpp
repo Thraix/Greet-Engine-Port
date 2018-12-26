@@ -3,6 +3,7 @@
 #include "GUIUtils.h"
 #include <utils/Utils.h>
 #include <utils/AABBUtils.h>
+#include <graphics/gui/GLayer.h>
 
 namespace Greet {
 
@@ -106,11 +107,22 @@ namespace Greet {
     }
     ResizeScreenClamp();
     if(oldSize != size)
-      Resized();
+    {
+      if(parent)
+      {
+        Vec2 empty{parent->GetMeasureFillSize()};
+        MeasureFill(empty.w, empty.h,parent->GetMeasureTotalWeight(),true);
+      }
+      else
+      {
+        MeasureFill(GLayer::GetWidth(), GLayer::GetHeight(),1,true);
+      }
+    }
   }
 
   void Frame::ResizeScreenClamp()
   {
+
     if (m_stayInsideWindow)
     {
       if (pos.x < 0)
@@ -118,17 +130,17 @@ namespace Greet {
         pos.x = 0;
         size.x = m_posOrigin.x + m_sizeOrigin.x;
       }
-      else if (pos.x > Window::GetWidth() - size.x)
+      else if (pos.x > GLayer::GetWidth() - size.x)
       {
-        size.x = Window::GetWidth() - m_posOrigin.x;
+        size.x = GLayer::GetWidth() - m_posOrigin.x;
       }
       if (pos.y < 0)
       {
         pos.y = 0;
         size.y = m_posOrigin.y + m_sizeOrigin.y;
       }
-      else if (pos.y > Window::GetHeight() - size.y)
-        size.y = Window::GetWidth() - m_posOrigin.y;
+      else if (pos.y > GLayer::GetHeight() - size.y)
+        size.y = GLayer::GetHeight() - m_posOrigin.y;
     }
   }
 
@@ -139,22 +151,7 @@ namespace Greet {
 
   void Frame::OnWindowResize(int width, int height)
   {
-    if (xmlObject.HasProperty("width"))
-    {
-      const std::string& w = xmlObject.GetProperty("width");
-      if (!GUIUtils::IsStaticSize(w))
-      {
-        size.w = GUIUtils::GetSize(w, width);
-      }
-    }
-    if (xmlObject.HasProperty("height"))
-    {
-      const std::string& h = xmlObject.GetProperty("height");
-      if (!GUIUtils::IsStaticSize(h))
-      {
-        size.h = GUIUtils::GetSize(h, height);
-      }
-    }
+    MeasureFill(width,height,1,true);
   }
 
   void Frame::MousePressed(const MousePressedEvent& event, const Vec2& translatedPos)

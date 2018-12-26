@@ -8,7 +8,6 @@ namespace Greet {
     fontSize = GUIUtils::GetSizeFromXML(object, "fontSize", 20, parent->GetHeight());
     font = FontManager::Get(GUIUtils::GetStringFromXML(object,"font",""),fontSize);
 
-    size = Vec2(CalculateWidth(), CalculateHeight());
     color = GUIUtils::GetColorFromXML(object,"color",Vec4(0,0,0,1));
   }
 
@@ -21,7 +20,8 @@ namespace Greet {
   void Label::SetText(const std::string& text)
   {
     str = text;
-    size.w = CalculateWidth();
+    // TODO: Tell the parent I have resized
+    //size.w = CalculateWidth();
   }
 
   const std::string& Label::GetText() const
@@ -29,15 +29,10 @@ namespace Greet {
     return str;
   }
 
-  float Label::CalculateWidth() const
+  Vec2 Label::GetWrapSize() const
   {
     float width = font->GetWidthOfText(str);
-    return hasMaxWidth ? Math::Min(width, maxWidth) : width;
-  }
-
-  float Label::CalculateHeight() const
-  {
-    return font->GetSize();
+    return Vec2(hasMaxWidth ? Math::Min(width, maxWidth) : width, font->GetSize());
   }
 
   const Vec4& Label::GetColor() const

@@ -44,6 +44,20 @@ namespace Greet
 
     public:
       Component(const XMLObject& object, Component* parent);
+
+      virtual void PostConstruction(){} 
+
+      // Measurements that doesn't depend on the parent
+      virtual void Measure();
+      // Measurements that does depend on the parent
+      virtual void MeasureFill(float parentEmptyWidth, float parentEmptyHeight, float parentTotalWeight, bool vertical);
+
+      // Size has updated
+      virtual void OnMeasured(){}
+
+      virtual Vec2 GetMeasureFillSize();
+      virtual float GetMeasureTotalWeight();
+
       // Push translation to renderer
       virtual void PreRender(GUIRenderer* renderer, const Vec2& translation) const;
 
@@ -72,13 +86,11 @@ namespace Greet
       Vec2 GetSize() const;
       Component* GetParent() const;
 
+      virtual Vec2 GetWrapSize() const;
+
       // Will return the stored value
       virtual float GetWidth() const;
       virtual float GetHeight() const;
-
-      // Will return a newly calculated value
-      virtual float CalculateWidth() const;
-      virtual float CalculateHeight() const;
 
       const XMLObject& GetXMLObject() const;
       virtual bool IsMouseInside(const Vec2& parentMouse) const;
@@ -100,9 +112,6 @@ namespace Greet
       virtual void KeyPressed(const KeyPressedEvent& event){}
       virtual void KeyReleased(const KeyReleasedEvent& event){}
       virtual void KeyTyped(const KeyTypedEvent& event){}
-
-      virtual void ParentResized(const Vec2& parentSize);
-      virtual void Resized(){}
 
       Vec2 GetTotalPadding() const;
       const TLBR& GetMargin() const;

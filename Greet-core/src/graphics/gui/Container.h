@@ -10,11 +10,19 @@ namespace Greet {
     protected:
       std::vector<Component*> m_components;
       bool vertical;
+      float spacing;
 
     public:
       Container();
       Container(const XMLObject& object, Component* parent);
       virtual ~Container();
+
+      void Measure() override;
+      void MeasureFill(float parentEmptyWidth, float parentEmptyHeight, float parentTotalWeight, bool vertical) override;
+      Vec2 GetMeasureFillSize() override;
+      float GetMeasureTotalWeight() override;
+
+      virtual void PostConstruction() override;
 
       virtual void RenderHandle(GUIRenderer* renderer) const override;
       virtual void UpdateHandle(float timeElapsed) override;
@@ -25,10 +33,12 @@ namespace Greet {
       Component* GetComponent(uint index);
       size_t GetComponentCount() const;
 
+      bool IsVertical() const;
+
+      virtual Vec2 GetWrapSize() const override;
+
       virtual Component* OnMousePressed(const MousePressedEvent& event, const Vec2& translatedPos) override;
       virtual Component* OnMouseMoved(const MouseMovedEvent& event, const Vec2& translatedPos) override;
-
-      virtual void Resized() override;
 
       virtual Component* GetComponentByNameNoCast(const std::string& name) override;
   };

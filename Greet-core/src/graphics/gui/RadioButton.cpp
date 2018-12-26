@@ -11,23 +11,17 @@ namespace Greet
     activeStyle.Load("active", *this, &normalStyle);
   }
 
-  void RadioButton::Render(GUIRenderer* renderer) const
+  void RadioButton::PostConstruction()
   {
-    return;
-    if(active)
-      renderer->SubmitRect(pos, Vec2(20,20), Vec4(1,1,1,1), false);
-    else
-      renderer->SubmitRect(pos, Vec2(20,20), Vec4(1,0,0,1), false);
+    radioParent = dynamic_cast<RadioGroup*>(parent);
+    if(!radioParent)
+      Log::Warning("RadioButton is not inside a RadioGroup");
   }
 
   void RadioButton::CallOnClickCallback() 
   {
-    RadioGroup* group = dynamic_cast<RadioGroup*>(parent);
-    if(group)
-      group->NotifyRadioChange(this);
-    else
-      Log::Warning("RadioButton is not inside a RadioGroup");
-
+    if(radioParent)
+      radioParent->NotifyRadioChange(this);
     Select(true);
     Component::CallOnClickCallback();
   }

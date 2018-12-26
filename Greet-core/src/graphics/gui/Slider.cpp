@@ -41,11 +41,51 @@ namespace Greet
     if(stepSize > 0)
       flags |= SLIDER_FLAG_SNAP;
 
-    // Resized initialized the min and max value of the positions
-    Resized();
-
     // Default defaultValue should be in the middle
     SetValue(GUIUtils::GetIntFromXML(xmlObject, "defaultValue", (maxValue-minValue)/2.0f));
+  }
+
+  void Slider::Measure() 
+  {
+    sliderComponent->Measure();
+    Component::Measure();
+  }
+
+  void Slider::MeasureFill(float parentEmptyWidth, float parentEmptyHeight, float parentWeight, bool vertical)
+  {
+    Component::MeasureFill(parentEmptyWidth, parentEmptyHeight, parentWeight, vertical);
+    sliderComponent->MeasureFill(GetContentSize().w,GetContentSize().h,1,flags & SLIDER_FLAG_VERTICAL);
+  }
+
+  void Slider::OnMeasured()
+  {
+    float value = GetValue();
+    // Is there a better way to do this. It is super sad.
+    if(flags & SLIDER_FLAG_FORCE_INSIDE)
+    {
+      if(flags & SLIDER_FLAG_VERTICAL)
+      {
+        minPos = sliderComponent->GetHeight()/2;
+        maxPos = size.h-GetBorder().GetHeight()-minPos;
+      }
+      else
+      {
+        minPos = sliderComponent->GetWidth()/2;
+        maxPos = size.w-GetBorder().GetWidth()-minPos;
+      }
+    }
+    else if(flags & SLIDER_FLAG_VERTICAL)
+    {
+      minPos = 0;
+      maxPos = size.h;
+    }
+    else
+    {
+      minPos = 0;
+      maxPos = size.w;
+    }
+
+    SetValue(value);
   }
 
   void Slider::Render(GUIRenderer* renderer) const
@@ -88,37 +128,6 @@ namespace Greet
       if(oldValue != newValue)
         CallOnValueChangeCallback(oldValue, newValue);
     }
-  }
-
-  void Slider::Resized() 
-  { 
-    float value = GetValue();
-    // Is there a better way to do this. It is super sad.
-    if(flags & SLIDER_FLAG_FORCE_INSIDE)
-    {
-      if(flags & SLIDER_FLAG_VERTICAL)
-      {
-        minPos = sliderComponent->GetHeight()/2;
-        maxPos = size.h-GetBorder().GetHeight()-minPos;
-      }
-      else
-      {
-        minPos = sliderComponent->GetWidth()/2;
-        maxPos = size.w-GetBorder().GetWidth()-minPos;
-      }
-    }
-    else if(flags & SLIDER_FLAG_VERTICAL)
-    {
-      minPos = 0;
-      maxPos = size.h;
-    }
-    else
-    {
-      minPos = 0;
-      maxPos = size.w;
-    }
-
-    SetValue(value);
   }
 
   void Slider::SetOnValueChangeCallback(OnValueChangeCallback callback)

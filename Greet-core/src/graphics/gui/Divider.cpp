@@ -12,17 +12,17 @@ namespace Greet
       if(!xmlObject.HasProperty("width"))
         xmlObject.AddProperty("width", "1px");
       if(!xmlObject.HasProperty("height"))
-        xmlObject.AddProperty("height", "100%");
+        xmlObject.AddProperty("height", "fill_parent");
     }
     else
     {
       if(!xmlObject.HasProperty("width"))
-        xmlObject.AddProperty("width", "100%");
+        xmlObject.AddProperty("width", "fill_parent");
       if(!xmlObject.HasProperty("height"))
         xmlObject.AddProperty("height", "1px");
     }
-    size = Vec2(CalculateWidth(), CalculateHeight());
   }
+
   void Divider::PreRender(GUIRenderer* renderer, const Vec2& translation) const
   {
     if(parent)
@@ -44,18 +44,26 @@ namespace Greet
       renderer->SubmitRect(pos + currentStyle->border.LeftTop(), size-GetBorder().LeftTop()-GetBorder().RightBottom(), currentStyle->backgroundColor, false);
 
   }
-  float Divider::CalculateWidth() const
+
+  void Divider::OnMeasured() 
   {
-    if(parent && !vertical)
-      return Component::CalculateWidth() + parent->GetPadding().GetWidth();
-    return Component::CalculateWidth();
+    if(parent)
+    {
+      if(vertical)
+      {
+        size.h += parent->GetPadding().GetHeight();
+      }
+      else
+      {
+        size.w += parent->GetPadding().GetWidth();
+      }
+    }
   }
 
-  float Divider::CalculateHeight() const
+  Vec2 Divider::GetWrapSize() const
   {
-    if(parent && vertical)
-      return Component::CalculateHeight() + parent->GetPadding().GetHeight();
-    return Component::CalculateHeight();
-
+    if(parent && !vertical)
+      return Vec2(100, 1);
+    return Vec2(1, 100);
   }
 }

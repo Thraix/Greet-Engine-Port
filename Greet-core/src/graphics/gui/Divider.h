@@ -13,8 +13,9 @@ namespace Greet
       Divider(const XMLObject& object, Component* parent);
       void PreRender(GUIRenderer* renderer, const Vec2& translation) const override;
 
+      virtual void OnMeasured() override;
+
       // Will return a newly calculated value
-      virtual float CalculateWidth() const override;
-      virtual float CalculateHeight() const override;
+      virtual Vec2 GetWrapSize() const override;
   };
 }

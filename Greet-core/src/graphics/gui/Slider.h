@@ -31,11 +31,14 @@ namespace Greet
     public:
       Slider(const XMLObject& xmlObject, Component* parent);
 
+      virtual void Measure() override;
+      virtual void MeasureFill(float parentEmptyWidth, float parentEmptyHeight, float parentWeight, bool vertical) override;
+      virtual void OnMeasured() override;
+
       virtual void Render(GUIRenderer* renderer) const override;
 
       virtual void MousePressed(const MousePressedEvent& event, const Vec2& translatedPos) override;
       virtual void MouseMoved(const MouseMovedEvent& event, const Vec2& translatedPos) override;
-      virtual void Resized() override;
 
       // Callbacks
       virtual void SetOnValueChangeCallback(OnValueChangeCallback callback);

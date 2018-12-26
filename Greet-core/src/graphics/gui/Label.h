@@ -22,8 +22,7 @@ namespace Greet {
       void SetText(const std::string& text);
       const std::string& GetText() const;
 
-      virtual float CalculateWidth() const override;
-      virtual float CalculateHeight() const override;
+      virtual Vec2 GetWrapSize() const override;
 
       const Vec4& GetColor() const;
 

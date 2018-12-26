@@ -18,11 +18,9 @@ namespace Greet
   {
     if (object.GetName() == "Frame")
     {
-      return new Frame(object);
-    }
-    else if (object.GetName() == "FrameHeader")
-    {
-
+      Frame* frame{new Frame{object}};
+      frame->PostConstruction();
+      return frame;
     }
     Log::Warning("Could not read XML object ", object.GetName(), ".");
     return new Frame();

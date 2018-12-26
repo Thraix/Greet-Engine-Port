@@ -45,6 +45,14 @@ namespace Greet
     return it->second;
   }
 
+  const std::string& XMLObject::GetProperty(const std::string& property, const std::string& defaultValue) const
+  {
+    auto it = properties.find(property);
+    if (it == properties.end())
+      return defaultValue;
+    return it->second;
+  }
+
   unsigned int XMLObject::GetObjectCount() const
   {
     return objects.size();

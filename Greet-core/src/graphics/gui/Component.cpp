@@ -4,13 +4,14 @@
 #include <graphics/gui/GLayer.h>
 #include <utils/UUID.h>
 #include <functional>
+#include <cstdlib>
 
 namespace Greet
 {
   Component::Component(const XMLObject& object, Component* parent)
     : xmlObject(object.GetStrippedXMLObject()), parent(parent), m_isFocusable(false),isFocused(false), pos(0,0), pressed(false)
   {
-    size = Vec2(CalculateWidth(), CalculateHeight());
+    size = Vec2(100,10);
     if(xmlObject.HasProperty("name"))
       name = xmlObject.GetProperty("name");
     else
@@ -20,6 +21,115 @@ namespace Greet
     hoverStyle.Load("hover",*this,&normalStyle);
     pressStyle.Load("press",*this,&normalStyle);
     currentStyle = &normalStyle;
+  }
+
+  void Component::Measure()
+  {
+    float weight = atof(xmlObject.GetProperty("weigth", "0").c_str());
+    std::string width = xmlObject.GetProperty("width", "wrap_content");
+    std::string height = xmlObject.GetProperty("height", "wrap_content");
+    Container* container = dynamic_cast<Container*>(parent);
+    if(weight == 0.0f || (container && container->IsVertical() ))
+    {
+      if(width == "wrap_content")
+      {
+        size.w = GetWrapSize().w;
+      }
+      else
+      {
+        float w = atof(width.c_str());
+        if(w > 0)
+        {
+          size.w = w;
+        }
+        else if(width == "fill_parent")
+        {
+          // If we have a parent, let that parent determain the size
+          if(!parent)
+          {
+            GLayer::GetWidth();
+          }
+        }
+      }
+    } 
+    else if(!parent)
+    {
+      GLayer::GetWidth();
+    }// else let the parent determain the size
+
+    if(weight == 0.0f || (container && !container->IsVertical() ))
+    {
+      if(height == "wrap_content")
+      {
+        size.h = GetWrapSize().h;
+      }
+      else
+      {
+        float h = atof(height.c_str());
+        if(h > 0)
+        {
+          size.h = h;
+        }
+        else if(height == "fill_parent")
+        {
+          // If we have a parent, let that parent determain the size
+          if(!parent)
+          {
+            GLayer::GetHeight();
+          }
+        }
+      }
+    } 
+    else if(!parent)
+    {
+      GLayer::GetHeight();
+    }// else let the parent determain the size
+  }
+
+  void Component::MeasureFill(float parentEmptyWidth, float parentEmptyHeight, float parentTotalWeight, bool vertical)
+  {
+    float weight = atof(xmlObject.GetProperty("weight", "0").c_str());
+    std::string width = xmlObject.GetProperty("width", "wrap_content");
+    std::string height = xmlObject.GetProperty("height", "wrap_content");
+
+    // Width
+    if(vertical)
+    {
+      if(width == "fill_parent")
+        size.w = parentEmptyWidth;
+      // else we have already set the size in Measure
+    }
+    else if(weight > 0 && !vertical) 
+    {
+      size.w = parentEmptyWidth * weight / parentTotalWeight;
+    }
+    // else we have already set the size in Measure
+
+
+    // Height
+    if(!vertical)
+    {
+      if(height == "fill_parent")
+        size.h = parentEmptyHeight;
+      // else we have already set the size in Measure
+    }
+    else if(weight > 0 && vertical )
+    {
+      size.h = parentEmptyHeight * weight / parentTotalWeight;
+    }
+    // else we have already set the size in Measure
+    //
+    OnMeasured();
+  }
+
+  Vec2 Component::GetMeasureFillSize()
+  {
+    return GetContentSize();
+  }
+
+  float Component::GetMeasureTotalWeight()
+  {
+    return 1;
   }
 
   // Push translation to renderer
@@ -155,6 +265,11 @@ namespace Greet
     return pos + GetMargin().LeftTop() + (parent ? parent->GetTotalPadding()+parent->GetRealPosition() : Vec2(0,0));
   }
 
+  Vec2 Component::GetWrapSize() const
+  {
+    return Vec2(100,100);
+  }
+
   Component* Component::GetParent() const
   {
     return parent;
@@ -185,45 +300,11 @@ namespace Greet
     return size.h;
   }
 
-  float Component::CalculateWidth() const
-  {
-    if (xmlObject.HasProperty("width"))
-    {
-      const std::string& w = xmlObject.GetProperty("width");
-      if (parent == NULL)
-        return GUIUtils::GetSize(w, GLayer::GetWidth());
-      return GUIUtils::GetSize(w, parent->GetWidth() - parent->GetPadding().GetWidth() - parent->GetBorder().GetWidth());
-    }
-    return size.w;
-  }
-
-  float Component::CalculateHeight() const
-  {
-    if (xmlObject.HasProperty("height"))
-    {
-      const std::string& h = xmlObject.GetProperty("height");
-      // If parent is nullptr it is the top component so use the window size
-      if (parent == NULL)
-        return GUIUtils::GetSize(h, GLayer::GetHeight());
-      return GUIUtils::GetSize(h, parent->GetHeight() - parent->GetPadding().GetHeight() - parent->GetBorder().GetHeight());
-    }
-    return size.h;
-  }
-
   Component* Component::GetComponentByNameNoCast(const std::string& name)
   {
     if(name == this->name)
       return this;
     return nullptr;
-  }
-
-  void Component::ParentResized(const Vec2& parentSize)
-  {
-    Vec2 oldSize = size;
-    size.w = CalculateWidth();
-    size.h = CalculateHeight();
-    if(oldSize != size)
-      Resized();
   }
 
   const XMLObject& Component::GetXMLObject() const

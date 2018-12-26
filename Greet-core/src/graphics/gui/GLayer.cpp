@@ -163,8 +163,11 @@ namespace Greet {
     if (frame == nullptr)
     {
       Log::Warning("Cannot add nullptr to frames");
+
       return;
     }
+    frame->Measure();
+    frame->MeasureFill(GetWidth(),GetHeight(), 1, true);
     frames.emplace(name, frame);
   }
 

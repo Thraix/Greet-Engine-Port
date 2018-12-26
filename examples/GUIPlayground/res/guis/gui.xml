@@ -1,5 +1,6 @@
 <Frame
-  width="400px" height="100%" minWidth="100px" spacing="10px"
+  name="TopComponent"
+  width="400px" weight="1" minWidth="100px" spacing="10px"
   resizeTop="false" resizeLeft="false" resizeBottom="false" resizeRight="true"
   padding="10px" border="5px"
   borderColor="#37474f" 
@@ -9,9 +10,9 @@
     padding="0px"
     fontSize="18px" font="roboto" color="#90a4ae">Frame header</Label>
 
-  <Divider backgroundColor="#90a4ae"/>
+  <Divider name="divider" backgroundColor="#90a4ae"/>
 
-  <RadioGroup name="Radio" width="20px" height="80px" padding="0" margin="0" spacing="10px">
+  <RadioGroup name="Radio" width="fill_parent" height="80px" padding="0" margin="0" spacing="10px">
     <RadioButton width="20px" height="20px" 
       backgroundColor="#263238" borderColor="#455a64" border="2px" 
       activebackgroundColor="#455a64" activeborderColor="#455a64" activeborder="2px"/>
@@ -23,7 +24,7 @@
       activebackgroundColor="#455a64" activeborderColor="#455a64" activeborder="2px"/>
   </RadioGroup>
 
-  <Button width="100%" height="40px" 
+  <Button width="fill_parent" height="40px" 
     backgroundColor="#37474f" borderColor="#455a64" 
     hoverbackgroundColor="#37474f" hoverborderColor="#455a64" 
     color="#90a4ae" fontSize="24px" font="roboto"
@@ -34,7 +35,7 @@
     border="0px 4px 4px 4px">Button!</Button>
 
   <TextBox
-    width="100%" height="40px"
+    width="fill_parent" height="40px"
     backgroundColor="#37474f" borderColor="#455a64" 
     border="2px" font="roboto" fontSize="24px" color="#90a4ae"
     hintColor="#263238" hintText="Username"
@@ -42,7 +43,7 @@
     padding="0px 10px"></TextBox>
 
   <TextBox
-    width="100%" height="40px"
+    width="fill_parent" height="40px"
     backgroundColor="#37474f" borderColor="#455a64" 
     border="2px" font="roboto" fontSize="24px" color="#90a4ae"
     hintColor="#263238" hintText="Password"
@@ -54,12 +55,12 @@
     backgroundColor="#37474f" 
     borderColor="#455a64" 
     border="2px"
-    width="100%" height="40px" padding="0" margin="0"
+    width="fill_parent" height="40px" padding="0" margin="0"
     minValue="10" maxValue="90" defaultValue="30" stepSize="10" indicatorInside="true">
     <Component
       borderColor="#263238" 
       backgroundColor="#455a64" 
-      width="10px" height="100%" padding="0" margin="0px"
+      width="10px" height="fill_parent" padding="0" margin="0px"
       border="2px"
       />
   </Slider>
@@ -69,12 +70,12 @@
     fontSize="12px" font="roboto" color="#90a4ae">Test label</Label>
 
   <Container 
-    width="100%"
+    width="fill_parent"
     height="200px"
     verticalAlign="false" padding="0">
 
     <ProgressBar
-      width="30px" height="100%" name="progressBarVertical"
+      width="30px" height="fill_parent" name="progressBarVertical"
       backgroundColor="#37474f" 
       borderColor="#455a64" 
       progressColor="#607d8b"
@@ -85,7 +86,7 @@
     <Divider backgroundColor="#455a64" vertical="true"/>
 
     <ProgressBar
-      width="30px" height="100%" name="progressBarVerticalReverse"
+      width="30px" height="fill_parent" name="progressBarVerticalReverse"
       backgroundColor="#37474f" 
       borderColor="#455a64" 
       progressColor="#607d8b"
@@ -100,12 +101,12 @@
       borderColor="#455a64" 
       border="2px"
       vertical="true"
-      width="40px" height="100%" padding="0" margin="0"
+      width="40px" height="fill_parent" padding="0" margin="0"
       minValue="10" maxValue="90" defaultValue="30" stepSize="10" indicatorInside="true">
       <Component
         borderColor="#263238" 
         backgroundColor="#455a64" 
-        width="100%" height="10px" padding="0" margin="0px"
+        width="fill_parent" height="10px" padding="0" margin="0px"
         border="2px"
         />
     </Slider>
@@ -113,7 +114,7 @@
   </Container>
 
   <ProgressBar
-    width="100%" height="30px" name="progressBar" 
+    width="fill_parent" height="30px" name="progressBar" 
     backgroundColor="#37474f" 
     borderColor="#455a64" 
     progressColor="#607d8b"
@@ -122,7 +123,7 @@
     minValue="0.25" maxValue="1.25"/>
 
   <ProgressBar
-    width="100%" height="30px" name="progressBarReverse"
+    width="fill_parent" height="30px" name="progressBarReverse"
     backgroundColor="#37474f" 
     borderColor="#455a64" 
     progressColor="#607d8b"
