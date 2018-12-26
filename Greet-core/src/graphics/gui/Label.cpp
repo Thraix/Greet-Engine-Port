@@ -21,7 +21,7 @@ namespace Greet {
   {
     str = text;
     // TODO: Tell the parent I have resized
-    //size.w = CalculateWidth();
+    size.w = GetWrapSize().w;
   }
 
   const std::string& Label::GetText() const

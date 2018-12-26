@@ -17,7 +17,7 @@ namespace Greet {
     labelObject.AddProperty("border", "0px");
     labelObject.AddProperty("margin", "0px");
 
-    label = new Label(object, this);
+    label = new Label(labelObject, this);
     textColor = Vec4(0.0,0.0,0.0,1.0);
     m_isFocusable = true;
     fontSize = GUIUtils::GetSizeFromXML(object, "fontSize", 20, GetHeight());
@@ -27,12 +27,19 @@ namespace Greet {
   Button::~Button()
   {
     delete label;
+  }
 
+  void Button::OnMeasured()
+  {
+    label->Measure();
+    label->MeasureFill(GetContentSize().w,GetContentSize().h,1,true);
   }
 
   void Button::Render(GUIRenderer* renderer) const
   {
-    Vec2 p = pos + GetTotalPadding() +  Vec2(GetContentSize().w-label->GetWidth(), GetContentSize().h-label->GetFont()->GetBaselineOffset())/2;
+    Vec2 p = pos + GetTotalPadding() +  Vec2(
+        GetContentSize().w-label->GetWidth(), 
+        GetContentSize().h-label->GetFont()->GetBaselineOffset())/2;
     renderer->PushMatrix(Mat3::Translate(p));
     label->Render(renderer);
     renderer->PopMatrix();

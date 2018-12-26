@@ -13,6 +13,8 @@ namespace Greet {
     public:
       Button(const XMLObject& object, Component* parent);
       virtual ~Button();
+
+      void OnMeasured() override;
       void Render(GUIRenderer* renderer) const override;
 
       void OnFocused() override;
