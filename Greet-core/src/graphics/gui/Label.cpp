@@ -5,7 +5,7 @@ namespace Greet {
   Label::Label(const XMLObject& object, Component* parent)
     : Component(object, parent), str{object.GetText()}, color{0,0,0,1}, hasMaxWidth{false}
   {
-    fontSize = GUIUtils::GetSizeFromXML(object, "fontSize", 20, parent->GetHeight());
+    fontSize = GUIUtils::GetFloatFromXML(object, "fontSize", 20);
     font = FontManager::Get(GUIUtils::GetStringFromXML(object,"font",""),fontSize);
 
     std::string grav = object.GetProperty("gravity", "center");
