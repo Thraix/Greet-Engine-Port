@@ -11,17 +11,27 @@
     fontSize="18px" font="roboto" color="#90a4ae">Frame header</Label>
 
   <Divider name="divider" backgroundColor="#90a4ae"/>
+  <Label color="#455a64" font="roboto" fontSize="20">Do you like Popcorn?</Label>
 
   <RadioGroup name="Radio" width="fill_parent" height="80px" margin="0" spacing="10px">
-    <RadioButton width="20px" weight="20px" 
-      backgroundColor="#263238" borderColor="#455a64" border="2px" 
-      activebackgroundColor="#455a64" activeborderColor="#455a64" activeborder="2px"/>
-    <RadioButton width="20px" weight="20px" 
-      backgroundColor="#263238" borderColor="#455a64" border="2px" 
-      activebackgroundColor="#455a64" activeborderColor="#455a64" activeborder="2px"/>
-    <RadioButton width="20px" weight="20px" 
-      backgroundColor="#263238" borderColor="#455a64" border="2px" 
-      activebackgroundColor="#455a64" activeborderColor="#455a64" activeborder="2px"/>
+    <Container verticalAlign="false">
+      <RadioButton width="20px" height="20px" 
+        backgroundColor="#263238" borderColor="#455a64" border="2px" 
+        activebackgroundColor="#455a64" activeborderColor="#455a64" activeborder="2px"/>
+      <Label color="#455a64" font="roboto" fontSize="20">Yes</Label>
+    </Container>
+    <Container verticalAlign="false">
+      <RadioButton width="20px" height="20px" 
+        backgroundColor="#263238" borderColor="#455a64" border="2px" 
+        activebackgroundColor="#455a64" activeborderColor="#455a64" activeborder="2px"/>
+      <Label color="#455a64" font="roboto" fontSize="20">No</Label>
+    </Container>
+    <Container verticalAlign="false">
+      <RadioButton width="20px" height="20px" 
+        backgroundColor="#263238" borderColor="#455a64" border="2px" 
+        activebackgroundColor="#455a64" activeborderColor="#455a64" activeborder="2px"/>
+      <Label color="#455a64" font="roboto" fontSize="20">Maybe</Label>
+    </Container>
   </RadioGroup>
 
   <Button width="fill_parent" height="40px" 

@@ -13,7 +13,7 @@ namespace Greet
 
   void RadioButton::PostConstruction()
   {
-    radioParent = dynamic_cast<RadioGroup*>(parent);
+    radioParent = FindRadioGroupParent();
     if(!radioParent)
       Log::Warning("RadioButton is not inside a RadioGroup");
   }
@@ -33,5 +33,17 @@ namespace Greet
       currentStyle = &activeStyle;
     else
       currentStyle = &normalStyle;
+  }
+
+  RadioGroup* RadioButton::FindRadioGroupParent() const
+  {
+    Component* p = parent;
+    RadioGroup* rp = dynamic_cast<RadioGroup*>(p);
+    while(!rp && p->GetParent())
+    {
+      p = p->GetParent();
+      rp = dynamic_cast<RadioGroup*>(p);
+    }
+    return rp;
   }
 }

@@ -31,7 +31,7 @@ public:
     // TODO: This should be done by the engine
 		GLayer::CreateInstance(new GUIRenderer(), Shader(Shader::FromFile("res/shaders/gui.shader")));
 
-		GLayer::AddFrame(GUIUtils::GetFrame(XML::FromFile("res/guis/colorpicker.xml")), "testing");
+		GLayer::AddFrame(GUIUtils::GetFrame(XML::FromFile("res/guis/gui.xml")), "testing");
     Frame* frame = GLayer::GetFrame("testing");
 #if 0
     using namespace std::placeholders;

@@ -22,6 +22,7 @@ namespace Greet
 
     private:
       void Select(bool select);
+      RadioGroup* FindRadioGroupParent() const;
   };
 
 }

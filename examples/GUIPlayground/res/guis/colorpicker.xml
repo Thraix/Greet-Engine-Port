@@ -14,7 +14,7 @@
       width="fill_parent" height="5"/>
   </Slider>
 
-  <Container width="200px" height="fill_parent">
+  <Container width="150px" height="fill_parent">
     <Container verticalAlign="false" width="fill_parent">
       <Container weight="1" verticalAlign="false">
         <Label font="roboto" fontSize="20">R</Label>
