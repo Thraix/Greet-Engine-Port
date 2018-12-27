@@ -2,47 +2,42 @@
 
 namespace Greet
 {
-  Divider::Divider(const XMLObject& object, Component* parent)
-    : Component(object,parent), vertical(false)
+  Divider::Divider(const XMLObject& xmlObject, Component* parent)
+    : Component(xmlObject,parent), vertical(false)
   {
     vertical = GUIUtils::GetBooleanFromXML(xmlObject,"vertical", false);
 
-    if(vertical)
+    if(!xmlObject.HasProperty("width"))
     {
-      if(!xmlObject.HasProperty("width"))
-        xmlObject.AddProperty("width", "1px");
-      if(!xmlObject.HasProperty("height"))
-        xmlObject.AddProperty("height", "fill_parent");
+      sizeType.w = 1;
+      size.w = 1;
+      if(!vertical)
+        widthSizeType = SizeType::WEIGHT;
+      else
+        widthSizeType = SizeType::NONE;
     }
-    else
+    if(!xmlObject.HasProperty("height"))
     {
-      if(!xmlObject.HasProperty("width"))
-        xmlObject.AddProperty("width", "fill_parent");
-      if(!xmlObject.HasProperty("height"))
-        xmlObject.AddProperty("height", "1px");
+      sizeType.h = 1;
+      size.h = 1;
+      if(vertical)
+        heightSizeType = SizeType::WEIGHT;
+      else
+        heightSizeType = SizeType::NONE;
     }
   }
 
   void Divider::PreRender(GUIRenderer* renderer, const Vec2& translation) const
   {
+    Vec2 trans = translation;
     if(parent)
     {
       if(vertical)
-        renderer->PushMatrix(Mat3::Translate(translation-Vec2(0,parent->GetPadding().LeftTop().h)));
+        trans.y -= parent->GetPadding().top;
       else
-        renderer->PushMatrix(Mat3::Translate(translation-Vec2(parent->GetPadding().LeftTop().w,0)));
+        trans.x -= parent->GetPadding().left;
     }
-    else
-      renderer->PushMatrix(Mat3::Translate(translation));
-
-    // Border around Component 
-    if (xmlObject.HasProperty("borderColor"))
-      renderer->SubmitRect(pos + Vec2(0,0), size, currentStyle->borderColor, false);
-
-    // Component background
-    if (xmlObject.HasProperty("backgroundColor"))
-      renderer->SubmitRect(pos + currentStyle->border.LeftTop(), size-GetBorder().LeftTop()-GetBorder().RightBottom(), currentStyle->backgroundColor, false);
-
+    Component::PreRender(renderer, trans);
   }
 
   void Divider::OnMeasured() 
@@ -50,13 +45,9 @@ namespace Greet
     if(parent)
     {
       if(vertical)
-      {
         size.h += parent->GetPadding().GetHeight();
-      }
       else
-      {
         size.w += parent->GetPadding().GetWidth();
-      }
     }
   }
 

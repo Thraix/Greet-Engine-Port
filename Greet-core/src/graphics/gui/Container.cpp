@@ -22,7 +22,7 @@ namespace Greet {
     for (uint i = 0;i < object.GetObjectCount();i++)
     {
       Component* component = GUIUtils::GetComponent(object.GetObject(i), this);
-      if(component->GetXMLObject().GetName() == "Failed")
+      if(StringUtils::starts_with(component->GetName(),"Failed#"))
         Log::Error("Could not load Component, could not understand type. (type=",object.GetObject(i).GetName(),")");
       else
         AddComponent(component);

@@ -8,7 +8,7 @@ namespace Greet
     : Component(xmlObject, parent), active(false)
   {
     m_isFocusable = true;
-    activeStyle.Load("active", *this, &normalStyle);
+    activeStyle.Load("active", xmlObject, &normalStyle);
   }
 
   void RadioButton::PostConstruction()

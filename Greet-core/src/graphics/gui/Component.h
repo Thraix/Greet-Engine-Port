@@ -29,7 +29,6 @@ namespace Greet
 
       std::string name;
 
-      XMLObject xmlObject;
       Component* parent;
 
       // Might get dirty?
@@ -109,7 +108,6 @@ namespace Greet
 
       const Vec2& GetSizeType() const;
 
-      const XMLObject& GetXMLObject() const;
       virtual bool IsMouseInside(const Vec2& parentMouse) const;
       virtual void SetPosition(const Vec2& pos);
       void SetSize(const Vec2& size);

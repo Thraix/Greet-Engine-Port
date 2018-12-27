@@ -31,9 +31,9 @@ public:
     // TODO: This should be done by the engine
 		GLayer::CreateInstance(new GUIRenderer(), Shader(Shader::FromFile("res/shaders/gui.shader")));
 
-		GLayer::AddFrame(GUIUtils::GetFrame(XML::FromFile("res/guis/colorpicker.xml")), "testing");
+		GLayer::AddFrame(GUIUtils::GetFrame(XML::FromFile("res/guis/gui.xml")), "testing");
     Frame* frame = GLayer::GetFrame("testing");
-#if 0
+#if 1
     using namespace std::placeholders;
     // Function callbacks 
     // Somewhat ugly, might look into making function pointers easier, since the structure

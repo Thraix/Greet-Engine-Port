@@ -6,15 +6,12 @@
 #include <functional>
 #include <cstdlib>
 
-// TODO: REMOVE THIS INCLUDE
-#include "TextBox.h"
-
 namespace Greet
 {
 
 
   Component::Component(const XMLObject& xmlObject, Component* parent)
-    : xmlObject(xmlObject), parent(parent), m_isFocusable(false),isFocused(false), pos(0,0), pressed(false)
+    : parent(parent), m_isFocusable(false),isFocused(false), pos(0,0), pressed(false)
   {
     std::string width = xmlObject.GetProperty("width", "wrap_content");
     std::string height = xmlObject.GetProperty("height", "wrap_content");
@@ -53,9 +50,9 @@ namespace Greet
     else
       name = xmlObject.GetName() + "#" + LogUtils::DecToHex(UUID::GetInstance().GetUUID(),8);
 
-    normalStyle.Load("",*this);
-    hoverStyle.Load("hover",*this,&normalStyle);
-    pressStyle.Load("press",*this,&normalStyle);
+    normalStyle.Load("",xmlObject);
+    hoverStyle.Load("hover",xmlObject,&normalStyle);
+    pressStyle.Load("press",xmlObject,&normalStyle);
     currentStyle = &normalStyle;
   }
 
@@ -107,10 +104,6 @@ namespace Greet
     }
     // else we have already set the size in Measure
 
-    if(dynamic_cast<TextBox*>(this))
-    {
-      Log::Info(size);
-    }
     OnMeasured();
   }
 
@@ -143,12 +136,12 @@ namespace Greet
     renderer->PushMatrix(Mat3::Translate(translation));
 
     // Border around Component 
-    if (xmlObject.HasProperty("borderColor"))
+    if (currentStyle->hasBorderColor)
       //renderer->SubmitRect(pos + Vec2(0,0), size, currentStyle->borderColor, false);
       renderer->SubmitRoundedRect(pos+Vec2(0,0),size, currentStyle->borderColor, currentStyle->borderRadius, currentStyle->roundedPrecision, false);
 
     // Component background
-    if (xmlObject.HasProperty("backgroundColor"))
+    if (currentStyle->hasBackgroundColor)
       renderer->SubmitRoundedRect(pos + currentStyle->border.LeftTop(), size-GetBorder().LeftTop()-GetBorder().RightBottom(), currentStyle->backgroundColor, currentStyle->radius,currentStyle->roundedPrecision,false);
   }
 
@@ -325,11 +318,6 @@ namespace Greet
     if(name == this->name)
       return this;
     return nullptr;
-  }
-
-  const XMLObject& Component::GetXMLObject() const
-  {
-    return xmlObject;
   }
 
   bool Component::IsMouseInside(const Vec2& parentMouse) const

@@ -5,29 +5,22 @@
 
 namespace Greet
 {
-  void Style::Load(const std::string& prefix, const Component& component, Style const * inherit)
+  void Style::Load(const std::string& prefix, const XMLObject& object, Style const * inherit)
   {
-    Component* parent = component.GetParent();
-    float w,h;
-    if(parent)
-    {
-      w = parent->GetWidth(); 
-      h = parent->GetHeight(); 
-    }
-    else
-    {
-      w = GLayer::GetWidth(); 
-      h = GLayer::GetHeight();
-    }
-    margin.Load(prefix+"margin", component.GetXMLObject(), w, h);
-    padding.Load(prefix+"padding", component.GetXMLObject(), w, h);
-    border.Load(prefix+"border", component.GetXMLObject(), w, h);
+    margin.Load(prefix+"margin", object);
+    padding.Load(prefix+"padding", object);
+    border.Load(prefix+"border", object);
 
-    radius = GUIUtils::GetSizeFromXML(component.GetXMLObject(), prefix+"radius",0,w);
-    borderRadius = GUIUtils::GetSizeFromXML(component.GetXMLObject(), prefix+"borderRadius",radius,w);
-    roundedPrecision = GUIUtils::GetIntFromXML(component.GetXMLObject(), prefix+"roundedPrecision", 3);
+    radius = GUIUtils::GetFloatFromXML(object, prefix+"radius",0);
+    borderRadius = GUIUtils::GetFloatFromXML(object, prefix+"borderRadius",radius);
+    roundedPrecision = GUIUtils::GetIntFromXML(object, prefix+"roundedPrecision", 3);
 
-    backgroundColor = GUIUtils::GetColorFromXML(component.GetXMLObject(), prefix+"backgroundColor",Vec4(0,0,0,1));
-    borderColor = GUIUtils::GetColorFromXML(component.GetXMLObject(), prefix+"borderColor",Vec4(0,0,0,1));
+    if(object.HasProperty(prefix+"backgroundColor"))
+      hasBackgroundColor = true;
+    if(object.HasProperty(prefix+"borderColor"))
+      hasBorderColor = true;
+
+    backgroundColor = GUIUtils::GetColorFromXML(object, prefix+"backgroundColor",Vec4(0,0,0,1));
+    borderColor = GUIUtils::GetColorFromXML(object, prefix+"borderColor",Vec4(0,0,0,1));
   }
 }
