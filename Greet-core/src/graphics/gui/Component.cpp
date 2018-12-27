@@ -6,16 +6,52 @@
 #include <functional>
 #include <cstdlib>
 
+// TODO: REMOVE THIS INCLUDE
+#include "TextBox.h"
+
 namespace Greet
 {
-  Component::Component(const XMLObject& object, Component* parent)
-    : xmlObject(object.GetStrippedXMLObject()), parent(parent), m_isFocusable(false),isFocused(false), pos(0,0), pressed(false)
+
+
+  Component::Component(const XMLObject& xmlObject, Component* parent)
+    : xmlObject(xmlObject), parent(parent), m_isFocusable(false),isFocused(false), pos(0,0), pressed(false)
   {
-    size = Vec2(100,10);
+    std::string width = xmlObject.GetProperty("width", "wrap_content");
+    std::string height = xmlObject.GetProperty("height", "wrap_content");
+
+    size.w = atof(width.c_str());
+    size.h = atof(height.c_str());
+    sizeType = size;
+
+    if(width == "fill_parent")
+    {
+      widthSizeType = SizeType::WEIGHT;
+      sizeType.w = 1;
+    }
+    else if(width[width.length()-1] == 'w')
+      widthSizeType = SizeType::WEIGHT;
+    else if(width == "wrap_content")
+      widthSizeType = SizeType::WRAP;
+    else
+      widthSizeType = SizeType::NONE;
+
+
+    if(height == "fill_parent")
+    {
+      heightSizeType = SizeType::WEIGHT;
+      sizeType.h = 1;
+    }
+    else if(height[height.length()-1] == 'w')
+      heightSizeType = SizeType::WEIGHT;
+    else if(height == "wrap_content")
+      heightSizeType = SizeType::WRAP;
+    else
+      heightSizeType = SizeType::NONE;
+
     if(xmlObject.HasProperty("name"))
       name = xmlObject.GetProperty("name");
     else
-      name = "Component#" + LogUtils::DecToHex(UUID::GetInstance().GetUUID(),8);
+      name = xmlObject.GetName() + "#" + LogUtils::DecToHex(UUID::GetInstance().GetUUID(),8);
 
     normalStyle.Load("",*this);
     hoverStyle.Load("hover",*this,&normalStyle);
@@ -25,108 +61,56 @@ namespace Greet
 
   void Component::Measure()
   {
-    float weight = atof(xmlObject.GetProperty("weigth", "0").c_str());
-    std::string width = xmlObject.GetProperty("width", "wrap_content");
-    std::string height = xmlObject.GetProperty("height", "wrap_content");
     Container* container = dynamic_cast<Container*>(parent);
-    if(weight == 0.0f || (container && container->IsVertical() ))
+    if(widthSizeType != SizeType::WEIGHT || (container && container->IsVertical() ))
     {
-      if(width == "wrap_content")
-      {
+      if(widthSizeType == SizeType::WRAP)
         size.w = GetWrapSize().w;
-      }
       else
-      {
-        float w = atof(width.c_str());
-        if(w > 0)
-        {
-          size.w = w;
-        }
-        else if(width == "fill_parent")
-        {
-          // If we have a parent, let that parent determain the size
-          if(!parent)
-          {
-            GLayer::GetWidth();
-          }
-        }
-      }
+        size.h = sizeType.h;
     } 
-    else if(!parent)
-    {
-      GLayer::GetWidth();
-    }// else let the parent determain the size
 
-    if(weight == 0.0f || (container && !container->IsVertical() ))
+    if(heightSizeType != SizeType::WEIGHT || (container && container->IsVertical() ))
     {
-      if(height == "wrap_content")
-      {
+      if(heightSizeType == SizeType::WRAP)
         size.h = GetWrapSize().h;
-      }
       else
-      {
-        float h = atof(height.c_str());
-        if(h > 0)
-        {
-          size.h = h;
-        }
-        else if(height == "fill_parent")
-        {
-          // If we have a parent, let that parent determain the size
-          if(!parent)
-          {
-            GLayer::GetHeight();
-          }
-        }
-      }
+        size.h = sizeType.h;
     } 
-    else if(!parent)
-    {
-      GLayer::GetHeight();
-    }// else let the parent determain the size
+  }
+
+  void Component::MeasureFill()
+  {
+    MeasureFill(GLayer::GetWidth(), GLayer::GetHeight(), 1, true);
   }
 
   void Component::MeasureFill(float parentEmptyWidth, float parentEmptyHeight, float parentTotalWeight, bool vertical)
   {
-    float weight = atof(xmlObject.GetProperty("weight", "0").c_str());
-    std::string width = xmlObject.GetProperty("width", "wrap_content");
-    std::string height = xmlObject.GetProperty("height", "wrap_content");
-
     // Width
-    if(vertical)
+    if(widthSizeType == SizeType::WEIGHT)
     {
-      if(width == "fill_parent")
+      if(vertical)
         size.w = parentEmptyWidth;
-      // else we have already set the size in Measure
-    }
-    else if(weight > 0 && !vertical) 
-    {
-      size.w = parentEmptyWidth * weight / parentTotalWeight;
-    }
-    else if(width == "fill_parent")
-    {
-      size.h = parentEmptyHeight / parentTotalWeight;
+      else
+        size.w = parentEmptyWidth * sizeType.w / parentTotalWeight;
     }
     // else we have already set the size in Measure
 
 
     // Height
-    if(!vertical)
+    if(heightSizeType == SizeType::WEIGHT)
     {
-      if(height == "fill_parent")
+      if(!vertical)
         size.h = parentEmptyHeight;
-      // else we have already set the size in Measure
-    }
-    else if(weight > 0 && vertical )
-    {
-      size.h = parentEmptyHeight * weight / parentTotalWeight;
-    }
-    else if(height == "fill_parent")
-    {
-      size.h = parentEmptyHeight / parentTotalWeight;
+      else
+        size.h = parentEmptyHeight * sizeType.h / parentTotalWeight;
     }
     // else we have already set the size in Measure
-    //
+
+    if(dynamic_cast<TextBox*>(this))
+    {
+      Log::Info(size);
+    }
     OnMeasured();
   }
 
@@ -138,6 +122,19 @@ namespace Greet
   float Component::GetMeasureTotalWeight()
   {
     return 1;
+  }
+
+  void Component::Remeasure()
+  {
+    if(!parent)
+    {
+      Measure();
+      MeasureFill();
+    }
+    else
+    {
+      GetRootNode()->Remeasure();
+    }
   }
 
   // Push translation to renderer
@@ -308,6 +305,21 @@ namespace Greet
     return size.h;
   }
 
+  Component::SizeType Component::GetWidthSizeType() const
+  {
+    return widthSizeType;
+  }
+
+  Component::SizeType Component::GetHeightSizeType() const
+  {
+    return heightSizeType;
+  }
+
+  const Vec2& Component::GetSizeType() const
+  {
+    return sizeType;
+  }
+
   Component* Component::GetComponentByNameNoCast(const std::string& name)
   {
     if(name == this->name)
@@ -323,6 +335,14 @@ namespace Greet
   bool Component::IsMouseInside(const Vec2& parentMouse) const
   {
     return AABBUtils::PointInsideBox(parentMouse, pos, size);
+  }
+
+  Component* Component::GetRootNode()
+  {
+    Component* par = this;
+    while(par->GetParent())
+      par = par->GetParent();
+    return par;
   }
 
   Vec2 Component::GetTotalPadding() const

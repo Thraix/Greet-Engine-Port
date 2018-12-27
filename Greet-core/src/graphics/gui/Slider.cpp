@@ -42,6 +42,7 @@ namespace Greet
       flags |= SLIDER_FLAG_SNAP;
 
     // Default defaultValue should be in the middle
+    // TODO: This needs to be moved to Measure since the component has no size when created
     SetValue(GUIUtils::GetIntFromXML(xmlObject, "defaultValue", (maxValue-minValue)/2.0f));
   }
 

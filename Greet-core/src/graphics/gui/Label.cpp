@@ -20,8 +20,7 @@ namespace Greet {
   void Label::SetText(const std::string& text)
   {
     str = text;
-    // TODO: Tell the parent I have resized
-    size.w = GetWrapSize().w;
+    Remeasure();
   }
 
   const std::string& Label::GetText() const

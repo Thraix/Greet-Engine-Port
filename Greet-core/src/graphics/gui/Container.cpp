@@ -92,13 +92,10 @@ namespace Greet {
       else 
         usedSpace += comp->GetMargin().GetWidth() + spacing;
 
-      if(!comp->GetXMLObject().HasProperty("weight"))
-      {
-        if(this->vertical && comp->GetXMLObject().GetProperty("height","wrap_content") != "fill_parent")
-          usedSpace += comp->GetSize().h;
-        else if(!this->vertical && comp->GetXMLObject().GetProperty("width","wrap_content") != "fill_parent")
-          usedSpace += comp->GetSize().w;
-      }
+      if(this->vertical && comp->GetHeightSizeType() != SizeType::WEIGHT)
+        usedSpace += comp->GetSize().h;
+      else if(!this->vertical && comp->GetWidthSizeType() != SizeType::WEIGHT)
+        usedSpace += comp->GetSize().w;
     }
     if(usedSpace > 0)
       usedSpace -= spacing; // Remove the spacing after the last one
@@ -111,19 +108,12 @@ namespace Greet {
   float Container::GetMeasureTotalWeight()
   {
     float totalWeight = 0;
-    std::string propName = "width";
-    if(vertical)
-      propName = "height";
     for(auto&& comp : m_components)
     {
-      if(comp->GetXMLObject().HasProperty("weight"))
-      {
-        totalWeight += atof(comp->GetXMLObject().GetProperty("weight").c_str());
-      }
-      else
-      {
-        totalWeight += comp->GetXMLObject().GetProperty(propName,"wrap_content") == "fill_parent" ? 1 : 0;
-      }
+      if(vertical && comp->GetHeightSizeType() == SizeType::WEIGHT)
+        totalWeight += comp->GetSizeType().h;
+      else if(!vertical && comp->GetWidthSizeType() == SizeType::WEIGHT)
+        totalWeight += comp->GetSizeType().w;
     }
     return totalWeight;
   }

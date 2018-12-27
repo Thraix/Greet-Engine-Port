@@ -11,6 +11,10 @@ namespace Greet
   class Component
   {
     public:
+      enum class SizeType
+      {
+        WRAP, WEIGHT, NONE 
+      };
       // Typedef callbacks
       typedef std::function<void(Component*)> OnClickCallback;
       typedef std::function<void(Component*)> OnPressCallback;
@@ -32,6 +36,12 @@ namespace Greet
       Vec2 pos;
       Vec2 size;
 
+      Vec2 sizeType;
+
+      SizeType widthSizeType;
+      SizeType heightSizeType;
+
+
       bool m_isFocusable;
       bool isFocused;
 
@@ -50,7 +60,9 @@ namespace Greet
       // Measurements that doesn't depend on the parent
       virtual void Measure();
       // Measurements that does depend on the parent
+      void MeasureFill();
       virtual void MeasureFill(float parentEmptyWidth, float parentEmptyHeight, float parentTotalWeight, bool vertical);
+      void Remeasure();
 
       // Size has updated
       virtual void OnMeasured(){}
@@ -92,6 +104,11 @@ namespace Greet
       virtual float GetWidth() const;
       virtual float GetHeight() const;
 
+      SizeType GetWidthSizeType() const;
+      SizeType GetHeightSizeType() const;
+
+      const Vec2& GetSizeType() const;
+
       const XMLObject& GetXMLObject() const;
       virtual bool IsMouseInside(const Vec2& parentMouse) const;
       virtual void SetPosition(const Vec2& pos);
@@ -113,6 +130,7 @@ namespace Greet
       virtual void KeyReleased(const KeyReleasedEvent& event){}
       virtual void KeyTyped(const KeyTypedEvent& event){}
 
+      Component* GetRootNode();
       Vec2 GetTotalPadding() const;
       const TLBR& GetMargin() const;
       const TLBR& GetPadding() const;

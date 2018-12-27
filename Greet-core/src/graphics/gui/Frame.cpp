@@ -108,21 +108,12 @@ namespace Greet {
     ResizeScreenClamp();
     if(oldSize != size)
     {
-      if(parent)
-      {
-        Vec2 empty{parent->GetMeasureFillSize()};
-        MeasureFill(empty.w, empty.h,parent->GetMeasureTotalWeight(),true);
-      }
-      else
-      {
-        MeasureFill(GLayer::GetWidth(), GLayer::GetHeight(),1,true);
-      }
+      Remeasure();
     }
   }
 
   void Frame::ResizeScreenClamp()
   {
-
     if (m_stayInsideWindow)
     {
       if (pos.x < 0)
@@ -151,7 +142,7 @@ namespace Greet {
 
   void Frame::OnWindowResize(int width, int height)
   {
-    MeasureFill(width,height,1,true);
+    Remeasure();
   }
 
   void Frame::MousePressed(const MousePressedEvent& event, const Vec2& translatedPos)

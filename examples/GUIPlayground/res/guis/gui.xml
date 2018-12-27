@@ -16,18 +16,21 @@
   <RadioGroup name="Radio" width="fill_parent" height="80px" margin="0" spacing="10px">
     <Container verticalAlign="false">
       <RadioButton width="20px" height="20px" 
+        radius="10" activeradius="10"
         backgroundColor="#263238" borderColor="#455a64" border="2px" 
         activebackgroundColor="#455a64" activeborderColor="#455a64" activeborder="2px"/>
       <Label color="#455a64" font="roboto" fontSize="20">Yes</Label>
     </Container>
     <Container verticalAlign="false">
       <RadioButton width="20px" height="20px" 
+        radius="10" activeradius="10"
         backgroundColor="#263238" borderColor="#455a64" border="2px" 
         activebackgroundColor="#455a64" activeborderColor="#455a64" activeborder="2px"/>
       <Label color="#455a64" font="roboto" fontSize="20">No</Label>
     </Container>
     <Container verticalAlign="false">
       <RadioButton width="20px" height="20px" 
+        radius="10" activeradius="10"
         backgroundColor="#263238" borderColor="#455a64" border="2px" 
         activebackgroundColor="#455a64" activeborderColor="#455a64" activeborder="2px"/>
       <Label color="#455a64" font="roboto" fontSize="20">Maybe</Label>
