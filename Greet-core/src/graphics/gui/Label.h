@@ -7,7 +7,12 @@
 namespace Greet {
   class Label : public Component 
   {
+    enum class Gravity
+    {
+      TOP, CENTER, BOTTOM
+    };
     private:
+      Gravity gravity;
       bool hasMaxWidth;
       float maxWidth;
       std::string str;

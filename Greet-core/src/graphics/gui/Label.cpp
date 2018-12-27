@@ -8,13 +8,25 @@ namespace Greet {
     fontSize = GUIUtils::GetSizeFromXML(object, "fontSize", 20, parent->GetHeight());
     font = FontManager::Get(GUIUtils::GetStringFromXML(object,"font",""),fontSize);
 
+    std::string grav = object.GetProperty("gravity", "center");
+    if(grav == "top")
+      gravity = Gravity::TOP;
+    else if(grav == "bottom")
+      gravity = Gravity::BOTTOM;
+    else// if(grav == "center") or invalid
+      gravity = Gravity::CENTER;
+
     color = GUIUtils::GetColorFromXML(object,"color",Vec4(0,0,0,1));
   }
 
   void Label::Render(GUIRenderer* renderer) const
   {
-    // Top of the text will be at 0
-    renderer->SubmitString(str, pos + GetTotalPadding() + Vec2(0, font->GetBaselineOffset()), font, color, false);
+    if(gravity == Gravity::TOP)
+      renderer->SubmitString(str, pos + GetTotalPadding() + Vec2(0, font->GetBaselineOffset()), font, color, false);
+    else if(gravity == Gravity::CENTER)
+      renderer->SubmitString(str, pos + GetTotalPadding() + Vec2(0, GetContentSize().h + font->GetBaselineOffset())/2, font, color, false);
+    else// if(gravity == Gravity::BOTTOM)
+      renderer->SubmitString(str, pos + GetTotalPadding() + Vec2(0, GetContentSize().h), font, color, false);
   }
 
   void Label::SetText(const std::string& text)

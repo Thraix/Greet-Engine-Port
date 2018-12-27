@@ -16,29 +16,14 @@
 
   <Container width="150px" height="fill_parent">
     <Container verticalAlign="false" width="fill_parent">
-      <Container width="1w" verticalAlign="false">
-        <Label font="roboto" fontSize="20">R</Label>
+      <Container spacing="5"  width="1w" verticalAlign="false">
+        <Label gravity="center" height="1w" font="roboto" fontSize="20">R</Label>
         <TextBox padding="0 5" radius="5px" borderRadius="7px" 
           border="2px" height="30px" width="1w" font="roboto"
           backgroundColor="#37474f" borderColor="#455a64" />
       </Container>
-      <Container width="1w" verticalAlign="false">
-        <Label font="roboto" fontSize="20">H</Label>
-        <TextBox padding="0 5" radius="5px" borderRadius="7px" 
-          border="2px" height="30px" width="1w" font="roboto"
-          backgroundColor="#37474f" borderColor="#455a64" />
-      </Container>
-    </Container>
-
-    <Container verticalAlign="false" width="fill_parent">
-      <Container width="1w" verticalAlign="false">
-        <Label font="roboto" fontSize="20">G</Label>
-        <TextBox padding="0 5" radius="5px" borderRadius="7px" 
-          border="2px" height="30px" width="1w" font="roboto"
-          backgroundColor="#37474f" borderColor="#455a64" />
-      </Container>
-      <Container width="1w" verticalAlign="false">
-        <Label font="roboto" fontSize="20">S</Label>
+      <Container spacing="5"  width="1w" verticalAlign="false">
+        <Label gravity="center" height="1w" font="roboto" fontSize="20">H</Label>
         <TextBox padding="0 5" radius="5px" borderRadius="7px" 
           border="2px" height="30px" width="1w" font="roboto"
           backgroundColor="#37474f" borderColor="#455a64" />
@@ -46,14 +31,14 @@
     </Container>
 
     <Container verticalAlign="false" width="fill_parent">
-      <Container width="1w" verticalAlign="false">
-        <Label font="roboto" fontSize="20">B</Label>
+      <Container spacing="5"  width="1w" verticalAlign="false">
+        <Label gravity="center" height="1w" font="roboto" fontSize="20">G</Label>
         <TextBox padding="0 5" radius="5px" borderRadius="7px" 
           border="2px" height="30px" width="1w" font="roboto"
           backgroundColor="#37474f" borderColor="#455a64" />
       </Container>
-      <Container width="1w" verticalAlign="false">
-        <Label font="roboto" fontSize="20">V</Label>
+      <Container spacing="5"  width="1w" verticalAlign="false">
+        <Label gravity="center" height="1w" font="roboto" fontSize="20">S</Label>
         <TextBox padding="0 5" radius="5px" borderRadius="7px" 
           border="2px" height="30px" width="1w" font="roboto"
           backgroundColor="#37474f" borderColor="#455a64" />
@@ -61,7 +46,22 @@
     </Container>
 
     <Container verticalAlign="false" width="fill_parent">
-      <Label font="roboto" fontSize="20">#</Label>
+      <Container spacing="5"  width="1w" verticalAlign="false">
+        <Label gravity="center" height="1w" font="roboto" fontSize="20">B</Label>
+        <TextBox padding="0 5" radius="5px" borderRadius="7px" 
+          border="2px" height="30px" width="1w" font="roboto"
+          backgroundColor="#37474f" borderColor="#455a64" />
+      </Container>
+      <Container spacing="5"  width="1w" verticalAlign="false">
+        <Label gravity="center" height="1w" font="roboto" fontSize="20">V</Label>
+        <TextBox padding="0 5" radius="5px" borderRadius="7px" 
+          border="2px" height="30px" width="1w" font="roboto"
+          backgroundColor="#37474f" borderColor="#455a64" />
+      </Container>
+    </Container>
+
+    <Container spacing="5" verticalAlign="false" width="fill_parent">
+      <Label gravity="center" height="1w" font="roboto" fontSize="20">#</Label>
       <TextBox padding="0 5" radius="5px" borderRadius="7px" 
         border="2px" height="30px" width="1w" font="roboto"
         backgroundColor="#37474f" borderColor="#455a64" />
