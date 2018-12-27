@@ -41,9 +41,13 @@ namespace Greet
     if(stepSize > 0)
       flags |= SLIDER_FLAG_SNAP;
 
+
+    // Bit of a hack to make the initial value correct
+    minPos = 0;
+    maxPos = 1;
     // Default defaultValue should be in the middle
-    // TODO: This needs to be moved to Measure since the component has no size when created
     SetValue(GUIUtils::GetIntFromXML(xmlObject, "defaultValue", (maxValue-minValue)/2.0f));
+    Log::Info(GetValue());
   }
 
   void Slider::Measure() 
