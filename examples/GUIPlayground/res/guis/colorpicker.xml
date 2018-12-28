@@ -4,15 +4,23 @@
   backgroundColor="#263238" 
   padding="10"
   verticalAlign="false">
-  <Component width="200px" height="200px"
-    backgroundColor="#37474f" borderColor="#455a64" />
-  <Slider width="20px" height="fill_parent"
-    backgroundColor="#37474f" borderColor="#455a64" vertical="true">
+  <SatValSlider width="200px" height="200px"
+    backgroundColor="#37474f" borderColor="#455a64">
     <Component
-      borderColor="#263238" 
-      backgroundColor="#455a64" 
-      width="fill_parent" height="5"/>
-  </Slider>
+      borderColor="#000000" 
+      backgroundColor="#ffffff" 
+      border="2"
+      width="7" height="7"/>
+  </SatValSlider>
+
+  <HueSlider width="20px" height="fill_parent"
+    borderColor="#455a64" vertical="true">
+    <Component
+      borderColor="#000000" 
+      backgroundColor="#ffffff" 
+      border="2"
+      width="fill_parent" height="7"/>
+  </HueSlider>
 
   <Container width="150px" height="fill_parent">
     <Container verticalAlign="false" width="fill_parent">

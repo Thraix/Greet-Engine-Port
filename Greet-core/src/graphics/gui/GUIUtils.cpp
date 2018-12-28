@@ -9,6 +9,8 @@
 #include <graphics/gui/Divider.h>
 #include <graphics/gui/TextBox.h>
 #include <graphics/gui/Slider.h>
+#include <graphics/gui/HueSlider.h>
+#include <graphics/gui/SatValSlider.h>
 #include <graphics/gui/RadioGroup.h>
 #include <graphics/gui/RadioButton.h>
 
@@ -55,6 +57,14 @@ namespace Greet
     else if(object.GetName() == "Slider")
     {
       return new Slider(object, parent);
+    }
+    else if(object.GetName() == "HueSlider")
+    {
+      return new HueSlider(object, parent);
+    }
+    else if(object.GetName() == "SatValSlider")
+    {
+      return new SatValSlider(object, parent);
     }
     else if(object.GetName() == "Container")
     {
