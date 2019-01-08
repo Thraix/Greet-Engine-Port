@@ -8,7 +8,6 @@ class Core : public App, public KeyListener, public MouseListener
 private:
 	Component* content;
   float progressBarValue;
-	//Container* container;
 public:
   Core()
     : App("GUI Testing", 960, 540)
@@ -19,7 +18,6 @@ public:
 	~Core()
 	{
 		GLayer::DestroyInstance();
-//		delete container;
 	}
 
 	void Init() override
@@ -59,6 +57,10 @@ public:
     frame->GetComponentByName<ProgressBar>("progressBarVerticalReverse")
       ->AttachValueReference(&progressBarValue);
 #endif
+    std::vector<std::vector<Vec2>> vec{std::vector<Vec2>{Vec2(0,0),Vec2(1,1)},std::vector<Vec2>{Vec2(2,2),Vec2(3,4)}};
+    std::vector<int> vec2{0,0,1,1,2,2,3,4,};
+    Log::Info(vec);
+    Log::Info(vec2);
 	}
 
   void OnRadioChangeCallback(RadioButton* button)
@@ -105,6 +107,7 @@ public:
 	{
     // TODO: This should be done by the engine
 		GLayer::Render();
+
 	}
 
 	void OnPressed(const KeyPressedEvent& e) override
@@ -131,6 +134,7 @@ public:
 
 	void WindowResize(int width, int height) override
 	{
+
 	}
 
 	void JoystickState(uint joy, bool connected) override
@@ -150,5 +154,7 @@ int main()
 		//XMLObject obj = XML::FromFile("projtest.xml");
 		Core game;
 		game.Start();
+    
+
 	}
 }

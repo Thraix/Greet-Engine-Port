@@ -1,5 +1,7 @@
 #include "GUIUtils.h"
 
+#include <utils/xml/XMLException.h>
+
 #include <graphics/gui/Component.h>
 #include <graphics/gui/Frame.h>
 #include <graphics/gui/Button.h>
@@ -16,6 +18,19 @@
 
 namespace Greet
 {
+  Frame* GUIUtils::GetFrame(const std::string& filepath)
+  {
+    try
+    {
+      return GetFrame(XML::FromFile(filepath));
+    }
+    catch(XMLException& e)
+    {
+      Log::Error(e.what());
+      return new Frame();
+    }
+  }
+
   Frame* GUIUtils::GetFrame(const XMLObject& object)
   {
     if (object.GetName() == "Frame")

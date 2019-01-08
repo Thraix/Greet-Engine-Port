@@ -4,6 +4,7 @@
 #include <ostream>
 #include <string>
 #include <iostream>
+#include <iterator>
 
 namespace Greet {
 
@@ -86,26 +87,46 @@ namespace Greet {
 
     private:
 
-      /*
-         Put all the arguments to the stream.
-         */
-      template<typename T, typename... Args>
-        void Put(const T& t, const Args&... args)
+    /*
+     * Put function for Container
+     */
+    template <typename T>
+      auto PutHelper(const T& t, int)
+      -> decltype(t.begin(), t.end(), std::declval<typename T::value_type>(), std::declval<void>())
+      {
+        auto size = t.size()-1; 
+        for(auto it = t.begin();it!=t.end();++it,--size)
         {
-          // Put one argument to the stream.
-          Put(t);
-          // Put the rest of the arguments to the stream (if only one, put(const T&) is called)
-          Put(args...);
+          PutHelper(*it, 0);
+          if(size != 0)
+            PutHelper(" ", 0);
         }
+      }
 
-      /*
-         Put the arguments to the stream.
-         */
-      template <typename T>
-        void Put(const T& t)
-        {
-          m_stream << t;
-        }
+    template <typename T>
+      void PutHelper(const T& t, long long)
+      {
+        m_stream << t;
+      }
+    /*
+       Put all the arguments to the stream.
+       */
+    template<typename T, typename... Args>
+      void Put(const T& t, const Args&... args)
+      {
+        // Put one argument to the stream.
+        Put(t);
+        // Put the rest of the arguments to the stream (if only one, put(const T&) is called)
+        Put(args...);
+      }
 
+    /*
+       Put the arguments to the stream.
+       */
+    template <typename T>
+      void Put(const T& t)
+      {
+        PutHelper(t, 0);
+      }
   };
 }

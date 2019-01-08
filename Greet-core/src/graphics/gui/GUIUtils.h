@@ -14,6 +14,7 @@ namespace Greet {
   {
     public:
 
+      static Frame* GetFrame(const std::string& filepath);
       static Frame* GetFrame(const XMLObject& object);
       static Component* GetComponent(const XMLObject& object, Component* parent);
 
