@@ -29,7 +29,7 @@ public:
     // TODO: This should be done by the engine
 		GLayer::CreateInstance(new GUIRenderer(), Shader(Shader::FromFile("res/shaders/gui.shader")));
 
-		GLayer::AddFrame(GUIUtils::GetFrame(XML::FromFile("res/guis/colorpicker.xml")), "testing");
+		GLayer::AddFrame(GUIUtils::GetFrame("res/guis/colorpicker.axml"), "testing");
     Frame* frame = GLayer::GetFrame("testing");
 #if 0
     using namespace std::placeholders;
@@ -57,10 +57,6 @@ public:
     frame->GetComponentByName<ProgressBar>("progressBarVerticalReverse")
       ->AttachValueReference(&progressBarValue);
 #endif
-    std::vector<std::vector<Vec2>> vec{std::vector<Vec2>{Vec2(0,0),Vec2(1,1)},std::vector<Vec2>{Vec2(2,2),Vec2(3,4)}};
-    std::vector<int> vec2{0,0,1,1,2,2,3,4,};
-    Log::Info(vec);
-    Log::Info(vec2);
 	}
 
   void OnRadioChangeCallback(RadioButton* button)
