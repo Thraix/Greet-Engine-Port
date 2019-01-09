@@ -1,8 +1,9 @@
-# This Makefile was generated using MakeGen v1.0.6 made by Tim Håkansson
+# This Makefile was generated using MakeGen v1.0.7 made by Tim Håkansson
 # and is licensed under MIT. Full source of the project can be found at
 # https://github.com/Thraix/MakeGen
-CC=@g++ -g
-CO=@g++ -g -shared -o
+CC=@g++ $(CFLAGS)
+CO=@g++ -shared -o
+CFLAGS=-g 
 BIN=bin/
 OBJPATH=$(BIN)intermediates
 INCLUDES=-I./../deps/includes/ -I./src/ 
@@ -215,10 +216,10 @@ $(OBJPATH)/CubeMap.o : src/graphics/textures/CubeMap.cpp src/graphics/textures/C
 $(OBJPATH)/ImageFactory.o : src/graphics/textures/ImageFactory.cpp src/graphics/textures/ImageFactory.h src/internal/GreetTypes.h src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  src/utils/Utils.h src/internal/GreetGL.h  src/utils/LogUtils.h   
 	$(info -[72%]- $<)
 	$(CC) $(CFLAGS) -o $@ $<
-$(OBJPATH)/Texture.o : src/graphics/textures/Texture.cpp src/graphics/textures/Texture.h src/internal/GreetGL.h src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  src/utils/LogUtils.h src/internal/GreetTypes.h    src/internal/OpenGLObjectHandler.h 
+$(OBJPATH)/Texture.o : src/graphics/textures/Texture.cpp src/graphics/textures/Texture.h src/internal/GreetGL.h src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  src/utils/LogUtils.h src/internal/GreetTypes.h   
 	$(info -[73%]- $<)
 	$(CC) $(CFLAGS) -o $@ $<
-$(OBJPATH)/Texture2D.o : src/graphics/textures/Texture2D.cpp src/graphics/textures/Texture2D.h src/graphics/textures/Texture.h src/internal/GreetGL.h src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  src/utils/LogUtils.h src/internal/GreetTypes.h   src/utils/ImageUtils.h src/graphics/textures/ImageFactory.h     src/utils/ErrorHandle.h  src/utils/Utils.h   src/utils/StringUtils.h  src/internal/OpenGLObjectHandler.h 
+$(OBJPATH)/Texture2D.o : src/graphics/textures/Texture2D.cpp src/graphics/textures/Texture2D.h src/graphics/textures/Texture.h src/internal/GreetGL.h src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  src/utils/LogUtils.h src/internal/GreetTypes.h   src/utils/ImageUtils.h src/graphics/textures/ImageFactory.h     src/utils/ErrorHandle.h  src/utils/Utils.h   src/utils/StringUtils.h 
 	$(info -[74%]- $<)
 	$(CC) $(CFLAGS) -o $@ $<
 $(OBJPATH)/TextureManager.o : src/graphics/textures/TextureManager.cpp src/graphics/textures/TextureManager.h src/graphics/textures/CubeMap.h src/graphics/textures/Texture.h src/internal/GreetGL.h src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  src/utils/LogUtils.h src/internal/GreetTypes.h    src/utils/ImageUtils.h src/graphics/textures/ImageFactory.h     src/utils/ErrorHandle.h  src/utils/Utils.h   src/utils/StringUtils.h src/graphics/textures/Texture2D.h  
