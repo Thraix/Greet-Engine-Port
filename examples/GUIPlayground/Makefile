@@ -1,15 +1,15 @@
-# This Makefile was generated using MakeGen v1.0.7 made by Tim Håkansson
+# This Makefile was generated using MakeGen v1.0.8 made by Tim Håkansson
 # and is licensed under MIT. Full source of the project can be found at
 # https://github.com/Thraix/MakeGen
-CC=@g++ $(CFLAGS)
+CC=@g++
 CO=@g++ -o
-CFLAGS=
 BIN=bin/
 OBJPATH=$(BIN)intermediates
 INCLUDES=-I./../../Greet-core/src/ -I./../../deps/includes/ 
 OBJECTS=$(OBJPATH)/GuiTesting.o 
 CFLAGS=$(INCLUDES) -std=c++17 -c -w -g3 -D_DEBUG 
 LIBDIR=-L./../../deps/libs/unix/ -L./../../Greet-core/bin/ 
+LDFLAGS=-Wl,-rpath=../../deps/libs/unix/ -Wl,-rpath=../../Greet-core/bin/ 
 LIBS=$(LIBDIR) -lgreet -lGL -lGLEW -lglfw -lfreeimage -lfreetype 
 OUTPUT=$(BIN)Sandbox.a
 all: $(OUTPUT)
@@ -19,7 +19,7 @@ clean:
 	rm -rf $(OBJPATH)/*.o
 $(OUTPUT): $(OBJECTS)
 	$(info Generating output file)
-	$(CO) $(OUTPUT) $(OBJECTS) $(LIBS)
+	$(CO) $(OUTPUT) $(OBJECTS) $(LDFLAGS) $(LIBS)
 install: all
 	$(info Installing Sandbox to /usr/bin/)
 	@cp $(OUTPUT) /usr/bin/Sandbox.a

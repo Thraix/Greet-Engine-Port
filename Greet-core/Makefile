@@ -1,14 +1,13 @@
-# This Makefile was generated using MakeGen v1.0.7 made by Tim Håkansson
+# This Makefile was generated using MakeGen v1.0.8 made by Tim Håkansson
 # and is licensed under MIT. Full source of the project can be found at
 # https://github.com/Thraix/MakeGen
-CC=@g++ $(CFLAGS)
+CC=@g++
 CO=@g++ -shared -o
-CFLAGS=-g 
 BIN=bin/
 OBJPATH=$(BIN)intermediates
 INCLUDES=-I./../deps/includes/ -I./src/ 
 OBJECTS=$(OBJPATH)/AudioChannel.o $(OBJPATH)/AudioChannelManager.o $(OBJPATH)/Sound.o $(OBJPATH)/SoundManager.o $(OBJPATH)/Driver.o $(OBJPATH)/DriverDispatcher.o $(OBJPATH)/LinearDriver.o $(OBJPATH)/RectDriver.o $(OBJPATH)/Event.o $(OBJPATH)/EventDispatcher.o $(OBJPATH)/InputControl.o $(OBJPATH)/InputController.o $(OBJPATH)/KeyListener.o $(OBJPATH)/MouseListener.o $(OBJPATH)/Animation.o $(OBJPATH)/FrameBufferObject.o $(OBJPATH)/ParticlePool.o $(OBJPATH)/RenderEngine.o $(OBJPATH)/Skybox.o $(OBJPATH)/Window.o $(OBJPATH)/Atlas.o $(OBJPATH)/AtlasManager.o $(OBJPATH)/BatchIndexBuffer.o $(OBJPATH)/Buffer.o $(OBJPATH)/IndexBuffer.o $(OBJPATH)/VertexArray.o $(OBJPATH)/Font.o $(OBJPATH)/FontAtlas.o $(OBJPATH)/FontContainer.o $(OBJPATH)/FontManager.o $(OBJPATH)/Button.o $(OBJPATH)/Component.o $(OBJPATH)/Container.o $(OBJPATH)/Divider.o $(OBJPATH)/Frame.o $(OBJPATH)/FrameContainer.o $(OBJPATH)/GLayer.o $(OBJPATH)/GUIProperty.o $(OBJPATH)/GUIUtils.o $(OBJPATH)/HueSlider.o $(OBJPATH)/Label.o $(OBJPATH)/ProgressBar.o $(OBJPATH)/RadioButton.o $(OBJPATH)/RadioGroup.o $(OBJPATH)/SatValSlider.o $(OBJPATH)/Slider.o $(OBJPATH)/Style.o $(OBJPATH)/TextBox.o $(OBJPATH)/Group.o $(OBJPATH)/Layer3D.o $(OBJPATH)/EntityModel.o $(OBJPATH)/Material.o $(OBJPATH)/MaterialModel.o $(OBJPATH)/Mesh.o $(OBJPATH)/MeshData.o $(OBJPATH)/MeshFactory.o $(OBJPATH)/TPCamera.o $(OBJPATH)/BatchRenderer.o $(OBJPATH)/BatchRenderer3D.o $(OBJPATH)/GUIRenderer.o $(OBJPATH)/Renderer3D.o $(OBJPATH)/Shader.o $(OBJPATH)/ShaderFactory.o $(OBJPATH)/CubeMap.o $(OBJPATH)/ImageFactory.o $(OBJPATH)/Texture.o $(OBJPATH)/Texture2D.o $(OBJPATH)/TextureManager.o $(OBJPATH)/Joystick.o $(OBJPATH)/App.o $(OBJPATH)/OpenGLObjectHandler.o $(OBJPATH)/Log.o $(OBJPATH)/LogStream.o $(OBJPATH)/Logger.o $(OBJPATH)/Mat3.o $(OBJPATH)/Mat4.o $(OBJPATH)/Quaternion.o $(OBJPATH)/Vec2.o $(OBJPATH)/Vec3.o $(OBJPATH)/Vec4.o $(OBJPATH)/ErrorHandle.o $(OBJPATH)/Noise.o $(OBJPATH)/OBJUtils.o $(OBJPATH)/UUID.o $(OBJPATH)/JSON.o $(OBJPATH)/JSONArray.o $(OBJPATH)/JSONLoader.o $(OBJPATH)/JSONObject.o $(OBJPATH)/XML.o $(OBJPATH)/XMLObject.o 
-CFLAGS=$(INCLUDES) -fPIC -std=c++17 -c -w -g3 -D_DEBUG -D_USE_MATH_DEFINES 
+CFLAGS=$(INCLUDES) -fPIC -std=c++17 -c -w -g3 -D_DEBUG -D_USE_MATH_DEFINES -g 
 OUTPUT=$(BIN)libgreet.so
 all: $(OUTPUT)
 rebuild: clean all
