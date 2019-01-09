@@ -12,42 +12,32 @@
 
 namespace Greet {
 
-  Shader::Shader(const std::string& geomSrc, const std::string& vertSrc, const std::string& fragSrc)
+  void ShaderDeleter::operator()(uint* id)
   {
-    m_shaderID = Load(geomSrc, vertSrc, fragSrc,true);
+    glDeleteProgram(*id);
+    delete id;
+  }
+
+  Shader::Shader(const std::string& geomSrc, const std::string& vertSrc, const std::string& fragSrc)
+    : m_shaderID{new uint{Load(geomSrc, vertSrc, fragSrc,true)}}
+  {
   }
 
   Shader::Shader(const std::string& vertSrc, const std::string& fragSrc)
+    : m_shaderID{new uint{Load(vertSrc,fragSrc)}}
   {
-    m_shaderID = Load(vertSrc,fragSrc);
-  }
-
-  Shader::Shader(const Shader& shader)
-  {
-    operator=(shader);
   }
 
   Shader::~Shader()
   {
-    OpenGLObjectHandler::DestroyOpenGLObject(OpenGLType::SHADER, m_shaderID);
   }
 
-  Shader& Shader::operator=(const Shader& shader)
-  {
-    if (this != &shader)
-    {
-      OpenGLObjectHandler::CopyOpenGLObject(OpenGLType::SHADER, shader.m_shaderID);
-      m_shaderID = shader.m_shaderID;
-    }
-    return *this;
-  }
-
-  GLuint Shader::Load(const std::string& vertSrc, const std::string& fragSrc)
+  uint Shader::Load(const std::string& vertSrc, const std::string& fragSrc)
   {
     return Load("", vertSrc, fragSrc, false);
   }
 
-  GLuint Shader::Load(const std::string& geomSrc, const std::string& vertSrc, const std::string& fragSrc, bool hasGeometry)
+  uint Shader::Load(const std::string& geomSrc, const std::string& vertSrc, const std::string& fragSrc, bool hasGeometry)
   {
     uint program = OpenGLObjectHandler::CreateOpenGLObject(OpenGLType::SHADER);
     uint shader = AttachShader(program, vertSrc, GL_VERTEX_SHADER);
@@ -58,9 +48,8 @@ namespace Greet {
       return shader;
     if (hasGeometry)
     {
+      // If this fails just ignore it
       AttachShader(program, geomSrc, GL_GEOMETRY_SHADER);
-      if (shader != 0)
-        return shader;
     }
     GLCall(glLinkProgram(program));
     GLCall(glValidateProgram(program));
@@ -69,9 +58,9 @@ namespace Greet {
     return program;
   }
 
-  GLuint Shader::AttachShader(const GLuint program, const std::string& shaderSrc, const GLuint shaderType)
+  uint Shader::AttachShader(const uint program, const std::string& shaderSrc, const uint shaderType)
   {
-    GLCall(GLuint shader = glCreateShader(shaderType));
+    GLCall(uint shader = glCreateShader(shaderType));
     const char* src = shaderSrc.c_str();
     GLCall(glShaderSource(shader, 1, &src, NULL));
     GLCall(glCompileShader(shader));
@@ -88,19 +77,21 @@ namespace Greet {
       {
         Log::Error("Failed to compile fragment Shader!\n", &error[0]);
         ErrorHandle::SetErrorCode(GREET_ERROR_SHADER_FRAGMENT);
+        GLCall(glShaderSource(shader, 1, &ShaderFactory::default_shader_frag, NULL));
       }
       else if (shaderType == GL_VERTEX_SHADER)
       {
         Log::Error("Failed to compile vertex Shader!\n", &error[0]);
         ErrorHandle::SetErrorCode(GREET_ERROR_SHADER_VERTEX);
+        GLCall(glShaderSource(shader, 1, &ShaderFactory::default_shader_vert, NULL));
       }
       else if (shaderType == GL_GEOMETRY_SHADER)
       {
         Log::Error("Failed to compile geometry Shader!\n", &error[0]);
         ErrorHandle::SetErrorCode(GREET_ERROR_SHADER_GEOMETRY);
+        return 1;
       }
-      GLCall(glDeleteShader(shader));
-      return ShaderFactory::DefaultShader().m_shaderID;
+      GLCall(glCompileShader(shader));
     }	
     GLCall(glAttachShader(program, shader));
     GLCall(glDeleteShader(shader));
@@ -109,78 +100,79 @@ namespace Greet {
 
   void Shader::BindAttributeOutput(uint attachmentId, const std::string& name)
   {
-    GLCall(glBindFragDataLocation(m_shaderID,attachmentId,name.c_str()));
+    GLCall(glBindFragDataLocation(*m_shaderID,attachmentId,name.c_str()));
   }
 
-  GLuint Shader::GetUniformLocation(const GLchar *name) const
+  uint Shader::GetUniformLocation(const char *name) const
   {
-    GLCall(uint location = glGetUniformLocation(m_shaderID,name));
+    GLCall(uint location = glGetUniformLocation(*m_shaderID,name));
     return location;
   }
 
-  void Shader::SetUniformBoolean(const GLchar *name, bool value) const
+  void Shader::SetUniformBoolean(const char *name, bool value) const
   {
     GLCall(glUniform1f(GetUniformLocation(name), value ? 1.0f : 0.0f));
   }
 
-  void Shader::SetUniform1f(const GLchar *name, float value) const
+  void Shader::SetUniform1f(const char *name, float value) const
   {
     GLCall(glUniform1f(GetUniformLocation(name), value));
   }
 
-  void Shader::SetUniform1fv(const GLchar *name, uint count, float* value) const
+  void Shader::SetUniform1fv(const char *name, uint count, float* value) const
   {
     GLCall(glUniform1fv(GetUniformLocation(name), count, value));
   }
 
-  void Shader::SetUniform1i(const GLchar *name, int value) const
+  void Shader::SetUniform1i(const char *name, int value) const
   {
     GLCall(glUniform1i(GetUniformLocation(name), value));
   }
 
-  void Shader::SetUniform1iv(const GLchar *name, uint count, int* value) const
+  void Shader::SetUniform1iv(const char *name, uint count, int* value) const
   {
     GLCall(glUniform1iv(GetUniformLocation(name), count, value));
   }
 
-  void Shader::SetUniform1ui(const GLchar *name, uint value) const
+  void Shader::SetUniform1ui(const char *name, uint value) const
   {
     GLCall(glUniform1ui(GetUniformLocation(name), value));
   }
 
-  void Shader::SetUniform1uiv(const GLchar *name, uint count, uint* value) const
+  void Shader::SetUniform1uiv(const char *name, uint count, uint* value) const
   {
     GLCall(glUniform1uiv(GetUniformLocation(name), count, value));
   }
 
-  void Shader::SetUniform2f(const GLchar *name, const Vec2 &value) const
+  void Shader::SetUniform2f(const char *name, const Vec2 &value) const
   {
     GLCall(glUniform2f(GetUniformLocation(name), value.x, value.y));
   }
 
-  void Shader::SetUniform3f(const GLchar *name, const Vec3 &value) const
+  void Shader::SetUniform3f(const char *name, const Vec3 &value) const
   {
     GLCall(glUniform3f(GetUniformLocation(name), value.x, value.y, value.z));
   }
 
-  void Shader::SetUniform4f(const GLchar *name, const Vec4 &value) const
+  void Shader::SetUniform4f(const char *name, const Vec4 &value) const
   {
     GLCall(glUniform4f(GetUniformLocation(name), value.x, value.y, value.z, value.w));
   }
 
-  void Shader::SetUniformMat3(const GLchar *name, const Mat3 &value) const
+  void Shader::SetUniformMat3(const char *name, const Mat3 &value) const
   {
     GLCall(glUniformMatrix3fv(GetUniformLocation(name), 1, GL_FALSE, value.elements));
   }
 
-  void Shader::SetUniformMat4(const GLchar *name, const Mat4 &value) const
+  void Shader::SetUniformMat4(const char *name, const Mat4 &value) const
   {
     GLCall(glUniformMatrix4fv(GetUniformLocation(name), 1, GL_FALSE, value.elements));
   }
 
   void Shader::Enable() const
   {
-    GLCall(glUseProgram(m_shaderID));
+    Log::Info(*m_shaderID.get());
+    GLCall(glUseProgram(*m_shaderID.get()));
   }
 
   void Shader::Disable()

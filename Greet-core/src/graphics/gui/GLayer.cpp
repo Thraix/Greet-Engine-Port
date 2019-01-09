@@ -8,8 +8,8 @@ namespace Greet {
   std::map<std::string, Frame*> GLayer::frames;
   GLayer* GLayer::instance;
 
-  GLayer::GLayer(GUIRenderer* renderer, const Shader& shader)
-    : m_renderer(renderer), m_shader(shader)
+  GLayer::GLayer(GUIRenderer* renderer, Shader&& shader)
+    : m_renderer(renderer), m_shader(std::move(shader))
   {
     m_focused = nullptr;
     m_hovered = nullptr;
@@ -118,9 +118,10 @@ namespace Greet {
     }
   }
 
-  void GLayer::CreateInstance(GUIRenderer* renderer, const Shader& shader)
+  void GLayer::CreateInstance(GUIRenderer* renderer, Shader&& shader)
   {
-    instance = new GLayer(renderer, shader);
+    // Keep shader as an rvalue
+    instance = new GLayer(renderer, std::move(shader));
   }
 
   GLayer* GLayer::GetInstance()

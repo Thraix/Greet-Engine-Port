@@ -1,35 +1,10 @@
-#include "Shader.h"
+#include "ShaderFactory.h"
+
+#include <graphics/shaders/Shader.h>
 
 
 namespace Greet { namespace ShaderFactory {
 
-  const std::string default_shader_vert =
-#include "default2dshader.vert"
-    ;
-
-  const std::string& default_shader_frag =
-#include "default2dshader.frag"
-    ;
-
-  const char *debug_shader_frag =
-#include "debugshader.frag"
-    ;
-
-  const char *led_shader_frag =
-#include "ledshader.frag"
-    ;
-
-  const char *basic_light_shader_frag =
-#include "basiclightshader.frag"
-    ;
-
-  const std::string skybox_shader_vert =
-#include "skyboxshader.vert"
-    ;
-
-  const char *skybox_shader_frag = 
-#include "skyboxshader.frag"
-    ;
 
   Shader LEDShader()
   {

@@ -18,13 +18,13 @@ namespace Greet {
       uint m_color;
 
     public:
-      Material(const Shader& shader, const Texture2D& texture);
-      Material(const Shader& shader);
+      Material(Shader&& shader, const Texture2D& texture);
+      Material(Shader&& shader);
       virtual ~Material();
 
       void Bind() const;
       void Unbind() const;
-      void SetShader(const Shader& shader);
+      void SetShader(Shader&& shader);
       Material* SetReflectivity(float reflectivity);
       Material* SetShineDamper(float shineDamper);
       Material* SetColor(uint color) { m_color = color; return this; }

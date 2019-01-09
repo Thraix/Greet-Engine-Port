@@ -1,8 +1,8 @@
 # This Makefile was generated using MakeGen v1.0.6 made by Tim Håkansson
 # and is licensed under MIT. Full source of the project can be found at
 # https://github.com/Thraix/MakeGen
-CC=@g++
-CO=@g++ -shared -o
+CC=@g++ -g
+CO=@g++ -g -shared -o
 BIN=bin/
 OBJPATH=$(BIN)intermediates
 INCLUDES=-I./../deps/includes/ -I./src/ 

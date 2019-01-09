@@ -104,14 +104,10 @@ class Core : public App, public KeyListener, public MouseListener
       Skybox* skybox = new Skybox(TextureManager::Get3D("skybox"));
       renderer3d = new BatchRenderer3D(Window::GetWidth(), Window::GetHeight(), camera,90,0.1f,1000.0f, skybox);
 
-      Shader modelShader = Shader::FromFile("res/shaders/3dshader.shader");
-      Shader terrainShader = Shader::FromFile("res/shaders/terrain.shader");
-      Shader stallShader = Shader::FromFile("res/shaders/3dshader.shader");
-      Shader blurShader = Shader::FromFile("res/shaders/default2dshader.vert","res/shaders/guassianblur.frag");
 
-      modelMaterial = new Material(modelShader);
-      stallMaterial = new Material(stallShader, TextureManager::Get2D("stall"));
-      terrainMaterial = new Material(terrainShader);
+      modelMaterial = new Material(Shader::FromFile("res/shaders/3dshader.shader"));
+      stallMaterial = new Material(Shader::FromFile("res/shaders/3dshader.shader"), TextureManager::Get2D("stall"));
+      terrainMaterial = new Material(Shader::FromFile("res/shaders/terrain.shader"));
       terrainMaterial->SetReflectivity(0.5f);
       terrainMaterial->SetShineDamper(5.0f);
       uint gridWidth = 999;
@@ -164,8 +160,9 @@ class Core : public App, public KeyListener, public MouseListener
       //}
 
       Light* l = new Light(Vec3(0, 0,10), 0xffffffff);
+      const Shader& modelShader = modelMaterial->GetShader();
       modelShader.Enable();
-      l->SetToUniform(&modelShader, "light");
+      l->SetToUniform(modelShader, "light");
       modelShader.Disable();
 
       delete l;
@@ -397,15 +394,13 @@ class Core : public App, public KeyListener, public MouseListener
     {
       if (e.GetButton() == GLFW_KEY_F5)
       {
-        Shader terrainShader = Shader::FromFile("res/shaders/terrain.vert", "res/shaders/terrain.frag");
-        Shader modelShader = Shader::FromFile("res/shaders/3dshader.vert", "res/shaders/3dshader.frag");
-        modelMaterial->SetShader(modelShader);
-        terrainMaterial->SetShader(terrainShader);
+        modelMaterial->SetShader(Shader::FromFile("res/shaders/3dshader.vert", "res/shaders/3dshader.frag"));
+        terrainMaterial->SetShader(Shader::FromFile("res/shaders/terrain.vert", "res/shaders/terrain.frag"));
         Light* l = new Light(Vec3(25, 25, 12.5), 0xffffffff);
 
-        modelShader.Enable();
-        l->SetToUniform(&modelShader, "light");
-        modelShader.Disable();
+        modelMaterial->GetShader().Enable();
+        l->SetToUniform(modelMaterial->GetShader(), "light");
+        modelMaterial->GetShader().Disable();
         //terrainShader->enable();
         //l->setToUniform(terrainShader, "light");
         //terrainShader->disable();

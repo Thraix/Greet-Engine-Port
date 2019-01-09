@@ -27,7 +27,7 @@ class Core : public App, public KeyListener, public MouseListener
       FontManager::Add(new FontContainer("/usr/share/fonts/truetype/ubuntu/Ubuntu-C.ttf","roboto"));
 
       // TODO: This should be done by the engine
-      GLayer::CreateInstance(new GUIRenderer(), Shader(Shader::FromFile("res/shaders/gui.shader")));
+      GLayer::CreateInstance(new GUIRenderer(), Shader::FromFile("res/shaders/gui.shader"));
 
       GLayer::AddFrame(GUIUtils::GetFrame("res/guis/colorpicker.xml"), "testing");
       Frame* frame = GLayer::GetFrame("testing");

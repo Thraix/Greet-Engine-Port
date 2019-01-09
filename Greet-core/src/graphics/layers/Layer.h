@@ -17,18 +17,18 @@ namespace Greet {
 
       Mat3 m_projectionMatrix;
     public:
-      Layer(Renderer2D* renderer, const Shader& shader, Mat3 projectionMatrix)
-        : m_renderer(renderer), m_shader(shader), m_projectionMatrix(projectionMatrix)
+      Layer(Renderer2D* renderer, Shader&& shader, Mat3 projectionMatrix)
+        : m_renderer(renderer), m_shader(std::move(shader)), m_projectionMatrix(projectionMatrix)
       {
         GLint texIDs[32];
         for (int i = 0; i < 32; i++)
         {
           texIDs[i] = i;
         }
-        shader.Enable();
-        shader.SetUniformMat3("pr_matrix", m_projectionMatrix);
-        shader.SetUniform1iv("textures", 32, texIDs);
-        shader.Disable();
+        m_shader.Enable();
+        m_shader.SetUniformMat3("pr_matrix", m_projectionMatrix);
+        m_shader.SetUniform1iv("textures", 32, texIDs);
+        m_shader.Disable();
       }
 
       virtual ~Layer()

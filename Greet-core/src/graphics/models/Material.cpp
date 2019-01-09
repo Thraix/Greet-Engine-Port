@@ -2,14 +2,14 @@
 
 namespace Greet {
 
-  Material::Material(const Shader& shader, const Texture2D& texture)
-    : m_shader(shader), m_texture(texture), m_color(0xffffffff)
+  Material::Material(Shader&& shader, const Texture2D& texture)
+    : m_shader{std::move(shader)}, m_texture(texture), m_color(0xffffffff)
   {
     UpdateTexture();
   }
 
-  Material::Material(const Shader& shader)
-    : m_shader(shader), m_texture(Texture2D()), m_color(0xffffffff)
+  Material::Material(Shader&& shader)
+    : m_shader(std::move(shader)), m_texture(Texture2D()), m_color(0xffffffff)
   {
     UpdateTexture();
   }
@@ -35,9 +35,9 @@ namespace Greet {
     m_shader.Disable();
   }
 
-  void Material::SetShader(const Shader& shader)
+  void Material::SetShader(Shader&& shader)
   {
-    m_shader = shader;
+    m_shader = std::move(shader);
     UpdateTexture();
   }
 

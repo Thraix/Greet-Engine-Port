@@ -20,7 +20,7 @@ namespace Greet {
       Shader m_shader;
 
     private:
-      GLayer(GUIRenderer* renderer, const Shader& shader);
+      GLayer(GUIRenderer* renderer, Shader&& shader);
     public:
 
       bool OnPressed(const MousePressedEvent& event) override;
@@ -32,7 +32,7 @@ namespace Greet {
       void WindowResize(int width, int height) override;
 
 
-      static void CreateInstance(GUIRenderer* renderer, const Shader& shader);
+      static void CreateInstance(GUIRenderer* renderer, Shader&& shader);
       static GLayer* GetInstance();
       static void DestroyInstance();
 

@@ -8,4 +8,5 @@
 deps/libs/*
 *Makefile.backup
 installation/glfw*
+core
 
