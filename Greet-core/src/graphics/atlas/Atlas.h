@@ -21,6 +21,8 @@ namespace Greet{
       BYTE* m_bits;
     public:
       Atlas(uint atlasSize, uint textureSize);
+      Atlas(Atlas&&) = default;
+      Atlas& operator=(Atlas&&) = default;
       virtual ~Atlas();
 
       bool AddTexture(std::string name, std::string filePath);

@@ -5,9 +5,9 @@
 #include <utils/ErrorHandle.h>
 
 namespace Greet{
-  std::map<std::string, const Atlas&> AtlasManager::m_atlas;
+  std::map<std::string, Atlas> AtlasManager::m_atlas;
 
-  void AtlasManager::Add(const std::string& name, const Atlas& atlas)
+  void AtlasManager::Add(const std::string& name, Atlas&& atlas)
   {
     if(m_atlas.find(name) != m_atlas.end())
     {
@@ -15,7 +15,7 @@ namespace Greet{
       Log::Error("Given atlas name already exists: ", name);
       return;
     }
-    m_atlas.emplace(name, atlas);
+    m_atlas.emplace(name, std::move(atlas));
   }
 
   const Atlas& AtlasManager::Get(const std::string& name)
