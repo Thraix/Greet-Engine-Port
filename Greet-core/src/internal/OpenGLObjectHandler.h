@@ -8,7 +8,7 @@ namespace Greet {
 
   enum OpenGLType
   {
-    SHADER, TEXTURE, BUFFER, VERTEX_ARRAY
+    TEXTURE, BUFFER, VERTEX_ARRAY
   };
 
   class OpenGLObjectHandler

@@ -7,34 +7,31 @@
 
 namespace Greet {
 
-  struct ShaderDeleter
+  struct ShaderDeleter final
   {
     void operator()(uint* id);
   };
 
-  class Shader
+  class Shader final
   {
     private:
       std::unique_ptr<uint, ShaderDeleter> m_shaderID;
 
     private:
+      Shader(const std::string& geomSrc, const std::string& vertSrc, const std::string& fragSrc);
+      Shader(const std::string& vertSrc, const std::string& fragSrc);
+
       uint Load(const std::string& geomSrc, const std::string& vertSrc, const std::string& fragSrc, bool hasGeometry);
       uint Load(const std::string& vertSrc, const std::string& fragSrc);
       uint AttachShader(const uint program, const std::string& shaderSrc, const uint shaderType);
       uint GetUniformLocation(const char*name) const;
 
-      Shader(const std::string& geomSrc, const std::string& vertSrc, const std::string& fragSrc);
-      Shader(const std::string& vertSrc, const std::string& fragSrc);
     public:
       Shader(Shader&&) = default;
       Shader& operator=(Shader&&) = default;
-
-    public:
-      virtual ~Shader();
-
       void Enable() const;
       static void Disable();
-      void BindAttributeOutput(uint attachmentId, const std::string& name);
+      void BindAttributeOutput(uint attachmentId, const std::string& name) const;
 
       void SetUniformBoolean(const char *name, bool value) const;
       void SetUniform1f(const char *name, float value) const;
@@ -48,6 +45,7 @@ namespace Greet {
       void SetUniform4f(const char *name, const Vec4 &value) const;
       void SetUniformMat3(const char *name, const Mat3 &value) const;
       void SetUniformMat4(const char *name, const Mat4 &value) const;
+
     public:
       static Shader FromFile(const std::string& shaderPath);
       static Shader FromFile(const std::string& vertPath, const std::string& fragPath);

@@ -12,9 +12,6 @@ namespace Greet {
     uint id;
     switch (type)
     {
-      case SHADER:
-        id = glCreateProgram();
-        break;
       case TEXTURE:
         GLCall(glGenTextures(1, &id));
         break;
@@ -90,9 +87,6 @@ namespace Greet {
   {
     switch (type)
     {
-      case SHADER:
-        GLCall(glDeleteProgram(objIterator->first));
-        break;
       case TEXTURE:
         GLCall(glDeleteTextures(1, &objIterator->first));
         break;
@@ -115,8 +109,6 @@ namespace Greet {
   {
     switch (type)
     {
-      case SHADER:
-        return "Shader";
       case TEXTURE:
         return "Texture";
       case BUFFER:

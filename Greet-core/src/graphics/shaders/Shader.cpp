@@ -1,14 +1,9 @@
 #include "Shader.h"
-
 #include <graphics/shaders/ShaderFactory.h>
 #include <utils/ErrorHandle.h>
 #include <utils/FileUtils.h>
-
 #include <fstream>
 #include <sstream>
-
-#include <internal/OpenGLObjectHandler.h>
-
 
 namespace Greet {
 
@@ -20,17 +15,11 @@ namespace Greet {
 
   Shader::Shader(const std::string& geomSrc, const std::string& vertSrc, const std::string& fragSrc)
     : m_shaderID{new uint{Load(geomSrc, vertSrc, fragSrc,true)}}
-  {
-  }
+  {}
 
   Shader::Shader(const std::string& vertSrc, const std::string& fragSrc)
     : m_shaderID{new uint{Load(vertSrc,fragSrc)}}
-  {
-  }
-
-  Shader::~Shader()
-  {
-  }
+  {}
 
   uint Shader::Load(const std::string& vertSrc, const std::string& fragSrc)
   {
@@ -39,12 +28,13 @@ namespace Greet {
 
   uint Shader::Load(const std::string& geomSrc, const std::string& vertSrc, const std::string& fragSrc, bool hasGeometry)
   {
-    uint program = OpenGLObjectHandler::CreateOpenGLObject(OpenGLType::SHADER);
+    GLCall(uint program = glCreateProgram()); 
+
     uint shader = AttachShader(program, vertSrc, GL_VERTEX_SHADER);
-    if (shader != 0)
+    if (!shader)
       return shader;
     shader = AttachShader(program, fragSrc, GL_FRAGMENT_SHADER);
-    if (shader != 0)
+    if (!shader)
       return shader;
     if (hasGeometry)
     {
@@ -77,28 +67,30 @@ namespace Greet {
       {
         Log::Error("Failed to compile fragment Shader!\n", &error[0]);
         ErrorHandle::SetErrorCode(GREET_ERROR_SHADER_FRAGMENT);
+        // Should never fail
         GLCall(glShaderSource(shader, 1, &ShaderFactory::default_shader_frag, NULL));
       }
       else if (shaderType == GL_VERTEX_SHADER)
       {
         Log::Error("Failed to compile vertex Shader!\n", &error[0]);
         ErrorHandle::SetErrorCode(GREET_ERROR_SHADER_VERTEX);
+        // Should never fail
         GLCall(glShaderSource(shader, 1, &ShaderFactory::default_shader_vert, NULL));
       }
       else if (shaderType == GL_GEOMETRY_SHADER)
       {
         Log::Error("Failed to compile geometry Shader!\n", &error[0]);
         ErrorHandle::SetErrorCode(GREET_ERROR_SHADER_GEOMETRY);
-        return 1;
+        return 0;
       }
       GLCall(glCompileShader(shader));
     }	
     GLCall(glAttachShader(program, shader));
     GLCall(glDeleteShader(shader));
-    return 0;
+    return 1;
   }
 
-  void Shader::BindAttributeOutput(uint attachmentId, const std::string& name)
+  void Shader::BindAttributeOutput(uint attachmentId, const std::string& name) const
   {
     GLCall(glBindFragDataLocation(*m_shaderID,attachmentId,name.c_str()));
   }
