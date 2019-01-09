@@ -1,13 +1,10 @@
 #pragma once
 
 #include <map>
-#include <functional>
 #include <vector>
 #include <event/MouseEvent.h>
 #include <event/MouseListener.h>
 #include <event/KeyListener.h>
-#include <utils/Utils.h>
-#include <logging/Logger.h>
 
 #define DISPATCHER_GUI BIT(24)
 

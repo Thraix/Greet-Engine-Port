@@ -1,6 +1,9 @@
 #include "Mesh.h"
 
 #include <internal/OpenGLObjectHandler.h>
+#include <utils/ErrorHandle.h>
+#include <internal/GreetGL.h>
+#include <logging/Logger.h>
 
 namespace Greet {
 

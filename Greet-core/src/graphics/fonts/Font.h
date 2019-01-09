@@ -2,10 +2,7 @@
 
 #include <internal/GreetGL.h>
 #include <internal/GreetTypes.h>
-#include <graphics/textures/Texture.h>
 #include <string>
-#include <math/Maths.h>
-#include <logging/Log.h>
 #include <graphics/fonts/FontAtlas.h>
 
 namespace Greet{

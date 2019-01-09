@@ -1,7 +1,6 @@
 #include "Texture2D.h"
 
 #include <internal/GreetGL.h>
-#include <internal/OpenGLObjectHandler.h>
 
 namespace Greet {
 
@@ -31,7 +30,7 @@ namespace Greet {
   }
 
   Texture2D::Texture2D(uint texId, uint width, uint height, TextureParams params)
-    :Texture(texId, (uint)GL_TEXTURE_2D), m_width(width), m_height(height), m_params(params)
+    : Texture(texId, (uint)GL_TEXTURE_2D), m_width(width), m_height(height), m_params(params)
   {
 
   }
@@ -68,7 +67,6 @@ namespace Greet {
       default:
         Log::Warning("Image bpp is invalid (bpp=",bpp,")");
     }
-
     GenTexture(bits);
     delete[] bits;
   }
@@ -82,14 +80,14 @@ namespace Greet {
 
   void Texture2D::GenTexture(BYTE* bits)
   {
-    GLCall(glBindTexture(GL_TEXTURE_2D, m_texId));
+    Enable();
     if(m_params.filter != TextureFilter::NONE)
     {
       GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,  (uint)m_params.filter));
       GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, (uint)m_params.filter));
     }
     GLCall(glTexImage2D(GL_TEXTURE_2D, 0, (uint)m_params.internalFormat, m_width, m_height, 0, GetFormat(), GL_UNSIGNED_BYTE, bits));
-    GLCall(glBindTexture(GL_TEXTURE_2D, 0));
+    Disable();
   }
 
   void Texture2D::SetPixels(const void* pixels) const

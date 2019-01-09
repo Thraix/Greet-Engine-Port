@@ -19,6 +19,8 @@ namespace Greet {
       Texture2D(BYTE* bits, uint width, uint height, TextureParams params = TextureParams());
       Texture2D(uint texID, uint width, uint height, TextureParams params = TextureParams());
       Texture2D(TextureParams params = TextureParams());
+      Texture2D(Texture2D&&) = default;
+      Texture2D& operator=(Texture2D&&) = default;
       void SetPixels(const void* pixels) const;
       virtual ~Texture2D();
       inline uint GetWidth() const { return m_width; }

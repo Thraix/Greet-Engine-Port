@@ -1,9 +1,6 @@
 #pragma once
 
 #include <vector>
-#include <logging/Log.h>
-#include <internal/GreetTypes.h>
-#include <utils/ErrorHandle.h>
 #include <graphics/fonts/FontContainer.h>
 
 namespace Greet {

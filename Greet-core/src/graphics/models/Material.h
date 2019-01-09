@@ -12,7 +12,7 @@ namespace Greet {
   {
     private:
       Shader m_shader;
-      Texture2D m_texture;
+      const Texture2D& m_texture;
       float m_shineDamper = 10;
       float m_reflectivity = 1;
       uint m_color;

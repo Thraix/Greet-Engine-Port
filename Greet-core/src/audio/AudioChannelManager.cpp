@@ -1,5 +1,8 @@
 #include "AudioChannelManager.h"
 
+#include <logging/Log.h>
+#include <utils/ErrorHandle.h>
+
 namespace Greet{
 
   std::vector<AudioChannel*> AudioChannelManager::m_channels;

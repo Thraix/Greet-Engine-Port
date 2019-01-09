@@ -1,5 +1,8 @@
 #include "BatchRenderer.h"
 
+#include <logging/Log.h>
+#include <internal/GreetGL.h>
+
 namespace Greet {
 
   BatchRenderer::BatchRenderer()

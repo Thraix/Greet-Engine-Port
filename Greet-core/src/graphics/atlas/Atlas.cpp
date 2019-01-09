@@ -35,7 +35,7 @@ namespace Greet {
 
   void Atlas::GenTexture(BYTE* bits)
   {
-    GLCall(glBindTexture(GL_TEXTURE_2D, m_texId));
+    GLCall(glBindTexture(GL_TEXTURE_2D, *texId));
     GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST));
     GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
     GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER));
@@ -92,7 +92,7 @@ namespace Greet {
       return;
     }
 
-    GLCall(glBindTexture(GL_TEXTURE_2D, m_texId));
+    GLCall(glBindTexture(GL_TEXTURE_2D, *texId));
     GLCall(glTexSubImage2D(GL_TEXTURE_2D, 0, x*m_textureSize,m_textureSize*m_texturesSide -m_textureSize - y*m_textureSize,m_textureSize,m_textureSize,bpp == 32 ? GL_BGRA : GL_BGR, GL_UNSIGNED_BYTE, bits));
     GLCall(glBindTexture(GL_TEXTURE_2D, 0));
   }

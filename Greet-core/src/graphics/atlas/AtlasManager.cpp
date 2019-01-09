@@ -1,7 +1,11 @@
 #include "AtlasManager.h"	
 
+#include <logging/Log.h>
+#include <internal/GreetTypes.h>
+#include <utils/ErrorHandle.h>
+
 namespace Greet{
-  std::map<std::string, Atlas> AtlasManager::m_atlas;
+  std::map<std::string, const Atlas&> AtlasManager::m_atlas;
 
   void AtlasManager::Add(const std::string& name, const Atlas& atlas)
   {

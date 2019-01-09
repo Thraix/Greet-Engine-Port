@@ -2,7 +2,6 @@
 #define _GREETGL_H_
 
 #include <utils/LogUtils.h>
-
 #include <logging/Log.h>
 
 #include <ft2build.h>
@@ -50,8 +49,6 @@ static void GLLogError(const char* glCall, const char* file, int line)
     ASSERT(false, "OpenGL error");
   }
 }
-
-
 
 #if defined _DEBUG
 #define GLCall(x) GLClearError(); x; GLLogError(#x,__FILE__,__LINE__)

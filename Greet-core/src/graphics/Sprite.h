@@ -3,17 +3,18 @@
 #include <internal/GreetTypes.h>
 #include <math/Maths.h>
 #include <graphics/textures/Texture2D.h>
+#include <graphics/textures/TextureManager.h>
 
 namespace Greet{
   class Sprite
   {
     protected:
-      Texture2D m_texture;
+      const Texture2D& m_texture;
       Vec2 m_texPos;
       Vec2 m_texSize;
     public:
       Sprite()
-        : m_texture(Texture2D()), m_texPos(Vec2(0, 0)), m_texSize(Vec2(1, 1))
+        : m_texture(TextureManager::GetEmptyTexture2D()), m_texPos(Vec2(0, 0)), m_texSize(Vec2(1, 1))
       {
 
       }

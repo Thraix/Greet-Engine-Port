@@ -2,9 +2,6 @@
 
 #include <vector>
 #include <audio/AudioChannel.h>
-#include <logging/Log.h>
-#include <internal/GreetTypes.h>
-#include <utils/ErrorHandle.h>
 
 namespace Greet {
   class AudioChannelManager

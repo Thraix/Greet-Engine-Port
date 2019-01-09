@@ -2,8 +2,6 @@
 
 #include <event/KeyEvent.h>
 
-#include <logging/Log.h>
-
 namespace Greet {
 
   class KeyListener

@@ -14,7 +14,7 @@ namespace Greet {
       uint m_fbo;
       uint m_width;
       uint m_height;
-      std::map<uint,Texture2D> m_colorTextures;
+      std::map<uint,const Texture2D&> m_colorTextures;
       Texture2D m_depthTexture;
       uint m_depthBuffer;
     public:

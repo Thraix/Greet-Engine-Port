@@ -1,5 +1,9 @@
 #include "EventDispatcher.h"
 
+#include <functional>
+#include <utils/Utils.h>
+#include <logging/Logger.h>
+
 namespace Greet {
 
   std::map<uint, std::vector<MouseListener*>, std::greater<uint>> EventDispatcher::m_mouseListeners;

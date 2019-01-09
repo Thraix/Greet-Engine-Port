@@ -1,5 +1,9 @@
 #include "FontManager.h"
 
+#include <logging/Log.h>
+#include <internal/GreetTypes.h>
+#include <utils/ErrorHandle.h>
+
 namespace Greet{
 
   std::vector<FontContainer*> FontManager::m_fonts;

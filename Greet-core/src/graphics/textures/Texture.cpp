@@ -1,52 +1,43 @@
 #include "Texture.h"
 
 #include <internal/GreetGL.h>
-#include <internal/OpenGLObjectHandler.h>
 
 namespace Greet {
 
+  void TextureDeleter::operator()(uint* id)
+  {
+    glDeleteTextures(1, id);
+    delete id;
+  }
+
   Texture::Texture(uint textureType, bool generateTexture)
-    : m_textureType(textureType)
+    : texId{new uint{0}}, m_textureType{textureType}
   {
     ASSERT(m_textureType == GL_TEXTURE_2D || m_textureType == GL_TEXTURE_CUBE_MAP, "Invalid texture enum");
     if(generateTexture)
-      m_texId = OpenGLObjectHandler::CreateOpenGLObject(OpenGLType::TEXTURE);
+    {
+      uint id;
+      glGenTextures(1, &id);
+      *texId = id;
+    }
     else 
-      m_texId = 0;
+      *texId = 0;
   }
 
   Texture::Texture(uint texId, uint textureType)
-    : m_texId(texId), m_textureType(textureType)
+    : texId{new uint{texId}}, m_textureType{textureType}
   {
     ASSERT(m_textureType == GL_TEXTURE_2D || m_textureType == GL_TEXTURE_CUBE_MAP, "Invalid texture enum");
   }
 
-  Texture::Texture(const Texture& texture)
+  Texture::Texture()
+    : texId{new uint{0}}, m_textureType{0}
   {
-    operator=(texture);
-  }
-
-  Texture::~Texture()
-  {
-    if(m_texId != 0)
-      OpenGLObjectHandler::DestroyOpenGLObject(OpenGLType::TEXTURE, m_texId);
-  }
-
-  Texture& Texture::operator=(const Texture& texture)
-  {
-    if (this != &texture)
-    {
-      if(texture.m_texId != 0)
-        OpenGLObjectHandler::CopyOpenGLObject(OpenGLType::TEXTURE, texture.m_texId);
-      this->m_texId = texture.m_texId;
-      this->m_textureType = texture.m_textureType;
-    }
-    return *this;
   }
 
   void Texture::Enable() const
   {
-    GLCall(glBindTexture(m_textureType, m_texId));
+    GLCall(glBindTexture(m_textureType, *texId));
   }
 
   void Texture::Disable() const
@@ -54,4 +45,8 @@ namespace Greet {
     GLCall(glBindTexture(m_textureType, 0));
   }
 
+  uint Texture::GetTexId() const
+  {
+    return *texId; 
+  }
 }

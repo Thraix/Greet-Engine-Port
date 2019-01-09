@@ -2,6 +2,7 @@
 
 #include <string>
 #include <internal/GreetGL.h>
+#include <memory>
 #include <internal/GreetTypes.h>
 
 namespace Greet {
@@ -54,28 +55,32 @@ namespace Greet {
     TextureFormat format;
   };
 
+  
+  struct TextureDeleter final
+  {
+    void operator()(uint* id);
+  };
+
   class Texture
   {
     protected:
-      uint m_texId;
+      std::unique_ptr<uint,TextureDeleter> texId; 
       uint m_textureType;
     public:
       Texture(uint textureType, bool generateTexture = true);
       Texture(uint texId, uint textureType);
-      Texture(const Texture& texture);
-      Texture& operator=(const Texture& shader);
-      virtual ~Texture();
+      Texture();
+
+      Texture(Texture&& texture) = default;
+      Texture& operator=(Texture&& texture) = default;
       virtual void Enable() const;
       virtual void Disable() const;
 
-      inline uint GetTexId() const { return m_texId; }
+      uint GetTexId() const;
       friend bool operator<(const Texture& tex1, const Texture& tex2)
       {
-        return tex1.m_texId < tex2.m_texId;
+        return *tex1.texId< *tex2.texId;
       }
-
-    protected:
-      inline void SetTexId(uint texId) { m_texId = texId; }
   };
 
 }

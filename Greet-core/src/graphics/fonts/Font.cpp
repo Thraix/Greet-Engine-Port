@@ -1,5 +1,6 @@
 #include "Font.h"
 #include <graphics/fonts/FontContainer.h>
+#include <logging/Log.h>
 
 namespace Greet{
 

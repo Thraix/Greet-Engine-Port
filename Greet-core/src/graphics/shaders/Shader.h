@@ -45,7 +45,6 @@ namespace Greet {
       void SetUniform4f(const char *name, const Vec4 &value) const;
       void SetUniformMat3(const char *name, const Mat3 &value) const;
       void SetUniformMat4(const char *name, const Mat4 &value) const;
-
     public:
       static Shader FromFile(const std::string& shaderPath);
       static Shader FromFile(const std::string& vertPath, const std::string& fragPath);

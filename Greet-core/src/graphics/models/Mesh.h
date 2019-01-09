@@ -1,13 +1,9 @@
 #pragma once
 
-#include <internal/GreetGL.h>
 #include <math/Maths.h>
-#include <logging/Logger.h>
 #include <map>
 #include <vector>
-#include <graphics/textures/Texture.h>
 #include <graphics/models/MeshData.h>
-#include <utils/ErrorHandle.h>
 
 namespace Greet {
   class Mesh

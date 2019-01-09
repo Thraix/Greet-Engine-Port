@@ -10,7 +10,7 @@ namespace Greet {
   class Skybox
   {
     private:
-      CubeMap m_map;
+      const CubeMap& m_map;
       Shader m_shader;
       Mesh* m_mesh;
     public:

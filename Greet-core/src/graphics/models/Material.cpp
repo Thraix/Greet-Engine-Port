@@ -1,5 +1,7 @@
 #include "Material.h"
 
+#include <graphics/textures/TextureManager.h>
+
 namespace Greet {
 
   Material::Material(Shader&& shader, const Texture2D& texture)
@@ -9,7 +11,7 @@ namespace Greet {
   }
 
   Material::Material(Shader&& shader)
-    : m_shader(std::move(shader)), m_texture(Texture2D()), m_color(0xffffffff)
+    : m_shader(std::move(shader)), m_texture(TextureManager::GetEmptyTexture2D()), m_color(0xffffffff)
   {
     UpdateTexture();
   }

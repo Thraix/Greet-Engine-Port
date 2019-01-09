@@ -3,7 +3,6 @@
 #include <graphics/shaders/Shader.h>
 #include <graphics/Renderable.h>
 #include <graphics/renderers/Renderer2D.h>
-#include <logging/Log.h>
 #include <graphics/layers/Scene.h>
 
 namespace Greet {

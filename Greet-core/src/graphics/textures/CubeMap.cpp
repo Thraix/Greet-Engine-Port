@@ -25,7 +25,7 @@ namespace Greet {
   void CubeMap::LoadCubeMap(const std::string& image)
   {
     GLCall(glActiveTexture(GL_TEXTURE0));
-    GLCall(glBindTexture(GL_TEXTURE_CUBE_MAP,m_texId));
+    Enable();
 
     uint width;
     uint height;
@@ -44,14 +44,14 @@ namespace Greet {
     LoadImage(ImageUtils::cropImage(bits,width,height,bpp,w*3,h,w,h),w,h,bpp,GL_TEXTURE_CUBE_MAP_NEGATIVE_Z);
     LoadParameters();
     delete[] bits;
-    GLCall(glBindTexture(GL_TEXTURE_CUBE_MAP,0));
 
+    Disable();
   }
 
   void CubeMap::LoadCubeMap(const std::string& top, const std::string& bottom, const std::string& left, const std::string& right, const std::string& front, const std::string& back)
   {
     GLCall(glActiveTexture(GL_TEXTURE0));
-    GLCall(glBindTexture(GL_TEXTURE_CUBE_MAP,m_texId));
+    Enable();
 
     LoadImage(right, GL_TEXTURE_CUBE_MAP_POSITIVE_X);
     LoadImage(left, GL_TEXTURE_CUBE_MAP_NEGATIVE_X);
@@ -62,7 +62,7 @@ namespace Greet {
 
     LoadParameters();
 
-    GLCall(glBindTexture(GL_TEXTURE_CUBE_MAP, 0));
+    Disable();
   }
 
   void CubeMap::LoadParameters()
