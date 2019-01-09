@@ -87,12 +87,23 @@ namespace Greet {
 
     private:
 
+
+      /*
+       * PutHelper function for everything
+       */
+      template <typename T>
+      auto PutHelper(const T& t, int)
+        -> decltype(m_stream << t, std::declval<void>())
+      {
+        m_stream << t;
+      }
+
       /*
        * PutHelper function for Container
        */
       template <typename T>
-      auto PutHelper(const T& t, int)
-        -> decltype(t.begin(), t.end(), std::declval<typename T::value_type>(), std::declval<void>())
+      auto PutHelper(const T& t, long long)
+        -> decltype(t.begin(), t.end(), std::declval<void>())
       {
         auto size = t.size()-1; 
         for(auto it = t.begin();it!=t.end();++it,--size)
@@ -102,16 +113,6 @@ namespace Greet {
             Put(" ");
         }
       }
-
-      /*
-       * PutHelper function for everything
-       */
-      template <typename T>
-      auto PutHelper(const T& t, long long)
-      {
-        m_stream << t;
-      }
-
       /*
        * Put all the arguments to the stream.
        */
@@ -132,5 +133,7 @@ namespace Greet {
       {
         PutHelper(t, 0);
       }
+
   };
+
 }
