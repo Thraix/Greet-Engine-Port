@@ -171,7 +171,6 @@ namespace Greet {
 
   void Shader::Enable() const
   {
-    Log::Info(*m_shaderID.get());
     GLCall(glUseProgram(*m_shaderID.get()));
   }
 
