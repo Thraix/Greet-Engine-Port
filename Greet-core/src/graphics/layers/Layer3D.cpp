@@ -31,10 +31,10 @@ namespace Greet {
   {
     m_renderer->Update(timeElapsed);
   }
-  
+
   InputControlRequest Layer3D::OnInputChanged(const InputControl* control)
   {
     m_renderer->GetCamera()->OnInputChanged(control);
-  
+
   }
 }

@@ -6,14 +6,14 @@
 //#include <graphics/renderers/Renderer3D.h>
 
 namespace Greet {
-	class Camera {
+  class Camera {
 
-	public:
-		virtual const Vec3& GetRotationVector() const = 0;
-		virtual const Mat4& GetViewMatrix() const = 0;
-		virtual void Update(float timeElapsed) {};
-    virtual InputControlRequest OnInputChanged(const InputControl* control) = 0;
-	};
+    public:
+      virtual const Vec3& GetRotationVector() const = 0;
+      virtual const Mat4& GetViewMatrix() const = 0;
+      virtual void Update(float timeElapsed) {};
+      virtual InputControlRequest OnInputChanged(const InputControl* control) = 0;
+  };
 
 
 }

@@ -60,26 +60,26 @@ namespace Greet {
   {
     friend class Mesh;
     private:
-    std::vector<AttributeDataBase*> m_data;
-    Vec3* m_vertices;
-    uint* m_indices;
-    uint m_vertexCount;
-    uint m_indexCount;
+      std::vector<AttributeDataBase*> m_data;
+      Vec3* m_vertices;
+      uint* m_indices;
+      uint m_vertexCount;
+      uint m_indexCount;
     public:
-    MeshData(Vec3* vertices, uint vertexCount, uint* indices, uint indexCount);
-    virtual ~MeshData();
-    void AddAttribute(AttributeDataBase* data);
-    AttributeDataBase* GetAttribute(AttributeDefaults defaults) const;
+      MeshData(Vec3* vertices, uint vertexCount, uint* indices, uint indexCount);
+      virtual ~MeshData();
+      void AddAttribute(AttributeDataBase* data);
+      AttributeDataBase* GetAttribute(AttributeDefaults defaults) const;
 
-    Vec3* GetVertices() const { return m_vertices; }
-    uint* GetIndices() const { return m_indices; }
-    uint GetVertexCount() const { return m_vertexCount; }
-    uint GetIndexCount() const { return m_indexCount; }
+      Vec3* GetVertices() const { return m_vertices; }
+      uint* GetIndices() const { return m_indices; }
+      uint GetVertexCount() const { return m_vertexCount; }
+      uint GetIndexCount() const { return m_indexCount; }
 
-    MeshData* LowPolify();
+      MeshData* LowPolify();
 
-    void WriteToFile(const std::string& filename) const;
-    static MeshData* ReadFromFile(const std::string& filename);
+      void WriteToFile(const std::string& filename) const;
+      static MeshData* ReadFromFile(const std::string& filename);
   };
 }
 

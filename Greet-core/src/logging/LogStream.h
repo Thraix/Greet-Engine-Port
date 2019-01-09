@@ -92,7 +92,7 @@ namespace Greet {
        */
       template <typename T>
       auto PutHelper(const T& t, int)
-      -> decltype(t.begin(), t.end(), std::declval<typename T::value_type>(), std::declval<void>())
+        -> decltype(t.begin(), t.end(), std::declval<typename T::value_type>(), std::declval<void>())
       {
         auto size = t.size()-1; 
         for(auto it = t.begin();it!=t.end();++it,--size)
