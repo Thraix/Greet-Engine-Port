@@ -42,9 +42,8 @@ namespace Greet {
 
   // Implementation of AttributeDataBase (mainly destructor)
   template <typename T>
-    struct AttributeData : public AttributeDataBase
+  struct AttributeData : public AttributeDataBase
   {
-
     AttributeData(AttributeDefaults defaults, T* data) 
       : AttributeDataBase(defaults,data) 
     {}

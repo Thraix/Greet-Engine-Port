@@ -137,13 +137,13 @@ namespace Greet
       const std::string& GetName() const;
 
       template <typename T>
-        T* GetComponentByName(const std::string& name)
-        {
-          T* component = dynamic_cast<T*>(GetComponentByNameNoCast(name));
-          if(component == nullptr)
-            Log::Warning("Could not find Component with given type (name = ", name,")");
-          return component;
-        }
+      T* GetComponentByName(const std::string& name)
+      {
+        T* component = dynamic_cast<T*>(GetComponentByNameNoCast(name));
+        if(component == nullptr)
+          Log::Warning("Could not find Component with given type (name = ", name,")");
+        return component;
+      }
 
       virtual Component* GetComponentByNameNoCast(const std::string& name);
 

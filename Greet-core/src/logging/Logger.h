@@ -17,16 +17,16 @@ namespace Greet {
       virtual ~Logger();
 
       /*
-         Logs the given type to all the LogStream's if they allow the given LogLevel.
-         */
+       * Logs the given type to all the LogStream's if they allow the given LogLevel.
+       */
       template <typename... Args>
-        void Log(const LogLevel& level, const Args&... args)
-        { 
-          for (std::vector<LogStream*>::iterator it = m_streams.begin(); it != m_streams.end(); it++)
-          {
-            (*it)->Output(level,args...);
-          }
+      void Log(const LogLevel& level, const Args&... args)
+      { 
+        for (std::vector<LogStream*>::iterator it = m_streams.begin(); it != m_streams.end(); it++)
+        {
+          (*it)->Output(level,args...);
         }
+      }
       void AddLogStream(LogStream* stream);
       LogStream* GetLogStream(const std::string& name);
       LogStream* RemoveLogStream(const std::string& name);

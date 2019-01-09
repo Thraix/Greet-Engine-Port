@@ -33,48 +33,48 @@ namespace Greet {
       virtual ~LogStream();
 
       /*
-         Output the given arguments to the stream with a given LogLevel
-         */
+       * Output the given arguments to the stream with a given LogLevel
+       */
       template<typename... Args>
-        void Output(const LogLevel& level, const Args&... args)
+      void Output(const LogLevel& level, const Args&... args)
+      {
+        // Check if the given level is allowed to be streamed.
+        if (m_levelCheck(m_logLevel, level))
         {
-          // Check if the given level is allowed to be streamed.
-          if (m_levelCheck(m_logLevel, level))
-          {
-            // Output all the arguments with an endline
-            Put("[Greet]", args..., '\n');
-          }
+          // Output all the arguments with an endline
+          Put("[Greet]", args..., '\n');
         }
+      }
 
 
       /*
-         return the name of the stream.
-         */
+       * Return the name of the stream.
+       */
       const std::string& GetName() const { return m_name; }
 
       /* 
-         Set the loglevel for the stream
-         */
+       * Set the loglevel for the stream
+       */
       void SetLogLevel(LogLevel level);
 
       /*
-         Checks if the stream name is equal to the given name parameter
-         */
+       * Checks if the stream name is equal to the given name parameter
+       */
       friend bool operator==(const LogStream& stream, const std::string& name);
 
       /*
-         Checks if the stream name is equal to the given name parameter
-         */
+       * Checks if the stream name is equal to the given name parameter
+       */
       friend bool operator!=(const LogStream& stream, const std::string& name);
 
       /*
-         Checks if the stream name is equal to the given streams name
-         */
+       * Checks if the stream name is equal to the given streams name
+       */
       friend bool operator==(const LogStream& stream1, const LogStream& stream2);
 
       /*
-         for some reason this is needed.
-         */
+       * For some reason this is needed.
+       */
       LogStream& operator=(const LogStream& stream);
 
       // Default level checks, returns true if the given stream should stream with the given output level.
@@ -87,31 +87,35 @@ namespace Greet {
 
     private:
 
-    /*
-     * Put function for Container
-     */
-    template <typename T>
+      /*
+       * PutHelper function for Container
+       */
+      template <typename T>
       auto PutHelper(const T& t, int)
       -> decltype(t.begin(), t.end(), std::declval<typename T::value_type>(), std::declval<void>())
       {
         auto size = t.size()-1; 
         for(auto it = t.begin();it!=t.end();++it,--size)
         {
-          PutHelper(*it, 0);
+          Put(*it);
           if(size != 0)
-            PutHelper(" ", 0);
+            Put(" ");
         }
       }
 
-    template <typename T>
-      void PutHelper(const T& t, long long)
+      /*
+       * PutHelper function for everything
+       */
+      template <typename T>
+      auto PutHelper(const T& t, long long)
       {
         m_stream << t;
       }
-    /*
-       Put all the arguments to the stream.
+
+      /*
+       * Put all the arguments to the stream.
        */
-    template<typename T, typename... Args>
+      template<typename T, typename... Args>
       void Put(const T& t, const Args&... args)
       {
         // Put one argument to the stream.
@@ -120,10 +124,10 @@ namespace Greet {
         Put(args...);
       }
 
-    /*
-       Put the arguments to the stream.
+      /*
+       * Put the arguments to the stream.
        */
-    template <typename T>
+      template <typename T>
       void Put(const T& t)
       {
         PutHelper(t, 0);

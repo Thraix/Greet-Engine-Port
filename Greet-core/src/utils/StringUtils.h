@@ -12,12 +12,12 @@ namespace Greet { namespace StringUtils{
   };
 
   template <typename T>
-    inline std::string to_string(T t)
-    {
-      std::stringstream ss;
-      ss << t;
-      return ss.str().c_str();
-    }
+  inline std::string to_string(T t)
+  {
+    std::stringstream ss;
+    ss << t;
+    return ss.str().c_str();
+  }
 
   inline std::string Passwordify(const std::string& string)
   {

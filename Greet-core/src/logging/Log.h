@@ -25,57 +25,57 @@ namespace Greet {
     public:
 
       /*
-         Add a log stream to the logging system.
-         */
+       * Add a log stream to the logging system.
+       */
       static void AddLogStream(LogStream* stream);
 
       /*
-         Remove a log stream from the logging system.
-         */
+       * Remove a log stream from the logging system.
+       */
       static LogStream* RemoveLogStream(const std::string& name);
 
       /*
-         Remove a log stream from the logging system.
-         */
+       * Remove a log stream from the logging system.
+       */
       static LogStream* RemoveLogStream(LogStream* stream);
 
       // Default logging capabilities
 
       /*
-         Logging at information log level.
-         */
+       * Logging at information log level.
+       */
       template <typename... Args>
-        static void Info(const Args&... args)
-        {
-          m_log.m_logger.Log(LogLevel::Information(), "[INF] ", args...);
-        }
+      static void Info(const Args&... args)
+      {
+        m_log.m_logger.Log(LogLevel::Information(), "[INF] ", args...);
+      }
 
       /*
-         Logging at warning log level.
-         */
+       * Logging at warning log level.
+       */
       template <typename... Args>
-        static void Warning(const Args&... args)
-        {
-          m_log.m_logger.Log(LogLevel::Warning(), "[WRN] ", args...);
-        }
+      static void Warning(const Args&... args)
+      {
+        m_log.m_logger.Log(LogLevel::Warning(), "[WRN] ", args...);
+      }
 
       /*
-         Logging at error log level.
-         */
+       * Logging at error log level.
+       */
       template <typename... Args>
-        static void Error(const Args&... args)
-        {
-          m_log.m_logger.Log(LogLevel::Error(),"[ERR] ",args...);
-        }
+      static void Error(const Args&... args)
+      {
+        m_log.m_logger.Log(LogLevel::Error(),"[ERR] ",args...);
+      }
 
       /*
-         Logging at user defined log level.
-         */
+       * Logging at user defined log level.
+       */
       template <typename... Args>
-        static void LogAt(const LogLevel& level, const Args&... args)
-        {
-          m_log.m_logger.Log(level, args...);
-        }
+      static void LogAt(const LogLevel& level, const Args&... args)
+      {
+        m_log.m_logger.Log(level, args...);
+      }
 
   };
 }

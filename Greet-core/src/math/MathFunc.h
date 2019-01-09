@@ -1,7 +1,5 @@
 #pragma once
 
-#define _USE_MATH_DEFINES
-
 #include <math.h>
 #include <math/Vec4.h>
 #include <math/Vec2.h>
@@ -12,16 +10,16 @@
 namespace Greet{ namespace Math {
 
   template <typename T>
-    inline T Max(const T& t1, const T& t2)
-    {
-      return t1 > t2 ? t1 : t2;
-    }
+  inline T Max(const T& t1, const T& t2)
+  {
+    return t1 > t2 ? t1 : t2;
+  }
 
   template <typename T>
-    inline T Min(const T& t1, const T& t2)
-    {
-      return t1 < t2 ? t1 : t2;
-    }
+  inline T Min(const T& t1, const T& t2)
+  {
+    return t1 < t2 ? t1 : t2;
+  }
 
   inline float RoundDown(float numToRound, float multiple)
   {
@@ -54,13 +52,13 @@ namespace Greet{ namespace Math {
 
   //struct Vec2;
   template<typename T>
-    inline void Clamp(T* value, const T& min, const T& max)
-    {
-      if(min < max)
-        *value = *value < min ? min : (*value > max ? max : *value);
-      else
-        *value = *value < max ? max : (*value > min ? min : *value);
-    }
+  inline void Clamp(T* value, const T& min, const T& max)
+  {
+    if(min < max)
+      *value = *value < min ? min : (*value > max ? max : *value);
+    else
+      *value = *value < max ? max : (*value > min ? min : *value);
+  }
 
   // Returns half the value, add one to value if it is odd.
   inline int Half(int value)

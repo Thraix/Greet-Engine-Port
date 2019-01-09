@@ -32,9 +32,9 @@ namespace Greet { namespace Utils {
   }
 
   template<typename Base, typename T>
-    inline bool InstanceOf(const T *ptr) {
-      return dynamic_cast<const Base*>(ptr) != nullptr;
-    }
+  inline bool InstanceOf(const T *ptr) {
+    return dynamic_cast<const Base*>(ptr) != nullptr;
+  }
 
   inline std::string GetTime()
   {
