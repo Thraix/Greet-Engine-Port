@@ -54,23 +54,4 @@ namespace Greet { namespace ImageFactory
       bits -= add;
       return bits;
     }
-#if 0
-    BYTE* getFrameImage(uint* width, uint* height, uint* bpp)
-    {
-      const char* c = {
-#include "frame.bin"
-      };
-      *width = 16;
-      *height = 16;
-      *bpp = 32;
-      BYTE b[1024];
-      for(uint i = 0;i<1024;i++)
-      {
-        b[i] = 0xff;
-      }
-      delete[] c;
-      return b;
-
-    }
-#endif
   }}

@@ -3,8 +3,8 @@
 
 #include <string>
 #include <logging/Log.h>
-#include "AudioChannelManager.h"
-#include "AudioChannel.h"
+#include <audio/AudioChannelManager.h>
+#include <audio/AudioChannel.h>
 
 #include <ga.h>
 #include <gau.h>

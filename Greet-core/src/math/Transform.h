@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Mat3.h"
+#include <math/Mat3.h>
 
 namespace Greet {
   class Transform

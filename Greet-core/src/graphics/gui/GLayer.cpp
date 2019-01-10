@@ -1,6 +1,6 @@
 #include "GLayer.h"
 
-#include "GUIUtils.h"
+#include <graphics/gui/GUIUtils.h>
 #include <event/EventDispatcher.h>
 
 namespace Greet {

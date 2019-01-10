@@ -1,5 +1,7 @@
 #include "VertexArray.h"
 
+#include <internal/GreetGL.h>
+
 namespace Greet {
 
   void VertexArrayDeleter::operator()(uint* id)

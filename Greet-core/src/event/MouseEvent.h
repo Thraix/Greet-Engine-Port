@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Event.h"
+#include <event/Event.h>
 #include <internal/GreetTypes.h>
 #include <math/Maths.h>
 

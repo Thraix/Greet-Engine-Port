@@ -1,6 +1,6 @@
 #include "Mat3.h"
 
-#include "MathFunc.h"
+#include <math/MathFunc.h>
 #include <cstring>
 
 #define _0_0 0 

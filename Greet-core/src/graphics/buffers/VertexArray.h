@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Buffer.h"
 #include <vector>
 #include <internal/GreetTypes.h>
 #include <memory>

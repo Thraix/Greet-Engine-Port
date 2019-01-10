@@ -1,5 +1,3 @@
-#pragma once
-
 #include "Driver.h"
 
 #include <logging/Log.h>

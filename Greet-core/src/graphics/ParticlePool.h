@@ -1,6 +1,6 @@
 #pragma once
 #if 0
-#include "particle.h"
+#include <graphics/particle.h>
 #include <list>
 
 namespace Greet {

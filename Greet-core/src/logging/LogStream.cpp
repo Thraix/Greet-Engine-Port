@@ -1,7 +1,7 @@
 #include "LogStream.h"
 
 #include <iostream>
-#include "Log.h"
+#include <logging/Log.h>
 
 namespace Greet {
 

@@ -1,6 +1,6 @@
 #include "XMLObject.h"
 
-#include "XMLException.h"
+#include <utils/xml/XMLException.h>
 #include <utils/StringUtils.h>
 #include <logging/Log.h>
 

@@ -1,6 +1,6 @@
-#pragma once
 #include "LinearDriver.h"
-#include "logging/Logger.h"
+
+#include <logging/Logger.h>
 
 namespace Greet {
 
