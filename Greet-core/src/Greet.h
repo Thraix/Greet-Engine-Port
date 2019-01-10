@@ -102,7 +102,6 @@
 #include <graphics/gui/Component.h>
 #include <graphics/gui/Label.h>
 #include <graphics/gui/Button.h>
-#include <graphics/gui/FrameContainer.h>
 #include <graphics/gui/GLayer.h>
 #include <graphics/gui/GUIUtils.h>
 #include <graphics/gui/Component.h>
