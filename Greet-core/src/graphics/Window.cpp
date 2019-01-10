@@ -5,7 +5,6 @@
 #include <graphics/atlas/AtlasManager.h>
 #include <internal/GreetGL.h>
 #include <event/EventDispatcher.h>
-#include <internal/OpenGLObjectHandler.h>
 #include <event/InputController.h>
 #include <graphics/RenderEngine.h>
 
@@ -54,7 +53,6 @@ namespace Greet {
     TextureManager::Destroy();
     AtlasManager::Destroy();
     glfwTerminate();
-    OpenGLObjectHandler::Destroy();
   }
 
   bool Window::init()

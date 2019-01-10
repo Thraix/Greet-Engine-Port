@@ -2,38 +2,25 @@
 
 namespace Greet {
 
+  void VertexArrayDeleter::operator()(uint* id)
+  {
+    glDeleteVertexArrays(1, id);
+    delete id;
+  }
+
   VertexArray::VertexArray()
+    : id{new uint{0}}
   {
-    GLCall(glGenVertexArrays(1, &m_arrayID));
-  }
-
-  VertexArray::~VertexArray()
-  {
-    for (uint i = 0; i < m_buffers.size(); i++)
-      delete m_buffers[i];
-    GLCall(glDeleteVertexArrays(1, &m_arrayID));
-  }
-
-  void VertexArray::AddBuffer(Buffer* buffer, GLuint index)
-  {
+    GLCall(glGenVertexArrays(1, id.get()));
     Enable();
-    buffer->Enable();
-
-    GLCall(glEnableVertexAttribArray(index));
-    GLCall(glVertexAttribPointer(index, buffer->GetComponentCount(), GL_FLOAT,GL_FALSE, 0, 0));
-
-    buffer->Disable();
-    Disable();
-
-    m_buffers.push_back(buffer);
   }
 
   void VertexArray::Enable() const
   {
-    GLCall(glBindVertexArray(m_arrayID));
+    GLCall(glBindVertexArray(*id));
   }
 
-  void VertexArray::Disable() const
+  void VertexArray::Disable()
   {
     GLCall(glBindVertexArray(0));
   }

@@ -30,7 +30,6 @@
 #include <internal/App.h>
 #include <internal/GreetGL.h>
 #include <internal/GreetTypes.h>
-#include <internal/OpenGLObjectHandler.h>
 #include <math/Quaternion.h>
 #include <math/Vec4.h>
 #include <math/Vec3.h>
@@ -127,7 +126,6 @@
 #include <graphics/Sprite.h>
 #include <graphics/Renderable.h>
 #include <graphics/buffers/BatchIndexBuffer.h>
-#include <graphics/buffers/IndexBuffer.h>
 #include <graphics/buffers/Buffer.h>
 #include <graphics/buffers/VertexArray.h>
 #include <graphics/FrameBufferObject.h>

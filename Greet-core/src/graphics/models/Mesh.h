@@ -4,15 +4,22 @@
 #include <map>
 #include <vector>
 #include <graphics/models/MeshData.h>
+#include <memory>
+#include <graphics/buffers/VertexArray.h>
+#include <graphics/buffers/Buffer.h>
 
 namespace Greet {
+
+
   class Mesh
   {
     private:
       // Location, vbo
-      std::map<uint,uint> m_vbos;
-      uint m_vaoId;
-      uint m_iboId;
+      std::map<uint, Buffer> m_vbos;
+
+      VertexArray vao;
+      Buffer ibo;
+
       uint m_vertexCount;
       uint m_indexCount;
       uint m_drawMode;
@@ -22,11 +29,8 @@ namespace Greet {
     public:
       Mesh(const Vec3* vertices, uint vertexCount, const uint* indices, uint indexCount);
       Mesh(MeshData* data);
-      Mesh(const Mesh& mesh);
-      void init(const Vec3* vertices, uint vertexCount, const uint* indices, uint indexCount);
-      Mesh& operator=(const Mesh& mesh);
-      virtual ~Mesh();
-      inline uint GetVAO()  const { return m_vaoId; };
+      Mesh(Mesh&&) = default;
+      Mesh& operator=(Mesh&&) = default;
 
       void Render() const;
 
@@ -39,14 +43,18 @@ namespace Greet {
 
       inline void SetEnableCulling(bool culling) { m_culling = culling; }
       inline bool IsEnableCulling() const { return m_culling; }
+
       void AddAttribute(uint location, const Vec3* data);
       void AddAttribute(uint location, const Vec2* data);
       //void addAttribute(uint location, uint attributeSize, const float* data);
       void AddAttribute(uint location, uint attributeSize, const uint* data);
       void AddAttribute(AttributeDataBase* data);
+      void AddAttribute(uint location, void* data, uint dataSize, uint typeCount, uint glType, bool normalized);
+
       void SetDefaultAttribute4f(uint location, const Vec4& data);
       void SetDefaultAttribute3f(uint location, const Vec3& data);
     private:
+      bool HasVBO(uint location) const;
       void EnableAttributes() const;
       void DisableAttributes() const;
   };

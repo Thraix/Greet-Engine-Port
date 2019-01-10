@@ -1,28 +1,33 @@
 #include "Buffer.h"
 
-namespace Greet {
-  Buffer::Buffer(GLfloat* data, GLsizei count, GLuint componentCount)
-  {
-    m_componentCount = componentCount;
+#include <internal/GreetGL.h>
 
-    GLCall(glGenBuffers(1,&m_bufferID));
-    GLCall(glBindBuffer(GL_ARRAY_BUFFER, m_bufferID));
-    GLCall(glBufferData(GL_ARRAY_BUFFER, count * sizeof(float),data,GL_STATIC_DRAW));
-    GLCall(glBindBuffer(GL_ARRAY_BUFFER, 0));
+namespace Greet {
+
+  void BufferDeleter::operator()(uint* id)
+  {
+    glDeleteBuffers(1, id);
+    delete id;
   }
 
-  Buffer::~Buffer()
+  Buffer::Buffer(uint dataSize, BufferType type, BufferDrawType drawType)
+    : id{new uint{0}}, dataSize{dataSize}, type{type}, drawType{drawType}
   {
-    GLCall(glDeleteBuffers(1, &m_bufferID));
+    GLCall(glGenBuffers(1, id.get()));
   }
 
   void Buffer::Enable() const
   {
-    GLCall(glBindBuffer(GL_ARRAY_BUFFER, m_bufferID));
+    GLCall(glBindBuffer((uint)type, *id));
+  }
+
+  void Buffer::UpdateData(void* data) const
+  {
+    GLCall(glBufferData((uint)type, dataSize, data, (uint)drawType));
   }
 
   void Buffer::Disable() const
   {
-    GLCall(glBindBuffer(GL_ARRAY_BUFFER, 0));
+    GLCall(glBindBuffer((uint)type, 0));
   }
 }

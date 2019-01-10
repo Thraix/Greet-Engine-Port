@@ -1,23 +1,29 @@
 #pragma once
 
-#include <internal/GreetGL.h>
 #include "Buffer.h"
 #include <vector>
 #include <internal/GreetTypes.h>
+#include <memory>
 
 namespace Greet {
 
-  class VertexArray
+  struct VertexArrayDeleter
+  {
+    void operator()(uint* id);
+  };
+
+  class VertexArray final 
   {
     private:
-      GLuint m_arrayID;
-      std::vector<Buffer*> m_buffers;
+      std::unique_ptr<uint, VertexArrayDeleter> id;
     public:
       VertexArray();
-      ~VertexArray();
-      void AddBuffer(Buffer* buffer,GLuint index);
+
+      VertexArray(VertexArray&&) = default;
+      VertexArray& operator=(VertexArray&&) = default;
+
       void Enable() const;
-      void Disable() const;
+      static void Disable();
   };
 
 }
