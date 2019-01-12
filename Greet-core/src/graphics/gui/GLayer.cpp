@@ -32,17 +32,21 @@ namespace Greet {
   {
     for (auto it = frames.rbegin(); it != frames.rend(); ++it)
     {
-      Component* c = it->second->OnMousePressed(event, event.GetPosition() - it->second->GetPosition() - it->second->GetMargin().LeftTop());
-      if (c)
+      Vec2 pos = event.GetPosition() - it->second->GetPosition() - it->second->GetMargin().LeftTop();
+      if(it->second->IsMouseInside(pos))
       {
-        if (c != m_focused)
+        Component* c = it->second->OnMousePressed(event, pos);
+        if (c)
         {
-          if (m_focused)
-            m_focused->OnUnfocused();
-          c->OnFocused();
-          m_focused = c;
+          if (c != m_focused)
+          {
+            if (m_focused)
+              m_focused->OnUnfocused();
+            c->OnFocused();
+            m_focused = c;
+          }
+          return true;
         }
-        return true;
       }
     }
 

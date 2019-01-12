@@ -4,32 +4,50 @@
 
 namespace Greet
 {
+  TextBox::TextBox(const std::string& name, Component* parent)
+    : Component(name,parent), cursorPos(0), selectionPos(0), cursorBlinkTimer(0), textOffset{0}, password{false}
+  {
+    m_isFocusable = true;
+
+    text = new Label("Label", this);
+    Style textStyle = Style{}.SetBackgroundColor(Vec4(0,0,0,1));
+
+    text->SetFont("")
+      .SetFontSize(20)
+      .SetText("")
+      .SetNormalStyle(textStyle);
+
+    hintText = new Label("HintLabel", this);
+    Style hintStyle = Style{}.SetBackgroundColor(Vec4(0,0,0,1));
+
+    hintText->SetFont("")
+      .SetFontSize(20)
+      .SetText("")
+      .SetNormalStyle(textStyle);
+  }
+
   TextBox::TextBox(const XMLObject& object, Component* parent)
     : Component(object,parent), cursorPos(0), selectionPos(0), cursorBlinkTimer(0), textOffset{0}
   {
     m_isFocusable = true;
-    XMLObject labelObject;
-    labelObject.SetName("Label");
-    labelObject.AddProperty("font", GUIUtils::GetStringFromXML(object, "font",""));
-    labelObject.AddProperty("color", GUIUtils::GetStringFromXML(object, "color","#000000"));
-    labelObject.AddProperty("fontSize", GUIUtils::GetStringFromXML(object, "fontSize","20px"));
-    labelObject.AddProperty("padding", "0px");
 
-    XMLObject hintLabelObject;
-    hintLabelObject.AddProperty("font", 
-        GUIUtils::GetStringFromXML(object, "hintFont",labelObject.GetProperty("font")));
-    hintLabelObject.AddProperty("color", 
-        GUIUtils::GetStringFromXML(object, "hintColor",labelObject.GetProperty("color")));
-    hintLabelObject.AddProperty("fontSize", 
-        GUIUtils::GetStringFromXML(object, "hintFontSize",labelObject.GetProperty("fontSize")));
-    hintLabelObject.AddProperty("padding", "0px");
+    text = new Label("Label", this);
+    Style textStyle = Style{}.SetBackgroundColor(GUIUtils::GetColorFromXML(object, "color", Vec4(0,0,0,1)));
 
-    text = new Label(labelObject, this);
-    hintText = new Label(hintLabelObject, this);
+    text->SetFont(GUIUtils::GetStringFromXML(object, "font",""))
+      .SetFontSize(GUIUtils::GetFloatFromXML(object,"fontSize",20))
+      .SetText(object.GetText())
+      .SetNormalStyle(textStyle);
+
+    hintText = new Label("HintLabel", this);
+    Style hintStyle = Style{}.SetBackgroundColor(GUIUtils::GetColorFromXML(object, "color", text->GetNormalStyle().backgroundColor));
+
+    text->SetFont(GUIUtils::GetStringFromXML(object, "font",text->GetFont()->GetFontContainer()->GetName()))
+      .SetFontSize(GUIUtils::GetFloatFromXML(object,"fontSize",text->GetFontSize()))
+      .SetText(GUIUtils::GetStringFromXML(object, "hintText", ""))
+      .SetNormalStyle(hintStyle);
 
     password = GUIUtils::GetBooleanFromXML(object, "password", false);
-    SetText(object.GetText());
-    hintText->SetText(GUIUtils::GetStringFromXML(object, "hintText", ""));
   }
 
   TextBox::~TextBox()
@@ -106,11 +124,13 @@ namespace Greet
 
   void TextBox::KeyTyped(const KeyTypedEvent& event)
   {
+    std::string before = str;
     auto it = str.begin();
     std::advance(it, cursorPos);
     str.insert(it, (char)event.GetCharCode());
     SetText(str);
     MoveCursor(1);
+    CallOnTextChangedCallback(before,str);
   }  
 
   void TextBox::KeyPressed(const KeyPressedEvent& event)
@@ -207,21 +227,50 @@ namespace Greet
     return text->GetText();
   }
 
-  void TextBox::SetText(const std::string& text)
+  TextBox& TextBox::SetText(const std::string& text)
   {
     if(password)
       this->text->SetText(StringUtils::Passwordify(text));
     else
       this->text->SetText(text);
     str = text;
+    return *this;
   }
+
+  TextBox& TextBox::SetFont(const std::string& fontName)
+  {
+    text->SetFont(fontName);
+    return *this;
+  }
+
+  TextBox& TextBox::SetFontSize(float fontSize)
+  {
+    text->SetFontSize(fontSize);
+    return *this;
+  }
+
+  TextBox& TextBox::SetHintFont(const std::string& fontName)
+  {
+    hintText->SetFont(fontName);
+    return *this;
+  }
+
+  TextBox& TextBox::SetHintFontSize(float fontSize)
+  {
+    hintText->SetFontSize(fontSize);
+    return *this;
+  }
+
+
 
   void TextBox::RemoveText(uint start, uint n = -1)
   {
+    std::string before = str;
     if(n == -1)
       n = str.length()-start;
     str.erase(start,n);
     SetText(str);
+    CallOnTextChangedCallback(before,str);
   }
 
   void TextBox::RecenterText()
@@ -285,4 +334,16 @@ namespace Greet
     return selectionPos;
 
   }
+
+  void TextBox::SetOnTextChangedCallback(OnTextChangedCallback callback)
+  {
+    onTextChangedCallback = callback;
+  }
+
+  void TextBox::CallOnTextChangedCallback(const std::string& before, const std::string& after)
+  {
+    if(onTextChangedCallback)
+      onTextChangedCallback(this, before, after);
+  }
+
 }

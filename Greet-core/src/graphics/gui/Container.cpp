@@ -14,6 +14,12 @@ namespace Greet {
 
   }
 
+  Container::Container(const std::string& name, Component* parent)
+    : Component{name, parent}, vertical{true}, spacing{10}
+  {
+
+  }
+
   Container::Container(const XMLObject& object, Component* parent)
     : Component(object, parent), vertical(true)
   {
@@ -237,6 +243,20 @@ namespace Greet {
   bool Container::IsVertical() const
   {
     return vertical;
+  }
+
+  Container& Container::SetVertical(bool v)
+  {
+    vertical = v;
+    Remeasure();
+    return *this;
+  }
+
+  Container& Container::SetSpacing(float spacing)
+  {
+    this->spacing = spacing;
+    Remeasure();
+    return *this;
   }
 
   Component* Container::OnMousePressed(const MousePressedEvent& event, const Vec2& translatedPos)

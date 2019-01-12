@@ -10,8 +10,16 @@ namespace Greet
 {
 
 
+  Component::Component(const std::string& name, Component* parent)
+    : parent{parent}, sizeType{1,1}, 
+    widthSizeType{SizeType::WRAP},heightSizeType{SizeType::WRAP},
+    m_isFocusable{false},isFocused{false}, pos{0,0}, pressed{false}, name{name}
+  {
+    currentStyle = &normalStyle;
+  }
+
   Component::Component(const XMLObject& xmlObject, Component* parent)
-    : parent(parent), m_isFocusable(false),isFocused(false), pos(0,0), pressed(false)
+    : Component{GUIUtils::GetStringFromXML(xmlObject,"name", xmlObject.GetName() + "#" + LogUtils::DecToHex(UUID::GetInstance().GetUUID(),8)), parent}
   {
     std::string width = xmlObject.GetProperty("width", "wrap_content");
     std::string height = xmlObject.GetProperty("height", "wrap_content");
@@ -45,15 +53,9 @@ namespace Greet
     else
       heightSizeType = SizeType::NONE;
 
-    if(xmlObject.HasProperty("name"))
-      name = xmlObject.GetProperty("name");
-    else
-      name = xmlObject.GetName() + "#" + LogUtils::DecToHex(UUID::GetInstance().GetUUID(),8);
-
     normalStyle.Load("",xmlObject);
     hoverStyle.Load("hover",xmlObject,&normalStyle);
     pressStyle.Load("press",xmlObject,&normalStyle);
-    currentStyle = &normalStyle;
   }
 
   void Component::Measure()
@@ -64,7 +66,7 @@ namespace Greet
       if(widthSizeType == SizeType::WRAP)
         size.w = GetWrapSize().w;
       else
-        size.h = sizeType.h;
+        size.w = sizeType.w;
     } 
 
     if(heightSizeType != SizeType::WEIGHT || (container && container->IsVertical() ))
@@ -283,11 +285,6 @@ namespace Greet
     return size;
   }
 
-  void Component::SetSize(const Vec2& size)
-  {
-    this->size = size;
-  }
-
   float Component::GetWidth() const 
   {
     return size.w;
@@ -306,6 +303,83 @@ namespace Greet
   Component::SizeType Component::GetHeightSizeType() const
   {
     return heightSizeType;
+  }
+
+  Component& Component::SetWidth(float width)
+  {
+    sizeType.w = width;
+    Remeasure();
+    return *this;
+  }
+
+  Component& Component::SetHeight(float height)
+  {
+    sizeType.h = height;
+    Remeasure();
+    return *this;
+  }
+
+  Component& Component::SetWidthSizeType(SizeType width)
+  {
+    widthSizeType = width;
+    Remeasure();
+    return *this;
+  }
+
+  Component& Component::SetHeightSizeType(SizeType height)
+  {
+    heightSizeType = height;
+    Remeasure();
+    return *this;
+  }
+
+  Component& Component::SetSize(float width, float height, SizeType widthType, SizeType heightType, bool remeasure)
+  {
+    sizeType.w = width;
+    sizeType.h = height;
+    widthSizeType = widthType;
+    heightSizeType = heightType;
+    if(remeasure)
+      Remeasure();
+    return *this;
+  }
+
+  const Style& Component::GetNormalStyle() const
+  {
+    return normalStyle;
+  }
+
+  const Style& Component::GetHoverStyle() const
+  {
+    return hoverStyle;
+  }
+
+  const Style& Component::GetPressStyle() const
+  {
+    return pressStyle;
+  }
+
+  Component& Component::SetNormalStyle(const Style& style)
+  {
+    normalStyle = style;
+    if(currentStyle == &normalStyle)
+      Remeasure();
+    return *this;
+  }
+  Component& Component::SetHoverStyle(const Style& style)
+  {
+    hoverStyle = style;
+    if(currentStyle == &hoverStyle)
+      Remeasure();
+    return *this;
+  }
+
+  Component& Component::SetPressStyle(const Style& style)
+  {
+    pressStyle = style;
+    if(currentStyle == &pressStyle)
+      Remeasure();
+    return *this;
   }
 
   const Vec2& Component::GetSizeType() const

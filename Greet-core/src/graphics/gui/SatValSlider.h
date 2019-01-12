@@ -10,6 +10,7 @@ namespace Greet
       typedef std::function<void(Component*, float oldValue, float newValue)> OnSatChangeCallback;
       typedef std::function<void(Component*, float oldValue, float newValue)> OnValChangeCallback;
     protected:
+      float hue;
       float sat;
       float val;
 
@@ -18,7 +19,12 @@ namespace Greet
       OnValChangeCallback onValChangeCallback;
 
     public:
+      SatValSlider(const std::string& xmlObject, Component* parent);
       SatValSlider(const XMLObject& xmlObject, Component* parent);
+      virtual ~SatValSlider();
+
+      virtual void Measure() override;
+      virtual void MeasureFill(float parentEmptyWidth, float parentEmptyHeight, float parentWeight, bool vertical) override;
 
       void PreRender(GUIRenderer* renderer, const Vec2& translation) const override;
       void Render(GUIRenderer* renderer) const override;
@@ -30,6 +36,7 @@ namespace Greet
       virtual void SetOnSatChangeCallback(OnSatChangeCallback callback);
       virtual void SetOnValChangeCallback(OnValChangeCallback callback);
 
+      void SetHue(float hue);
       void SetSat(float sat);
       void SetVal(float val);
 

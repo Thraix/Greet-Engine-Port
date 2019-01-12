@@ -8,8 +8,31 @@ namespace Greet
   uint Slider::SLIDER_FLAG_SNAP = BIT(1);
   uint Slider::SLIDER_FLAG_VERTICAL = BIT(2);
 
+  Slider::Slider(const std::string& name, Component* parent)
+    : Component{name, parent}, flags{0}
+  {
+    m_isFocusable = true;
+    Style normal{};
+    normal.SetBackgroundColor(Vec4(1,1,1,1))
+      .SetBorderColor(Vec4(0,0,0,1))
+      .SetBorder(TLBR(2,2,2,2));
+    sliderComponent = new Component(name+"#SliderComponent", this);
+    sliderComponent->SetSize(7,1,SizeType::NONE, SizeType::WEIGHT)
+      .SetNormalStyle(normal);
+
+    minValue = 0;
+    maxValue = 100;
+    stepSize = 0;
+    flags |= SLIDER_FLAG_VERTICAL;
+    // Bit of a hack to make the initial value correct
+    minPos = 0;
+    maxPos = 1;
+
+    SetValue((maxValue-minValue)/2.0f);
+  }
+
   Slider::Slider(const XMLObject& xmlObject, Component* parent)
-    : Component(xmlObject, parent), flags(0), stepSize(5)
+    : Component(xmlObject, parent), flags{0}
   {
     m_isFocusable = true;
     if(xmlObject.GetObjectCount() > 0)
@@ -142,6 +165,20 @@ namespace Greet
   {
     if(onValueChangeCallback)
       onValueChangeCallback(this, oldValue, newValue);
+  }
+
+  Slider& Slider::SetVertical(bool vertical)
+  {
+    if(vertical)
+      flags |= SLIDER_FLAG_VERTICAL;
+    else
+      flags &= ~SLIDER_FLAG_VERTICAL;
+    return *this;
+  }
+
+  Component* Slider::GetSliderComponent()
+  {
+    return sliderComponent;
   }
 
   float Slider::GetValue() const

@@ -7,6 +7,8 @@ namespace Greet
 {
   class TextBox : public Component
   {
+    public:
+      typedef std::function<void(Component*, const std::string& before, const std::string& after)> OnTextChangedCallback;
     protected:
       Label* text;
       Label* hintText;
@@ -21,8 +23,11 @@ namespace Greet
       bool password;
       std::string str;
 
+      OnTextChangedCallback onTextChangedCallback;
+
 
     public:
+      TextBox(const std::string& name, Component* parent);
       TextBox(const XMLObject& object, Component* parent);
       virtual ~TextBox();
 
@@ -32,7 +37,12 @@ namespace Greet
       void Update(float timeElapsed) override;
 
       const std::string& GetText() const;
-      void SetText(const std::string& text);
+      TextBox& SetText(const std::string& text);
+
+      TextBox& SetFont(const std::string& fontName);
+      TextBox& SetFontSize(float fontSize);
+      TextBox& SetHintFont(const std::string& fontName);
+      TextBox& SetHintFontSize(float fontSize);
 
       virtual void MousePressed(const MousePressedEvent& event, const Vec2& translatedPos) override;
       //virtual void MouseReleased(const MouseReleasedEvent& event, const Vec2& translatedPos);
@@ -41,6 +51,8 @@ namespace Greet
       virtual void KeyReleased(const KeyReleasedEvent& event) override;
       virtual void KeyTyped(const KeyTypedEvent& event) override;
 
+      void SetOnTextChangedCallback(OnTextChangedCallback callback);
+
     protected:
       void RemoveText(uint start, uint n);
       void RecenterText();
@@ -48,6 +60,8 @@ namespace Greet
       void MoveCursorWord(bool forward);
       int GetCursorPos() const;
       int GetSelectionPos() const;
+
+      void CallOnTextChangedCallback(const std::string& before, const std::string& after);
   };
 
 }

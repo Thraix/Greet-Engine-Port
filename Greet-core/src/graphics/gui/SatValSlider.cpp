@@ -2,6 +2,19 @@
 
 namespace Greet
 {
+  SatValSlider::SatValSlider(const std::string& name, Component* parent)
+    : Component{name, parent}, hue{0}, sat{0.5}, val{0.5}
+  {
+    m_isFocusable = true;
+    Style normal{};
+    normal.SetBackgroundColor(Vec4(1,1,1,1))
+      .SetBorderColor(Vec4(0,0,0,1))
+      .SetBorder(TLBR(2,2,2,2));
+    Component* component = new Component{"SatValSliderComponent", this};
+    component->SetSize(7,7,SizeType::NONE, SizeType::NONE, false)
+      .SetNormalStyle(normal);
+    sliderComponent = component;
+  }
 
   SatValSlider::SatValSlider(const XMLObject& xmlObject, Component* parent)
     : Component(xmlObject, parent)
@@ -9,12 +22,37 @@ namespace Greet
     m_isFocusable = true;
     if(xmlObject.GetObjectCount() > 0)
       sliderComponent = GUIUtils::GetComponent(xmlObject.GetObject(0), this);
+    else
+    {
+      Style normal{};
+      normal.SetBackgroundColor(Vec4(1,1,1,1)).SetBorderColor(Vec4(0,0,0,1));
+      Component* component = new Component{"SatValSliderComponent", this};
+      component->SetSize(7,7,SizeType::NONE, SizeType::NONE, false).SetNormalStyle(normal);
+      sliderComponent = component;
+    }
+  }
+
+  SatValSlider::~SatValSlider()
+  {
+    delete sliderComponent;
+  }
+
+  void SatValSlider::Measure() 
+  {
+    sliderComponent->Measure();
+    Component::Measure();
+  }
+
+  void SatValSlider::MeasureFill(float parentEmptyWidth, float parentEmptyHeight, float parentWeight, bool vertical)
+  {
+    Component::MeasureFill(parentEmptyWidth, parentEmptyHeight, parentWeight, vertical);
+    sliderComponent->MeasureFill(GetContentSize().w,GetContentSize().h,1, false);
   }
 
   void SatValSlider::PreRender(GUIRenderer* renderer, const Vec2& translation) const
   {
     renderer->PushMatrix(Mat3::Translate(translation));
-    renderer->SubmitRect(pos, size, Vec4(1,0,0,1), Vec4(1,0,1,1), Vec4(1,1,0,1), Vec4(1,1,1,1),true);
+    renderer->SubmitRect(pos, size, Vec4(hue,0,0,1), Vec4(hue,1,0,1), Vec4(hue,0,1,1), Vec4(hue,1,1,1),true);
   }
 
   void SatValSlider::Render(GUIRenderer* renderer) const
@@ -85,6 +123,11 @@ namespace Greet
   {
     this->sat= sat;
     Math::Clamp(&this->sat, 0.0f,1.0f);
+  }
+
+  void SatValSlider::SetHue(float hue)
+  {
+    this->hue = hue;
   }
 
   void SatValSlider::SetVal(float val)

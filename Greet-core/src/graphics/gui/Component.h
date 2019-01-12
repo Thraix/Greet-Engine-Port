@@ -52,6 +52,7 @@ namespace Greet
       OnReleaseCallback onReleaseCallback;
 
     public:
+      Component(const std::string& name, Component* parent);
       Component(const XMLObject& object, Component* parent);
 
       virtual void PostConstruction(){} 
@@ -102,11 +103,28 @@ namespace Greet
       // Will return the stored value
       virtual float GetWidth() const;
       virtual float GetHeight() const;
-
       SizeType GetWidthSizeType() const;
       SizeType GetHeightSizeType() const;
 
+      // Size of the sizeType, 1w will return 1 and not the size of the component
       const Vec2& GetSizeType() const;
+
+      // Sets the sizeType size and not the actuall component size.
+      Component& SetWidth(float width);
+      Component& SetHeight(float height);
+      Component& SetWidthSizeType(SizeType width);
+      Component& SetHeightSizeType(SizeType height);
+
+      // Faster to use since it sets all values and does a single remeasure.
+      Component& SetSize(float width, float height, SizeType widthType, SizeType heightType, bool remeasure = true);
+
+      const Style& GetNormalStyle() const; 
+      const Style& GetHoverStyle() const; 
+      const Style& GetPressStyle() const; 
+
+      Component& SetNormalStyle(const Style& style); 
+      Component& SetHoverStyle(const Style& style); 
+      Component& SetPressStyle(const Style& style); 
 
       virtual bool IsMouseInside(const Vec2& parentMouse) const;
       virtual void SetPosition(const Vec2& pos);

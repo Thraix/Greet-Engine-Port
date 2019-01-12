@@ -30,6 +30,11 @@ class Core : public App, public KeyListener, public MouseListener
       GLayer::CreateInstance(new GUIRenderer(), Shader::FromFile("res/shaders/gui.shader"));
 
       GLayer::AddFrame(GUIUtils::GetFrame("res/guis/colorpicker.xml"), "testing");
+
+      ColorPickerWindow* window = new ColorPickerWindow();
+      window->SetPosition(Vec2(GLayer::GetFrame("testing")->GetWidth()+10, 0));
+      GLayer::AddFrame(window, "ucolorpicker");
+
       Frame* frame = GLayer::GetFrame("testing");
 #if 0
       using namespace std::placeholders;

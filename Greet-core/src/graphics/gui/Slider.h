@@ -29,6 +29,7 @@ namespace Greet
 
 
     public:
+      Slider(const std::string& name, Component* parent);
       Slider(const XMLObject& xmlObject, Component* parent);
 
       virtual void Measure() override;
@@ -42,6 +43,10 @@ namespace Greet
 
       // Callbacks
       virtual void SetOnValueChangeCallback(OnValueChangeCallback callback);
+
+      Slider& SetVertical(bool vertical);
+
+      Component* GetSliderComponent();
 
       float GetValue() const;
       void SetValue(float value);

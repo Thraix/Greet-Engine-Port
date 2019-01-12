@@ -2,6 +2,14 @@
 
 namespace Greet {
 
+  Label::Label(const std::string& name, Component* parent)
+    : Component{name,parent}, str{}, color{0,0,0,1}, hasMaxWidth{false}
+  {
+    fontSize = 20;
+    font = FontManager::Get("", fontSize);
+    gravity = Gravity::CENTER;
+  }
+
   Label::Label(const XMLObject& object, Component* parent)
     : Component(object, parent), str{object.GetText()}, color{0,0,0,1}, hasMaxWidth{false}
   {
@@ -29,10 +37,11 @@ namespace Greet {
       renderer->SubmitString(str, pos + GetTotalPadding() + Vec2(0, GetContentSize().h), font, color, false);
   }
 
-  void Label::SetText(const std::string& text)
+  Label& Label::SetText(const std::string& text)
   {
     str = text;
     Remeasure();
+    return *this;
   }
 
   const std::string& Label::GetText() const
@@ -54,5 +63,30 @@ namespace Greet {
   const Font* Label::GetFont() const
   {
     return font;
+  }
+
+  float Label::GetFontSize() const
+  {
+    return fontSize;
+  }
+
+  Label& Label::SetGravity(Gravity grav)
+  {
+    gravity = grav;
+    return *this;
+  }
+
+  Label& Label::SetFont(const std::string& font)
+  {
+    this->font = FontManager::Get(font, fontSize);
+    return *this;
+  }
+
+  Label& Label::SetFontSize(float fontSize)
+  {
+    font = FontManager::Get(font->GetFontContainer()->GetName(), fontSize);
+    this->fontSize = fontSize;
+    Remeasure();
+    return *this;
   }
 }

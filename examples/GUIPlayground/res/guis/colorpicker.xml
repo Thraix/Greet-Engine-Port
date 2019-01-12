@@ -76,6 +76,7 @@
     </Container>
 
     <Component width="fill_parent" height="fill_parent"
+      border="2"
       backgroundColor="#37474f" borderColor="#455a64" />
   </Container>
 </Frame>

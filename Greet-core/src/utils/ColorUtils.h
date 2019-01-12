@@ -12,6 +12,8 @@ namespace Greet { namespace ColorUtils {
 
   inline Vec4 HSVtoRGB(float h, float s, float v, float a)
   {
+    if(h == 1.0)
+      h = 0;
     float c = v * s;
     float h6f = h*6.0f;
     uint h6 = (uint)h6f;

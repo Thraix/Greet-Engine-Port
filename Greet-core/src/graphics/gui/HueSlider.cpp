@@ -4,6 +4,13 @@
 
 namespace Greet
 {
+  HueSlider::HueSlider(const std::string& name, Component* parent)
+    : Slider{name, parent}
+  {
+    minValue = 0;
+    maxValue = 1.0;
+    SetValue(0.5);
+  }
 
   HueSlider::HueSlider(const XMLObject& xmlObject, Component* parent)
     : Slider(xmlObject, parent)

@@ -33,5 +33,16 @@ namespace Greet
       }
 
       void Load(const std::string& prefix, const XMLObject& object, Style const * inherit);
+
+      Style& SetMargin(const TLBR& margin);
+      Style& SetPadding(const TLBR& padding);
+      Style& SetBorder(const TLBR& border);
+      Style& SetHasBackgroundColor(bool hasColor);
+      Style& SetHasBorderColor(bool hasColor);
+      Style& SetBackgroundColor(const Vec4& color);
+      Style& SetBorderColor(const Vec4& color);
+      Style& SetBorderRadius(float radius);
+      Style& SetRadius(float radius);
+      Style& SetRoundedPrecision(uint precision);
   };
 }

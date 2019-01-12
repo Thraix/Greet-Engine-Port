@@ -14,6 +14,7 @@ namespace Greet {
 
     public:
       Container();
+      Container(const std::string& name, Component* parent);
       Container(const XMLObject& object, Component* parent);
       virtual ~Container();
 
@@ -34,6 +35,8 @@ namespace Greet {
       size_t GetComponentCount() const;
 
       bool IsVertical() const;
+      Container& SetVertical(bool v);
+      Container& SetSpacing(float spacing);
 
       virtual Vec2 GetWrapSize() const override;
 
