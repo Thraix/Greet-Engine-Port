@@ -2,6 +2,7 @@
 
 #include <math/MathFunc.h>
 #include <math/Maths.h>
+#include <cassert>
 
 namespace Greet{
 
@@ -173,6 +174,12 @@ namespace Greet{
   Vec3 operator/(const Vec3& first, const float c)
   {
     return Vec3(first.x, first.y, first.z).Divide(c);
+  }
+
+  float Vec3::operator[](uint i)
+  {
+    assert(i < 3);
+    return *((&x)+i);
   }
 
   Vec3& Vec3::operator+=(const Vec3 &other)

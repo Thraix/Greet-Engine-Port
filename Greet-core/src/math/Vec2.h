@@ -63,6 +63,8 @@ namespace Greet{
       friend Vec2 operator*(const Vec2& first, const float c);
       friend Vec2 operator/(const Vec2& first, const float c);
 
+      float operator[](uint i);
+
       Vec2& operator+=(const Vec2 &other);
       Vec2& operator-=(const Vec2 &other);
       Vec2& operator*=(const Vec2 &other);

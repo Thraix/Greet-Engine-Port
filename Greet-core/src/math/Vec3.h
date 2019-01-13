@@ -13,6 +13,7 @@ namespace Greet{
   {
     union
     {
+      float vals[3];
       struct {
         float x, y, z;
       };
@@ -55,6 +56,8 @@ namespace Greet{
     friend Vec3 operator-(const Vec3& first, const float c);
     friend Vec3 operator*(const Vec3& first, const float c);
     friend Vec3 operator/(const Vec3& first, const float c);
+
+    float operator[](uint i);
 
     Vec3& operator+=(const Vec3 &other);
     Vec3& operator-=(const Vec3 &other);

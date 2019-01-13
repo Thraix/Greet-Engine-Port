@@ -1,6 +1,7 @@
 #include "Vec4.h"
 
 #include <math.h>
+#include <cassert>
 
 namespace Greet{
 
@@ -140,6 +141,12 @@ namespace Greet{
   Vec4 operator/(const Vec4& first, const float c)
   {
     return Vec4(first).Divide(c);
+  }
+
+  float Vec4::operator[](uint i)
+  {
+    assert(i < 4);
+    return *((&x)+i);
   }
 
   Vec4& Vec4::operator+=(const Vec4 &other)

@@ -2,6 +2,7 @@
 
 #include <logging/Log.h>
 #include <math.h>
+#include <cassert>
 
 namespace Greet {
 
@@ -203,6 +204,12 @@ namespace Greet {
   Vec2 operator-(const Vec2& first)
   {
     return Vec2(-first.x, -first.y);
+  }
+
+  float Vec2::operator[](uint i)
+  {
+    assert(i < 2);
+    return *((&x)+i);
   }
 
   Vec2& Vec2::operator+=(const Vec2 &other)
