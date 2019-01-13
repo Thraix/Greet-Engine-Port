@@ -36,7 +36,7 @@ class Core : public App, public KeyListener, public MouseListener
       GLayer::AddFrame(window, "ucolorpicker");
 
       Frame* frame = GLayer::GetFrame("testing");
-#if 0
+#if 1
       using namespace std::placeholders;
       // Function callbacks 
       // Somewhat ugly, might look into making function pointers easier, since the structure

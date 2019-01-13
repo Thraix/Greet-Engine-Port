@@ -32,12 +32,13 @@ namespace Greet {
   {
     for (auto it = frames.rbegin(); it != frames.rend(); ++it)
     {
-      Vec2 pos = event.GetPosition() - it->second->GetPosition() - it->second->GetMargin().LeftTop();
+      Vec2 pos = event.GetPosition() - it->second->GetMargin().LeftTop();
       if(it->second->IsMouseInside(pos))
       {
-        Component* c = it->second->OnMousePressed(event, pos);
+        Component* c = it->second->OnMousePressed(event, pos - it->second->GetPosition());
         if (c)
         {
+          Log::Info("Name: ", c->GetName());
           if (c != m_focused)
           {
             if (m_focused)
@@ -150,6 +151,7 @@ namespace Greet {
       it->second->RenderHandle(renderer);
       it->second->PostRender(renderer);
     }
+
     renderer->End();
     renderer->Draw();
     shader.Disable();

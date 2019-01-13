@@ -11,7 +11,7 @@ namespace Greet {
   byte Frame::RESIZING_RIGHT = BIT(1);
   byte Frame::RESIZING_TOP = BIT(2);
   byte Frame::RESIZING_BOTTOM = BIT(3);
-  uint Frame::RESIZING_MARGIN = 10;
+  uint Frame::RESIZING_MARGIN = 5;
 
   Frame::Frame()
     : Frame(XMLObject())
@@ -71,42 +71,42 @@ namespace Greet {
 
   void Frame::Resize(const Vec2& mousePos)
   {
-    Vec2 oldSize = size;
+    Vec2 oldSize = sizeType;
     Vec2 diff = m_posOrigin - (m_clickPos - mousePos);
     if (m_resizingFlags & RESIZING_LEFT)
     {
       pos.x = m_posOrigin.x - (m_clickPos.x - mousePos.x);
-      size.x = m_sizeOrigin.x + (m_clickPos.x - mousePos.x);
-      if (size.x < minSize.x)
+      sizeType.x = m_sizeOrigin.x + (m_clickPos.x - mousePos.x);
+      if (sizeType.x < minSize.x)
       {
         pos.x = m_posOrigin.x + (m_sizeOrigin.x - minSize.x);
-        size.x = minSize.x;
+        sizeType.x = minSize.x;
       }
     }
     else if (m_resizingFlags & RESIZING_RIGHT)
     {
-      size.x = m_sizeOrigin.x - (m_clickPos.x - mousePos.x);
-      if (size.x < minSize.x)
-        size.x = minSize.x;
+      sizeType.x = m_sizeOrigin.x - (m_clickPos.x - mousePos.x);
+      if (sizeType.x < minSize.x)
+        sizeType.x = minSize.x;
     }
     if (m_resizingFlags & RESIZING_TOP)
     {
       pos.y = m_posOrigin.y - (m_clickPos.y - mousePos.y);
-      size.y = m_sizeOrigin.y + (m_clickPos.y - mousePos.y);
-      if (size.y < minSize.y)
+      sizeType.y = m_sizeOrigin.y + (m_clickPos.y - mousePos.y);
+      if (sizeType.y < minSize.y)
       {
         pos.y = m_posOrigin.y + (m_sizeOrigin.y - minSize.y);
-        size.y = minSize.y;
+        sizeType.y = minSize.y;
       }
     }
     else if (m_resizingFlags & RESIZING_BOTTOM)
     {
-      size.y = m_sizeOrigin.y - (m_clickPos.y - mousePos.y);
-      if (size.y < minSize.y)
-        size.y = minSize.y;
+      sizeType.y = m_sizeOrigin.y - (m_clickPos.y - mousePos.y);
+      if (sizeType.y < minSize.y)
+        sizeType.y = minSize.y;
     }
     ResizeScreenClamp();
-    if(oldSize != size)
+    if(oldSize != sizeType)
     {
       Remeasure();
     }
@@ -170,16 +170,14 @@ namespace Greet {
   {
     if (m_resizing)
     {
-
       Resize(event.GetPosition());
-      // TODO: Recalculate children size if they are relative
     }
   }
 
   bool Frame::IsMouseInside(const Vec2& mousePos) const
   {
     Vec2 resizeMargin = Vec2(RESIZING_MARGIN, RESIZING_MARGIN);
-    return AABBUtils::PointInsideBox(mousePos, -resizeMargin, GetSize() + resizeMargin*2);
+    return AABBUtils::PointInsideBox(mousePos, pos-resizeMargin, GetSize() + resizeMargin*2);
   }
 
 

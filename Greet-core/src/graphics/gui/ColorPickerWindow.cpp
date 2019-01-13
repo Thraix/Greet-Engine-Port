@@ -32,13 +32,13 @@ namespace Greet
     AddComponent(hSlider);
 
     Container* textBoxContainer = new Container("",this);
-    textBoxContainer->SetSize(150,1,SizeType::NONE, SizeType::WEIGHT);
+    textBoxContainer->SetSize(110,1,SizeType::NONE, SizeType::WEIGHT);
     AddComponent(textBoxContainer);
 
     Style textBoxStyle = Style{}.SetPadding({0, 5, 0, 5})
-      .SetRadius(5)
-      .SetBorder({2,2,2,2})
-      .SetBorderRadius(7)
+      .SetRadius(3)
+      .SetBorder({1,1,1,1})
+      .SetBorderRadius(4)
       .SetBackgroundColor(ColorUtils::ColorHexToVec4(0xff37474f))
       .SetBorderColor(ColorUtils::ColorHexToVec4(0xff455a64));
 
@@ -55,7 +55,7 @@ namespace Greet
         {
           Label* text = new Label("",this);
           text->SetText("R")
-            .SetFontSize(20)
+            .SetFontSize(16)
             .SetFont("roboto")
             .SetSize(1,1,SizeType::WRAP, SizeType::WEIGHT);
           rgbContainer->AddComponent(text);
@@ -63,8 +63,8 @@ namespace Greet
           rTextBox = new TextBox("",this);
 
           rTextBox->SetFont("roboto")
-            .SetFontSize(20)
-            .SetSize(1,30, SizeType::WEIGHT, SizeType::NONE)
+            .SetFontSize(16)
+            .SetSize(1,20, SizeType::WEIGHT, SizeType::NONE)
             .SetNormalStyle(textBoxStyle);
 
           rgbContainer->AddComponent(rTextBox);
@@ -78,7 +78,7 @@ namespace Greet
       {
         Label* text = new Label("",this);
         text->SetText("H")
-          .SetFontSize(20)
+          .SetFontSize(16)
           .SetFont("roboto")
           .SetSize(1,1,SizeType::WRAP, SizeType::WEIGHT);
         hsvContainer->AddComponent(text);
@@ -86,8 +86,8 @@ namespace Greet
         hTextBox = new TextBox("",this);
 
         hTextBox->SetFont("roboto")
-          .SetFontSize(20)
-          .SetSize(1,30, SizeType::WEIGHT, SizeType::NONE)
+          .SetFontSize(16)
+          .SetSize(1,20, SizeType::WEIGHT, SizeType::NONE)
           .SetNormalStyle(textBoxStyle);
 
         hsvContainer->AddComponent(hTextBox);
@@ -106,7 +106,7 @@ namespace Greet
         {
           Label* text = new Label("",this);
           text->SetText("G")
-            .SetFontSize(20)
+            .SetFontSize(16)
             .SetFont("roboto")
             .SetSize(1,1,SizeType::WRAP, SizeType::WEIGHT);
           rgbContainer->AddComponent(text);
@@ -114,8 +114,8 @@ namespace Greet
           gTextBox = new TextBox("",this);
 
           gTextBox->SetFont("roboto")
-            .SetFontSize(20)
-            .SetSize(1,30, SizeType::WEIGHT, SizeType::NONE)
+            .SetFontSize(16)
+            .SetSize(1,20, SizeType::WEIGHT, SizeType::NONE)
             .SetNormalStyle(textBoxStyle);
 
           rgbContainer->AddComponent(gTextBox);
@@ -129,7 +129,7 @@ namespace Greet
       {
         Label* text = new Label("",this);
         text->SetText("S")
-          .SetFontSize(20)
+          .SetFontSize(16)
           .SetFont("roboto")
           .SetSize(1,1,SizeType::WRAP, SizeType::WEIGHT);
         hsvContainer->AddComponent(text);
@@ -137,8 +137,8 @@ namespace Greet
         sTextBox = new TextBox("",this);
 
         sTextBox->SetFont("roboto")
-          .SetFontSize(20)
-          .SetSize(1,30, SizeType::WEIGHT, SizeType::NONE)
+          .SetFontSize(16)
+          .SetSize(1,20, SizeType::WEIGHT, SizeType::NONE)
           .SetNormalStyle(textBoxStyle);
 
         hsvContainer->AddComponent(sTextBox);
@@ -157,7 +157,7 @@ namespace Greet
         {
           Label* text = new Label("",this);
           text->SetText("B")
-            .SetFontSize(20)
+            .SetFontSize(16)
             .SetFont("roboto")
             .SetSize(1,1,SizeType::WRAP, SizeType::WEIGHT);
           rgbContainer->AddComponent(text);
@@ -165,8 +165,8 @@ namespace Greet
           bTextBox = new TextBox("",this);
 
           bTextBox->SetFont("roboto")
-            .SetFontSize(20)
-            .SetSize(1,30, SizeType::WEIGHT, SizeType::NONE)
+            .SetFontSize(16)
+            .SetSize(1,20, SizeType::WEIGHT, SizeType::NONE)
             .SetNormalStyle(textBoxStyle);
 
           rgbContainer->AddComponent(bTextBox);
@@ -180,7 +180,7 @@ namespace Greet
       {
         Label* text = new Label("",this);
         text->SetText("V")
-          .SetFontSize(20)
+          .SetFontSize(16)
           .SetFont("roboto")
           .SetSize(1,1,SizeType::WRAP, SizeType::WEIGHT);
         hsvContainer->AddComponent(text);
@@ -188,8 +188,8 @@ namespace Greet
         vTextBox = new TextBox("",this);
 
         vTextBox->SetFont("roboto")
-          .SetFontSize(20)
-          .SetSize(1,30, SizeType::WEIGHT, SizeType::NONE)
+          .SetFontSize(16)
+          .SetSize(1,20, SizeType::WEIGHT, SizeType::NONE)
           .SetNormalStyle(textBoxStyle);
 
         hsvContainer->AddComponent(vTextBox);
@@ -202,7 +202,7 @@ namespace Greet
     {
       Label* text = new Label("",this);
       text->SetText("#")
-        .SetFontSize(20)
+        .SetFontSize(16)
         .SetFont("roboto")
         .SetSize(1,1,SizeType::WRAP, SizeType::WEIGHT);
       hexContainer->AddComponent(text);
@@ -210,8 +210,8 @@ namespace Greet
       hexTextBox = new TextBox("",this);
 
       hexTextBox->SetFont("roboto")
-        .SetFontSize(20)
-        .SetSize(1,30, SizeType::WEIGHT, SizeType::NONE)
+        .SetFontSize(16)
+        .SetSize(1,20, SizeType::WEIGHT, SizeType::NONE)
         .SetNormalStyle(textBoxStyle);
 
       hexContainer->AddComponent(hexTextBox);
@@ -219,7 +219,7 @@ namespace Greet
     colorDisplay = new Component("",this);
     Style colorStyle = Style{}.SetBackgroundColor(ColorUtils::ColorHexToVec4(0xff37474f))
       .SetBorderColor(ColorUtils::ColorHexToVec4(0xff455a64))
-      .SetBorder({2,2,2,2});
+      .SetBorder({1,1,1,1});
     colorDisplay->SetSize(1,1,SizeType::WEIGHT, SizeType::WEIGHT)
       .SetNormalStyle(colorStyle);
     textBoxContainer->AddComponent(colorDisplay);

@@ -6,22 +6,15 @@ namespace Greet {
   Button::Button(const XMLObject& object, Component* parent)
     : Component(object, parent)
   {
-    XMLObject labelObject;
-    labelObject.SetName("Label");
-    labelObject.SetText(object.GetText());
+    label = new Label("Label", this);
+    label->SetFont(GUIUtils::GetStringFromXML(object, "font",""))
+      .SetFontSize(GUIUtils::GetFloatFromXML(object,"fontSize",20))
+      .SetText(object.GetText())
+      .SetColor(GUIUtils::GetColorFromXML(object, "color", Vec4(0,0,0,1)))
+      .SetSize(1,1,SizeType::WRAP, SizeType::WEIGHT);
 
-    labelObject.AddProperty("font", object.GetProperty("font"));
-    labelObject.AddProperty("color", object.GetProperty("color"));
-    labelObject.AddProperty("fontSize", object.GetProperty("fontSize"));
-    labelObject.AddProperty("padding", "0px");
-    labelObject.AddProperty("border", "0px");
-    labelObject.AddProperty("margin", "0px");
-
-    label = new Label(labelObject, this);
-    textColor = Vec4(0.0,0.0,0.0,1.0);
     m_isFocusable = true;
     fontSize = GUIUtils::GetSizeFromXML(object, "fontSize", 20, GetHeight());
-    textColor = GUIUtils::GetColorFromXML(object, "fontColor", Vec4(0,0,0,1));
   }
 
   Button::~Button()
@@ -38,8 +31,7 @@ namespace Greet {
   void Button::Render(GUIRenderer* renderer) const
   {
     Vec2 p = pos + GetTotalPadding() +  Vec2(
-        GetContentSize().w-label->GetWidth(), 
-        GetContentSize().h-label->GetFont()->GetBaselineOffset())/2;
+        (GetContentSize().w-label->GetWidth())/2, 0);
     renderer->PushMatrix(Mat3::Translate(p));
     label->Render(renderer);
     renderer->PopMatrix();

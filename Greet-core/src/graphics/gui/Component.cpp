@@ -174,7 +174,6 @@ namespace Greet
       return this;
     }
     return nullptr;
-
   }
 
   Component* Component::OnMouseMoved(const MouseMovedEvent& event, const Vec2& translatedPos)
