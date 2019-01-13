@@ -54,25 +54,28 @@ namespace Greet { namespace ColorUtils {
     float cmax = r > g ? (r > b ? r : b) : (g > b ? g : b);
 
     float delta = cmax - cmin;
-    float s = 0;
+    Vec4 hsva{0,0,cmax,a};
     if (cmax != 0)
-      s = delta / cmax;
-    if (delta == 0)
+      hsva.s = delta / cmax;
+    if (delta != 0)
     {
-      return Vec4(0, s, cmax,a);
+      if (cmax == r)
+      {
+        hsva.h = (g - b) / delta * 0.16667;
+      }
+      else if (cmax == g)
+      {
+        hsva.h = ((b - r) / delta + 2) * 0.16667;
+      }
+      else // if (cmax == b)
+      {
+        hsva.h = ((r - g) / delta + 4) * 0.16667;
+      }
+
+      if(hsva.h < 0)
+        hsva.h++;
     }
-    else if (cmax == r)
-    {
-      return Vec4((g - b) / delta*0.16667, s, cmax, a);
-    }
-    else if (cmax == g)
-    {
-      return Vec4(((b - r) / delta + 2) * 0.16667, s, cmax, a);
-    }
-    else // if (cmax == b)
-    {
-      return Vec4(((r - g) / delta + 4) * 0.16667, s, cmax, a);
-    }
+    return hsva;
   }
 
   inline Vec4 RGBtoHSV(uint colorHex)

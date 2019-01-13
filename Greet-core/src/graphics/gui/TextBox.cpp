@@ -5,7 +5,7 @@
 namespace Greet
 {
   TextBox::TextBox(const std::string& name, Component* parent)
-    : Component(name,parent), cursorPos(0), selectionPos(0), cursorBlinkTimer(0), textOffset{0}, password{false}
+    : Component(name,parent), cursorPos(0), selectionPos(0), cursorBlinkTimer(0), textOffset{0}, password{false}, ctrlDown{false}, shiftDown{false}
   {
     m_isFocusable = true;
 
