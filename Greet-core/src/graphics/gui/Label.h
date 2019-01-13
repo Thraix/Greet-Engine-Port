@@ -36,6 +36,7 @@ namespace Greet {
       Label& SetGravity(Gravity grav);
       Label& SetFont(const std::string& font);
       Label& SetFontSize(float fontSize);
+      Label& SetColor(const Vec4& color);
 
   };
 }

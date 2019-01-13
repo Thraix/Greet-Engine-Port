@@ -10,42 +10,42 @@ namespace Greet
     m_isFocusable = true;
 
     text = new Label("Label", this);
-    Style textStyle = Style{}.SetBackgroundColor(Vec4(0,0,0,1));
 
     text->SetFont("")
       .SetFontSize(20)
       .SetText("")
-      .SetNormalStyle(textStyle);
+      .SetColor(Vec4(0,0,0,1))
+      .SetSize(1,1,SizeType::WEIGHT, SizeType::WEIGHT);
 
     hintText = new Label("HintLabel", this);
-    Style hintStyle = Style{}.SetBackgroundColor(Vec4(0,0,0,1));
 
     hintText->SetFont("")
       .SetFontSize(20)
       .SetText("")
-      .SetNormalStyle(textStyle);
+      .SetColor(Vec4(0,0,0,1))
+      .SetSize(1,1,SizeType::WEIGHT, SizeType::WEIGHT);
   }
 
   TextBox::TextBox(const XMLObject& object, Component* parent)
-    : Component(object,parent), cursorPos(0), selectionPos(0), cursorBlinkTimer(0), textOffset{0}
+    : Component(object,parent), cursorPos(0), selectionPos(0), cursorBlinkTimer(0), textOffset{0}, ctrlDown{false}, shiftDown{false}
   {
     m_isFocusable = true;
 
     text = new Label("Label", this);
-    Style textStyle = Style{}.SetBackgroundColor(GUIUtils::GetColorFromXML(object, "color", Vec4(0,0,0,1)));
 
     text->SetFont(GUIUtils::GetStringFromXML(object, "font",""))
       .SetFontSize(GUIUtils::GetFloatFromXML(object,"fontSize",20))
       .SetText(object.GetText())
-      .SetNormalStyle(textStyle);
+      .SetColor(GUIUtils::GetColorFromXML(object, "color", Vec4(0,0,0,1)))
+      .SetSize(1,1,SizeType::WEIGHT, SizeType::WEIGHT);
 
     hintText = new Label("HintLabel", this);
-    Style hintStyle = Style{}.SetBackgroundColor(GUIUtils::GetColorFromXML(object, "color", text->GetNormalStyle().backgroundColor));
 
-    text->SetFont(GUIUtils::GetStringFromXML(object, "font",text->GetFont()->GetFontContainer()->GetName()))
+    hintText->SetFont(GUIUtils::GetStringFromXML(object, "font",text->GetFont()->GetFontContainer()->GetName()))
       .SetFontSize(GUIUtils::GetFloatFromXML(object,"fontSize",text->GetFontSize()))
       .SetText(GUIUtils::GetStringFromXML(object, "hintText", ""))
-      .SetNormalStyle(hintStyle);
+      .SetColor(GUIUtils::GetColorFromXML(object, "hintColor", text->GetColor()))
+      .SetSize(1,1,SizeType::WEIGHT, SizeType::WEIGHT);
 
     password = GUIUtils::GetBooleanFromXML(object, "password", false);
   }
@@ -69,13 +69,13 @@ namespace Greet
     renderer->PushViewport(pos+GetTotalPadding(), GetContentSize(), true);
     if(text->GetText().length() == 0)
     {
-      Vec2 p = pos + GetTotalPadding() +  Vec2(-textOffset, (GetContentSize().h-text->GetFont()->GetBaselineOffset())/2);
+      Vec2 p = pos + GetTotalPadding() +  Vec2(-textOffset, 0);
       renderer->PushMatrix(Mat3::Translate(p));
       hintText->Render(renderer);
     }
     else
     {
-      Vec2 p = pos + GetTotalPadding() +  Vec2(-textOffset, (GetContentSize().h-hintText->GetFont()->GetBaselineOffset())/2);
+      Vec2 p = pos + GetTotalPadding() +  Vec2(-textOffset, 0);
       renderer->PushMatrix(Mat3::Translate(p));
       text->Render(renderer);
     }

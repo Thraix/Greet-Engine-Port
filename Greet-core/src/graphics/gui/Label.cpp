@@ -89,4 +89,10 @@ namespace Greet {
     Remeasure();
     return *this;
   }
+
+  Label& Label::SetColor(const Vec4& color)
+  {
+    this->color = color;
+    return *this;
+  }
 }
