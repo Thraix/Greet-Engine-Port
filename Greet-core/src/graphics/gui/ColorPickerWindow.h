@@ -33,6 +33,7 @@ namespace Greet
       void SliderChanged();
       void RGBTextBoxChanged(Component* textBox);
       void HSVTextBoxChanged(Component* textBox);
+      void HexTextBoxChanged();
       void UpdateColor(float hue, float sat, float val, InputChangeType type);
 
     public:

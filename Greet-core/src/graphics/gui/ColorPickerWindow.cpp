@@ -235,6 +235,7 @@ namespace Greet
     hTextBox->SetOnTextChangedCallback(std::bind(&ColorPickerWindow::HSVTextBoxChanged, std::ref(*this),_1));
     sTextBox->SetOnTextChangedCallback(std::bind(&ColorPickerWindow::HSVTextBoxChanged, std::ref(*this),_1));
     vTextBox->SetOnTextChangedCallback(std::bind(&ColorPickerWindow::HSVTextBoxChanged, std::ref(*this),_1));
+    hexTextBox->SetOnTextChangedCallback(std::bind(&ColorPickerWindow::HexTextBoxChanged, std::ref(*this)));
 
     // Make textboxes and other stuff update
     SliderChanged();
@@ -300,5 +301,12 @@ namespace Greet
     Math::Clamp(&s,0.0f,1.0f);
     Math::Clamp(&v,0.0f,1.0f);
     UpdateColor(h,s,v,InputChangeType::HSV_TEXTBOX);
+  }
+
+  void ColorPickerWindow::HexTextBoxChanged()
+  {
+    Vec4 rgba = ColorUtils::HexToVec4(LogUtils::HexToDec(hexTextBox->GetText()));
+    Vec4 hsv = ColorUtils::RGBtoHSV(rgba.r,rgba.g,rgba.b,1);
+    UpdateColor(hsv.h,hsv.s,hsv.v,InputChangeType::HEX_TEXTBOX);
   }
 }
