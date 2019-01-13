@@ -29,7 +29,7 @@ class Core : public App, public KeyListener, public MouseListener
       // TODO: This should be done by the engine
       GLayer::CreateInstance(new GUIRenderer(), Shader::FromFile("res/shaders/gui.shader"));
 
-      GLayer::AddFrame(GUIUtils::GetFrame("res/guis/colorpicker.xml"), "testing");
+      GLayer::AddFrame(GUIUtils::GetFrame("res/guis/gui.xml"), "testing");
 
       ColorPickerWindow* window = new ColorPickerWindow();
       window->SetPosition(Vec2(GLayer::GetFrame("testing")->GetWidth()+10, 0));

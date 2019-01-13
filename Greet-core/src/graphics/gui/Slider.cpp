@@ -87,29 +87,19 @@ namespace Greet
   void Slider::OnMeasured()
   {
     float value = GetValue();
-    // Is there a better way to do this. It is super sad.
+
+    // vi will be the y value of the sizes if vertical and x value if not
+    uint vi = (flags & SLIDER_FLAG_VERTICAL) ? 1 : 0;
+
     if(flags & SLIDER_FLAG_FORCE_INSIDE)
     {
-      if(flags & SLIDER_FLAG_VERTICAL)
-      {
-        minPos = sliderComponent->GetHeight()/2;
-        maxPos = size.h-GetBorder().GetHeight()-minPos;
-      }
-      else
-      {
-        minPos = sliderComponent->GetWidth()/2;
-        maxPos = size.w-GetBorder().GetWidth()-minPos;
-      }
-    }
-    else if(flags & SLIDER_FLAG_VERTICAL)
-    {
-      minPos = 0;
-      maxPos = size.h;
+        minPos = sliderComponent->GetSize()[vi]/2;
+        maxPos = size[vi]-GetBorder().GetSize()[vi]-minPos;
     }
     else
     {
       minPos = 0;
-      maxPos = size.w;
+      maxPos = size[vi];
     }
 
     SetValue(value);
