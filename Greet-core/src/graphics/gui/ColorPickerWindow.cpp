@@ -8,9 +8,11 @@ namespace Greet
   ColorPickerWindow::ColorPickerWindow()
     : Frame{}
   {
+    name = "ColorPickerWindow";
     // Would be easier to create an XMLObject for this.
     // However that would need to be integrated with the engine and
     // I have no idea how to do this.
+    
 
     Style s = Style{}.SetBackgroundColor(ColorUtils::ColorHexToVec4(0xff263238))
       .SetBorderColor(ColorUtils::ColorHexToVec4(0xff37474f))
