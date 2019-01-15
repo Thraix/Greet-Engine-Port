@@ -110,6 +110,7 @@
 #include <graphics/gui/Label.h>
 #include <graphics/gui/ProgressBar.h>
 #include <graphics/gui/Container.h>
+#include <graphics/gui/ColorPicker.h>
 #include <graphics/gui/ColorPickerWindow.h>
 #include <graphics/gui/Divider.h>
 #include <graphics/gui/TextBox.h>

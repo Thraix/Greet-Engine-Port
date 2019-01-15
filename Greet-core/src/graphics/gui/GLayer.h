@@ -15,7 +15,6 @@ namespace Greet {
       static std::map<std::string, Frame*> frames;
       static GLayer* instance;
       Component* m_focused;
-      Component* m_hovered;
       GUIRenderer* m_renderer;
       Shader m_shader;
 
@@ -39,6 +38,7 @@ namespace Greet {
       static void Render();
       static void Update(float timeElapsed);
 
+      static bool RequestFocus(Component* component);
       static void AddFrame(Frame* frame, const std::string& name);
       static Frame* RemoveFrame(const std::string& name);
       static Frame* RemoveFrame(Frame* frame);

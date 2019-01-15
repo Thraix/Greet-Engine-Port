@@ -40,8 +40,8 @@ namespace Greet {
 
       virtual Vec2 GetWrapSize() const override;
 
-      virtual Component* OnMousePressed(const MousePressedEvent& event, const Vec2& translatedPos) override;
-      virtual Component* OnMouseMoved(const MouseMovedEvent& event, const Vec2& translatedPos) override;
+      virtual void OnMousePressed(const MousePressedEvent& event, const Vec2& translatedPos) override;
+      virtual void OnMouseMoved(const MouseMovedEvent& event, const Vec2& translatedPos) override;
 
       virtual Component* GetComponentByNameNoCast(const std::string& name) override;
   };

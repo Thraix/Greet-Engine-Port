@@ -15,6 +15,7 @@
 #include <graphics/gui/SatValSlider.h>
 #include <graphics/gui/RadioGroup.h>
 #include <graphics/gui/RadioButton.h>
+#include <graphics/gui/ColorPicker.h>
 
 namespace Greet
 {
@@ -92,6 +93,10 @@ namespace Greet
     else if(object.GetName() == "RadioButton")
     {
       return new RadioButton(object, parent);
+    }
+    else if(object.GetName() == "ColorPicker")
+    {
+      return new ColorPicker(object, parent);
     }
     Log::Warning("Could not read XML object ", object.GetName(), ".");
     XMLObject o("Failed", std::map<std::string, std::string>(), "");

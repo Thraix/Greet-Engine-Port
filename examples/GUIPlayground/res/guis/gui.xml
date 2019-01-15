@@ -38,7 +38,7 @@
 
   <Button width="fill_parent" height="20px" 
     backgroundColor="#37474f" borderColor="#455a64" 
-    hoverbackgroundColor="#37474f" hoverborderColor="#455a64" 
+    hoverbackgroundColor="#ff00ff" hoverborderColor="#455a64" 
     color="#90a4ae" fontSize="16px" font="roboto"
     hoverborder="1px"
     radius="8px" borderRadius="9px"

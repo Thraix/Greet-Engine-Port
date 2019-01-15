@@ -259,33 +259,26 @@ namespace Greet {
     return *this;
   }
 
-  Component* Container::OnMousePressed(const MousePressedEvent& event, const Vec2& translatedPos)
+  void Container::OnMousePressed(const MousePressedEvent& event, const Vec2& translatedPos)
   {
     for(auto it = m_components.rbegin(); it != m_components.rend();++it)
     {
       Component* c{*it};
       if(c->IsMouseInside(translatedPos - GetTotalPadding() - c->GetMargin().LeftTop()))
       {
-        Component* focused= c->OnMousePressed(event, translatedPos - GetTotalPadding() - c->GetPosition() - c->GetMargin().LeftTop());
-        if(focused)
-          return focused;
+        c->OnMousePressed(event, translatedPos - GetTotalPadding() - c->GetPosition() - c->GetMargin().LeftTop());
+        return;
       }
     }
-    return Component::OnMousePressed(event,translatedPos);
+    Component::OnMousePressed(event,translatedPos);
   }
 
-  Component* Container::OnMouseMoved(const MouseMovedEvent& event, const Vec2& translatedPos)
+  void Container::OnMouseMoved(const MouseMovedEvent& event, const Vec2& translatedPos)
   {
+    Component::OnMouseMoved(event,translatedPos);
     for(auto it = m_components.rbegin(); it != m_components.rend();++it)
     {
-      Component* c{*it};
-      if(c->IsMouseInside(translatedPos - GetTotalPadding() - c->GetMargin().LeftTop()))
-      {
-        Component* hovered = c->OnMouseMoved(event, translatedPos - GetTotalPadding() - c->GetPosition() - c->GetMargin().LeftTop());
-        if(hovered)
-          return hovered;
-      }
+      (*it)->OnMouseMoved(event, translatedPos - GetTotalPadding() - (*it)->GetPosition() - (*it)->GetMargin().LeftTop());
     }
-    return Component::OnMouseMoved(event,translatedPos);
   }
 }

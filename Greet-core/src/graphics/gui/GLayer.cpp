@@ -12,7 +12,6 @@ namespace Greet {
     : m_renderer(renderer), m_shader(std::move(shader))
   {
     m_focused = nullptr;
-    m_hovered = nullptr;
     EventDispatcher::AddKeyListener(100, *this);
     EventDispatcher::AddMouseListener(100, *this);
     Window::AddResizeCallback(this);
@@ -35,26 +34,9 @@ namespace Greet {
       Vec2 pos = event.GetPosition() - it->second->GetMargin().LeftTop();
       if(it->second->IsMouseInside(pos))
       {
-        Component* c = it->second->OnMousePressed(event, pos - it->second->GetPosition());
-        if (c)
-        {
-          Log::Info("Name: ", c->GetName());
-          if (c != m_focused)
-          {
-            if (m_focused)
-              m_focused->OnUnfocused();
-            c->OnFocused();
-            m_focused = c;
-          }
-          return true;
-        }
+        it->second->OnMousePressed(event, pos - it->second->GetPosition());
+        return true;
       }
-    }
-
-    if (m_focused)
-    {
-      m_focused->OnUnfocused();
-      m_focused = nullptr;
     }
     return false;
   }
@@ -70,28 +52,13 @@ namespace Greet {
     if (m_focused != nullptr)
     {
       m_focused->MouseMoved(event, event.GetPosition() - m_focused->GetRealPosition());
-      return;
-    }
-    for (auto it = frames.rbegin(); it != frames.rend(); ++it)
-    {
-      Component* c = it->second->OnMouseMoved(event, event.GetPosition() - it->second->GetPosition() - it->second->GetMargin().LeftTop());
-      if (c)
-      {
-        if (c != m_hovered)
-        {
-          if (m_hovered != nullptr)
-            m_hovered->MouseExited();
-          c->MouseEntered();
-          m_hovered = c;
-        }
+      if(m_focused->UsingMouse())
         return;
-      }
     }
 
-    if (m_hovered != nullptr)
+    for (auto it = frames.rbegin(); it != frames.rend(); ++it)
     {
-      m_hovered->MouseExited();
-      m_hovered = nullptr;
+      it->second->OnMouseMoved(event, event.GetPosition() - it->second->GetPosition() - it->second->GetMargin().LeftTop());
     }
   }
 
@@ -163,6 +130,22 @@ namespace Greet {
     {
       it->second->UpdateHandle(timeElapsed);
     }
+  }
+
+  // Could do checks if a popup is refusing to give request or something
+  bool GLayer::RequestFocus(Component* component)
+  {
+    // Unfocus the currently focused component
+    if(GetInstance()->m_focused)
+      GetInstance()->m_focused->OnUnfocused();
+
+    // Focus the requested one
+    if(component != GetInstance()->m_focused)
+      component->OnFocused();
+    
+    GetInstance()->m_focused = component;
+
+    return true;
   }
 
   void GLayer::AddFrame(Frame* frame, const std::string& name)

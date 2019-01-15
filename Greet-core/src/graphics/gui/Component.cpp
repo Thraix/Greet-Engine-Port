@@ -13,7 +13,7 @@ namespace Greet
   Component::Component(const std::string& name, Component* parent)
     : parent{parent}, sizeType{1,1}, 
     widthSizeType{SizeType::WRAP},heightSizeType{SizeType::WRAP},
-    m_isFocusable{false},isFocused{false}, pos{0,0}, pressed{false}, name{name}
+    m_isFocusable{false},isFocused{false},isHovered{false}, pos{0,0}, pressed{false}, name{name}
   {
     currentStyle = &normalStyle;
   }
@@ -166,25 +166,37 @@ namespace Greet
     Update(timeElapsed);
   }
 
-  Component* Component::OnMousePressed(const MousePressedEvent& event, const Vec2& translatedPos)
+  void Component::OnMousePressed(const MousePressedEvent& event, const Vec2& translatedPos)
   {
     if(m_isFocusable)
     {
+      if(!isFocused)
+      {
+        GLayer::RequestFocus(this);
+      }
       MousePressed(event,translatedPos);
-      return this;
     }
-    return nullptr;
   }
 
-  Component* Component::OnMouseMoved(const MouseMovedEvent& event, const Vec2& translatedPos)
+  void Component::OnMouseMoved(const MouseMovedEvent& event, const Vec2& translatedPos)
   {
     if(m_isFocusable)
     {
-      MouseMoved(event,translatedPos);
-      return this;
+      if(IsMouseInside(pos+translatedPos))
+      {
+        if(!isHovered)
+        {
+          isHovered = true;
+          MouseEntered();
+        }
+        MouseMoved(event,translatedPos);
+      }
+      else if(isHovered)
+      {
+        isHovered = false;
+        MouseExited();
+      }
     }
-    return nullptr;
-
   }
   void Component::SetOnClickCallback(OnClickCallback callback)
   {
@@ -252,6 +264,11 @@ namespace Greet
   {
     isFocused = false;
     Unfocused();
+  }
+
+  bool Component::UsingMouse()
+  {
+    return pressed;
   }
 
   Vec2 Component::GetPosition() const

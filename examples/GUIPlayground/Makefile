@@ -7,7 +7,7 @@ BIN=bin/
 OBJPATH=$(BIN)intermediates
 INCLUDES=-I./../../Greet-core/src/ -I./../../deps/includes/ 
 OBJECTS=$(OBJPATH)/GuiTesting.o 
-CFLAGS=$(INCLUDES) -std=c++17 -c -w -g3 -D_DEBUG 
+CFLAGS=$(INCLUDES) -std=c++17 -c -w -g3 -D_DEBUG -g 
 LIBDIR=-L./../../deps/libs/unix/ -L./../../Greet-core/bin/ 
 LDFLAGS=-Wl,-rpath=../../deps/libs/unix/ -Wl,-rpath=../../Greet-core/bin/ 
 LIBS=$(LIBDIR) -lgreet -lGL -lGLEW -lglfw -lfreeimage -lfreetype 

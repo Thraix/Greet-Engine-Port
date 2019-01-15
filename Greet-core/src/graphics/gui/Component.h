@@ -43,7 +43,7 @@ namespace Greet
 
       bool m_isFocusable;
       bool isFocused;
-
+      bool isHovered;
       bool pressed;
 
       // Callbacks
@@ -84,9 +84,9 @@ namespace Greet
       virtual void Update(float timeElapsed){}
 
       // Returns the focused content
-      virtual Component* OnMousePressed(const MousePressedEvent& event, const Vec2& translatedPos);
+      virtual void OnMousePressed(const MousePressedEvent& event, const Vec2& translatedPos);
       // Returns the hovered content
-      virtual Component* OnMouseMoved(const MouseMovedEvent& event, const Vec2& translatedPos);
+      virtual void OnMouseMoved(const MouseMovedEvent& event, const Vec2& translatedPos);
 
       // Callbacks
       void SetOnClickCallback(OnClickCallback callback);
@@ -137,6 +137,8 @@ namespace Greet
       virtual void Unfocused(){}
       virtual void MouseEntered(){}
       virtual void MouseExited(){}
+
+      virtual bool UsingMouse();
 
       // These functions will only be called if the component is focused
       virtual void MousePressed(const MousePressedEvent& event, const Vec2& translatedPos);
