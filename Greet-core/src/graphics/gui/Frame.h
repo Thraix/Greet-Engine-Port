@@ -39,6 +39,7 @@ namespace Greet {
       virtual ~Frame();
 
       virtual bool IsMouseInside(const Vec2& mousePos) const override;
+      virtual void SetPosition(const Vec2& pos) override;
 
       // Check if the mouse is within the resize window and sets flags
       bool CheckResize(const Vec2& mousePos);

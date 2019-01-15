@@ -1,6 +1,7 @@
 #include "ColorPickerWindow.h"
 
 #include <graphics/gui/Label.h>
+#include <graphics/gui/GLayer.h>
 #include <functional>
 
 namespace Greet
@@ -9,7 +10,6 @@ namespace Greet
   {
     name = "ColorPickerWindow";
     shouldCloseUnfocus = true;
-    SetPosition(pos);
     // Would be easier to create an XMLObject for this.
     // However that would need to be integrated with the engine and
     // I have no idea how to do this.
@@ -247,6 +247,7 @@ namespace Greet
 
     // Make textboxes and other stuff update
     SliderChanged();
+    SetPosition(pos);
   
   }
   ColorPickerWindow::ColorPickerWindow()

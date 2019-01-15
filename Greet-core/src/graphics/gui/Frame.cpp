@@ -21,7 +21,7 @@ namespace Greet {
 
   // These are usually the top element so no parent is needed
   Frame::Frame(const XMLObject& object)
-    : Container(object, nullptr), shouldCloseUnfocus{false}
+    : Container(object, nullptr), shouldCloseUnfocus{false}, m_stayInsideWindow{true}
   {
     m_resizableFlags = RESIZING_LEFT | RESIZING_RIGHT | RESIZING_TOP | RESIZING_BOTTOM;
     m_resizing = 0;
@@ -180,11 +180,30 @@ namespace Greet {
     return AABBUtils::PointInsideBox(mousePos, pos-resizeMargin, GetSize() + resizeMargin*2);
   }
 
+  void Frame::SetPosition(const Vec2& pos) 
+  {
+    if(m_stayInsideWindow)
+    {
+      Vec2 p = pos;
+      if(p.x + size.w > GLayer::GetWidth())
+      {
+        p.x = GLayer::GetWidth() - size.w;
+      }
+      if(p.y + size.h > GLayer::GetHeight())
+      {
+        p.y = GLayer::GetHeight() - size.h;
+      }
+      Component::SetPosition(p);
+      return;
+    }
+    Component::SetPosition(pos);
+  }
+
   void Frame::ChildChangedFocus(bool focused)
   {
     if(!GetParent() && !focused && shouldCloseUnfocus)
     {
-      delete GLayer::RemoveFrame(name);
+      GLayer::RemoveFrame(name);
     }
   }
 }

@@ -9,16 +9,21 @@ namespace Greet
     : Component{object, parent}
   {
     m_isFocusable = true;
+    picker  = new ColorPickerWindow(Vec2(0,0), GetNormalStyle().backgroundColor);
+    using namespace std::placeholders;
+    picker->SetOnColorChangeCallback(std::bind(&ColorPicker::OnColorChanged, std::ref(*this), _1, _2));
+  }
 
+  ColorPicker::~ColorPicker()
+  {
+    delete picker;
   }
 
   void ColorPicker::MousePressed(const MousePressedEvent& e, const Vec2& translatedPos)
   {
-    ColorPickerWindow* window = new ColorPickerWindow(e.GetPosition(), GetNormalStyle().backgroundColor);
-    GLayer::AddFrame(window);
-    using namespace std::placeholders;
-    window->SetOnColorChangeCallback(std::bind(&ColorPicker::OnColorChanged, std::ref(*this), _1, _2));
-    GLayer::RequestFocus(window);
+    GLayer::AddFrame(picker);
+    picker->SetPosition(e.GetPosition());
+    GLayer::RequestFocus(picker);
   }
 
   void ColorPicker::OnColorChanged(const Vec3& previous, const Vec3& current)

@@ -10,7 +10,7 @@
     fontSize="18px" font="roboto" color="#90a4ae">Frame header</Label>
 
   <Divider name="divider" backgroundColor="#90a4ae"/>
-  <Label color="#455a64" font="roboto" fontSize="20">Do you like Popcorn?</Label>
+  <Label color="#90a4ae" font="roboto" fontSize="20">Do you like Popcorn?</Label>
 
   <RadioGroup name="Radio" width="fill_parent" height="wrap_content" margin="0" spacing="10px">
     <Container verticalAlign="false">
@@ -18,27 +18,27 @@
         radius="8" activeradius="8"
         backgroundColor="#263238" borderColor="#455a64" border="1px" 
         activebackgroundColor="#455a64" activeborderColor="#455a64" activeborder="1px"/>
-      <Label color="#455a64" font="roboto" fontSize="12">Yes</Label>
+      <Label color="#90a4ae" font="roboto" fontSize="12">Yes</Label>
     </Container>
     <Container verticalAlign="false">
       <RadioButton width="16px" height="16px" 
         radius="8" activeradius="8"
         backgroundColor="#263238" borderColor="#455a64" border="1px" 
         activebackgroundColor="#455a64" activeborderColor="#455a64" activeborder="1px"/>
-      <Label color="#455a64" font="roboto" fontSize="12">No</Label>
+      <Label color="#90a4ae" font="roboto" fontSize="12">No</Label>
     </Container>
     <Container verticalAlign="false">
       <RadioButton width="16px" height="16px" 
         radius="8" activeradius="8"
         backgroundColor="#263238" borderColor="#455a64" border="1px" 
         activebackgroundColor="#455a64" activeborderColor="#455a64" activeborder="1px"/>
-      <Label color="#455a64" font="roboto" fontSize="12">Maybe</Label>
+      <Label color="#90a4ae" font="roboto" fontSize="12">Maybe</Label>
     </Container>
   </RadioGroup>
 
   <Button width="fill_parent" height="20px" 
     backgroundColor="#37474f" borderColor="#455a64" 
-    hoverbackgroundColor="#ff00ff" hoverborderColor="#455a64" 
+    hoverbackgroundColor="#37474f" hoverborderColor="#455a64" 
     color="#90a4ae" fontSize="16px" font="roboto"
     hoverborder="1px"
     radius="8px" borderRadius="9px"
@@ -146,12 +146,16 @@
     borderRadius="10"
     minValue="0.25" maxValue="1.25" reverseProgress="true"/>
 
-  <ColorPicker
-      width="fill_parent" height="30px" name="backgroundChanger"
+  <Container width="fill_parent" verticalAlign="false">
+    <Label width="wrap_content" height="fill_parent" fontSize="16" font="roboto" color="#90a4ae">Background Color: </Label>
+
+    <ColorPicker
+      width="60" height="30" name="backgroundChanger"
       backgroundColor="#455a64"
       borderColor="#455a64" 
       border="2"
       radius="2"
       borderRadius="4"
       />
+  </Container>
 </Frame>
