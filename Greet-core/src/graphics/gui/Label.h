@@ -22,6 +22,7 @@ namespace Greet {
 
     public:
       Label(const std::string& name, Component* parent);
+      Label(const std::string& name, Component* parent, const std::string& text, const std::string& fontName, float fontSize);
       Label(const XMLObject& object, Component* parent);
       void Render(GUIRenderer* renderer) const override;
 

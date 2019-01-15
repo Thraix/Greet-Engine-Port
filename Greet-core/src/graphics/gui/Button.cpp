@@ -7,11 +7,8 @@ namespace Greet {
     : Component(object, parent)
   {
     m_isFocusable = true;
-    label = new Label("Label", this);
-    label->SetFont(GUIUtils::GetStringFromXML(object, "font",""))
-      .SetFontSize(GUIUtils::GetFloatFromXML(object,"fontSize",20))
-      .SetText(object.GetText())
-      .SetColor(GUIUtils::GetColorFromXML(object, "color", Vec4(0,0,0,1)))
+    label = new Label("Label", this,object.GetText(),GUIUtils::GetStringFromXML(object, "font",""),GUIUtils::GetFloatFromXML(object,"fontSize",20) );
+    label->SetColor(GUIUtils::GetColorFromXML(object, "color", Vec4(0,0,0,1)))
       .SetSize(1,1,SizeType::WRAP, SizeType::WEIGHT);
 
     fontSize = GUIUtils::GetSizeFromXML(object, "fontSize", 20, GetHeight());

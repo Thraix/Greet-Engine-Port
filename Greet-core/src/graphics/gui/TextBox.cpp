@@ -9,20 +9,13 @@ namespace Greet
   {
     m_isFocusable = true;
 
-    text = new Label("Label", this);
+    text = new Label("Label", this, "", "roboto", 20);
 
-    text->SetFont("")
-      .SetFontSize(20)
-      .SetText("")
-      .SetColor(Vec4(0,0,0,1))
+    text->SetColor(Vec4(0,0,0,1))
       .SetSize(1,1,SizeType::WEIGHT, SizeType::WEIGHT);
 
-    hintText = new Label("HintLabel", this);
-
-    hintText->SetFont("")
-      .SetFontSize(20)
-      .SetText("")
-      .SetColor(Vec4(0,0,0,1))
+    hintText = new Label("HintLabel", this, "", "roboto",20);
+    hintText->SetColor(Vec4(0,0,0,1))
       .SetSize(1,1,SizeType::WEIGHT, SizeType::WEIGHT);
   }
 
@@ -31,20 +24,20 @@ namespace Greet
   {
     m_isFocusable = true;
 
-    text = new Label("Label", this);
+    text = new Label("Label",this, 
+        object.GetText(), 
+        GUIUtils::GetStringFromXML(object, "font",""),
+        GUIUtils::GetFloatFromXML(object,"fontSize",20));
 
-    text->SetFont(GUIUtils::GetStringFromXML(object, "font",""))
-      .SetFontSize(GUIUtils::GetFloatFromXML(object,"fontSize",20))
-      .SetText(object.GetText())
-      .SetColor(GUIUtils::GetColorFromXML(object, "color", Vec4(0,0,0,1)))
+    text->SetColor(GUIUtils::GetColorFromXML(object, "color", Vec4(0,0,0,1)))
       .SetSize(1,1,SizeType::WEIGHT, SizeType::WEIGHT);
 
-    hintText = new Label("HintLabel", this);
+    hintText = new Label("HintLabel", this,
+        GUIUtils::GetStringFromXML(object, "hintText", ""),
+        GUIUtils::GetStringFromXML(object, "font",text->GetFont()->GetFontContainer()->GetName()),
+        GUIUtils::GetFloatFromXML(object,"fontSize",text->GetFontSize()));
 
-    hintText->SetFont(GUIUtils::GetStringFromXML(object, "font",text->GetFont()->GetFontContainer()->GetName()))
-      .SetFontSize(GUIUtils::GetFloatFromXML(object,"fontSize",text->GetFontSize()))
-      .SetText(GUIUtils::GetStringFromXML(object, "hintText", ""))
-      .SetColor(GUIUtils::GetColorFromXML(object, "hintColor", text->GetColor()))
+    hintText->SetColor(GUIUtils::GetColorFromXML(object, "hintColor", text->GetColor()))
       .SetSize(1,1,SizeType::WEIGHT, SizeType::WEIGHT);
 
     password = GUIUtils::GetBooleanFromXML(object, "password", false);

@@ -61,11 +61,8 @@ namespace Greet
         rgbhsvContainer->AddComponent(rgbContainer);
 
         {
-          Label* text = new Label("ColorPickerWindow#RLabel",this);
-          text->SetText("R")
-            .SetFontSize(16)
-            .SetFont("roboto")
-            .SetSize(1,1,SizeType::WRAP, SizeType::WEIGHT);
+          Label* text = new Label("ColorPickerWindow#RLabel",this, "R", "roboto",16);
+          text->SetSize(1,1,SizeType::WRAP, SizeType::WEIGHT);
           rgbContainer->AddComponent(text);
 
           rTextBox = new TextBox("ColorPickerWindow#RTextBox",this);
@@ -83,11 +80,8 @@ namespace Greet
         hsvContainer->SetSpacing(5).SetVertical(false).SetSize(1,1,SizeType::WEIGHT, SizeType::WRAP);
         rgbhsvContainer->AddComponent(hsvContainer);
         {
-          Label* text = new Label("ColorPickerWindow#HLabel",this);
-          text->SetText("H")
-            .SetFontSize(16)
-            .SetFont("roboto")
-            .SetSize(1,1,SizeType::WRAP, SizeType::WEIGHT);
+          Label* text = new Label("ColorPickerWindow#HLabel",this, "H", "roboto",16);
+          text->SetSize(1,1,SizeType::WRAP, SizeType::WEIGHT);
           hsvContainer->AddComponent(text);
 
           hTextBox = new TextBox("ColorPickerWindow#HTextBox",this);
@@ -112,11 +106,8 @@ namespace Greet
         rgbhsvContainer->AddComponent(rgbContainer);
 
         {
-          Label* text = new Label("ColorPickerWindow#GLabel",this);
-          text->SetText("G")
-            .SetFontSize(16)
-            .SetFont("roboto")
-            .SetSize(1,1,SizeType::WRAP, SizeType::WEIGHT);
+          Label* text = new Label("ColorPickerWindow#GLabel",this, "G", "roboto",16);
+          text->SetSize(1,1,SizeType::WRAP, SizeType::WEIGHT);
           rgbContainer->AddComponent(text);
 
           gTextBox = new TextBox("ColorPickerWindow#GTextBox",this);
@@ -135,11 +126,8 @@ namespace Greet
       hsvContainer->SetSpacing(5).SetVertical(false).SetSize(1,1,SizeType::WEIGHT, SizeType::WRAP);
       rgbhsvContainer->AddComponent(hsvContainer);
       {
-        Label* text = new Label("ColorPickerWindow#SLabel",this);
-        text->SetText("S")
-          .SetFontSize(16)
-          .SetFont("roboto")
-          .SetSize(1,1,SizeType::WRAP, SizeType::WEIGHT);
+        Label* text = new Label("ColorPickerWindow#SLabel",this, "S", "roboto",16);
+        text->SetSize(1,1,SizeType::WRAP, SizeType::WEIGHT);
         hsvContainer->AddComponent(text);
 
         sTextBox = new TextBox("ColorPickerWindow#STextBox",this);
@@ -163,11 +151,8 @@ namespace Greet
         rgbhsvContainer->AddComponent(rgbContainer);
 
         {
-          Label* text = new Label("ColorPickerWindow#BLabel",this);
-          text->SetText("B")
-            .SetFontSize(16)
-            .SetFont("roboto")
-            .SetSize(1,1,SizeType::WRAP, SizeType::WEIGHT);
+        Label* text = new Label("ColorPickerWindow#BLabel",this, "B", "roboto",16);
+        text->SetSize(1,1,SizeType::WRAP, SizeType::WEIGHT);
           rgbContainer->AddComponent(text);
 
           bTextBox = new TextBox("ColorPickerWindow#BTextBox",this);
@@ -186,11 +171,8 @@ namespace Greet
       hsvContainer->SetSpacing(5).SetVertical(false).SetSize(1,1,SizeType::WEIGHT, SizeType::WRAP);
       rgbhsvContainer->AddComponent(hsvContainer);
       {
-        Label* text = new Label("ColorPickerWindow#VLabel",this);
-        text->SetText("V")
-          .SetFontSize(16)
-          .SetFont("roboto")
-          .SetSize(1,1,SizeType::WRAP, SizeType::WEIGHT);
+        Label* text = new Label("ColorPickerWindow#VLabel",this, "V", "roboto",16);
+        text->SetSize(1,1,SizeType::WRAP, SizeType::WEIGHT);
         hsvContainer->AddComponent(text);
 
         vTextBox = new TextBox("ColorPickerWindow#VTextBox",this);
@@ -208,11 +190,8 @@ namespace Greet
     hexContainer->SetSpacing(5).SetVertical(false).SetSize(1,1,SizeType::WEIGHT, SizeType::WRAP);
     textBoxContainer->AddComponent(hexContainer);
     {
-      Label* text = new Label("ColorPickerWindow#HexLabel",this);
-      text->SetText("#")
-        .SetFontSize(16)
-        .SetFont("roboto")
-        .SetSize(1,1,SizeType::WRAP, SizeType::WEIGHT);
+      Label* text = new Label("ColorPickerWindow#HexLabel",this, "#", "roboto",16);
+      text->SetSize(1,1,SizeType::WRAP, SizeType::WEIGHT);
       hexContainer->AddComponent(text);
 
       hexTextBox = new TextBox("ColorPickerWindow#HexTextBox",this);
@@ -248,7 +227,7 @@ namespace Greet
     // Make textboxes and other stuff update
     SliderChanged();
     SetPosition(pos);
-  
+
   }
   ColorPickerWindow::ColorPickerWindow()
     : ColorPickerWindow {{0,0}, {1,1,1}}
@@ -288,7 +267,7 @@ namespace Greet
       hexTextBox->SetText(LogUtils::DecToHex(((int)(255*rgb.r) << 16) | ((int)(255*rgb.g) << 8)  | (int)(255*rgb.b),6));
     }
     if(Vec3(rgb) != prevRGB)
-    CallOnColorChangeCallback(prevRGB, Vec3(rgb));
+      CallOnColorChangeCallback(prevRGB, Vec3(rgb));
   }
 
   void ColorPickerWindow::SliderChanged()

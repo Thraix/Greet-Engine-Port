@@ -3,10 +3,14 @@
 namespace Greet {
 
   Label::Label(const std::string& name, Component* parent)
-    : Component{name,parent}, str{}, color{0,0,0,1}, hasMaxWidth{false}
+    : Label{name,parent, "", "", 20}
   {
-    fontSize = 20;
-    font = FontManager::Get("", fontSize);
+  }
+
+  Label::Label(const std::string& name, Component* parent, const std::string& text, const std::string& fontName, float fontSize)
+    : Component{name, parent}, str{text}, fontSize{fontSize}, color{0,0,0,1}, hasMaxWidth{false}
+  {
+    font = FontManager::Get(fontName, fontSize);
     gravity = Gravity::CENTER;
   }
 
