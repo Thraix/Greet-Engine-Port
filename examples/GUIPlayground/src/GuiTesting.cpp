@@ -60,12 +60,19 @@ class Core : public App, public KeyListener, public MouseListener
           ->AttachValueReference(&progressBarValue);
         frame->GetComponentByName<ColorPicker>("backgroundChanger")
           ->SetOnColorChangeCallback(std::bind(&Core::OnColorChangeCallback, std::ref(*this), _1, _2, _3));
+        frame->GetComponentByName<Button>("button")
+          ->SetOnClickCallback(std::bind(&Core::OnButtonPressCallback, std::ref(*this), _1));
         }
     }
 
     void OnRadioChangeCallback(RadioButton* button)
     {
       Log::Info("Radio changed to ", button->GetName());
+    }
+
+    void OnButtonPressCallback(Component* button)
+    {
+      Log::Info("Button pressed: ", button->GetName());
     }
 
     void OnValueChangeCallback(Component* component, float oldValue, float newValue)

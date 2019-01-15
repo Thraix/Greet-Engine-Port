@@ -9,7 +9,7 @@ namespace Greet
 {
   class ColorPickerWindow : public Frame
   {
-    private:
+    protected:
       enum class InputChangeType
       {
         SLIDER, RGB_TEXTBOX, HSV_TEXTBOX, HEX_TEXTBOX
@@ -17,7 +17,7 @@ namespace Greet
     public:
       typedef std::function<void(const Vec3& previous, const Vec3& current)> OnColorChangeCallback;
 
-    private:
+    protected:
       Vec3 color;
       HueSlider* hSlider;
       SatValSlider* svSlider;
@@ -34,7 +34,7 @@ namespace Greet
 
       OnColorChangeCallback onColorChangeCallback;
 
-    private:
+    protected:
       void SliderChanged();
       void RGBTextBoxChanged(Component* textBox);
       void HSVTextBoxChanged(Component* textBox);
