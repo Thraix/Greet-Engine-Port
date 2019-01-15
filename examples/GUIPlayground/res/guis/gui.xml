@@ -145,4 +145,13 @@
     radius="9"
     borderRadius="10"
     minValue="0.25" maxValue="1.25" reverseProgress="true"/>
+
+  <ColorPicker
+      width="fill_parent" height="30px" name="backgroundChanger"
+      backgroundColor="#455a64"
+      borderColor="#455a64" 
+      border="2"
+      radius="2"
+      borderRadius="4"
+      />
 </Frame>

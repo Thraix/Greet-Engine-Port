@@ -5,14 +5,16 @@
 
 namespace Greet
 {
-  ColorPickerWindow::ColorPickerWindow()
-    : Frame{}
+  ColorPickerWindow::ColorPickerWindow(const Vec2& pos, const Vec3& color)
   {
     name = "ColorPickerWindow";
+    shouldCloseUnfocus = true;
+    SetPosition(pos);
     // Would be easier to create an XMLObject for this.
     // However that would need to be integrated with the engine and
     // I have no idea how to do this.
-    
+
+    Vec3 hsv = ColorUtils::RGBtoHSV(Vec4(color.r,color.g,color.b,1));
 
     Style s = Style{}.SetBackgroundColor(ColorUtils::ColorHexToVec4(0xff263238))
       .SetBorderColor(ColorUtils::ColorHexToVec4(0xff37474f))
@@ -25,12 +27,16 @@ namespace Greet
 
     svSlider = new SatValSlider("ColorPickerWindow#SatValSlider", this);
     svSlider->SetSize(200,200,SizeType::NONE,SizeType::NONE,false);
+    svSlider->SetHue(hsv.h);
+    svSlider->SetSat(hsv.s);
+    svSlider->SetVal(hsv.v);
     AddComponent(svSlider);
 
     hSlider = new HueSlider("ColorPickerWindow#HueSlider", this);
     hSlider->SetVertical(true)
       .SetSize(20,1, SizeType::NONE, SizeType::WEIGHT, false);
     hSlider->GetSliderComponent()->SetSize(1,7,SizeType::WEIGHT, SizeType::NONE);
+    hSlider->SetValue(hsv.h);
     AddComponent(hSlider);
 
     Container* textBoxContainer = new Container("ColorPickerWindow#TextBoxContainer",this);
@@ -241,12 +247,19 @@ namespace Greet
 
     // Make textboxes and other stuff update
     SliderChanged();
+  
+  }
+  ColorPickerWindow::ColorPickerWindow()
+    : ColorPickerWindow {{0,0}, {1,1,1}}
+  {
   }
 
   void ColorPickerWindow::UpdateColor(float hue, float sat, float val, InputChangeType type)
   {
     Style s = colorDisplay->GetNormalStyle();
+    Vec3 prevRGB = color;
     Vec4 rgb = ColorUtils::HSVtoRGB(hue,sat,val,1);
+    color = Vec3(rgb);
     s.SetBackgroundColor(rgb);
     colorDisplay->SetNormalStyle(s);
     svSlider->SetHue(hue);
@@ -273,6 +286,8 @@ namespace Greet
     {
       hexTextBox->SetText(LogUtils::DecToHex(((int)(255*rgb.r) << 16) | ((int)(255*rgb.g) << 8)  | (int)(255*rgb.b),6));
     }
+    if(Vec3(rgb) != prevRGB)
+    CallOnColorChangeCallback(prevRGB, Vec3(rgb));
   }
 
   void ColorPickerWindow::SliderChanged()
@@ -310,5 +325,16 @@ namespace Greet
     Vec4 rgba = ColorUtils::HexToVec4(LogUtils::HexToDec(hexTextBox->GetText()));
     Vec4 hsv = ColorUtils::RGBtoHSV(rgba.r,rgba.g,rgba.b,1);
     UpdateColor(hsv.h,hsv.s,hsv.v,InputChangeType::HEX_TEXTBOX);
+  }
+
+  void ColorPickerWindow::SetOnColorChangeCallback(OnColorChangeCallback callback)
+  {
+    onColorChangeCallback = callback;
+  }
+
+  void ColorPickerWindow::CallOnColorChangeCallback(const Vec3& previous, const Vec3& current)
+  {
+    if(onColorChangeCallback)
+      onColorChangeCallback(previous, current);
   }
 }

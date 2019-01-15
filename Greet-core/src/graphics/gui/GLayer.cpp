@@ -5,7 +5,7 @@
 
 namespace Greet {
 
-  std::map<std::string, Frame*> GLayer::frames;
+  std::vector<Frame*> GLayer::frames;
   GLayer* GLayer::instance;
 
   GLayer::GLayer(GUIRenderer* renderer, Shader&& shader)
@@ -31,13 +31,14 @@ namespace Greet {
   {
     for (auto it = frames.rbegin(); it != frames.rend(); ++it)
     {
-      Vec2 pos = event.GetPosition() - it->second->GetMargin().LeftTop();
-      if(it->second->IsMouseInside(pos))
+      Vec2 pos = event.GetPosition() - (*it)->GetMargin().LeftTop();
+      if((*it)->IsMouseInside(pos))
       {
-        it->second->OnMousePressed(event, pos - it->second->GetPosition());
+        (*it)->OnMousePressed(event, pos - (*it)->GetPosition());
         return true;
       }
     }
+    RequestFocus(nullptr);
     return false;
   }
 
@@ -58,7 +59,7 @@ namespace Greet {
 
     for (auto it = frames.rbegin(); it != frames.rend(); ++it)
     {
-      it->second->OnMouseMoved(event, event.GetPosition() - it->second->GetPosition() - it->second->GetMargin().LeftTop());
+      (*it)->OnMouseMoved(event, event.GetPosition() - (*it)->GetPosition() - (*it)->GetMargin().LeftTop());
     }
   }
 
@@ -86,7 +87,7 @@ namespace Greet {
     m_shader.Disable();
     for (auto it = frames.begin(); it != frames.end(); ++it)
     {
-      it->second->OnWindowResize(width, height);
+      (*it)->OnWindowResize(width, height);
     }
   }
 
@@ -114,9 +115,9 @@ namespace Greet {
     renderer->Begin();
     for (auto it = frames.begin(); it != frames.end(); ++it)
     {
-      it->second->PreRender(renderer, Vec2(0,0));
-      it->second->RenderHandle(renderer);
-      it->second->PostRender(renderer);
+      (*it)->PreRender(renderer, Vec2(0,0));
+      (*it)->RenderHandle(renderer);
+      (*it)->PostRender(renderer);
     }
 
     renderer->End();
@@ -128,7 +129,7 @@ namespace Greet {
   {
     for (auto it = frames.begin(); it != frames.end(); ++it)
     {
-      it->second->UpdateHandle(timeElapsed);
+      (*it)->UpdateHandle(timeElapsed);
     }
   }
 
@@ -140,15 +141,46 @@ namespace Greet {
       GetInstance()->m_focused->OnUnfocused();
 
     // Focus the requested one
-    if(component != GetInstance()->m_focused)
+    if(component && component != GetInstance()->m_focused)
       component->OnFocused();
-    
+
+    // TODO: Maybe clean this code up.
+    Component* unfocused = GetInstance()->m_focused;
+    Component* focused = component;;
+
+    uint unfocusedDepth = unfocused ? unfocused->GetComponentDepth() : 0;
+    uint focusedDepth = focused ? focused->GetComponentDepth() : 0;
+
+    while(unfocusedDepth != focusedDepth)
+    {
+      if(unfocusedDepth > focusedDepth)
+      {
+        unfocused->ChildChangedFocus(false);
+        unfocused = unfocused->GetParent();
+        --unfocusedDepth;
+      }
+      else
+      {
+        focused->ChildChangedFocus(true);
+        focused = focused->GetParent();
+        --focusedDepth;
+      }
+    }
+
+    while(unfocused != focused)
+    {
+      unfocused->ChildChangedFocus(false);
+      unfocused = unfocused->GetParent();
+      focused->ChildChangedFocus(true);
+      focused = focused->GetParent();
+    }
+
     GetInstance()->m_focused = component;
 
     return true;
   }
 
-  void GLayer::AddFrame(Frame* frame, const std::string& name)
+  void GLayer::AddFrame(Frame* frame)
   {
     if (frame == nullptr)
     {
@@ -158,21 +190,27 @@ namespace Greet {
     }
     frame->Measure();
     frame->MeasureFill(GetWidth(),GetHeight(), 1, true);
-    frames.emplace(name, frame);
+    frames.push_back(frame);
   }
 
   Frame* GLayer::RemoveFrame(const std::string& name)
   {
-    auto it = frames.find(name);
-    frames.erase(it);
-    return it->second;
+    for(auto it = frames.begin(); it!=frames.end();++it)
+    {
+      if((*it)->GetName() == name)
+      {
+        frames.erase(it);
+        return (*it);
+      }
+    }
+    return nullptr;
   }
 
   Frame* GLayer::RemoveFrame(Frame* frame)
   {
     for (auto it = frames.begin(); it != frames.end();++it)
     {
-      if (it->second == frame)
+      if ((*it) == frame)
       {
         frames.erase(it);
         return frame;
@@ -183,10 +221,14 @@ namespace Greet {
 
   Frame* GLayer::GetFrame(const std::string& name)
   {
-    auto it = frames.find(name);
-    if (it == frames.end())
-      return nullptr;
-    return it->second;
+    for(auto it = frames.begin(); it!=frames.end();++it)
+    {
+      if((*it)->GetName() == name)
+      {
+        return (*it);
+      }
+    }
+    return nullptr;
   }
   float GLayer::GetWidth()
   {

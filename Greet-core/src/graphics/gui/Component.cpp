@@ -13,7 +13,7 @@ namespace Greet
   Component::Component(const std::string& name, Component* parent)
     : parent{parent}, sizeType{1,1}, 
     widthSizeType{SizeType::WRAP},heightSizeType{SizeType::WRAP},
-    m_isFocusable{false},isFocused{false},isHovered{false}, pos{0,0}, pressed{false}, name{name}
+    m_isFocusable{false},isFocused{false},isHovered{false},isChildFocused{false}, childChangedFocus{false}, pos{0,0}, pressed{false}, name{name}
   {
     currentStyle = &normalStyle;
   }
@@ -421,6 +421,18 @@ namespace Greet
     while(par->GetParent())
       par = par->GetParent();
     return par;
+  }
+
+  uint Component::GetComponentDepth() const
+  {
+    uint depth = 1;
+    const Component* par = this; 
+    while(par->GetParent())
+    {
+      depth++;
+      par = par->GetParent();
+    }
+    return depth;
   }
 
   Vec2 Component::GetTotalPadding() const

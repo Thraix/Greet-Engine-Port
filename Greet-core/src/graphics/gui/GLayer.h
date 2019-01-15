@@ -12,7 +12,7 @@ namespace Greet {
   class GLayer : public MouseListener, public KeyListener, public WindowResizeListener
   {
     private:
-      static std::map<std::string, Frame*> frames;
+      static std::vector<Frame*> frames;
       static GLayer* instance;
       Component* m_focused;
       GUIRenderer* m_renderer;
@@ -39,7 +39,7 @@ namespace Greet {
       static void Update(float timeElapsed);
 
       static bool RequestFocus(Component* component);
-      static void AddFrame(Frame* frame, const std::string& name);
+      static void AddFrame(Frame* frame);
       static Frame* RemoveFrame(const std::string& name);
       static Frame* RemoveFrame(Frame* frame);
       static Frame* GetFrame(const std::string& name);

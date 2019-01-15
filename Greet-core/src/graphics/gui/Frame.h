@@ -22,6 +22,7 @@ namespace Greet {
       Vec2 minSize;
 
       bool m_stayInsideWindow;
+      bool shouldCloseUnfocus;
 
       Vec2 m_clickPos;
       Vec2 m_posOrigin;
@@ -62,8 +63,7 @@ namespace Greet {
       virtual void MouseReleased(const MouseReleasedEvent& event, const Vec2& translatedPos) override;
       virtual void MouseMoved(const MouseMovedEvent& event, const Vec2& translatedPos) override;
 
-      virtual void OnFocused() override;
-      virtual void OnUnfocused() override;
+      virtual void ChildChangedFocus(bool focused) override;
 
   };
 }

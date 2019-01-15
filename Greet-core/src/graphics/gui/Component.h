@@ -46,6 +46,9 @@ namespace Greet
       bool isHovered;
       bool pressed;
 
+      bool isChildFocused;
+      bool childChangedFocus;
+
       // Callbacks
       OnClickCallback onClickCallback;
       OnPressCallback onPressCallback;
@@ -138,6 +141,8 @@ namespace Greet
       virtual void MouseEntered(){}
       virtual void MouseExited(){}
 
+      virtual void ChildChangedFocus(bool focused) {}
+
       virtual bool UsingMouse();
 
       // These functions will only be called if the component is focused
@@ -155,6 +160,8 @@ namespace Greet
       const TLBR& GetBorder() const;
       Vec2 GetContentSize() const;
       const std::string& GetName() const;
+
+      uint GetComponentDepth() const;
 
       template <typename T>
       T* GetComponentByName(const std::string& name)
