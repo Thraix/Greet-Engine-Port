@@ -6,7 +6,9 @@
 #include <graphics/gui/Component.h>
 #include <cstdlib>
 
-namespace Greet {
+namespace Greet 
+{
+  REGISTER_COMPONENT_DEFINITION(Container);
 
   Container::Container()
     : Container(XMLObject(), nullptr)
@@ -27,7 +29,7 @@ namespace Greet {
     spacing = GUIUtils::GetFloatFromXML(object, "spacing", 10);
     for (uint i = 0;i < object.GetObjectCount();i++)
     {
-      Component* component = GUIUtils::GetComponent(object.GetObject(i), this);
+      Component* component = ComponentFactory::GetComponent(object.GetObject(i), this);
       if(StringUtils::starts_with(component->GetName(),"Failed#"))
         Log::Error("Could not load Component, could not understand type. (type=",object.GetObject(i).GetName(),")");
       else

@@ -4,6 +4,8 @@
 
 namespace Greet
 {
+  REGISTER_COMPONENT_DEFINITION(RadioGroup);
+
   RadioGroup::RadioGroup(const XMLObject& xmlObject, Component* parent)
     : Container(xmlObject, parent), activeButton(nullptr)
   {

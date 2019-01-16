@@ -4,6 +4,8 @@
 
 namespace Greet
 {
+  REGISTER_COMPONENT_DEFINITION(ProgressBar);
+
   ProgressBar::ProgressBar(const XMLObject& object, Component* parent)
     : Component(object,parent), min(0), max(1), value(0), valueReference(nullptr), vertical(false), reverse(false)
   {

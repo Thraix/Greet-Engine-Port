@@ -8,6 +8,9 @@
 namespace Greet {
   class Frame : public Container 
   {
+    private:
+      REGISTER_FRAME_DECLARATION(Frame);
+
     protected:
 
       static byte RESIZING_RIGHT;

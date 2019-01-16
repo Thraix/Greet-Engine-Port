@@ -2,6 +2,8 @@
 
 namespace Greet
 {
+  REGISTER_COMPONENT_DEFINITION(Divider);
+
   Divider::Divider(const XMLObject& xmlObject, Component* parent)
     : Component(xmlObject,parent), vertical(false)
   {

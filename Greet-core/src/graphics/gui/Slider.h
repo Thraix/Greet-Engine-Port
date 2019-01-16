@@ -6,6 +6,8 @@ namespace Greet
 {
   class Slider : public Component
   {
+    private:
+      REGISTER_COMPONENT_DECLARATION(Slider);
     public:
       typedef std::function<void(Component*, float oldValue, float newValue)> OnValueChangeCallback;
     protected:

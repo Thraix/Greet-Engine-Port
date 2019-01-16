@@ -1,6 +1,8 @@
 #include "Label.h"
 
-namespace Greet {
+namespace Greet 
+{
+  REGISTER_COMPONENT_DEFINITION(Label);
 
   Label::Label(const std::string& name, Component* parent)
     : Label{name,parent, "", "", 20}

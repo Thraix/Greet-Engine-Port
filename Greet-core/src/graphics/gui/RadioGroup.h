@@ -8,6 +8,8 @@ namespace Greet
 
   class RadioGroup : public Container
   {
+    private:
+      REGISTER_COMPONENT_DECLARATION(RadioGroup);
     public:
       friend class RadioButton;
       typedef std::function<void(RadioButton*)> OnRadioChangeCallback;

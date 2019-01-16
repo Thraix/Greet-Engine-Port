@@ -6,6 +6,8 @@ namespace Greet
 {
   class HueSlider : public Slider 
   {
+    private:
+      REGISTER_COMPONENT_DECLARATION(HueSlider);
     public:
       HueSlider(const std::string& name, Component* parent);
       HueSlider(const XMLObject& xmlObject, Component* parent);

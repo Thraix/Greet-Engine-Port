@@ -6,9 +6,11 @@
 #include <functional>
 #include <cstdlib>
 
+
 namespace Greet
 {
 
+  REGISTER_COMPONENT_DEFINITION(Component);
 
   Component::Component(const std::string& name, Component* parent)
     : parent{parent}, sizeType{1,1}, 

@@ -14,11 +14,6 @@ namespace Greet {
   {
     public:
 
-      static Frame* GetFrame(const std::string& filepath);
-      static Frame* GetFrame(const XMLObject& object);
-      static Component* GetComponent(const XMLObject& object, Component* parent);
-
-
       static bool GetBooleanFromXML(const XMLObject& object, const std::string& key, bool defaultValue);
       static Vec4 GetColorFromXML(const XMLObject& object, const std::string& key, const Vec4& defaultValue);
       static float GetSizeFromXML(const XMLObject& object, const std::string& key, float defaultValue, float parentSize);

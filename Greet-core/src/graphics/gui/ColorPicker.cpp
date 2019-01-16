@@ -5,6 +5,8 @@
 
 namespace Greet
 {
+  REGISTER_COMPONENT_DEFINITION(ColorPicker);
+
   ColorPicker::ColorPicker(const XMLObject& object, Component* parent)
     : Component{object, parent}
   {

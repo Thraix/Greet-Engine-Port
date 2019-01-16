@@ -7,6 +7,8 @@ namespace Greet
 {
   class RadioButton : public Component
   {
+    private:
+      REGISTER_COMPONENT_DECLARATION(RadioButton);
     public:
       friend class RadioGroup;
     protected:

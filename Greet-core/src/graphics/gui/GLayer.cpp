@@ -191,6 +191,7 @@ namespace Greet {
     frame->Measure();
     frame->MeasureFill(GetWidth(),GetHeight(), 1, true);
     frames.push_back(frame);
+    frame->PostConstruction();
   }
 
   Frame* GLayer::RemoveFrame(const std::string& name)

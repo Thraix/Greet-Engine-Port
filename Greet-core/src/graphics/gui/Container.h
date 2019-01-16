@@ -7,6 +7,8 @@
 namespace Greet {
   class Container : public Component 
   {
+    private:
+      REGISTER_COMPONENT_DECLARATION(Container);
     protected:
       std::vector<Component*> m_components;
       bool vertical;

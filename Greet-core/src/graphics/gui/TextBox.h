@@ -7,6 +7,8 @@ namespace Greet
 {
   class TextBox : public Component
   {
+    private:
+      REGISTER_COMPONENT_DECLARATION(TextBox);
     public:
       typedef std::function<void(Component*, const std::string& before, const std::string& after)> OnTextChangedCallback;
     protected:

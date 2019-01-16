@@ -4,6 +4,8 @@
 
 namespace Greet
 {
+  REGISTER_COMPONENT_DEFINITION(HueSlider);
+
   HueSlider::HueSlider(const std::string& name, Component* parent)
     : Slider{name, parent}
   {

@@ -95,6 +95,7 @@
 #include <graphics/fonts/FontAtlas.h>
 #include <graphics/fonts/FontManager.h>
 #include <graphics/fonts/FontContainer.h>
+#include <graphics/gui/ComponentFactory.h>
 #include <graphics/gui/Style.h>
 #include <graphics/gui/TLBR.h>
 #include <graphics/gui/Container.h>

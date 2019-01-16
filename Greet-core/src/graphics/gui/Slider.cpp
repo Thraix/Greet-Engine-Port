@@ -4,6 +4,8 @@
 
 namespace Greet
 {
+  REGISTER_COMPONENT_DEFINITION(Slider);
+
   uint Slider::SLIDER_FLAG_FORCE_INSIDE = BIT(0);
   uint Slider::SLIDER_FLAG_SNAP = BIT(1);
   uint Slider::SLIDER_FLAG_VERTICAL = BIT(2);
@@ -36,7 +38,7 @@ namespace Greet
   {
     m_isFocusable = true;
     if(xmlObject.GetObjectCount() > 0)
-      sliderComponent = GUIUtils::GetComponent(xmlObject.GetObject(0), this);
+      sliderComponent = ComponentFactory::GetComponent(xmlObject.GetObject(0), this);
 
     minValue = GUIUtils::GetFloatFromXML(xmlObject, "minValue", 0.0f);
     maxValue = GUIUtils::GetFloatFromXML(xmlObject, "maxValue", 100.0f);
@@ -93,8 +95,8 @@ namespace Greet
 
     if(flags & SLIDER_FLAG_FORCE_INSIDE)
     {
-        minPos = sliderComponent->GetSize()[vi]/2;
-        maxPos = size[vi]-GetBorder().GetSize()[vi]-minPos;
+      minPos = sliderComponent->GetSize()[vi]/2;
+      maxPos = size[vi]-GetBorder().GetSize()[vi]-minPos;
     }
     else
     {

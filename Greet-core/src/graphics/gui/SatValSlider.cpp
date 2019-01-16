@@ -2,6 +2,8 @@
 
 namespace Greet
 {
+  REGISTER_COMPONENT_DEFINITION(SatValSlider);
+
   SatValSlider::SatValSlider(const std::string& name, Component* parent)
     : Component{name, parent}, hue{0}, sat{0.5}, val{0.5}
   {
@@ -21,7 +23,7 @@ namespace Greet
   {
     m_isFocusable = true;
     if(xmlObject.GetObjectCount() > 0)
-      sliderComponent = GUIUtils::GetComponent(xmlObject.GetObject(0), this);
+      sliderComponent = ComponentFactory::GetComponent(xmlObject.GetObject(0), this);
     else
     {
       Style normal{};

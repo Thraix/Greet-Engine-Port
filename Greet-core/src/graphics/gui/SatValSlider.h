@@ -6,6 +6,8 @@ namespace Greet
 {
   class SatValSlider : public Component 
   {
+    private:
+      REGISTER_COMPONENT_DECLARATION(SatValSlider);
     public:
       typedef std::function<void(Component*, float oldValue, float newValue)> OnSatChangeCallback;
       typedef std::function<void(Component*, float oldValue, float newValue)> OnValChangeCallback;

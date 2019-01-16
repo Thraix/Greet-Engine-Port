@@ -3,6 +3,9 @@
 #include <graphics/fonts/FontManager.h>
 
 namespace Greet {
+
+  REGISTER_COMPONENT_DEFINITION(Button);
+
   Button::Button(const XMLObject& object, Component* parent)
     : Component(object, parent)
   {

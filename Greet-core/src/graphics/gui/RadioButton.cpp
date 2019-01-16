@@ -4,6 +4,8 @@
 
 namespace Greet
 {
+  REGISTER_COMPONENT_DEFINITION(RadioButton);
+
   RadioButton::RadioButton(const XMLObject& xmlObject, Component* parent)
     : Component(xmlObject, parent), active(false)
   {
@@ -13,6 +15,7 @@ namespace Greet
 
   void RadioButton::PostConstruction()
   {
+    Log::Info("test");
     radioParent = FindRadioGroupParent();
     if(!radioParent)
       Log::Warning("RadioButton is not inside a RadioGroup");

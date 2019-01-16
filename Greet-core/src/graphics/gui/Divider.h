@@ -7,6 +7,8 @@ namespace Greet
   // This class will ignore parent padding?
   class Divider : public Component
   {
+    private:
+      REGISTER_COMPONENT_DECLARATION(Divider);
     protected:
       bool vertical;
     public:

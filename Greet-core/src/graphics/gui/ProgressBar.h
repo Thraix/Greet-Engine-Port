@@ -6,6 +6,8 @@ namespace Greet
 {
   class ProgressBar : public Component
   {
+    private:
+      REGISTER_COMPONENT_DECLARATION(ProgressBar);
     protected:
       float value;
       float* valueReference;

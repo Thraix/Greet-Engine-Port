@@ -7,6 +7,8 @@
 
 namespace Greet {
 
+  REGISTER_FRAME_DEFINITION(Frame);
+
   byte Frame::RESIZING_LEFT = BIT(0);
   byte Frame::RESIZING_RIGHT = BIT(1);
   byte Frame::RESIZING_TOP = BIT(2);

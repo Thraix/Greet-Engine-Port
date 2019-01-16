@@ -4,12 +4,15 @@
 #include <graphics/renderers/GUIRenderer.h>
 #include <event/MouseEvent.h>
 #include <event/KeyEvent.h>
+#include <graphics/gui/ComponentFactory.h>
 
 namespace Greet
 {
 
   class Component
   {
+    private:
+      REGISTER_COMPONENT_DECLARATION(Component);
     public:
       enum class SizeType
       {
@@ -178,6 +181,5 @@ namespace Greet
       virtual void CallOnClickCallback();
       virtual void CallOnPressCallback();
       virtual void CallOnReleaseCallback();
-
   };
 }

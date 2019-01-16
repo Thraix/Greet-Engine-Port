@@ -7,6 +7,8 @@ namespace Greet
 {
   class ColorPicker : public Component
   {
+    private:
+      REGISTER_COMPONENT_DECLARATION(ColorPicker);
     public:
       typedef std::function<void(Component* comp, const Vec3& previous, const Vec3& current)> OnColorChangeCallback;
     public:

@@ -7,6 +7,8 @@
 namespace Greet {
   class Label : public Component 
   {
+    private:
+      REGISTER_COMPONENT_DECLARATION(Label);
     enum class Gravity
     {
       TOP, CENTER, BOTTOM

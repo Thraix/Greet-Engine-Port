@@ -6,6 +6,8 @@
 namespace Greet {
   class Button : public Component 
   {
+    private:
+      REGISTER_COMPONENT_DECLARATION(Button);
     protected:
       float fontSize;
       Label* label;

@@ -29,7 +29,7 @@ class Core : public App, public KeyListener, public MouseListener
       // TODO: This should be done by the engine
       GLayer::CreateInstance(new GUIRenderer(), Shader::FromFile("res/shaders/gui.shader"));
 
-      GLayer::AddFrame(GUIUtils::GetFrame("res/guis/gui.xml"));
+      GLayer::AddFrame(FrameFactory::GetFrame("res/guis/gui.xml"));
 
       Frame* frame = GLayer::GetFrame("TopComponent");
       if(frame != nullptr)
