@@ -7,6 +7,7 @@
 #include <event/EventDispatcher.h>
 #include <event/InputController.h>
 #include <graphics/RenderEngine.h>
+#include <graphics/gui/ComponentFactory.h>
 
 namespace Greet {
 
@@ -52,6 +53,8 @@ namespace Greet {
     FontManager::Destroy();
     TextureManager::Destroy();
     AtlasManager::Destroy();
+    ComponentFactory::Cleanup();
+    FrameFactory::Cleanup();
     glfwTerminate();
   }
 

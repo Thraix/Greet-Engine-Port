@@ -20,10 +20,12 @@ namespace Greet
   class Component;
   class Frame;
 
-  struct ComponentFactory
+  class ComponentFactory
   {
     template <typename T>
     friend class ComponentRegistry;
+    friend class Window;
+
     private:
       typedef std::map<std::string, std::function<Component*(const XMLObject& xmlObject, Component*)>> ComponentMap;
       static ComponentMap* guiComponents;
@@ -35,7 +37,11 @@ namespace Greet
         guiComponents = new ComponentMap{};
         return guiComponents;
       }
-    public:
+
+      static void Cleanup()
+      {
+        delete guiComponents;
+      }
 
       template <typename T>
       static T* CreateComponent(const XMLObject& xmlObject, Component* parent)
@@ -43,13 +49,16 @@ namespace Greet
         return new T(xmlObject,parent);
       }
 
+    public:
       static Component* GetComponent(const XMLObject& xmlObject, Component* parent);
   };
 
-  struct FrameFactory
+  class FrameFactory
   {
     template <typename T>
     friend class FrameRegistry;
+    friend class Window;
+
     private:
       typedef std::map<std::string, std::function<Frame*(const XMLObject& xmlObject)>> FrameMap;
 
@@ -64,7 +73,11 @@ namespace Greet
         guiFrames = new FrameMap{};
         return guiFrames;
       }
-    public:
+
+      static void Cleanup()
+      {
+        delete guiFrames;
+      }
 
       template <typename T>
       static T* CreateFrame(const XMLObject& xmlObject)
@@ -72,7 +85,7 @@ namespace Greet
         return new T(xmlObject);
       }
 
-
+    public:
       static Frame* GetFrame(const std::string& filePath);
       static Frame* GetFrame(const XMLObject& xmlObject);
 
