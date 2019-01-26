@@ -12,6 +12,7 @@ class Core : public App, public KeyListener, public MouseListener
   private:
     BatchRenderer3D* renderer3d;
     Material* modelMaterial;
+    Material* flatMaterial;
     Material* terrainMaterial;
     Material* stallMaterial;
     KeyboardControl* movement;
@@ -25,7 +26,6 @@ class Core : public App, public KeyListener, public MouseListener
     EntityModel* tetrahedron;
     std::vector<EntityModel> models;
     FrameBufferObject* fbo;
-    GUIRenderer* guirenderer;
 
 
     float progressFloat;
@@ -43,7 +43,7 @@ class Core : public App, public KeyListener, public MouseListener
     Core()
       : App("Best Game Ever", 960, 540)
     {
-      SetFrameCap(60);
+      SetFrameCap(0);
     }
 
     ~Core()
@@ -106,13 +106,14 @@ class Core : public App, public KeyListener, public MouseListener
 
 
       modelMaterial = new Material(Shader::FromFile("res/shaders/3dshader.shader"));
+      flatMaterial = new Material(Shader::FromFile("res/shaders/flat3d.shader"));
       stallMaterial = new Material(Shader::FromFile("res/shaders/3dshader.shader"), TextureManager::Get2D("stall"));
       terrainMaterial = new Material(Shader::FromFile("res/shaders/terrain.shader"));
       terrainMaterial->SetReflectivity(0.5f);
       terrainMaterial->SetShineDamper(5.0f);
-      uint gridWidth = 999;
-      uint gridLength = 999;
-      float* noise = Noise::GenNoise(gridWidth+1, gridWidth + 1,5,64, 64,0.5f);
+      uint gridWidth = 99;
+      uint gridLength = 99;
+      float* noise = Noise::GenNoise(gridWidth+1, gridWidth + 1,5,8, 8,0.5f);
       //noise[0] = 10;
       MeshData* gridMesh = MeshFactory::LowPolyGrid(0, 0, 0, gridWidth+1, gridLength+1, gridWidth, gridLength, noise,1);
       RecalcGrid(gridMesh, gridWidth, gridLength);
@@ -138,16 +139,23 @@ class Core : public App, public KeyListener, public MouseListener
       tetrahedron = new EntityModel(tetrahedronModelMaterial, Vec3(30, 0, 10), Vec3(1, 1, 1), Vec3(0, 0, 0));
       delete tetrahedronMesh;
 
-      // MEMORY LEAK WITH MESHDATA
-      Mesh* stallMesh = new Mesh(OBJUtils::LoadObj("res/objs/stall.obj"));
+      MeshData* stallMeshData = OBJUtils::LoadObj("res/objs/stall.obj");
+      //
+      Mesh* stallMesh = new Mesh(stallMeshData);
       stallMaterial->SetReflectivity(0.1)->SetShineDamper(1);
       MaterialModel* stallModelMaterial = new MaterialModel(stallMesh, stallMaterial);
-      stall = new EntityModel(stallModelMaterial, Vec3(0.0f, 0.0f, -25), Vec3(1.0f, 1.0f, 1.0f), Vec3(0.0f, 0.0f, 0.0f));
+      stall = new EntityModel(stallModelMaterial, Vec3(0.0f, 0.0f, -25), Vec3(3.0f, 3.0f, 3.0f), Vec3(0.0f, 0.0f, 0.0f));
 
       // MEMORY LEAK WITH MESHDATA
-      Mesh* dragonMesh = new Mesh(OBJUtils::LoadObj("res/objs/dragon.obj"));
-      MaterialModel* dragonModelMaterial = new MaterialModel(dragonMesh, modelMaterial);
-      dragon = new EntityModel(dragonModelMaterial, Vec3(10.0f, 0.0f, -25), Vec3(1.0f, 1.0f, 1.0f), Vec3(0.0f, 0.0f, 0.0f));
+      MeshData* data = OBJUtils::LoadObj("res/objs/dragon.obj");
+      Vec3* normals = new Vec3[data->GetVertexCount()];
+      MeshFactory::CalculateNormals(data->GetVertices(), data->GetVertexCount(), data->GetIndices(), data->GetIndexCount(), normals);
+      data->AddAttribute(new AttributeData<Vec3>(ATTRIBUTE_NORMAL, normals));
+      data->LowPolify();
+      data->WriteToFile("res/objs/dragon.gobj");
+      Mesh* dragonMesh = new Mesh(data);
+      MaterialModel* dragonModelMaterial = new MaterialModel(dragonMesh, flatMaterial);
+      dragon = new EntityModel(dragonModelMaterial, Vec3(20.0f, 0.0f, -25), Vec3(1.0f, 1.0f, 1.0f), Vec3(0.0f, 0.0f, 0.0f));
 
       //Mesh* gridMesh = MeshFactory::cube(0,0,0,10,10,10);
       //gridMesh->setEnableCulling(false);
@@ -170,53 +178,14 @@ class Core : public App, public KeyListener, public MouseListener
       uilayer = new Layer(new BatchRenderer(), ShaderFactory::DefaultShader(), Mat3::Orthographic(0.0f, (float)Window::GetWidth(), 0.0f, (float)Window::GetHeight()));
       Vec4 colorPink = ColorUtils::GetMaterialColorAsHSV(300 /360.0f, 3);
       cursor = new Renderable2D(Vec2(0,0),Vec2(32,32),0xffffffff, new Sprite(TextureManager::Get2D("cursor")), new Sprite(TextureManager::Get2D("mask")));
-      //drivers::DriverDispatcher::addDriver(new drivers::LinearDriver(driverTest->m_position.x, -20, 0.5f, true, new drivers::DriverAdapter()));
-      /* Keeping this for reference later.
-         fps = new Label("144 fps", Vec2(50, 300), "roboto", 72, ColorUtils::Vec3ToColorHex(ColorUtils::GetMaterialColorAsRGB(120 / 360.0f, 9)));
-         guilayer = new GUILayer(new GUIRenderer(),Shader::FromFile("res/shaders/gui.shader"));
-         std::vector<std::string> labels{ "Babymode", "Softcore",  "Easy", "Medium", "Hard", "Hardcore", "Expert" };
-         slider = new Slider(Vec2(0, 0), Vec2(200, 30), 0, 255, 1);
-         slider2 = new Slider(Vec2(0, 40), Vec2(200, 30), labels);
-         slider2->SetValue(3);
-         Slider* slider3 = new Slider(Vec2(0, 80), Vec2(200, 30), 0, 255, 1);
-         slider3->SetRenderPercentage(true);
-         slider3->SetSliderController(new SliderController(Vec2(0, 15), Vec2(30, 30)));
-         TextBox* textBox = new TextBox(Vec2(0, 120), Vec2(200, 30), false);
-         TextBox* textBoxPass = new TextBox(Vec2(0, 160), Vec2(200, 30), true);
-         textBox->SetText("Text Box");
-         progressFloat = 0;
-         ProgressBar* progressBar = new ProgressBar(Vec2(0, 200), Vec2(200, 30),&progressFloat,0,1000);
-         button = new Button(Vec2(0,240),Vec2(200,30),"Button");
-         ColorPicker* picker = new ColorPicker(Vec2(210, 0), 200, 16, 20);
-      //Slider* sliderVertical = new Slider(Vec2(445, 0), Vec2(30, 200), 0, 255, 1,true);
-      frame = new Frame(Vec2(10, 10), Vec2(0, 0),"GUI Frame");
-      scene3d = new Layer(new BatchRenderer(),blurShader, Mat3::Orthographic(0.0f, (float)Window::GetWidth(), 0.0f, (float)Window::GetHeight()));
-      fboScene = new Renderable2D(Vec2(0,0),Vec2(960,540),0xffffffff,new Sprite(fbo->GetColorTexture(GL_COLOR_ATTACHMENT0)),NULL);
-      scene3d->Add(fboScene);
-
-      uilayer->Add(fps);
-      frame->Add(slider);
-      frame->Add(slider2);
-      frame->Add(slider3);
-      frame->Add(button);
-      frame->Add(textBox);
-      frame->Add(textBoxPass);
-      frame->Add(progressBar);
-      frame->Add(picker);
-      frame->Pack();
-      //frame->Add(sliderVertical);
-      guilayer->Add(frame);
-      */
       uilayer->Add(cursor);
 
-      //drivers::DriverDispatcher::addDriver(new drivers::LinearDriver(frame->m_position.x, 100, 5, true, new drivers::DriverAdapter()));
-
-      //renderer3d->submit(stall);
-      //renderer3d->submit(dragon);
+      renderer3d->Submit(stall);
+      renderer3d->Submit(dragon);
       renderer3d->Submit(grid);
       //renderer3d->Submit(polygon);
-      //renderer3d->submit(cube);
-      //renderer3d->submit(tetrahedron);
+      //renderer3d->Submit(cube);
+      //renderer3d->Submit(tetrahedron);
       //for (uint i = 0;i < 2000;i++)
       //{
       //	renderer3d->submit(&models[i]);
@@ -227,10 +196,7 @@ class Core : public App, public KeyListener, public MouseListener
       uint pos = 0;
       //		Log::info(JSONLoader::isNumber("0.1234s",pos));
       RenderEngine::Add2DScene(uilayer, "uilayer");
-      //RenderEngine::AddLayer2d(guilayer, "guilayer");
       RenderEngine::Add3DScene(new Layer3D(renderer3d), "3dWorld");
-      guirenderer = new GUIRenderer();
-      //guirenderer->PushMatrix(Mat3::Orthographic(0, Window::GetWidth(), 0, Window::GetHeight()));
       Log::Info(ColorUtils::HexToVec4(0xffaa0077));
     }
 
@@ -330,7 +296,6 @@ class Core : public App, public KeyListener, public MouseListener
 
     void Update(float elapsedTime) override
     {
-      //guilayer->Update(elapsedTime);
       progressFloat++;
       if (progressFloat > 1000)
         progressFloat = 0;
@@ -477,9 +442,6 @@ class Core : public App, public KeyListener, public MouseListener
     bool screenshot = false;
     void Render() override
     {
-      //guirenderer->SubmitString("test", Vec2(100, 100), FontManager::Get("roboto",24), 0xff00ff);
-      //guirenderer->SubmitRect(Vec2(0, 0), Vec2(1, 1), 0xffffff00);
-      //guilayer->Render();
     }
 
     void WindowResize(int width, int height) override

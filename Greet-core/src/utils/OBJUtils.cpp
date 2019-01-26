@@ -11,123 +11,117 @@
 
 namespace Greet {
 
-
   MeshData* OBJUtils::ErrorModel()
   {
     return MeshFactory::Cube(0,0,0,1,1,1);// TODO return cube
-  }
-
-  void OBJUtils::ProcessVertex(const std::vector<std::string>& vertexData, std::vector<uint>& indices, const std::vector<Vec2>& texCoords, const std::vector<Vec3>& normals, Vec2* texCoordsArray, Vec3* normalsArray)
-  {
-    uint currentVertex = atoi(vertexData[0].c_str()) - 1;
-
-    indices.push_back(currentVertex);
-    if(vertexData[1].length() == 0)
-    {
-      if(texCoords.size() != 0)
-      {
-        texCoordsArray[currentVertex] = Vec2(0,0);
-      }
-    }
-    else
-    {
-      uint texPos = atoi(vertexData[1].c_str());
-      texPos--;
-      Vec2 currentTex = texCoords[texPos];
-      texCoordsArray[currentVertex] = currentTex;
-    }
-    if(vertexData[2].length() == 0)
-    {
-      if(normals.size() != 0)
-      {
-        normalsArray[currentVertex] = Vec3(0,0,0);
-      }
-    }
-    else
-    {
-      uint normalPos = atoi(vertexData[2].c_str()) - 1;
-      Vec3 currentNormal = normals[normalPos];
-      normalsArray[currentVertex] = currentNormal;
-    }
   }
 
   MeshData* OBJUtils::LoadObj(const std::string& filename)
   {
     std::vector<std::string> dataLine;
 
-    std::vector<Vec3> vertices;
+    std::vector<Vec3> positions;
     std::vector<Vec2> texCoords;
     std::vector<Vec3> normals;
     std::vector<uint> indices;
-    bool atIndex = false;
-
-    Vec2* texCoordsArray = NULL;
-    Vec3* normalsArray = NULL;
 
     std::ifstream input(filename);
+    std::map<std::string, uint> verticesMap;
+
+    // These are the same length.
+    std::vector<Vec3> vertexPos;
+    std::vector<Vec2> vertexTexCoords;
+    std::vector<Vec3> vertexNormals;
+
     for (std::string line; getline(input, line); )
     {
-      dataLine = StringUtils::split_string(line, " ");
-      if (dataLine[0].compare("v") == 0)
+      std::istringstream iss{line};
+      std::string s;
+      iss >> s;
+      if (s == "v")
       {
-        const char* pos1 = strchr(line.c_str(), ' ')+1;
-        const char* pos2 = strchr(pos1, ' ')+1;
-        const char* pos3 = strchr(pos2, ' ')+1;
-        Vec3 vector = Vec3(atof(pos1),atof(pos2),atof(pos3));
-        vertices.push_back(vector);
+        Vec3 vector{};
+        iss >> vector.x;
+        iss >> vector.y;
+        iss >> vector.z;
+        positions.push_back(vector);
       }
-      else if (dataLine[0].compare("vt") == 0)
+      else if (s == "vt")
       {
-        const char* pos1 = strchr(line.c_str(), ' ')+1;
-        const char* pos2 = strchr(pos1, ' ')+1;
-        Vec2 texCoord = Vec2(atof(pos1),atof(pos2));
-        texCoords.push_back(texCoord);
+        Vec2 vector{};
+        iss >> vector.x;
+        iss >> vector.y;
+        texCoords.push_back(vector);
       }
-      else if (dataLine[0].compare("vn") == 0)
+      else if (s == "vn")
       {
-        const char* pos1 = strchr(line.c_str(), ' ')+1;
-        const char* pos2 = strchr(pos1, ' ')+1;
-        const char* pos3 = strchr(pos2, ' ')+1;
-        Vec3 normal = Vec3(atof(pos1),atof(pos2),atof(pos3));
-        normals.push_back(normal);
+        Vec3 vector{};
+        iss >> vector.x;
+        iss >> vector.y;
+        iss >> vector.z;
+        normals.push_back(vector);
       }
-      else if (dataLine[0].compare("f") == 0)
+      else if (s == "f")
       {
-        if (!atIndex)
+        dataLine = StringUtils::split_string(line, " ");
+        for(int i = 0; i<3;i++)
         {
-          texCoordsArray = new Vec2[vertices.size()];
-          normalsArray = new Vec3[vertices.size()];
-          atIndex = true;
-        }
-        std::vector<std::string> vertex1 = StringUtils::split_string(dataLine[1], "/");
-        std::vector<std::string> vertex2 = StringUtils::split_string(dataLine[2], "/");
-        std::vector<std::string> vertex3 = StringUtils::split_string(dataLine[3], "/");
+          auto it = verticesMap.find(dataLine[1 + i]);
+          if(it != verticesMap.end())
+          {
+            indices.push_back(it->second);
+          }
+          else
+          {
+            indices.push_back(vertexPos.size());
+            verticesMap.emplace(dataLine[i + 1], vertexPos.size());
+            std::vector<std::string> vertex = StringUtils::split_string(dataLine[i + 1], "/");
 
-        ProcessVertex(vertex1, indices, texCoords, normals, texCoordsArray, normalsArray);
-        ProcessVertex(vertex2, indices, texCoords, normals, texCoordsArray, normalsArray);
-        ProcessVertex(vertex3, indices, texCoords, normals, texCoordsArray, normalsArray);
+            // Only position defined
+            if(vertex.size() == 1)
+            {
+              vertexPos.push_back(positions[atoi(vertex[0].c_str())-1]);
+            }
+            else if(vertex.size() == 2) // Position and texcoord defined
+            {
+              vertexPos.push_back(positions[atoi(vertex[0].c_str())-1]);
+              if(vertex[1] != "")
+                vertexTexCoords.push_back(texCoords[atoi(vertex[1].c_str())-1]);
+            }
+            else if(vertex.size() == 3)
+            {
+              vertexPos.push_back(positions[atoi(vertex[0].c_str())-1]);
+              if(vertex[1] != "")
+                vertexTexCoords.push_back(texCoords[atoi(vertex[1].c_str())-1]);
+              if(vertex[2] != "")
+                vertexNormals.push_back(normals[atoi(vertex[2].c_str())-1]);
+            }
+          }
+        }
       }
     }
 
     input.close();
-    Vec3* verticesArray = new Vec3[vertices.size()];
+    Vec3* positionsArray = new Vec3[vertexPos.size()];
+    Vec3* normalsArray = new Vec3[vertexNormals.size()];
+    Vec2* texCoordsArray = new Vec2[vertexTexCoords.size()];
     uint* indicesArray = new uint[indices.size()];
-    int i = 0;
-    for (Vec3 vertex : vertices)
-    {
-      verticesArray[i++] = vertex;
+    memcpy(positionsArray, vertexPos.data(), vertexPos.size() * sizeof(Vec3));
+    memcpy(texCoordsArray, vertexTexCoords.data(), vertexTexCoords.size() * sizeof(Vec2));
+    memcpy(normalsArray, vertexNormals.data(), vertexNormals.size() * sizeof(Vec3));
+    memcpy(indicesArray, indices.data(), indices.size() * sizeof(uint));
 
-    }
-    for (uint i = 0;i < indices.size();i++)
-    {
-      indicesArray[i] = indices[i];
-    }
-
-    MeshData* mesh = new MeshData(verticesArray, vertices.size(), indicesArray, indices.size());
-    if(normals.size() > 0)
-      mesh->AddAttribute(new AttributeData<Vec3>(ATTRIBUTE_NORMAL, normalsArray));
-    if(texCoords.size() > 0)
+    MeshData* mesh = new MeshData(positionsArray, vertexPos.size(), indicesArray, indices.size());
+    if(vertexTexCoords.size() > 0)
       mesh->AddAttribute(new AttributeData<Vec2>(ATTRIBUTE_TEXCOORD, texCoordsArray));
+    else
+      delete[] texCoordsArray;
+
+    if(vertexNormals.size() > 0)
+      mesh->AddAttribute(new AttributeData<Vec3>(ATTRIBUTE_NORMAL, normalsArray));
+    else
+      delete[] normalsArray;
+
     return mesh;
   }
 }
