@@ -21,13 +21,14 @@ namespace Greet { namespace Utils {
 
   inline void Screenshot(uint width, uint height)
   {
-    BYTE* pixels = new BYTE[3 * width*height];
-    glReadPixels(0,0,width,height, GL_BGR, GL_UNSIGNED_BYTE, pixels);
-    FIBITMAP* Image = FreeImage_ConvertFromRawBits(pixels, width, height, 3*width, 24, 0xFF0000, 0x00FF00, 0x0000FF, false);
+    BYTE* pixels = new BYTE[4 * width * height];
+    glReadPixels(0,0,width,height, GL_BGRA, GL_UNSIGNED_BYTE, pixels);
+    FIBITMAP* image = FreeImage_ConvertFromRawBits(pixels, width, height, 4 * width, 32, 0x0000ff, 0x00ff00, 0xFF0000, false);
     std::string s = "screenshot_";
-    s += CurrentDateTime();
+    s += Utils::CurrentDateTime();
     s += ".png";
-    FreeImage_Save(FIF_PNG, Image, s.c_str(), 0);
+    FreeImage_Save(FIF_PNG, image, s.c_str(), 0);
+    FreeImage_Unload(image);
     delete[] pixels;
   }
 
