@@ -2,41 +2,65 @@
 
 namespace Greet {
 
-  Layer3D::Layer3D(Renderer3D* renderer, Camera* camera, Skybox* skybox)
-    : m_renderer(renderer), camera{camera}, skybox{skybox}
+  Layer3D::Layer3D(Camera* camera, Skybox* skybox)
+    : camera{camera}, skybox{skybox}
   {
   }
 
   Layer3D::~Layer3D()
   {
-    delete m_renderer;
   }
 
   void Layer3D::PreRender() const
   {
-    m_renderer->Begin(camera);
-    skybox->Render(camera->GetProjectionMatrix(), *camera);
   }
 
   void Layer3D::Render() const
   {
-    m_renderer->Render(camera);
+    skybox->Render(*camera);
+    for(auto&& renderer : renderers)
+    {
+      renderer->Begin(camera);
+      renderer->Render(camera);
+      renderer->End(camera);
+    }
   }
 
   void Layer3D::PostRender() const 
   {
-    m_renderer->End(camera);
   }
 
   void Layer3D::Update(float timeElapsed)
   {
-    camera->Update(timeElapsed);
-    m_renderer->Update(timeElapsed);
+    for(auto&& renderer : renderers)
+    {
+      camera->Update(timeElapsed);
+      renderer->Update(timeElapsed);
+    }
   }
 
   InputControlRequest Layer3D::OnInputChanged(const InputControl* control)
   {
     camera->OnInputChanged(control);
+    return InputControlRequest::NOTHING;
+  }
+
+  void Layer3D::AddRenderer(Renderer3D* renderer)
+  {
+    renderers.push_back(renderer);
+  }
+
+  void Layer3D::RemoveRenderer(Renderer3D* renderer)
+  {
+    for(auto it = renderers.begin(); it != renderers.end(); ++it)
+    {
+      if(*it == renderer)
+      {
+        renderers.erase(it);
+        return;
+      }
+    }
+    Log::Warning("Could not remove the renderer");
   }
 
   Vec3 Layer3D::GetScreenCoordination(const Vec3& coordinate, uint screenWidth, uint screenHeight) const

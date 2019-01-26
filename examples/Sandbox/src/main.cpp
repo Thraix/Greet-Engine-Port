@@ -197,7 +197,8 @@ class Core : public App, public KeyListener, public MouseListener
       uint pos = 0;
       //		Log::info(JSONLoader::isNumber("0.1234s",pos));
       RenderEngine::Add2DScene(uilayer, "uilayer");
-      layer3d = new Layer3D(renderer3d, camera, skybox);
+      layer3d = new Layer3D(camera, skybox);
+      layer3d->AddRenderer(renderer3d);
       RenderEngine::Add3DScene(layer3d, "3dWorld");
       Log::Info(ColorUtils::HexToVec4(0xffaa0077));
     }
@@ -448,10 +449,6 @@ class Core : public App, public KeyListener, public MouseListener
 
     void WindowResize(int width, int height) override
     {
-      //camera::Camera::getInstance()->getLayer(0)->setProjectionMatrix(mat3::orthographic(0, (float)width / 20.0f, 0, (float)height / 20.0f)*mat3::translate((width - 960) / 40.0f, (height - 540) / 40.0f));
-      //camera::Camera::getInstance()->getLayer(1)->setProjectionMatrix(mat3::orthographic(0, (float)width / 20.0f, 0, (float)height / 20.0f)*mat3::translate((width - 960) / 40.0f, (height - 540) / 40.0f));
-      //camera::Camera::getInstance()->getLayer(2)->setProjectionMatrix(mat3::orthographic(0, (float)width, 0, (float)height)*mat3::translate((width - 960) / 2, (height - 540) / 2));
-      //camera::Camera::getInstance()->setViewport(0, 0, width, height* 9 / 16);
       uilayer->SetProjectionMatrix(Mat3::Orthographic(0,Window::GetWidth(),0,Window::GetHeight()));
     }
 

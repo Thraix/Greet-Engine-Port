@@ -2,42 +2,50 @@
 
 namespace Greet {
 
-  void BatchRenderer3D::Submit(const EntityModel* model)
+  void BatchRenderer3D::Submit(EntityModel* model)
   {
     if(model == NULL)
     {
       Log::Error("Adding NULL EntityModel to 3D renderer");
       return;
     }
-    for (BatchRenderer3DMap* map : m_map)
+
+    auto it = m_map.find(model->GetMaterialModel());
+    if(it == m_map.end())
     {
-      if (map->m_material == model->GetMaterialModel())
-      {
-        map->AddEntity(model);
-        return;
-      }
+      std::vector<EntityModel*> vector{model};
+      m_map.emplace(model->GetMaterialModel(), vector);
     }
-    BatchRenderer3DMap* map = new BatchRenderer3DMap(model->GetMaterialModel());
-    map->AddEntity(model);
-    m_map.push_back(map);
+    else
+      (*it).second.push_back(model);
   }
 
   void BatchRenderer3D::Render(Camera* camera) const
   {
-    for (BatchRenderer3DMap* map : m_map)
+    for (auto&& entityModels : m_map)
     {
-      map->m_material.GetMaterial().Bind();
-      BindMatrices(map->m_material.GetMaterial().GetShader(),camera);
-      const Mesh& mesh = map->m_material.GetMesh();
+      entityModels.first.GetMaterial().Bind();
+      BindMatrices(entityModels.first.GetMaterial().GetShader(),camera);
+      const Mesh& mesh = entityModels.first.GetMesh();
       mesh.Bind();
-      for (const EntityModel* model : map->m_models)
+      for (auto&& entityModel : entityModels.second)
       {
-        map->m_material.GetMaterial().GetShader().SetUniformMat4("transformationMatrix", model->GetTransformationMatrix());
+        entityModels.first.GetMaterial().GetShader().SetUniformMat4("transformationMatrix", entityModel->GetTransformationMatrix());
         mesh.Render();
       }
-      mesh.Unbind();
-      map->m_material.GetMaterial().Unbind();
+        mesh.Unbind();
+      entityModels.first.GetMaterial().Unbind();
     }
+  }
 
+  void BatchRenderer3D::Update(float timeElapsed) 
+  {
+    for (auto&& entityModels: m_map)
+    {
+      for (auto&& entityModel : entityModels.second)
+      {
+        entityModel->Update(timeElapsed);
+      }
+    }
   }
 }

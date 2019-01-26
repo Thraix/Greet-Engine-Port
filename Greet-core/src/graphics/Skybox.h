@@ -17,6 +17,6 @@ namespace Greet {
       Skybox(const CubeMap& map);
       const CubeMap& GetCubeMap() const { return m_map; };
       virtual ~Skybox();
-      void Render(const Mat4& projectionMatrix, const Camera& camera) const;
+      void Render(const Camera& camera) const;
   };
 }

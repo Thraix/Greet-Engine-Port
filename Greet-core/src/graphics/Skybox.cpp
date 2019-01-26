@@ -19,13 +19,13 @@ namespace Greet {
     delete m_mesh;
   }
 
-  void Skybox::Render(const Mat4& projectionMatrix, const Camera& camera) const
+  void Skybox::Render(const Camera& camera) const
   {
     GLCall(glActiveTexture(GL_TEXTURE0));
     GLCall(glDisable(GL_DEPTH_TEST));
     GLCall(glFrontFace(GL_CCW));
     m_shader.Enable();
-    m_shader.SetUniformMat4("projectionMatrix", projectionMatrix);
+    m_shader.SetUniformMat4("projectionMatrix", camera.GetProjectionMatrix());
     m_shader.SetUniformMat4("viewMatrix", Mat4::ViewMatrix(Vec3(0, 0, 0), camera.GetRotationVector()));
     m_map.Enable();
     m_mesh->Bind();

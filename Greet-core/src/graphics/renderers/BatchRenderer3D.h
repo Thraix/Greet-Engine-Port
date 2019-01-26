@@ -12,26 +12,16 @@
 
 namespace Greet {
 
-  struct BatchRenderer3DMap
-  {
-    public:
-      friend class BatchRenderer3D;
-    private:
-      const MaterialModel& m_material;
-      std::vector<const EntityModel*> m_models;
-      BatchRenderer3DMap(const MaterialModel& material) : m_material(material) {}
-      void AddEntity(const EntityModel* model) { m_models.push_back(model); };
-  };
-
   class BatchRenderer3D : public Renderer3D
   {
     private:
-      std::vector<BatchRenderer3DMap*> m_map;
+      std::map<MaterialModel, std::vector<EntityModel*>> m_map;
     public:
       BatchRenderer3D()
         : Renderer3D(){}
 
-      void Submit(const EntityModel* model);
+      void Submit(EntityModel* model);
       void Render(Camera* camera) const override;
+      void Update(float timeElapsed) override;
   };
 }

@@ -4,10 +4,8 @@
 
 namespace Greet {
 
-  uint MaterialModel::s_current_id;
-
   MaterialModel::MaterialModel(const Mesh* mesh, const Material* material)
-    : m_mesh(mesh), m_material(material), m_id(s_current_id++)
+    : m_mesh(mesh), m_material(material)
   {
 
   }
@@ -57,6 +55,6 @@ namespace Greet {
 
   bool MaterialModel::operator==(const MaterialModel& second) const
   {
-    return m_id == second.m_id;
+    return m_mesh == second.m_mesh && m_material && second.m_material;
   }
 }
