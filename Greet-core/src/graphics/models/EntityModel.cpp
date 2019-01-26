@@ -21,19 +21,19 @@ namespace Greet {
     UpdateTransformation();
   }
 
-  void EntityModel::PreRender(const Renderer3D* renderer) const
+  void EntityModel::PreRender(const Renderer3D* renderer, const Camera* camera) const
   {
-    m_model->PreRender(renderer,m_transformationMatrix);
+    m_model->PreRender(renderer,camera, m_transformationMatrix);
   }
 
-  void EntityModel::Render(const Renderer3D* renderer) const
+  void EntityModel::Render(const Renderer3D* renderer, const Camera* camera) const
   {
-    m_model->Render(renderer,m_transformationMatrix);
+    m_model->Render(renderer,camera, m_transformationMatrix);
   }
 
-  void EntityModel::PostRender(const Renderer3D* renderer) const
+  void EntityModel::PostRender(const Renderer3D* renderer, const Camera* camera) const
   {
-    m_model->PostRender(renderer,m_transformationMatrix);
+    m_model->PostRender(renderer,camera, m_transformationMatrix);
   }
 
   void EntityModel::Update(float timeElapsed)

@@ -8,8 +8,11 @@ namespace Greet {
   {
     protected:
       Renderer3D* m_renderer;
+      Camera* camera;
+      Skybox* skybox;
+
     public:
-      Layer3D(Renderer3D* renderer);
+      Layer3D(Renderer3D* renderer, Camera* camera, Skybox* skybox);
       virtual ~Layer3D();
       virtual void PreRender() const override;
       virtual void Render() const override;
@@ -18,5 +21,8 @@ namespace Greet {
       virtual InputControlRequest OnInputChanged(const InputControl* control) override;
       const Renderer3D* GetRenderer() const { return m_renderer;}
       void SetRenderer(Renderer3D* renderer) { m_renderer = renderer;}
+
+      Vec3 GetScreenCoordination(const Vec3& coordinate, uint screenWidth, uint screenHeight) const;
+      void GetWorldCoordination(const Vec2& mousePos, Vec3* near, Vec3* direction) const;
   };
 }

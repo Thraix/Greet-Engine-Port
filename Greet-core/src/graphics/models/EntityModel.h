@@ -19,9 +19,9 @@ namespace Greet {
       EntityModel(const MaterialModel* model, Vec3 position, Vec3 scale, Vec3 rotation);
       EntityModel(const MaterialModel* model);
 
-      void PreRender(const Renderer3D* renderer) const;
-      void Render(const Renderer3D* renderer) const;
-      void PostRender(const Renderer3D* renderer) const;
+      void PreRender(const Renderer3D* renderer, const Camera* camera) const;
+      void Render(const Renderer3D* renderer, const Camera* camera) const;
+      void PostRender(const Renderer3D* renderer, const Camera* camera) const;
 
       inline const MaterialModel& GetMaterialModel() const { return *m_model; }
       void SetMaterialModel(const MaterialModel* model) { m_model = model;}

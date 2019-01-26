@@ -22,13 +22,12 @@ namespace Greet {
     m_map.push_back(map);
   }
 
-  void BatchRenderer3D::Render() const
+  void BatchRenderer3D::Render(Camera* camera) const
   {
-    GLCall(glDepthRange(m_near, m_far));
     for (BatchRenderer3DMap* map : m_map)
     {
       map->m_material.GetMaterial().Bind();
-      BindMatrices(map->m_material.GetMaterial().GetShader());
+      BindMatrices(map->m_material.GetMaterial().GetShader(),camera);
       const Mesh& mesh = map->m_material.GetMesh();
       mesh.Bind();
       for (const EntityModel* model : map->m_models)

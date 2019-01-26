@@ -4,24 +4,24 @@
 
 namespace Greet {
 
-  TPCamera::TPCamera()
-    : TPCamera(Vec3(0,0,0), 1, 0, 0)
+  TPCamera::TPCamera(const Mat4& projectionMatrix)
+    : TPCamera(projectionMatrix, Vec3(0,0,0), 1, 0, 0)
   {
   }
 
-  TPCamera::TPCamera(Vec3 position, float distance, float height, float rotation)
-    :TPCamera(position, distance, height, rotation, 1, 100, -1,1)
+  TPCamera::TPCamera(const Mat4& projectionMatrix, Vec3 position, float distance, float height, float rotation)
+    :TPCamera(projectionMatrix, position, distance, height, rotation, 1, 100, -1,1)
   {
 
   }
 
-  TPCamera::TPCamera(Vec3 position, float distance, float height, float rotation, float distanceMin, float distanceMax, float heightMin, float heightMax)
-    : TPCamera(position, distance, height, rotation, distanceMin, distanceMax, heightMin, heightMax, 1000, 10, 10)
+  TPCamera::TPCamera(const Mat4& projectionMatrix, Vec3 position, float distance, float height, float rotation, float distanceMin, float distanceMax, float heightMin, float heightMax)
+    : TPCamera(projectionMatrix, position, distance, height, rotation, distanceMin, distanceMax, heightMin, heightMax, 1000, 10, 10)
   {
   }
 
-  TPCamera::TPCamera(Vec3 position, float distance, float height, float rotation, float distanceMin, float distanceMax, float heightMin, float heightMax, float rotationSpeed, float heightSpeed, float distanceSpeed) 
-    : m_position(position), m_distance(distance), m_height(height), m_rotation(rotation), m_rotationSpeed(rotationSpeed), m_heightSpeed(heightSpeed), m_distanceSpeed(distanceSpeed)
+  TPCamera::TPCamera(const Mat4& projectionMatrix, Vec3 position, float distance, float height, float rotation, float distanceMin, float distanceMax, float heightMin, float heightMax, float rotationSpeed, float heightSpeed, float distanceSpeed) 
+    : Camera(projectionMatrix), m_position(position), m_distance(distance), m_height(height), m_rotation(rotation), m_rotationSpeed(rotationSpeed), m_heightSpeed(heightSpeed), m_distanceSpeed(distanceSpeed)
   {
     m_rotationWanted = m_rotation;
     m_distanceWanted = m_distance;

@@ -28,16 +28,10 @@ namespace Greet {
     private:
       std::vector<BatchRenderer3DMap*> m_map;
     public:
-      BatchRenderer3D(const Mat4& projectionMatrix, Camera* camera, Skybox* skybox, float near=-1, float far=1)
-        : Renderer3D(projectionMatrix, camera,skybox,near,far){}
-      BatchRenderer3D(const Mat4& projectionMatrix, Camera* camera, float near=-1, float far=1)
-        : Renderer3D(projectionMatrix, camera,near,far){}
-      BatchRenderer3D(float width, float height, Camera* camera, float fov, float near, float far, Skybox* skybox)
-        : Renderer3D(width,height,camera,fov,near,far,skybox){}
-      BatchRenderer3D(float width, float height, Camera* camera, float fov, float near, float far)
-        : Renderer3D(width,height,camera,fov,near,far){}
+      BatchRenderer3D()
+        : Renderer3D(){}
 
       void Submit(const EntityModel* model);
-      void Render() const override;
+      void Render(Camera* camera) const override;
   };
 }

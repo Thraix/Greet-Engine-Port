@@ -2,6 +2,7 @@
 
 #include <graphics/models/Material.h>
 #include <graphics/models/Mesh.h>
+#include <graphics/models/Camera.h>
 
 namespace Greet {
 
@@ -18,13 +19,13 @@ namespace Greet {
       MaterialModel(const Mesh* mesh, const Material* material);
       virtual ~MaterialModel();
 
-      void PreRender(const Renderer3D* renderer, const Mat4& transformationMatrix) const;
-      void Render(const Renderer3D* renderer, const Mat4& transformationMatrix) const;
-      void PostRender(const Renderer3D* renderer, const Mat4& transformationMatrix) const;
+      void PreRender(const Renderer3D* renderer, const Camera* camera, const Mat4& transformationMatrix) const;
+      void Render(const Renderer3D* renderer, const Camera* camera, const Mat4& transformationMatrix) const;
+      void PostRender(const Renderer3D* renderer, const Camera* camera, const Mat4& transformationMatrix) const;
 
-      void PreRender(const Renderer3D* renderer) const;
-      void Render(const Renderer3D* renderer) const;
-      void PostRender(const Renderer3D* renderer) const;
+      void PreRender(const Renderer3D* renderer, const Camera* camera) const;
+      void Render(const Renderer3D* renderer, const Camera* camera) const;
+      void PostRender(const Renderer3D* renderer, const Camera* camera) const;
 
       inline const Material& GetMaterial() const { return *m_material; }
       inline const Mesh& GetMesh() const { return *m_mesh; }

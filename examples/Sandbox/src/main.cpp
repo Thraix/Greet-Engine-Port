@@ -33,6 +33,7 @@ class Core : public App, public KeyListener, public MouseListener
     TPCamera* camera;
     Layer* scene3d;
     Layer* uilayer;
+    Layer3D* layer3d;
     Button* button;
     Label* fps;
     Renderable2D* cursor;
@@ -100,9 +101,9 @@ class Core : public App, public KeyListener, public MouseListener
 
       fbo = new FrameBufferObject(960,540);
       //camera = new TPCamera(vec3(-3.5, -7.8, 5.5), 18, 0.66, 38.5, 15, 80, 0, 0.8f); // Profile shot
-      camera = new TPCamera(Vec3(0, 0, 0), 15, 0, 0, 15, 80, 0, 0.8f);
+      camera = new TPCamera(Mat4::ProjectionMatrix(Window::GetWidth()/ (float)Window::GetHeight(), 90, 0.1f,1000.0f), Vec3(0, 0, 0), 15, 0, 0, 15, 80, 0, 0.8f);
       Skybox* skybox = new Skybox(TextureManager::Get3D("skybox"));
-      renderer3d = new BatchRenderer3D(Window::GetWidth(), Window::GetHeight(), camera,90,0.1f,1000.0f, skybox);
+      renderer3d = new BatchRenderer3D();
 
 
       modelMaterial = new Material(Shader::FromFile("res/shaders/3dshader.shader"));
@@ -196,7 +197,8 @@ class Core : public App, public KeyListener, public MouseListener
       uint pos = 0;
       //		Log::info(JSONLoader::isNumber("0.1234s",pos));
       RenderEngine::Add2DScene(uilayer, "uilayer");
-      RenderEngine::Add3DScene(new Layer3D(renderer3d), "3dWorld");
+      layer3d = new Layer3D(renderer3d, camera, skybox);
+      RenderEngine::Add3DScene(layer3d, "3dWorld");
       Log::Info(ColorUtils::HexToVec4(0xffaa0077));
     }
 
@@ -388,7 +390,7 @@ class Core : public App, public KeyListener, public MouseListener
       }
       if (e.GetButton() == GLFW_KEY_X)
       {
-        Vec3 p = renderer3d->GetScreenCoordination(Vec3(0,0,0),Window::GetWidth(),Window::GetHeight());
+        Vec3 p = layer3d->GetScreenCoordination(Vec3(0,0,0),Window::GetWidth(),Window::GetHeight());
       }
       movement->onInput(e.GetButton(),true);
       rotation->onInput(e.GetButton(),true);
