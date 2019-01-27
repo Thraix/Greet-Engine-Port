@@ -25,6 +25,7 @@ namespace Greet {
       uint m_drawMode;
       bool m_culling = true;
       bool m_clockwise = false;
+      bool wireframe = false;
 
     public:
       Mesh(const Vec3* vertices, uint vertexCount, const uint* indices, uint indexCount);
@@ -43,6 +44,9 @@ namespace Greet {
 
       inline void SetEnableCulling(bool culling) { m_culling = culling; }
       inline bool IsEnableCulling() const { return m_culling; }
+
+      inline void SetEnableWireframe(bool _wireframe) { wireframe = _wireframe; }
+      inline bool IsEnableWireframe() const { return wireframe; }
 
       void AddAttribute(uint location, const Vec3* data);
       void AddAttribute(uint location, const Vec2* data);

@@ -23,6 +23,7 @@ class Core : public App, public KeyListener, public MouseListener
     EntityModel* grid;
     EntityModel* polygon;
     EntityModel* cube;
+    EntityModel* sphere;
     EntityModel* tetrahedron;
     std::vector<EntityModel> models;
     FrameBufferObject* fbo;
@@ -54,6 +55,7 @@ class Core : public App, public KeyListener, public MouseListener
       delete dragon;
       delete grid;
       delete cube;
+      delete sphere;
       delete tetrahedron;
       delete renderer3d;
       delete uilayer;
@@ -101,7 +103,7 @@ class Core : public App, public KeyListener, public MouseListener
 
       fbo = new FrameBufferObject(960,540);
       //camera = new TPCamera(vec3(-3.5, -7.8, 5.5), 18, 0.66, 38.5, 15, 80, 0, 0.8f); // Profile shot
-      camera = new TPCamera(Mat4::ProjectionMatrix(Window::GetWidth()/ (float)Window::GetHeight(), 90, 0.1f,1000.0f), Vec3(0, 0, 0), 15, 0, 0, 15, 80, 0, 0.8f);
+      camera = new TPCamera(Mat4::ProjectionMatrix(Window::GetWidth()/ (float)Window::GetHeight(), 90, 0.1f,1000.0f), Vec3(0, 0, 0), 15, 0, 0, 0, 80, -0.8f, 0.8f);
       Skybox* skybox = new Skybox(TextureManager::Get3D("skybox"));
       renderer3d = new BatchRenderer3D();
 
@@ -130,10 +132,18 @@ class Core : public App, public KeyListener, public MouseListener
       grid = new EntityModel(gridModelMaterial, Vec3(0, -20, 0), Vec3(1.0f, 1.0f, 1.0f), Vec3(0.0f, 0.0f, 0.0f));
       delete gridMesh;
 
-      MeshData* cubeMesh = MeshFactory::Cube(0,0,0,10,10,10);
+      MeshData* cubeMesh = MeshFactory::Cube(0,0,0,1,1,1);
       MaterialModel* cubeModelMaterial = new MaterialModel(new Mesh(cubeMesh), modelMaterial);
-      cube = new EntityModel(cubeModelMaterial, Vec3(0,0,0), Vec3(1, 1, 1), Vec3(0, 0, 0));
+      cube = new EntityModel(cubeModelMaterial, Vec3(1,0,0), Vec3(1, 1, 1), Vec3(0, 0, 0));
       delete cubeMesh;
+
+      MeshData* sphereMeshData = MeshFactory::Sphere(Vec3(0,0,0), 0.5f, 20, 20);
+      //sphereMeshData->LowPolify();
+      Mesh* sphereMesh = new Mesh(sphereMeshData);
+      //sphereMesh->SetEnableWireframe(true);
+      MaterialModel* sphereModelMaterial = new MaterialModel(sphereMesh, modelMaterial);
+      sphere = new EntityModel(sphereModelMaterial, Vec3(0,0,0), Vec3(1, 1, 1), Vec3(0, 0, 0));
+      delete sphereMeshData;
 
       MeshData* tetrahedronMesh = MeshFactory::Tetrahedron(0,0,0,10);
       MaterialModel* tetrahedronModelMaterial = new MaterialModel(new Mesh(tetrahedronMesh), modelMaterial);
@@ -168,11 +178,15 @@ class Core : public App, public KeyListener, public MouseListener
       //	models.push_back(EntityModel(*modelModelMaterial, vec3(random()*100, random() * 100, random() * 100), vec3(1.0f, 1.0f, 1.0f), vec3(random() * 360, random() * 360, random() * 360)));
       //}
 
-      Light* l = new Light(Vec3(0, 0,10), 0xffffffff);
+      Light* l = new Light(Vec3(10, 10, 10), 0xffffffff);
       const Shader& modelShader = modelMaterial->GetShader();
       modelShader.Enable();
       l->SetToUniform(modelShader, "light");
       modelShader.Disable();
+      const Shader& flatShader = flatMaterial->GetShader();
+      flatShader.Enable();
+      l->SetToUniform(flatShader, "light");
+      flatShader.Disable();
 
       delete l;
 
@@ -184,8 +198,9 @@ class Core : public App, public KeyListener, public MouseListener
       renderer3d->Submit(stall);
       renderer3d->Submit(dragon);
       renderer3d->Submit(grid);
+      renderer3d->Submit(sphere);
+      renderer3d->Submit(cube);
       //renderer3d->Submit(polygon);
-      //renderer3d->Submit(cube);
       //renderer3d->Submit(tetrahedron);
       //for (uint i = 0;i < 2000;i++)
       //{
@@ -362,13 +377,17 @@ class Core : public App, public KeyListener, public MouseListener
     {
       if (e.GetButton() == GLFW_KEY_F5)
       {
-        modelMaterial->SetShader(Shader::FromFile("res/shaders/3dshader.vert", "res/shaders/3dshader.frag"));
-        terrainMaterial->SetShader(Shader::FromFile("res/shaders/terrain.vert", "res/shaders/terrain.frag"));
-        Light* l = new Light(Vec3(25, 25, 12.5), 0xffffffff);
+        modelMaterial->SetShader(Shader::FromFile("res/shaders/3dshader.shader"));
+        terrainMaterial->SetShader(Shader::FromFile("res/shaders/terrain.shader"));
+        flatMaterial->SetShader(Shader::FromFile("res/shaders/flat3d.shader"));
+        Light* l = new Light(Vec3(10, 10, 10), 0xffffffff);
 
         modelMaterial->GetShader().Enable();
         l->SetToUniform(modelMaterial->GetShader(), "light");
         modelMaterial->GetShader().Disable();
+        flatMaterial->GetShader().Enable();
+        l->SetToUniform(flatMaterial->GetShader(), "light");
+        flatMaterial->GetShader().Disable();
         //terrainShader->enable();
         //l->setToUniform(terrainShader, "light");
         //terrainShader->disable();
