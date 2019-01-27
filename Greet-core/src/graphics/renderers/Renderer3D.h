@@ -2,7 +2,6 @@
 
 #include <math/Maths.h>
 #include <graphics/models/EntityModel.h>
-#include <graphics/renderers/Renderer.h>
 #include <internal/GreetGL.h>
 #include <graphics/models/Camera.h>
 #include <graphics/Skybox.h>
@@ -11,7 +10,7 @@
 
 namespace Greet{
 
-  class Renderer3D : public Renderer
+  class Renderer3D
   {
 
     protected:

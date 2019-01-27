@@ -60,6 +60,7 @@ namespace Greet {
     m_lastIndex = 0;
   }
 
+#if 0
   void BatchRenderer::Submit(const RenderablePoly* renderable)
   {
     const uint color = renderable->GetColor();
@@ -67,6 +68,7 @@ namespace Greet {
     const uint vertexCount = renderable->GetVertexCount();
     Draw(renderable->GetPosition(),vertices, vertexCount, color);
   }
+#endif
 
   void BatchRenderer::Submit(const Renderable2D* renderable)
   {

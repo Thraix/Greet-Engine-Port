@@ -42,17 +42,19 @@ namespace Greet {
       virtual ~BatchRenderer();
       void Begin() override;
       void Submit(const Renderable2D* renderable) override;
-      void Submit(const RenderablePoly* renderable) override;
-      void Submit(const Transform& transform, uint texID, Vec2 texPos, Vec2 texSize, uint color, uint maskTexId, const Vec2& maskTexPos, const Vec2& maskTexSize) override;
-      void Submit(const Vec2& position, const Vec2& size, uint texID, Vec2 texPos, Vec2 texSize, uint color, uint maskTexId, const Vec2& maskTexPos, const Vec2& maskTexSize) override;
+#if 0
+      void Submit(const RenderablePoly* renderable);
+#endif
+      void Submit(const Transform& transform, uint texID, Vec2 texPos, Vec2 texSize, uint color, uint maskTexId, const Vec2& maskTexPos, const Vec2& maskTexSize);
+      void Submit(const Vec2& position, const Vec2& size, uint texID, Vec2 texPos, Vec2 texSize, uint color, uint maskTexId, const Vec2& maskTexPos, const Vec2& maskTexSize);
       void Submit(const Vec2& position, const Vec2& size, uint texID, Vec2 texPos, Vec2 texSize, uint color);
-      void SubmitString(const std::string& text, const Vec2& position, Font* font, const uint& color, float scale=1.0) override;
+      void SubmitString(const std::string& text, const Vec2& position, Font* font, const uint& color, float scale=1.0);
       inline void Draw(const Transform& transform, const Vec2& texPos, const Vec2& texSize, const uint textureSlot, const uint& color, const uint& maskTexSlot, const Vec2& maskTexPos, const Vec2& maskTexSize);
       inline void Draw(const Vec2& position, const Vec2& size, const Vec2& texPos, const Vec2& texSize, const uint textureSlot, const uint color, const uint& maskTexSlot, const Vec2& maskTexPos, const Vec2& maskTexSize);
       inline void Draw(const Vec2& position, const Vec2* vertices, const uint amount, const uint color);
-      inline void DrawRect(const Vec2& position, const Vec2& size, const uint& color) override;
-      inline void FillRect(const Vec2& position, const Vec2& size, const uint& color) override;
-      inline void FillRect(const Vec2& position, const Vec2& size, const uint& color, const Sprite* mask) override;
+      inline void DrawRect(const Vec2& position, const Vec2& size, const uint& color);
+      inline void FillRect(const Vec2& position, const Vec2& size, const uint& color);
+      inline void FillRect(const Vec2& position, const Vec2& size, const uint& color, const Sprite* mask);
       inline void AppendVertexBuffer(const Vec2& position, const Vec2& texCoord, const uint& texID, const uint& color, const uint& maskTexId, const Vec2& maskTexCoord);
       uint GetTextureSlot(const GLuint texID);
       void End() override;

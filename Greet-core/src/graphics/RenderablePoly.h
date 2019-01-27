@@ -1,4 +1,5 @@
 #pragma once
+#if 0
 
 #include "Renderable.h"
 
@@ -54,3 +55,4 @@ namespace Greet {
       inline const uint GetVertexCount() const { return m_vertexCount; }
   };
 }
+#endif

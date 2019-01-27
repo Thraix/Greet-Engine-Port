@@ -1,6 +1,5 @@
 #include <Greet.h>
 
-#include <graphics/renderers/GUIRenderer.h>
 #include <random>
 
 #include "Grid.h"

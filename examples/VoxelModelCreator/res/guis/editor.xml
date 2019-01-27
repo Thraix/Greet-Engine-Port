@@ -49,11 +49,11 @@
     <Label width="wrap_content" height="fill_parent" fontSize="12" font="roboto" color="#90a4ae">Cube Color: </Label>
 
     <ColorPicker
-      width="60" height="30" name="backgroundChanger"
-      backgroundColor="#455a64"
+      width="60" height="20" name="backgroundChanger"
+      backgroundColor="#ffffff"
       borderColor="#455a64" 
-      border="2"
-      radius="2"
+      border="1"
+      radius="1"
       borderRadius="4"
       />
   </Container>

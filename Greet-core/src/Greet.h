@@ -62,10 +62,8 @@
 #include <logging/Logger.h>
 #include <logging/LogStream.h>
 #include <logging/Log.h>
-#include <graphics/RenderablePoly.h>
 #include <graphics/renderers/BatchRenderer.h>
 #include <graphics/renderers/GUIRenderer.h>
-#include <graphics/renderers/Renderer.h>
 #include <graphics/renderers/Renderer2D.h>
 #include <graphics/renderers/Renderer3D.h>
 #include <graphics/renderers/BatchRenderer3D.h>
