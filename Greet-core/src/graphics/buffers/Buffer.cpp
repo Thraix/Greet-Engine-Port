@@ -26,6 +26,17 @@ namespace Greet {
     GLCall(glBufferData((uint)type, dataSize, data, (uint)drawType));
   }
 
+  void* Buffer::MapBuffer()
+  {
+    GLCall(void* buffer = glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY));
+    return buffer;
+  }
+
+  void Buffer::UnmapBuffer()
+  {
+    GLCall(glUnmapBuffer(GL_ARRAY_BUFFER));
+  }
+
   void Buffer::Disable() const
   {
     GLCall(glBindBuffer((uint)type, 0));
