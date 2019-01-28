@@ -26,7 +26,7 @@ namespace Greet {
     GLCall(glFrontFace(GL_CCW));
     m_shader.Enable();
     m_shader.SetUniformMat4("projectionMatrix", camera.GetProjectionMatrix());
-    m_shader.SetUniformMat4("viewMatrix", Mat4::ViewMatrix(Vec3(0, 0, 0), camera.GetRotationVector()));
+    m_shader.SetUniformMat4("viewMatrix", camera.GetViewMatrix());
     m_map.Enable();
     m_mesh->Bind();
     m_mesh->Render();

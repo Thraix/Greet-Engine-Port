@@ -11,16 +11,19 @@ class Core : public App, public KeyListener, public MouseListener
 {
   private:
     BatchRenderer3D* renderer3d;
+    BatchRenderer3D* waterRenderer;
     Material* modelMaterial;
     Material* flatMaterial;
     Material* terrainMaterial;
+    Material* waterMaterial;
     Material* stallMaterial;
     KeyboardControl* movement;
     KeyboardControl* rotation;
 
     EntityModel* stall;
     EntityModel* dragon;
-    EntityModel* grid;
+    EntityModel* terrain;
+    EntityModel* water;
     EntityModel* polygon;
     EntityModel* cube;
     EntityModel* sphere;
@@ -53,11 +56,13 @@ class Core : public App, public KeyListener, public MouseListener
       delete modelMaterial;
       delete stall;
       delete dragon;
-      delete grid;
+      delete terrain;
+      delete water;
       delete cube;
       delete sphere;
       delete tetrahedron;
       delete renderer3d;
+      delete waterRenderer;
       delete uilayer;
       delete movement;
       delete rotation;
@@ -106,31 +111,44 @@ class Core : public App, public KeyListener, public MouseListener
       camera = new TPCamera(Mat4::ProjectionMatrix(Window::GetWidth()/ (float)Window::GetHeight(), 90, 0.1f,1000.0f), Vec3(0, 0, 0), 15, 0, 0, 0, 80, -0.8f, 0.8f);
       Skybox* skybox = new Skybox(TextureManager::Get3D("skybox"));
       renderer3d = new BatchRenderer3D();
+      waterRenderer = new BatchRenderer3D();
 
 
       modelMaterial = new Material(Shader::FromFile("res/shaders/3dshader.shader"));
       flatMaterial = new Material(Shader::FromFile("res/shaders/flat3d.shader"));
       stallMaterial = new Material(Shader::FromFile("res/shaders/3dshader.shader"), TextureManager::Get2D("stall"));
-      terrainMaterial = new Material(Shader::FromFile("res/shaders/terrain.shader"));
-      terrainMaterial->SetReflectivity(0.5f);
-      terrainMaterial->SetShineDamper(5.0f);
-      uint gridWidth = 99;
-      uint gridLength = 99;
-      float* noise = Noise::GenNoise(gridWidth+1, gridWidth + 1,5,8, 8,0.5f);
-      //noise[0] = 10;
-      MeshData* gridMesh = MeshFactory::LowPolyGrid(0, 0, 0, gridWidth+1, gridLength+1, gridWidth, gridLength, noise,1);
-      RecalcGrid(gridMesh, gridWidth, gridLength);
+      {
+        terrainMaterial = new Material(Shader::FromFile("res/shaders/terrain.shader"));
+        waterMaterial = new Material(Shader::FromFile("res/shaders/water.shader"));
+        waterMaterial->SetShineDamper(0.002);
+        waterMaterial->SetReflectivity(0.3);
+        waterMaterial->GetShader().Enable();
+        waterMaterial->GetShader().SetUniform1f("waterLevel",0.45f * 20.0f);
+        waterMaterial->GetShader().Disable();
+
+        terrainMaterial->SetReflectivity(0.5f);
+        terrainMaterial->SetShineDamper(5.0f);
+
+        uint gridWidth = 99;
+        uint gridLength = 99;
+        float* noise = Noise::GenNoise(gridWidth+1, gridWidth + 1,5,8, 8,0.5f);
+        MeshData* gridMesh = MeshFactory::LowPolyGrid(0, 0, 0, gridWidth+1, gridLength+1, gridWidth, gridLength, noise,1);
+        RecalcGrid(gridMesh, gridWidth, gridLength);
+        MaterialModel* terrainModelMaterial = new MaterialModel(new Mesh(gridMesh), terrainMaterial);
+        terrain = new EntityModel(terrainModelMaterial, Vec3(0, -15, 0), Vec3(1.0f, 1.0f, 1.0f), Vec3(0.0f, 0.0f, 0.0f));
+        gridMesh->RemoveAttribute(ATTRIBUTE_NORMAL);
+        gridMesh->RemoveAttribute(ATTRIBUTE_COLOR);
+        CalcGridVertexOffset(gridMesh);
+
+        MaterialModel* waterModelMaterial = new MaterialModel(new Mesh(gridMesh), waterMaterial);
+        water = new EntityModel(waterModelMaterial, Vec3(0, -15, 0), Vec3(1.0f, 1.0f, 1.0f), Vec3(0.0f, 0.0f, 0.0f));
+        delete gridMesh;
+      }
 
       MeshData* polygonMesh = MeshFactory::Polygon(6, 10, MeshFactory::PolygonSizeFormat::SIDE_LENGTH);
-      MaterialModel* polygonModel = new MaterialModel(new Mesh(polygonMesh), terrainMaterial);
-      polygon = new EntityModel(polygonModel, Vec3(0,1,0), Vec3(1,1,1), Vec3(0,0,0));
+      MaterialModel* terrainModel = new MaterialModel(new Mesh(polygonMesh), terrainMaterial);
+      polygon = new EntityModel(terrainModel, Vec3(0,1,0), Vec3(1,1,1), Vec3(0,0,0));
 
-
-      //gridMesh->setDefaultAttribute4f(MESH_COLORS_LOCATION, vec4(1.0f, 0.0f, 0.0f, 1.0f));
-      //gridMesh->setEnableCulling(false);
-      MaterialModel* gridModelMaterial = new MaterialModel(new Mesh(gridMesh), terrainMaterial);
-      grid = new EntityModel(gridModelMaterial, Vec3(0, -20, 0), Vec3(1.0f, 1.0f, 1.0f), Vec3(0.0f, 0.0f, 0.0f));
-      delete gridMesh;
 
       MeshData* cubeMesh = MeshFactory::Cube(0,0,0,1,1,1);
       MaterialModel* cubeModelMaterial = new MaterialModel(new Mesh(cubeMesh), modelMaterial);
@@ -195,11 +213,12 @@ class Core : public App, public KeyListener, public MouseListener
       cursor = new Renderable2D(Vec2(0,0),Vec2(32,32),0xffffffff, new Sprite(TextureManager::Get2D("cursor")), new Sprite(TextureManager::Get2D("mask")));
       uilayer->Add(cursor);
 
-      renderer3d->Submit(stall);
+      //renderer3d->Submit(stall);
       renderer3d->Submit(dragon);
-      renderer3d->Submit(grid);
+      renderer3d->Submit(terrain);
       renderer3d->Submit(sphere);
       renderer3d->Submit(cube);
+      waterRenderer->Submit(water);
       //renderer3d->Submit(polygon);
       //renderer3d->Submit(tetrahedron);
       //for (uint i = 0;i < 2000;i++)
@@ -214,8 +233,8 @@ class Core : public App, public KeyListener, public MouseListener
       RenderEngine::Add2DScene(uilayer, "uilayer");
       layer3d = new Layer3D(camera, skybox);
       layer3d->AddRenderer(renderer3d);
+      layer3d->AddRenderer(waterRenderer);
       RenderEngine::Add3DScene(layer3d, "3dWorld");
-      Log::Info(ColorUtils::HexToVec4(0xffaa0077));
     }
 
     void RecalcPositions(Vec3* vertex)
@@ -223,7 +242,7 @@ class Core : public App, public KeyListener, public MouseListener
       float y = vertex->y;
       if (y < 0.45)
       {
-        y = 0.45f + Noise::PRNG(vertex->x, vertex->z)*0.01f;// + 0.03f*(rand() / (float)RAND_MAX - 0.5f);
+        //y = 0.45f + Noise::PRNG(vertex->x, vertex->z)*0.01f;// + 0.03f*(rand() / (float)RAND_MAX - 0.5f);
       }
       else if (y < 0.48)
       {
@@ -241,7 +260,7 @@ class Core : public App, public KeyListener, public MouseListener
       {
         y = (pow(y - 0.58, 0.6) + 0.58);
       }
-      vertex->y = y * 20;
+      vertex->y = y * 20.0;
     }
 
     void RecalcColors(const Vec3& v1, const Vec3& v2, const Vec3& v3, uint* color)
@@ -252,6 +271,7 @@ class Core : public App, public KeyListener, public MouseListener
         uint blue = (uint)(pow(1, 4.0f) * 255);
         blue = blue > 255 ? 255 : blue;
         *color = 0xff000000 | ((blue / 2) << 16) | ((uint)(blue * 0.9) << 8) | blue;
+        *color = 0xffF0E5A5;
       }
       else if (y < 0.48)
       {
@@ -269,6 +289,26 @@ class Core : public App, public KeyListener, public MouseListener
       {
         *color = 0xffDCF2F2;
       }
+    }
+
+    void CalcGridVertexOffset(MeshData* data)
+    {
+      Vec3* vertices = data->GetVertices();
+      uint vertexCount = data->GetVertexCount();
+      uint indexCount = data->GetIndexCount();
+      uint* indices = data->GetIndices();
+
+      byte* offsets = new byte[4 * vertexCount];
+      for (int i = 0;i < indexCount;i+=3)
+      {
+        Vec3 v1 = vertices[indices[i+1]] - vertices[indices[i]];
+        Vec3 v2 = vertices[indices[i+2]] - vertices[indices[i]];
+        offsets[indices[i]*4] = round(v1.x);
+        offsets[indices[i]*4 + 1] = round(v1.z);
+        offsets[indices[i]*4 + 2] = round(v2.x);
+        offsets[indices[i]*4 + 3] = round(v2.z);
+      }
+      data->AddAttribute(new AttributeData<byte>(AttributeDefaults(4, 4, 4 * sizeof(byte), GL_BYTE,GL_FALSE), offsets));
     }
 
     void RecalcGrid(MeshData* data, uint gridWidth, uint gridLength)
@@ -311,9 +351,17 @@ class Core : public App, public KeyListener, public MouseListener
     float hue = 0;
     Vec3 velocityPos;
     Vec3 velocityNeg;
+    float waterTime = 0.0;
 
     void Update(float elapsedTime) override
     {
+      waterTime += elapsedTime;
+      waterMaterial->GetShader().Enable();
+      waterMaterial->GetShader().SetUniform1f("time", waterTime);
+      waterMaterial->GetShader().Disable();
+
+      //sphere->SetPosition(camera->GetPosition());
+
       progressFloat++;
       if (progressFloat > 1000)
         progressFloat = 0;
@@ -444,7 +492,6 @@ class Core : public App, public KeyListener, public MouseListener
 
     bool OnPressed(const MousePressedEvent& e)  override
     {
-      Log::Info(e.GetButton());
       return false;
     }
 

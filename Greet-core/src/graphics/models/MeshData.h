@@ -70,6 +70,7 @@ namespace Greet {
       virtual ~MeshData();
       void AddAttribute(AttributeDataBase* data);
       AttributeDataBase* GetAttribute(AttributeDefaults defaults) const;
+      AttributeDataBase* RemoveAttribute(AttributeDefaults defaults);
 
       Vec3* GetVertices() const { return m_vertices; }
       uint* GetIndices() const { return m_indices; }

@@ -55,11 +55,6 @@ namespace Greet {
     CalculateInformation();
   }
 
-  const Vec3& TPCamera::GetRotationVector() const
-  { 
-    return m_rotationVector;
-  }
-
   const Mat4& TPCamera::GetViewMatrix() const
   { 
     return m_viewMatrix;
@@ -140,12 +135,6 @@ namespace Greet {
     }
   }
 
-  void TPCamera::CalculateRotationVector()
-  {
-    m_rotationVector.x = Math::ToDegrees(asin(m_height));
-    m_rotationVector.y = m_rotation;
-  }
-
   void TPCamera::CalculateViewMatrix()
   {
     m_viewMatrix = Mat4::TPCamera(m_position, m_distance, m_height, m_rotation);
@@ -153,7 +142,6 @@ namespace Greet {
 
   void TPCamera::CalculateInformation()
   {
-    CalculateRotationVector();
     CalculateViewMatrix();
   }
 
