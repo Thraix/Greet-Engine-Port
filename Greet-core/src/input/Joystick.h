@@ -14,7 +14,6 @@ namespace Greet {
 
   class Joystick
   {
-
     public:
       friend class Window;
 
@@ -22,15 +21,18 @@ namespace Greet {
       bool m_connected = false;
       bool m_wasConnected = false;
 
-      //STORES THE JOYSTICK NUMBER
+      // Joystick number
       const int m_jsNum;
-      const float* axes;
+
+      // Axis Data
       int axisCount; 
+      const float* axis;
+      float* previousAxis;
+
+      // Button data
+      int buttonCount; 
       unsigned char* previousButtons;
       const unsigned char* buttons;
-      int buttonCount; 
-
-
 
     private:
       Joystick(uint jsNum, float m_calibrateLeft, float m_calibrateRight);

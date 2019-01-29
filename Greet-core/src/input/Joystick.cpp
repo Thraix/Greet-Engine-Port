@@ -11,12 +11,12 @@ namespace Greet {
   {
     m_connected = false;
     m_wasConnected = false;
-    previousButtons = NULL;
+    previousButtons = nullptr;
   }
 
   Joystick::~Joystick()
   {
-    if(previousButtons != NULL)
+    if(previousButtons != nullptr)
       delete[] previousButtons;
   }
 
@@ -24,21 +24,25 @@ namespace Greet {
   {
     if(connected)
     {
-      axes = glfwGetJoystickAxes(m_jsNum, &axisCount);
+      axis = glfwGetJoystickAxes(m_jsNum, &axisCount);
       buttons = glfwGetJoystickButtons(m_jsNum, &buttonCount);
       previousButtons = new unsigned char[buttonCount];
+      previousAxis = new float[axisCount];
       memcpy(previousButtons,buttons,buttonCount);
+      memcpy(previousAxis,axis,axisCount);
       m_connected = true;
       m_wasConnected = true;
-      Log::Info("Connected Joystick (axes=",axisCount,", buttons=",buttonCount);
     }
     else
     {
-      axes = NULL;
-      buttons = NULL;
-      if(previousButtons != NULL)
+      axis = nullptr;
+      buttons = nullptr;
+      if(previousButtons != nullptr)
         delete[] previousButtons;
-      previousButtons = NULL;
+      if(previousAxis != nullptr)
+        delete[] previousButtons;
+      previousButtons = nullptr;
+      previousAxis = nullptr;
       m_connected = false;
       m_wasConnected = false;
     }
@@ -49,23 +53,37 @@ namespace Greet {
     m_wasConnected = m_connected;
     if (m_connected)
     {
-      axes = glfwGetJoystickAxes(m_jsNum,&axisCount);
-      if(axisCount == 0)
+      int oldAxisCount = axisCount;
+      axis = glfwGetJoystickAxes(m_jsNum,&axisCount);
+      if(axisCount != oldAxisCount)
       {
-        SetState(false);
-        return;
+        Log::Warning("Joystick axis count changed");
+        if(axisCount == 0)
+        {
+          SetState(false);
+          return;
+        }
+        else
+        {
+          delete[] previousAxis;
+          previousAxis = new float[axisCount];
+        }
       }
 
       for (int i = 0; i < axisCount;i++)
       {
-        EventDispatcher::OnEvent(JoystickTriggerMoveEvent{m_jsNum, i, axes[i], 0});
+        if(axis[i] != previousAxis[i])
+        {
+          EventDispatcher::OnEvent(JoystickTriggerMoveEvent{m_jsNum, i, axis[i], axis[i] - previousAxis[i]});
+          previousAxis[i] = axis[i];
+        }
       }
 
       int count;
       buttons = glfwGetJoystickButtons(m_jsNum,&count);
       if(buttonCount != count)
       {
-        Log::Warning("wrong buttonCount");
+        Log::Warning("Button count changed");
         if(count == 0)
         {
           SetState(false);
