@@ -46,12 +46,12 @@ namespace Greet
       TextBox& SetHintFont(const std::string& fontName);
       TextBox& SetHintFontSize(float fontSize);
 
-      virtual void MousePressed(const MousePressedEvent& event, const Vec2& translatedPos) override;
+      virtual void MousePressed(MousePressEvent& event, const Vec2& translatedPos) override;
       //virtual void MouseReleased(const MouseReleasedEvent& event, const Vec2& translatedPos);
       //  virtual void MouseMoved(const MouseMovedEvent& event, const Vec2& translatedPos);
-      virtual void KeyPressed(const KeyPressedEvent& event) override;
-      virtual void KeyReleased(const KeyReleasedEvent& event) override;
-      virtual void KeyTyped(const KeyTypedEvent& event) override;
+      virtual void KeyPressed(KeyPressEvent& event) override;
+      virtual void KeyReleased(KeyReleaseEvent& event) override;
+      virtual void KeyTyped(KeyTypeEvent& event) override;
 
       void SetOnTextChangedCallback(OnTextChangedCallback callback);
 

@@ -5,6 +5,7 @@
 #include <utils/UUID.h>
 #include <functional>
 #include <cstdlib>
+#include <graphics/gui/Container.h>
 
 
 namespace Greet
@@ -82,7 +83,7 @@ namespace Greet
 
   void Component::MeasureFill()
   {
-    MeasureFill(GLayer::GetWidth(), GLayer::GetHeight(), 1, true);
+    MeasureFill(guiScene->GetWidth(), guiScene->GetHeight(), 1, true);
   }
 
   void Component::MeasureFill(float parentEmptyWidth, float parentEmptyHeight, float parentTotalWeight, bool vertical)
@@ -168,19 +169,20 @@ namespace Greet
     Update(timeElapsed);
   }
 
-  void Component::OnMousePressed(const MousePressedEvent& event, const Vec2& translatedPos)
+  void Component::OnMousePressed(MousePressEvent& event, const Vec2& translatedPos)
   {
     if(m_isFocusable)
     {
       if(!isFocused)
       {
-        GLayer::RequestFocus(this);
+        guiScene->RequestFocus(this);
+        event.flags |= EVENT_FOCUSED | EVENT_HANDLED;
       }
       MousePressed(event,translatedPos);
     }
   }
 
-  void Component::OnMouseMoved(const MouseMovedEvent& event, const Vec2& translatedPos)
+  void Component::OnMouseMoved(MouseMoveEvent& event, const Vec2& translatedPos)
   {
     if(m_isFocusable)
     {
@@ -233,7 +235,7 @@ namespace Greet
       onReleaseCallback(this);
   }
 
-  void Component::MousePressed(const MousePressedEvent& event, const Vec2& translatedPos)
+  void Component::MousePressed(MousePressEvent& event, const Vec2& translatedPos)
   {
     if(event.GetButton() == GLFW_MOUSE_BUTTON_1)
     {
@@ -242,7 +244,7 @@ namespace Greet
     }
   }
 
-  void Component::MouseReleased(const MouseReleasedEvent& event, const Vec2& translatedPos)
+  void Component::MouseReleased(MouseReleaseEvent& event, const Vec2& translatedPos)
   {
     if(event.GetButton() == GLFW_MOUSE_BUTTON_1)
     {
@@ -360,6 +362,11 @@ namespace Greet
     if(remeasure)
       Remeasure();
     return *this;
+  }
+
+  void Component::SetGUIScene(GUIScene* scene)
+  {
+    guiScene = scene;
   }
 
   const Style& Component::GetNormalStyle() const

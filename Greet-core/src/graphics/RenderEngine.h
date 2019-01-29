@@ -2,7 +2,7 @@
 
 #include <map>
 #include <graphics/layers/Scene.h>
-#include <event/InputControl.h>
+#include <event/Event.h>
 
 namespace Greet {
   class RenderEngine
@@ -23,11 +23,6 @@ namespace Greet {
       static Scene* Get3DScene(const std::string& name);
       static void Render();
       static void Update(float timeElapsed);
-      static void InputChanged(const InputControl* control);
-      static void WindowFocus(bool focus);
-      static void WindowResize(int width, int height);
-
-
-
+      static void OnEvent(Event& event);
   };
 }

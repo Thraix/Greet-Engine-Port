@@ -1,7 +1,8 @@
 #include "Joystick.h"
 
 #include <logging/Log.h>
-#include <event/InputController.h>
+#include <event/JoystickEvent.h>
+#include <event/EventDispatcher.h>
 #include <cstring>
 
 namespace Greet {
@@ -57,14 +58,14 @@ namespace Greet {
 
       for (int i = 0; i < axisCount;i++)
       {
-        InputController::GamepadAxis(i,axes[i]);
+        EventDispatcher::OnEvent(JoystickTriggerMoveEvent{m_jsNum, i, axes[i], 0});
       }
 
       int count;
       buttons = glfwGetJoystickButtons(m_jsNum,&count);
       if(buttonCount != count)
       {
-        Log::Info("wrong buttonCount");
+        Log::Warning("wrong buttonCount");
         if(count == 0)
         {
           SetState(false);
@@ -82,9 +83,11 @@ namespace Greet {
       {
         if(previousButtons[i] != buttons[i])
         {
-          Log::Info("button pressed");
-          InputController::GamepadButton(i,buttons[i] == GLFW_PRESS ? 1 : -1);
           previousButtons[i] = buttons[i];
+          if(buttons[i] == GLFW_PRESS)
+            EventDispatcher::OnEvent(JoystickPressEvent{m_jsNum, i});
+          else
+            EventDispatcher::OnEvent(JoystickReleaseEvent{m_jsNum, i});
         }
       }
     }

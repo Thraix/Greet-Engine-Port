@@ -118,7 +118,7 @@ namespace Greet
     sliderComponent->PostRender(renderer);
   }
 
-  void Slider::MousePressed(const MousePressedEvent& event, const Vec2& translatedPos)
+  void Slider::MousePressed(MousePressEvent& event, const Vec2& translatedPos)
   {
     Component::MousePressed(event,translatedPos);
     if(event.GetButton() == GLFW_MOUSE_BUTTON_1 && pressed)
@@ -134,7 +134,7 @@ namespace Greet
     }
   }
 
-  void Slider::MouseMoved(const MouseMovedEvent& event, const Vec2& translatedPos)
+  void Slider::MouseMoved(MouseMoveEvent& event, const Vec2& translatedPos)
   {
     if(pressed)
     {

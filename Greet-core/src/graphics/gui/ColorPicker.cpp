@@ -21,11 +21,11 @@ namespace Greet
     delete picker;
   }
 
-  void ColorPicker::MousePressed(const MousePressedEvent& e, const Vec2& translatedPos)
+  void ColorPicker::MousePressed(MousePressEvent& e, const Vec2& translatedPos)
   {
-    GLayer::AddFrame(picker);
+    guiScene->AddFrame(picker);
     picker->SetPosition(e.GetPosition());
-    GLayer::RequestFocus(picker);
+    guiScene->RequestFocus(picker);
   }
 
   void ColorPicker::OnColorChanged(const Vec3& previous, const Vec3& current)

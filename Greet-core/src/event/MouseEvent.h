@@ -9,68 +9,76 @@ namespace Greet {
   class MouseButtonEvent : public Event
   {
     protected:
-      Vec2 m_position;
-      uint m_button;
+      Vec2 position;
+      uint button;
     protected:
-      MouseButtonEvent(float x, float y, uint button, EventType type)
-        : Event(type),m_position(x,y),m_button(button){}
+      MouseButtonEvent(float x, float y, uint button)
+        : Event(),position(x,y),button(button)
+      {}
     public:
-      inline const float GetX() const { return m_position.x; }
-      inline const float GetY() const { return m_position.y; }
-      inline const void SetX(float x) { m_position.x = x; }
-      inline const void SetY(float y) { m_position.y = y; }
-      inline const Vec2& GetPosition() const { return m_position; }
-      inline const uint GetButton() const { return m_button; }
+      inline const float GetX() const { return position.x; }
+      inline const float GetY() const { return position.y; }
+      inline const Vec2& GetPosition() const { return position; }
+      inline const uint GetButton() const { return button; }
+
+      uint GetCategory() const {return INPUT_EVENT | MOUSE_EVENT;}
   };
 
-  class MousePressedEvent : public MouseButtonEvent
+  class MousePressEvent : public MouseButtonEvent
   {
     public:
-      MousePressedEvent(float x, float y, uint button)
-        : MouseButtonEvent(x, y, button, MOUSE_PRESSED) {}
+      MousePressEvent(float x, float y, uint button)
+        : MouseButtonEvent(x, y, button) 
+      {}
+
+      EventType GetType() const {return EventType::MOUSE_PRESS;}
   };
 
-  class MouseReleasedEvent : public MouseButtonEvent
+  class MouseReleaseEvent : public MouseButtonEvent
   {
     public:
-      MouseReleasedEvent(float x, float y, uint button)
-        : MouseButtonEvent(x, y, button, MOUSE_RELEASED) {}
+      MouseReleaseEvent(float x, float y, uint button)
+        : MouseButtonEvent(x, y, button) 
+      {}
+
+      EventType GetType() const {return EventType::MOUSE_RELEASE;}
   };
 
-  class MouseMovedEvent : public Event
+  class MouseMoveEvent : public Event
   {
     private:
-      Vec2 m_position;
-      Vec2 m_deltaPosition;
-      bool m_dragged;
+      Vec2 position;
+      Vec2 deltaPosition;
 
     public:
-      MouseMovedEvent(float x, float y, float dx, float dy, bool dragged)
-        :Event(MOUSE_MOVED),m_position(Vec2(x,y)), m_deltaPosition(Vec2(dx,dy)),m_dragged(dragged){}
-    public:
-      inline const float GetX() const { return m_position.x; }
-      inline const float GetY() const { return m_position.y; }
-      inline const float GetDX() const { return m_deltaPosition.x; }
-      inline const float GetDY() const { return m_deltaPosition.y; }
-      inline const void SetX(float x) { m_position.x = x; }
-      inline const void SetY(float y) { m_position.y = y; }
-      inline const Vec2& GetPosition() const { return m_position; }
-      inline const Vec2& GetDeltaPosition() const { return m_deltaPosition; }
-      inline const bool IsDragged() const { return m_dragged; }
+      MouseMoveEvent(float x, float y, float dx, float dy)
+        : position(Vec2(x,y)), deltaPosition(Vec2(dx,dy))
+      {}
+
+      inline const float GetX() const { return position.x; }
+      inline const float GetY() const { return position.y; }
+      inline const float GetDX() const { return deltaPosition.x; }
+      inline const float GetDY() const { return deltaPosition.y; }
+      inline const Vec2& GetPosition() const { return position; }
+      inline const Vec2& GetDeltaPosition() const { return deltaPosition; }
+      EventType GetType() const {return EventType::MOUSE_MOVE;}
+      uint GetCategory() const {return INPUT_EVENT | MOUSE_EVENT;}
   };
 
   class MouseScrollEvent : public Event
   {
     private:
-      int m_scroll;
-      int m_scrollDirection;
+      float scrollVertical;
+      float scrollHorizontal;
     public:
-      MouseScrollEvent(int scroll)
-        //															Calculate the direction, keeping in mind div by 0
-        :Event(MOUSE_SCROLLED), m_scroll(scroll), m_scrollDirection(scroll / (scroll < 0 ? -scroll : (scroll == 0 ? 1 : scroll))) {}
+      MouseScrollEvent(float scrollVertical, float scrollHorizontal)
+        : scrollVertical{scrollVertical}, scrollHorizontal{scrollHorizontal}
+      {}
 
-      inline const int GetScroll() const { return m_scroll; };
-      inline const int GetDirection() const { return m_scrollDirection; }
+      inline const int GetScrollHorizontal() const { return scrollHorizontal; }
+      inline const int GetScrollVertical() const { return scrollVertical; }
+      uint GetCategory() const {return INPUT_EVENT | MOUSE_EVENT;}
+      EventType GetType() const {return EventType::MOUSE_SCROLL;}
 
   };
 }

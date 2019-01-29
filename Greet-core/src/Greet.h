@@ -51,13 +51,8 @@
 #include <input/Joystick.h>
 #include <event/KeyEvent.h>
 #include <event/EventDispatcher.h>
-#include <event/InputControl.h>
-#include <event/InputControlListener.h>
 #include <event/MouseEvent.h>
 #include <event/Event.h>
-#include <event/KeyListener.h>
-#include <event/InputController.h>
-#include <event/MouseListener.h>
 #include <logging/LogLevel.h>
 #include <logging/Logger.h>
 #include <logging/LogStream.h>

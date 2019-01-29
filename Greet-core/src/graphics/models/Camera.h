@@ -1,9 +1,7 @@
 #pragma once
 
 #include <math/Maths.h>
-#include <event/InputControlListener.h>
-//#include <graphics/models/EntityModel.h>
-//#include <graphics/renderers/Renderer3D.h>
+#include <event/Event.h>
 
 namespace Greet {
   class Camera {
@@ -21,7 +19,7 @@ namespace Greet {
         Camera::projectionMatrix = projectionMatrix;
       }
       virtual void Update(float timeElapsed) {};
-      virtual InputControlRequest OnInputChanged(const InputControl* control) = 0;
+      virtual void OnEvent(Event& event) = 0;
   };
 
 

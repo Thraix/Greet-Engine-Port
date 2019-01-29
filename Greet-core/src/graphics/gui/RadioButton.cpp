@@ -15,7 +15,6 @@ namespace Greet
 
   void RadioButton::PostConstruction()
   {
-    Log::Info("test");
     radioParent = FindRadioGroupParent();
     if(!radioParent)
       Log::Warning("RadioButton is not inside a RadioGroup");

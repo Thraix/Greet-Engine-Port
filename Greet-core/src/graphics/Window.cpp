@@ -5,9 +5,11 @@
 #include <graphics/atlas/AtlasManager.h>
 #include <internal/GreetGL.h>
 #include <event/EventDispatcher.h>
-#include <event/InputController.h>
 #include <graphics/RenderEngine.h>
 #include <graphics/gui/ComponentFactory.h>
+#include <event/WindowEvent.h>
+#include <event/KeyEvent.h>
+#include <event/MouseEvent.h>
 
 namespace Greet {
 
@@ -77,6 +79,7 @@ namespace Greet {
     glfwSetWindowFocusCallback(window,window_focus_callback);
     glfwSetScrollCallback(window, mouse_scroll_callback);
     glfwSetCharCallback(window, key_char_callback);
+    glfwSetWindowPosCallback(window, window_position_callback);
     glfwSetJoystickCallback(joystick_callback);
 
     glfwSwapInterval(0);
@@ -175,7 +178,7 @@ namespace Greet {
     glViewport(0, 0, width, height);
     Window::width = width;
     Window::height = height;
-    RenderEngine::WindowResize(width,height);
+    EventDispatcher::OnEvent(WindowResizeEvent{width,height});
     for (uint i = 0;i < Window::windowResize.size();i++)
       windowResize[i]->WindowResize(width,height);
   }
@@ -183,71 +186,66 @@ namespace Greet {
   void Window::key_callback(GLFWwindow *window, int key, int scancode, int action, int mods)
   {
     if (action == GLFW_RELEASE)
-    {
-      InputController::KeyButton(key, -1);
-      EventDispatcher::OnKeyReleased(KeyReleasedEvent(key));
-    }
+      EventDispatcher::OnEvent(KeyReleaseEvent(key));
     else if(action == GLFW_PRESS)
-    {
-      InputController::KeyButton(key, 1);
-      EventDispatcher::OnKeyPressed(KeyPressedEvent(key));
-    }
+      EventDispatcher::OnEvent(KeyPressEvent(key,0));
     else if(action == GLFW_REPEAT)
-      EventDispatcher::OnKeyPressed(KeyPressedEvent(key));
+      EventDispatcher::OnEvent(KeyPressEvent(key,1));
   }
 
   void Window::mouse_button_callback(GLFWwindow *window, int button, int action, int mods)
   {
     mouseButtonDown[button] = action == GLFW_PRESS;
     if (action == GLFW_RELEASE)
-    {
-      EventDispatcher::OnMouseReleased(MouseReleasedEvent(mousePosPixel.x,mousePosPixel.y,button));
-      InputController::MouseButton(button,-1);
-    }
+      EventDispatcher::OnEvent(MouseReleaseEvent(mousePosPixel.x,mousePosPixel.y,button));
     else if (action == GLFW_PRESS)
-    {
-      EventDispatcher::OnMousePressed(MousePressedEvent(mousePosPixel.x, mousePosPixel.y, button));
-      InputController::MouseButton(button,1);
-    }
+      EventDispatcher::OnEvent(MousePressEvent(mousePosPixel.x, mousePosPixel.y, button));
     isMouseButtonDown = mouseButtonDown[button];
     if(!isMouseButtonDown)
+    {
       for (uint i = 0;i < MAX_MOUSEBUTTONS;i++)
+      {
         if (mouseButtonDown[i])
         {
-          Log::Info(i);
           isMouseButtonDown = true;
         }
+      }
+    }
   }
 
   void Window::mouse_position_callback(GLFWwindow* window, double xpos, double ypos)
   {
-    EventDispatcher::OnMouseMoved(MouseMovedEvent(xpos, ypos, xpos - mousePosPixel.x, ypos - mousePosPixel.y, isMouseButtonDown));
+    EventDispatcher::OnEvent(MouseMoveEvent{(float)xpos, (float)ypos, (float)(xpos - mousePosPixel.x), (float)(ypos - mousePosPixel.y)});
     Vec2 mousePosDelta = mousePos;
     mousePos = Vec2(xpos / width, 1.0f - (ypos / height))*2.0f - 1.0f;
     mousePosPixel = Vec2(xpos, ypos);
-    InputController::MouseMotion(0, mousePos.x);
-    InputController::MouseMotion(1, mousePos.y);
   }
 
   void Window::mouse_scroll_callback(GLFWwindow* window, double scrollX, double scrollY)
   {
-
-    EventDispatcher::OnMouseScrolled(MouseScrollEvent(scrollY));
-    InputController::MouseWheel(0,scrollY);
-    InputController::MouseWheel(1,scrollX);
+    EventDispatcher::OnEvent(MouseScrollEvent{(float)scrollX, (float)scrollY});
   }
 
   void Window::key_char_callback(GLFWwindow* window, uint charCode)
   {
-    EventDispatcher::OnKeyTyped(KeyTypedEvent(charCode));
+    EventDispatcher::OnEvent(KeyTypeEvent{charCode});
+  }
+
+  void Window::window_position_callback(GLFWwindow* window, int x, int y)
+  {
+    static int xLast = x, yLast = y;
+    EventDispatcher::OnEvent(WindowMoveEvent{x,y, xLast, yLast});
+    xLast = x;
+    yLast = y;
   }
 
   void Window::window_focus_callback(GLFWwindow* window,int state)
   {
     focus = state == GL_TRUE;
-    RenderEngine::WindowFocus(focus);
-    for (uint i = 0;i < windowFocus.size();i++)
-      windowFocus[i]->WindowFocus(focus);
+    if(focus)
+      EventDispatcher::OnEvent(WindowFocusEvent{});
+    else
+      EventDispatcher::OnEvent(WindowUnfocusEvent{});
   }
 
   void Window::joystick_callback(int joy, int event)

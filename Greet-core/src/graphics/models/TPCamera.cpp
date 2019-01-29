@@ -1,6 +1,8 @@
 #include "TPCamera.h"
 
 #include <graphics/Window.h>
+#include <event/MouseEvent.h>
+#include <internal/GreetGL.h>
 
 namespace Greet {
 
@@ -31,13 +33,6 @@ namespace Greet {
     SetDistanceClamp(distanceMin, distanceMax);
     SetHeightClamp(heightMin, heightMax);
     CalculateInformation();
-
-    // Default input controls
-    inputCameraRotate = "mouseMiddle";
-    inputCameraZoom = "mouseScroll";
-    inputCameraXZ = "mouseLeft";
-    inputCameraY = "mouseRight";
-    inputCameraMove = "mousePos";
   }
 
   TPCamera::~TPCamera()
@@ -180,56 +175,42 @@ namespace Greet {
     m_distanceWanted -= delta;
     Math::Clamp(&m_distanceWanted, m_distanceMin, m_distanceMax);
   }
-  void TPCamera::SetInputRotation(const std::string& inputName)
-  {
-    inputCameraRotate = inputName;
-  }
-
-  void TPCamera::SetInputZoom(const std::string& inputName)
-  {
-    inputCameraZoom= inputName;
-  }
-
-  void TPCamera::SetInputXZ(const std::string& inputName)
-  {
-    inputCameraXZ= inputName;
-  }
-
-  void TPCamera::SetInputY(const std::string& inputName)
-  {
-    inputCameraY= inputName;
-  }
-
-  void TPCamera::SetInputMove(const std::string& inputName)
-  {
-    inputCameraMove = inputName;
-  }
 
 
-  InputControlRequest TPCamera::OnInputChanged(const InputControl* control)
+  void TPCamera::OnEvent(Event& event)
   {
-    if(control->GetName() == inputCameraXZ) 
+    if(EVENT_IS_TYPE(event, EventType::MOUSE_PRESS))
     {
-      m_mouse1 = control->GetValue(0) > 0.5;
+      MousePressEvent mEvent = (MousePressEvent&)event;
+      if(mEvent.GetButton() == GLFW_MOUSE_BUTTON_1) 
+        m_mouse1 = true;
+      else if(mEvent.GetButton() == GLFW_MOUSE_BUTTON_2) 
+        m_mouse2 = true;
+      else if(mEvent.GetButton() == GLFW_MOUSE_BUTTON_3) 
+        m_mouse3 = true;
     }
-    else if(control->GetName() == inputCameraY)
+    else if(EVENT_IS_TYPE(event, EventType::MOUSE_RELEASE))
     {
-      m_mouse2 = control->GetValue(0) > 0.5;
+      MousePressEvent mEvent = (MousePressEvent&)event;
+      if(mEvent.GetButton() == GLFW_MOUSE_BUTTON_1) 
+        m_mouse1 = false;
+      else if(mEvent.GetButton() == GLFW_MOUSE_BUTTON_2) 
+        m_mouse2 = false;
+      else if(mEvent.GetButton() == GLFW_MOUSE_BUTTON_3) 
+        m_mouse3 = false;
     }
-    else if(control->GetName() == inputCameraRotate)
+    else if(EVENT_IS_TYPE(event, EventType::MOUSE_MOVE))
     {
-      m_mouse3 = control->GetValue(0) > 0.5;
+      MouseMoveEvent&  mEvent = (MouseMoveEvent&)event;
+      Move(Vec2(mEvent.GetDX(), mEvent.GetDY()));
     }
-    else if(control->GetName() == inputCameraMove)
+    else if(EVENT_IS_TYPE(event, EventType::MOUSE_SCROLL))
     {
-      Move(control->GetDeltaAsVec2());
+      MouseScrollEvent&  mEvent = (MouseScrollEvent&)event;
+      Zoom(mEvent.GetScrollVertical());
     }
-    else if(control->GetName() == inputCameraZoom)
-    {
-      Zoom(control->GetDelta(0));
-    }
-
-    return m_mouse1 | m_mouse2 | m_mouse3 ? InputControlRequest::DONE : InputControlRequest::NOTHING;
+    if(m_mouse1 | m_mouse2 | m_mouse3)
+      event.flags |= EVENT_HANDLED | EVENT_FOCUSED;
   }
 
 }

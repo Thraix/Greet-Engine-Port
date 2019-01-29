@@ -93,7 +93,7 @@ namespace Greet
       cursorBlinkTimer -= 1;
   }
 
-  void TextBox::MousePressed(const MousePressedEvent& event, const Vec2& translatedPos)
+  void TextBox::MousePressed(MousePressEvent& event, const Vec2& translatedPos)
   {
     Component::MousePressed(event,translatedPos);
     if(event.GetButton() == GLFW_MOUSE_BUTTON_1)
@@ -117,18 +117,18 @@ namespace Greet
     }
   }
 
-  void TextBox::KeyTyped(const KeyTypedEvent& event)
+  void TextBox::KeyTyped(KeyTypeEvent& event)
   {
     std::string before = str;
     auto it = str.begin();
     std::advance(it, cursorPos);
-    str.insert(it, (char)event.GetCharCode());
+    str.insert(it, (char)event.GetButton());
     SetText(str);
     MoveCursor(1);
     CallOnTextChangedCallback(before,str);
   }  
 
-  void TextBox::KeyPressed(const KeyPressedEvent& event)
+  void TextBox::KeyPressed(KeyPressEvent& event)
   {
     // Easier to type if the blinker is turned on while typing
     cursorBlinkTimer = 0;
@@ -209,7 +209,7 @@ namespace Greet
     }
   }
 
-  void TextBox::KeyReleased(const KeyReleasedEvent& event)
+  void TextBox::KeyReleased(KeyReleaseEvent& event)
   {
     if(event.GetButton() == GLFW_KEY_LEFT_CONTROL)
     {

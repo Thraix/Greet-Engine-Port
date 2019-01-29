@@ -2,24 +2,14 @@
 
 #include <graphics/models/Camera.h>
 #include <math/Maths.h>
-#include <event/MouseListener.h>
 #include <internal/GreetGL.h>
 #include <event/EventDispatcher.h>
-#include <event/InputControlListener.h>
 
 namespace Greet {
 
   class TPCamera : public Camera
   {
     private:
-
-      std::string inputCameraRotate;
-      std::string inputCameraZoom;
-      std::string inputCameraXZ;
-      std::string inputCameraY;
-      std::string inputCameraMove;
-
-
       bool m_mouse1 = false;
       bool m_mouse2 = false;
       bool m_mouse3 = false;
@@ -88,7 +78,7 @@ namespace Greet {
 
       void Move(const Vec2& delta);
       void Zoom(float delta);
-      InputControlRequest OnInputChanged(const InputControl* control) override;
+      void OnEvent(Event& event) override;
 
   };
 

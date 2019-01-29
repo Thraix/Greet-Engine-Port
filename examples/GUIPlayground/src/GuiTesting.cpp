@@ -3,9 +3,10 @@
 
 using namespace Greet;
 
-class Core : public App, public KeyListener, public MouseListener
+class Core : public App
 {
   private:
+    GUIScene* guiScene;
     Component* content;
     float progressBarValue;
   public:
@@ -17,21 +18,20 @@ class Core : public App, public KeyListener, public MouseListener
 
     ~Core()
     {
-      GLayer::DestroyInstance();
+      delete guiScene;
     }
 
     void Init() override
     {
-      EventDispatcher::AddKeyListener(10,*this);
-      EventDispatcher::AddMouseListener(10,*this);
+      progressBarValue = 0;
       FontManager::Add(new FontContainer("/usr/share/fonts/truetype/ubuntu/Ubuntu-C.ttf","roboto"));
 
       // TODO: This should be done by the engine
-      GLayer::CreateInstance(new GUIRenderer(), Shader::FromFile("res/shaders/gui.shader"));
+      guiScene = new GUIScene(new GUIRenderer(), Shader::FromFile("res/shaders/gui.shader"));
 
-      GLayer::AddFrame(FrameFactory::GetFrame("res/guis/gui.xml"));
+      guiScene->AddFrame(FrameFactory::GetFrame("res/guis/gui.xml"));
 
-      Frame* frame = GLayer::GetFrame("TopComponent");
+      Frame* frame = guiScene->GetFrame("TopComponent");
       if(frame != nullptr)
       {
         using namespace std::placeholders;
@@ -63,6 +63,7 @@ class Core : public App, public KeyListener, public MouseListener
         frame->GetComponentByName<Button>("button")
           ->SetOnClickCallback(std::bind(&Core::OnButtonPressCallback, std::ref(*this), _1));
         }
+      RenderEngine::Add2DScene(guiScene, "GUIScene");
     }
 
     void OnRadioChangeCallback(RadioButton* button)
@@ -108,8 +109,6 @@ class Core : public App, public KeyListener, public MouseListener
 
     void Update(float elapsedTime) override
     {
-      // TODO: This should be done by the engine
-      GLayer::Update(elapsedTime);
       progressBarValue += elapsedTime * 0.5;
       if(progressBarValue >= 1.5)
         progressBarValue -= 1.5;
@@ -117,46 +116,6 @@ class Core : public App, public KeyListener, public MouseListener
 
     void Render() override
     {
-      // TODO: This should be done by the engine
-      GLayer::Render();
-
-    }
-
-    void OnPressed(const KeyPressedEvent& e) override
-    {
-    }
-
-    void OnReleased(const KeyReleasedEvent& e)  override
-    {
-    }
-
-    void OnTyped(const KeyTypedEvent& e) override
-    {
-    }
-
-    void OnMoved(const MouseMovedEvent& e) override
-    {
-      //progressBarValue = e.GetX();
-    }
-
-    void OnScroll(const MouseScrollEvent& e) override
-    {
-
-    }
-
-    void WindowResize(int width, int height) override
-    {
-
-    }
-
-    void JoystickState(uint joy, bool connected) override
-    {
-
-    }
-
-    void OnClick(GUI* gui)
-    {
-
     }
 };
 

@@ -56,6 +56,7 @@ namespace Greet {
 
       static void mouse_button_callback(GLFWwindow *window, int button, int action, int mods);
       static void window_focus_callback(GLFWwindow* window, int state);
+      static void window_position_callback(GLFWwindow* window, int x, int y);
       static void mouse_position_callback(GLFWwindow* window, double xpos, double ypos);
       static void mouse_scroll_callback(GLFWwindow* window, double scrollX, double scrollY);
       static void joystick_callback(int joy, int event);

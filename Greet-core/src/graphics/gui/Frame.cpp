@@ -123,17 +123,17 @@ namespace Greet {
         pos.x = 0;
         size.x = m_posOrigin.x + m_sizeOrigin.x;
       }
-      else if (pos.x > GLayer::GetWidth() - size.x)
+      else if (pos.x > guiScene->GetWidth() - size.x)
       {
-        size.x = GLayer::GetWidth() - m_posOrigin.x;
+        size.x = guiScene->GetWidth() - m_posOrigin.x;
       }
       if (pos.y < 0)
       {
         pos.y = 0;
         size.y = m_posOrigin.y + m_sizeOrigin.y;
       }
-      else if (pos.y > GLayer::GetHeight() - size.y)
-        size.y = GLayer::GetHeight() - m_posOrigin.y;
+      else if (pos.y > Window::GetHeight() - size.y)
+        size.y = Window::GetHeight() - m_posOrigin.y;
     }
   }
 
@@ -147,7 +147,7 @@ namespace Greet {
     Remeasure();
   }
 
-  void Frame::MousePressed(const MousePressedEvent& event, const Vec2& translatedPos)
+  void Frame::MousePressed(MousePressEvent& event, const Vec2& translatedPos)
   {
     Component::MousePressed(event,translatedPos);
     if (event.GetButton() == GLFW_MOUSE_BUTTON_1)
@@ -159,7 +159,7 @@ namespace Greet {
     }
   }
 
-  void Frame::MouseReleased(const MouseReleasedEvent& event, const Vec2& translatedPos)
+  void Frame::MouseReleased(MouseReleaseEvent& event, const Vec2& translatedPos)
   {
     Component::MouseReleased(event,translatedPos);
     if (event.GetButton() == GLFW_MOUSE_BUTTON_1)
@@ -168,7 +168,7 @@ namespace Greet {
     }
   }
 
-  void Frame::MouseMoved(const MouseMovedEvent& event, const Vec2& translatedPos)
+  void Frame::MouseMoved(MouseMoveEvent& event, const Vec2& translatedPos)
   {
     if (m_resizing)
     {
@@ -187,13 +187,13 @@ namespace Greet {
     if(m_stayInsideWindow)
     {
       Vec2 p = pos;
-      if(p.x + size.w > GLayer::GetWidth())
+      if(p.x + size.w > guiScene->GetWidth())
       {
-        p.x = GLayer::GetWidth() - size.w;
+        p.x = guiScene->GetWidth() - size.w;
       }
-      if(p.y + size.h > GLayer::GetHeight())
+      if(p.y + size.h > guiScene->GetHeight())
       {
-        p.y = GLayer::GetHeight() - size.h;
+        p.y = guiScene->GetHeight() - size.h;
       }
       Component::SetPosition(p);
       return;
@@ -205,7 +205,7 @@ namespace Greet {
   {
     if(!GetParent() && !focused && shouldCloseUnfocus)
     {
-      GLayer::RemoveFrame(name);
+      guiScene->RemoveFrame(name);
     }
   }
 }

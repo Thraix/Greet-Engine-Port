@@ -2,19 +2,14 @@
 
 #include <graphics/gui/GUIUtils.h>
 #include <event/EventDispatcher.h>
+#include <graphics/gui/Frame.h>
 
 namespace Greet {
 
-  std::vector<Frame*> GLayer::frames;
-  GLayer* GLayer::instance;
-
-  GLayer::GLayer(GUIRenderer* renderer, Shader&& shader)
+  GUIScene::GUIScene(GUIRenderer* renderer, Shader&& shader)
     : m_renderer(renderer), m_shader(std::move(shader))
   {
     m_focused = nullptr;
-    EventDispatcher::AddKeyListener(100, *this);
-    EventDispatcher::AddMouseListener(100, *this);
-    Window::AddResizeCallback(this);
 
     GLint texIDs[32];
     for (int i = 0; i < 32; i++)
@@ -27,7 +22,30 @@ namespace Greet {
     m_shader.Disable();
   }
 
-  bool GLayer::OnPressed(const MousePressedEvent& event)
+  void GUIScene::OnEvent(Event& event)
+  {
+    if(EVENT_IS_CATEGORY(event, INPUT_EVENT))
+    {
+      if(EVENT_IS_TYPE(event, EventType::KEY_PRESS))
+        OnPressed((KeyPressEvent&)event);
+      else if(EVENT_IS_TYPE(event, EventType::KEY_RELEASE))
+        OnReleased((KeyReleaseEvent&)event);
+      else if(EVENT_IS_TYPE(event, EventType::KEY_TYPE))
+        OnTyped((KeyTypeEvent&)event);
+      else if(EVENT_IS_TYPE(event, EventType::MOUSE_MOVE))
+        OnMoved((MouseMoveEvent&)event);
+      else if(EVENT_IS_TYPE(event, EventType::MOUSE_PRESS))
+        OnPressed((MousePressEvent&)event);
+      else if(EVENT_IS_TYPE(event, EventType::MOUSE_RELEASE))
+        OnReleased((MouseReleaseEvent&)event);
+      else
+        Scene::OnEvent(event);
+    }
+    else
+      Scene::OnEvent(event);
+  }
+
+  bool GUIScene::OnPressed(MousePressEvent& event)
   {
     for (auto it = frames.rbegin(); it != frames.rend(); ++it)
     {
@@ -42,13 +60,13 @@ namespace Greet {
     return false;
   }
 
-  void GLayer::OnReleased(const MouseReleasedEvent& event)
+  void GUIScene::OnReleased(MouseReleaseEvent& event)
   {
     if (m_focused != nullptr)
       m_focused->MouseReleased(event, event.GetPosition() - m_focused->GetRealPosition());
   }
 
-  void GLayer::OnMoved(const MouseMovedEvent& event)
+  void GUIScene::OnMoved(MouseMoveEvent& event)
   {
     if (m_focused != nullptr)
     {
@@ -63,69 +81,51 @@ namespace Greet {
     }
   }
 
-  void GLayer::OnPressed(const KeyPressedEvent& event)
+  void GUIScene::OnPressed(KeyPressEvent& event)
   {
     if (m_focused != nullptr)
       m_focused->KeyPressed(event);
   }
 
-  void GLayer::OnReleased(const KeyReleasedEvent& event)
+  void GUIScene::OnReleased(KeyReleaseEvent& event)
   {
     if (m_focused != nullptr)
       m_focused->KeyReleased(event);
   }
-  void GLayer::OnTyped(const KeyTypedEvent& event)
+  void GUIScene::OnTyped(KeyTypeEvent& event)
   {
     if (m_focused != nullptr)
       m_focused->KeyTyped(event);
   }
 
-  void GLayer::WindowResize(int width, int height)
+  void GUIScene::WindowResize(WindowResizeEvent& event)
   {
     m_shader.Enable();
     m_shader.SetUniformMat3("pr_matrix", Mat3::Orthographic(0, Window::GetWidth(), 0, Window::GetHeight()));
     m_shader.Disable();
     for (auto it = frames.begin(); it != frames.end(); ++it)
     {
-      (*it)->OnWindowResize(width, height);
+      (*it)->OnWindowResize(event.GetWidth(), event.GetHeight());
     }
   }
 
-  void GLayer::CreateInstance(GUIRenderer* renderer, Shader&& shader)
+  void GUIScene::Render() const
   {
-    // Keep shader as an rvalue
-    instance = new GLayer(renderer, std::move(shader));
-  }
-
-  GLayer* GLayer::GetInstance()
-  {
-    return instance;
-  }
-
-  void GLayer::DestroyInstance()
-  {
-    delete instance;
-  }
-
-  void GLayer::Render()
-  {
-    GUIRenderer* renderer = GetInstance()->m_renderer;
-    const Shader& shader = GetInstance()->m_shader;
-    shader.Enable();
-    renderer->Begin();
+    m_shader.Enable();
+    m_renderer->Begin();
     for (auto it = frames.begin(); it != frames.end(); ++it)
     {
-      (*it)->PreRender(renderer, Vec2(0,0));
-      (*it)->RenderHandle(renderer);
-      (*it)->PostRender(renderer);
+      (*it)->PreRender(m_renderer, Vec2(0,0));
+      (*it)->RenderHandle(m_renderer);
+      (*it)->PostRender(m_renderer);
     }
 
-    renderer->End();
-    renderer->Draw();
-    shader.Disable();
+    m_renderer->End();
+    m_renderer->Draw();
+    m_shader.Disable();
   }
 
-  void GLayer::Update(float timeElapsed)
+  void GUIScene::Update(float timeElapsed)
   {
     for (auto it = frames.begin(); it != frames.end(); ++it)
     {
@@ -134,19 +134,19 @@ namespace Greet {
   }
 
   // Could do checks if a popup is refusing to give request or something
-  bool GLayer::RequestFocus(Component* component)
+  bool GUIScene::RequestFocus(Component* component)
   {
     // Unfocus the currently focused component
-    if(GetInstance()->m_focused)
-      GetInstance()->m_focused->OnUnfocused();
+    if(m_focused)
+      m_focused->OnUnfocused();
 
     // Focus the requested one
-    if(component && component != GetInstance()->m_focused)
+    if(component && component != m_focused)
       component->OnFocused();
 
     // TODO: Maybe clean this code up.
-    Component* unfocused = GetInstance()->m_focused;
-    Component* focused = component;;
+    Component* unfocused = m_focused;
+    Component* focused = component;
 
     uint unfocusedDepth = unfocused ? unfocused->GetComponentDepth() : 0;
     uint focusedDepth = focused ? focused->GetComponentDepth() : 0;
@@ -175,12 +175,12 @@ namespace Greet {
       focused = focused->GetParent();
     }
 
-    GetInstance()->m_focused = component;
+    m_focused = component;
 
     return true;
   }
 
-  void GLayer::AddFrame(Frame* frame)
+  void GUIScene::AddFrame(Frame* frame)
   {
     if (frame == nullptr)
     {
@@ -190,11 +190,12 @@ namespace Greet {
     }
     frame->Measure();
     frame->MeasureFill(GetWidth(),GetHeight(), 1, true);
+    frame->SetGUIScene(this);
     frames.push_back(frame);
     frame->PostConstruction();
   }
 
-  Frame* GLayer::RemoveFrame(const std::string& name)
+  Frame* GUIScene::RemoveFrame(const std::string& name)
   {
     for(auto it = frames.begin(); it!=frames.end();++it)
     {
@@ -207,7 +208,7 @@ namespace Greet {
     return nullptr;
   }
 
-  Frame* GLayer::RemoveFrame(Frame* frame)
+  Frame* GUIScene::RemoveFrame(Frame* frame)
   {
     for (auto it = frames.begin(); it != frames.end();++it)
     {
@@ -220,7 +221,7 @@ namespace Greet {
     return nullptr;
   }
 
-  Frame* GLayer::GetFrame(const std::string& name)
+  Frame* GUIScene::GetFrame(const std::string& name)
   {
     for(auto it = frames.begin(); it!=frames.end();++it)
     {
@@ -231,11 +232,11 @@ namespace Greet {
     }
     return nullptr;
   }
-  float GLayer::GetWidth()
+  float GUIScene::GetWidth()
   {
     return Window::GetWidth();
   }
-  float GLayer::GetHeight()
+  float GUIScene::GetHeight()
   {
     return Window::GetHeight();
   }

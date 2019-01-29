@@ -21,6 +21,7 @@ namespace Greet {
     private:
       bool m_connected = false;
       bool m_wasConnected = false;
+
       //STORES THE JOYSTICK NUMBER
       const int m_jsNum;
       const float* axes;
@@ -28,6 +29,8 @@ namespace Greet {
       unsigned char* previousButtons;
       const unsigned char* buttons;
       int buttonCount; 
+
+
 
     private:
       Joystick(uint jsNum, float m_calibrateLeft, float m_calibrateRight);

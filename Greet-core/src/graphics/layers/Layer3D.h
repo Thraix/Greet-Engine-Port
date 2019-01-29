@@ -18,7 +18,7 @@ namespace Greet {
       virtual void Render() const override;
       virtual void PostRender() const override;
       virtual void Update(float timeElapsed) override;
-      virtual InputControlRequest OnInputChanged(const InputControl* control) override;
+      virtual void OnEvent(Event& event) override;
 
       void AddRenderer(Renderer3D* renderer);
       void RemoveRenderer(Renderer3D* renderer);

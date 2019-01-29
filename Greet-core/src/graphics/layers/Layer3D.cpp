@@ -39,10 +39,11 @@ namespace Greet {
     }
   }
 
-  InputControlRequest Layer3D::OnInputChanged(const InputControl* control)
+  void Layer3D::OnEvent(Event& event)
   {
-    camera->OnInputChanged(control);
-    return InputControlRequest::NOTHING;
+    camera->OnEvent(event);
+
+    //return InputControlRequest::NOTHING;
   }
 
   void Layer3D::AddRenderer(Renderer3D* renderer)

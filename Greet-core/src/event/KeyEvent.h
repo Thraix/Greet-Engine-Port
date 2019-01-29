@@ -5,39 +5,44 @@
 
 namespace Greet {
 
-  class KeyButtonEvent : public Event
+  class KeyEvent : public Event
   {
     protected:
-      uint m_button;
+      uint button;
     protected:
-      KeyButtonEvent(uint button, EventType type)
-        : Event(type), m_button(button) {}
+      KeyEvent(uint button)
+        : button(button) {}
     public:
-      inline const uint GetButton() const { return m_button; }
+      inline const uint GetButton() const { return button; }
+      uint GetCategory() const {return INPUT_EVENT | KEYBOARD_EVENT;}
   };
 
-  class KeyPressedEvent : public KeyButtonEvent
+  class KeyPressEvent : public KeyEvent
+  {
+    protected:
+      uint repeat;
+    public:
+      KeyPressEvent(uint button, uint repeat)
+        : KeyEvent(button), repeat{repeat} {}
+      EventType GetType() const {return EventType::KEY_PRESS;}
+  };
+
+  class KeyReleaseEvent : public KeyEvent
   {
     public:
-      KeyPressedEvent(uint button)
-        : KeyButtonEvent(button, KEY_PRESSED) {}
+      KeyReleaseEvent(uint button)
+        : KeyEvent(button) {}
+      EventType GetType() const {return EventType::KEY_RELEASE;}
   };
 
-  class KeyReleasedEvent : public KeyButtonEvent
-  {
-    public:
-      KeyReleasedEvent(uint button)
-        : KeyButtonEvent(button, KEY_RELEASED) {}
-  };
-
-  class KeyTypedEvent : public Event
+  class KeyTypeEvent : public KeyEvent
   {
     private:
-      uint m_charCode;
+      uint charCode;
 
     public:
-      KeyTypedEvent(uint charCode) : Event(KEY_TYPED), m_charCode(charCode) {}
-      uint GetCharCode() const { return m_charCode; }
+      KeyTypeEvent(uint charCode) : KeyEvent(charCode) {}
+      EventType GetType() const {return EventType::KEY_TYPE;}
   };
 
 }

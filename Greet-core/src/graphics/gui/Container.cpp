@@ -261,7 +261,15 @@ namespace Greet
     return *this;
   }
 
-  void Container::OnMousePressed(const MousePressedEvent& event, const Vec2& translatedPos)
+  void Container::SetGUIScene(GUIScene* scene)
+  {
+    Component::SetGUIScene(scene);
+    for(auto&& component : m_components)
+      component->SetGUIScene(scene);
+    guiScene = scene;
+  }
+
+  void Container::OnMousePressed(MousePressEvent& event, const Vec2& translatedPos)
   {
     for(auto it = m_components.rbegin(); it != m_components.rend();++it)
     {
@@ -275,7 +283,7 @@ namespace Greet
     Component::OnMousePressed(event,translatedPos);
   }
 
-  void Container::OnMouseMoved(const MouseMovedEvent& event, const Vec2& translatedPos)
+  void Container::OnMouseMoved(MouseMoveEvent& event, const Vec2& translatedPos)
   {
     Component::OnMouseMoved(event,translatedPos);
     for(auto it = m_components.rbegin(); it != m_components.rend();++it)

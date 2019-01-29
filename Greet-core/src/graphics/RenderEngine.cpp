@@ -87,45 +87,22 @@ namespace Greet {
       it->second->PostUpdate(timeElapsed);
     }
   }
-  void RenderEngine::InputChanged(const InputControl* control)
+
+  void RenderEngine::OnEvent(Event& event)
   {
     // The last to be rendered will be on top so check input there first.
     for (auto it = m_scenes2d.rbegin(); it != m_scenes2d.rend(); it++)
     {
-      InputControlRequest req = it->second->OnInputChanged(control);
-      if(req == InputControlRequest::DONE)
+      it->second->OnEvent(event);
+      if(event.flags | EVENT_HANDLED)
         return;
     }
     // The order here doesn't matter
-    for (auto it = m_scenes3d.begin(); it != m_scenes3d.end(); it++)
+    for (auto it = m_scenes3d.rbegin(); it != m_scenes3d.rend(); it++)
     {
-      InputControlRequest req = it->second->OnInputChanged(control);
-      if(req == InputControlRequest::DONE)
+      it->second->OnEvent(event);
+      if(event.flags | EVENT_HANDLED)
         return;
-    }
-  }
-
-  void RenderEngine::WindowResize(int width, int height)
-  {
-    for (auto it = m_scenes3d.begin(); it != m_scenes3d.end(); it++)
-    {
-      it->second->WindowResize(width,height);
-    }
-    for (auto it = m_scenes2d.rbegin(); it != m_scenes2d.rend(); it++)
-    {
-      it->second->WindowResize(width,height);
-    }
-  }
-
-  void RenderEngine::WindowFocus(bool focus)
-  {
-    for (auto it = m_scenes3d.begin(); it != m_scenes3d.end(); it++)
-    {
-      it->second->WindowFocus(focus);
-    }
-    for (auto it = m_scenes2d.rbegin(); it != m_scenes2d.rend(); it++)
-    {
-      it->second->WindowFocus(focus);
     }
   }
 }

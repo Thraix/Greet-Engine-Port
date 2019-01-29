@@ -1,11 +1,11 @@
 #pragma once
 
-#include <event/InputControlListener.h>
-#include <event/InputControl.h>
+#include <event/Event.h>
+#include <event/WindowEvent.h>
 
 namespace Greet
 {
-  class Scene : public InputControlListener
+  class Scene
   {
     public:
       virtual void PreRender() const {}
@@ -14,9 +14,13 @@ namespace Greet
       virtual void PreUpdate(float timeElapsed) {}
       virtual void Update(float timeElapsed) = 0;
       virtual void PostUpdate(float timeElapsed) {}
-      virtual InputControlRequest OnInputChanged(const InputControl* control) override { return InputControlRequest::NOTHING;}
-      virtual void WindowResize(int width, int height) {}
-      virtual void WindowFocus(bool focus) {}
-      virtual void OnFocused(bool focus) {}
+      virtual void OnEvent(Event& event)
+      {
+        if(EVENT_IS_TYPE(event, EventType::WINDOW_RESIZE))
+        {
+          WindowResize((WindowResizeEvent&) event);
+        }
+      }
+      virtual void WindowResize(WindowResizeEvent& event) {}
   };
 }
