@@ -27,7 +27,6 @@ namespace Greet {
     m_distanceWanted = m_distance;
     m_heightWanted = m_height;
     m_positionWanted = m_position;
-    m_rotationVector.z = 0;
     SetDistanceClamp(distanceMin, distanceMax);
     SetHeightClamp(heightMin, heightMax);
     CalculateInformation();

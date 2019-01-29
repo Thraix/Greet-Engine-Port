@@ -47,7 +47,6 @@ namespace Greet {
 
       // Calculated information
       Mat4 m_viewMatrix;
-      Vec3 m_rotationVector;
     private:
       void CalculateViewMatrix();
       void CalculateInformation();

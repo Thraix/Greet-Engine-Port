@@ -120,8 +120,8 @@ class Core : public App, public KeyListener, public MouseListener
       {
         terrainMaterial = new Material(Shader::FromFile("res/shaders/terrain.shader"));
         waterMaterial = new Material(Shader::FromFile("res/shaders/water.shader"));
-        waterMaterial->SetShineDamper(0.002);
-        waterMaterial->SetReflectivity(0.3);
+        waterMaterial->SetShineDamper(20);
+        waterMaterial->SetReflectivity(0.4);
         waterMaterial->GetShader().Enable();
         waterMaterial->GetShader().SetUniform1f("waterLevel",0.45f * 20.0f);
         waterMaterial->GetShader().Disable();
@@ -214,7 +214,7 @@ class Core : public App, public KeyListener, public MouseListener
       uilayer->Add(cursor);
 
       //renderer3d->Submit(stall);
-      renderer3d->Submit(dragon);
+      //renderer3d->Submit(dragon);
       renderer3d->Submit(terrain);
       renderer3d->Submit(sphere);
       renderer3d->Submit(cube);
