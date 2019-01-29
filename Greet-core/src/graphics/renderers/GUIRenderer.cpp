@@ -2,6 +2,8 @@
 
 #include <algorithm>
 #include <cmath>
+#include <graphics/Renderable2D.h>
+#include <utils/ColorUtils.h>
 
 namespace Greet
 {
@@ -64,6 +66,9 @@ namespace Greet
         GLCall(glBindTexture(GL_TEXTURE_2D, m_textures[i]));
       }
 
+      // TODO: Remove this and actually draw the different things correctly
+      // instead
+      GLCall(glDisable(GL_CULL_FACE));
       GLCall(glBindVertexArray(m_vao));
       GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ibo));
       GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * m_iboCount, m_indices, GL_DYNAMIC_DRAW));
@@ -74,6 +79,7 @@ namespace Greet
       GLCall(glBindVertexArray(0));
 
       GLCall(glActiveTexture(GL_TEXTURE0));
+      GLCall(glEnable(GL_CULL_FACE));
       GLCall(glEnable(GL_DEPTH_TEST));
     }
   }
@@ -114,6 +120,11 @@ namespace Greet
       return;
     }
     m_viewports.pop();
+  }
+
+  void GUIRenderer::Submit(const Renderable2D* renderable)
+  {
+    SubmitRect(renderable->GetPosition(), renderable->GetSize(), ColorUtils::ColorHexToVec4(renderable->GetColor()), false);
   }
 
   void GUIRenderer::SubmitLine(const Vec2& pos, float length, float width, bool vertical, const Vec4& color, bool isHsv)

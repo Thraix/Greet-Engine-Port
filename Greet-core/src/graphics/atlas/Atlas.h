@@ -9,10 +9,10 @@
 namespace Greet{
   class Atlas : public Texture2D
   {
+
     private:
-      std::vector<std::string> m_textureNames;
-      std::vector<uint> m_textureNamePos;
-      std::vector<bool> m_occupied;
+      std::map<std::string, uint> textureMap;
+      std::vector<bool> occupied;
 
       uint m_textureSize;
       uint m_texturesSide;
@@ -25,11 +25,11 @@ namespace Greet{
       Atlas& operator=(Atlas&&) = default;
       virtual ~Atlas();
 
-      bool AddTexture(std::string name, std::string filePath);
-      void RemoveTexture(std::string textureName);
-      void AddTexture(BYTE* bits, uint bpp, std::string name);
-      Sprite GetSprite(std::string name) const;
-      Sprite GetSpriteFromSheet(std::string sheetName, Vec2 texPos, Vec2 texSize) const;
+      bool AddTexture(const std::string& name, const std::string& filePath);
+      void RemoveTexture(const std::string& textureName);
+      bool AddTexture(BYTE* bits, uint bpp, const std::string& name);
+      Sprite GetSprite(const std::string& name) const;
+      Sprite GetSpriteFromSheet(const std::string& sheetName, Vec2 texPos, Vec2 texSize) const;
     private:
       void GenTexture(BYTE* bits);
   };

@@ -7,17 +7,24 @@ namespace Greet {
   {
   }
 
+  Layer3D::Layer3D(Camera* camera)
+    :camera{camera}, skybox{nullptr}
+  {
+  
+  }
+
   Layer3D::~Layer3D()
   {
   }
 
   void Layer3D::PreRender() const
   {
+    if(skybox)
+      skybox->Render(*camera);
   }
 
   void Layer3D::Render() const
   {
-    skybox->Render(*camera);
     for(auto&& renderer : renderers)
     {
       renderer->Begin(camera);
@@ -32,9 +39,9 @@ namespace Greet {
 
   void Layer3D::Update(float timeElapsed)
   {
+    camera->Update(timeElapsed);
     for(auto&& renderer : renderers)
     {
-      camera->Update(timeElapsed);
       renderer->Update(timeElapsed);
     }
   }
@@ -42,8 +49,7 @@ namespace Greet {
   void Layer3D::OnEvent(Event& event)
   {
     camera->OnEvent(event);
-
-    //return InputControlRequest::NOTHING;
+    Scene::OnEvent(event);
   }
 
   void Layer3D::AddRenderer(Renderer3D* renderer)

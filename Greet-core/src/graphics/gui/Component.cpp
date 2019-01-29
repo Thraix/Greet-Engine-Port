@@ -176,7 +176,6 @@ namespace Greet
       if(!isFocused)
       {
         guiScene->RequestFocus(this);
-        event.flags |= EVENT_FOCUSED | EVENT_HANDLED;
       }
       MousePressed(event,translatedPos);
     }

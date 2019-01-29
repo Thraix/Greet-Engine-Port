@@ -456,4 +456,80 @@ namespace Greet {
     return data;
   }
 
+  MeshData* MeshFactory::Sphere(const Vec3& position, float radius, uint latitudes, uint longitudes)
+  {
+    if(latitudes < 1 || longitudes < 4)
+    {
+      Log::Error("Creating sphere failed. Latitude or longitude is too small.");
+      Log::Error("Has to be atleast 1 and 4 respectivly");
+      return Cube(position.x,position.y,position.z, radius, radius, radius);
+    }
+
+    uint vertexCount = 2 + longitudes * latitudes;
+    Vec3* vertices = new Vec3[vertexCount];
+    vertices[0] = Vec3(0,-radius, 0);
+    vertices[vertexCount - 1] = Vec3(0,radius, 0);
+
+    float angleY = M_PI / (latitudes + 1);
+    float angleLong = 2 * M_PI / longitudes;
+    float ay = angleY;
+    uint i = 1;
+    for(uint lat = 0; lat < latitudes; ++lat)
+    {
+      float y = radius * sin(ay - M_PI * 0.5f); 
+      for(uint lon = 0; lon< longitudes; ++lon)
+      {
+        float r = sqrt(radius*radius - y * y);
+        float x = r * cos(angleLong * lon);
+        float z = r * sin(angleLong * lon);
+        vertices[i] = {x,y,z};
+        i++;
+      }
+      ay += angleY;
+    }
+
+    // TRIANGLES = 2 * LONGITUDES
+    // QUADS = (LATITUDES - 1) * LONGITUDES
+
+
+    uint indexCount = 3 * (2 + 2 * (latitudes - 1)) * longitudes;
+    uint* indices = new uint[indexCount];
+    for(uint i = 0;i<longitudes;i++)
+    {
+      indices[i*3] = 0;
+      indices[i*3 + 1] = i+1;
+      // Allow the last index to wrap
+      indices[i*3 + 2] = ((i+1) % longitudes) + 1;
+
+      indices[indexCount - i*3 - 1] = vertexCount - (((i+1) % longitudes) + 1) - 1;
+      indices[indexCount - i*3 - 2] = vertexCount - i - 2;
+      indices[indexCount - i*3 - 3] = vertexCount - 1;
+    }
+
+    uint index = longitudes * 3;
+    for(uint i = 0; i < latitudes - 1;i++)
+    {
+      uint vertexPos = 1 + i * longitudes;
+
+      for(uint j = 0; j< longitudes; j++)
+      {
+        uint j1 = (j+1) % longitudes;
+        indices[index++] = vertexPos + j;
+        indices[index++] = vertexPos + j + longitudes;
+        indices[index++] = vertexPos + j1;
+
+        indices[index++] = vertexPos + j1;
+        indices[index++] = vertexPos + j + longitudes;
+        indices[index++] = vertexPos + j1 + longitudes;
+      }
+    }
+
+    MeshData* data = new MeshData(vertices, vertexCount, indices, indexCount);
+    Vec3* normals = CalculateNormals(vertices, vertexCount, indices, indexCount);
+    data->AddAttribute(new AttributeData<Vec3>(ATTRIBUTE_NORMAL, normals));
+
+    return data;
+
+  }
+
 }

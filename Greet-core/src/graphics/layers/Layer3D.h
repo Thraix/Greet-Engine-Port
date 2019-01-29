@@ -13,6 +13,7 @@ namespace Greet {
 
     public:
       Layer3D(Camera* camera, Skybox* skybox);
+      Layer3D(Camera* camera);
       virtual ~Layer3D();
       virtual void PreRender() const override;
       virtual void Render() const override;

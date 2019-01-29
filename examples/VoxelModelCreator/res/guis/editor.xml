@@ -1,0 +1,60 @@
+<Frame
+  name="TopComponent"
+  width="150px" height="fill_parent" minWidth="100px" spacing="10px"
+  resizeTop="false" resizeLeft="false" resizeBottom="false" resizeRight="true"
+  padding="10px" border="1px"
+  borderColor="#37474f" 
+  backgroundColor="#263238" 
+  >
+  <Label 
+    fontSize="16px" font="roboto" color="#90a4ae">Settings</Label>
+  <Divider name="divider" backgroundColor="#90a4ae"/>
+  <TextBox
+    width="fill_parent" height="20px"
+    backgroundColor="#37474f" borderColor="#455a64" 
+    border="1px" font="roboto" fontSize="12px" color="#90a4ae"
+    hintColor="#263238" hintText="Filename"
+    radius="6px" borderRadius="7px"
+    padding="0px 5px"></TextBox>
+
+  <Button width="fill_parent" height="20px" name="button"
+    backgroundColor="#37474f" borderColor="#455a64" 
+    hoverbackgroundColor="#37474f" hoverborderColor="#455a64" 
+    color="#90a4ae" fontSize="12px" font="roboto"
+    hoverborder="1px"
+    radius="2" borderRadius="3"
+    hoverradius="2" hoverborderRadius="3"
+    border="1px 1px 1px 1px">Save Model</Button>
+
+  <Button width="fill_parent" height="20px" name="button"
+    backgroundColor="#37474f" borderColor="#455a64" 
+    hoverbackgroundColor="#37474f" hoverborderColor="#455a64" 
+    color="#90a4ae" fontSize="12px" font="roboto"
+    hoverborder="1px"
+    radius="2" borderRadius="3"
+    hoverradius="2" hoverborderRadius="3"
+    border="1px 1px 1px 1px">Load Model</Button>
+
+  <Button width="fill_parent" height="20px" name="button"
+    backgroundColor="#37474f" borderColor="#455a64" 
+    hoverbackgroundColor="#37474f" hoverborderColor="#455a64" 
+    color="#90a4ae" fontSize="12px" font="roboto"
+    hoverborder="1px"
+    radius="2" borderRadius="3"
+    hoverradius="2" hoverborderRadius="3"
+    border="1px 1px 1px 1px">Export Model</Button>
+
+
+  <Container width="fill_parent" verticalAlign="false">
+    <Label width="wrap_content" height="fill_parent" fontSize="12" font="roboto" color="#90a4ae">Cube Color: </Label>
+
+    <ColorPicker
+      width="60" height="20" name="backgroundChanger"
+      backgroundColor="#ffffff"
+      borderColor="#455a64" 
+      border="1"
+      radius="1"
+      borderRadius="4"
+      />
+  </Container>
+</Frame>

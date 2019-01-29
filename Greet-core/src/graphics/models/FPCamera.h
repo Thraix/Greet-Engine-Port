@@ -9,9 +9,16 @@ namespace Greet {
       float yaw;
       float pitch;
       float roll;
+      Mat4 viewMatrix;
 
-      const Vec3& GetRotationVector() const override { return Vec3(yaw,pitch,roll); }
-      const Mat4& GetViewMatrix() const override { return Mat4::ViewMatrix(position, GetRotationVector()); }
+      FPCamera(const Mat4& projectionMatrix, const Vec3& position, const Vec3& rotation)
+        : Camera(projectionMatrix), position(position), yaw(rotation.x), pitch(rotation.y), roll(rotation.z),
+        viewMatrix(Mat4::ViewMatrix(position, Vec3(yaw,pitch, roll)))
+      {
+      
+      }
+
+      const Mat4& GetViewMatrix() const override { return viewMatrix; }
 
   };
 }

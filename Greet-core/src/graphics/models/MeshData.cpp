@@ -40,6 +40,19 @@ namespace Greet {
     return NULL;
   }
 
+  AttributeDataBase* MeshData::RemoveAttribute(AttributeDefaults defaults)
+  {
+    for (auto it = m_data.begin(); it != m_data.end(); it++)
+    {
+      if (((AttributeDataBase*)*it)->location == defaults.location)
+      {
+        m_data.erase(it);
+        return *it;
+      }
+    }
+    return nullptr;
+  }
+
   MeshData* MeshData::LowPolify()
   {
     std::set<uint> usedProvokingVertices; 

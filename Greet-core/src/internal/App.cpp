@@ -57,8 +57,8 @@ namespace Greet {
       if (elapsed - renderTimer >= frameCap)
       {
         Window::Clear();
-        Render();
         RenderEngine::Render();
+        Render();
         Window::Render();
         frames++;
         renderTimer = elapsed;
@@ -74,6 +74,8 @@ namespace Greet {
         updates = 0;
         timer += 1.0;
       }
+      // This is generally bad and should probably not be here, but it makes the
+      // computer work less and therefore draw less energy/lower temps
       elapsed = m_timer->Elapsed();
       double timeToNext = fmin(frameCap - (elapsed - renderTimer),updateTick - (elapsed-updateTimer))*1000*0.5;
       if (timeToNext >= 1)

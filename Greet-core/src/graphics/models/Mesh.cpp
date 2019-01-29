@@ -54,6 +54,11 @@ namespace Greet {
       GLCall(glDisable(GL_CULL_FACE));
     }
 
+    if(wireframe) 
+    {
+      GLCall(glPolygonMode(GL_FRONT_AND_BACK, GL_LINE));
+    }
+
     vao.Enable();
     EnableAttributes();
     ibo.Enable();
@@ -65,6 +70,8 @@ namespace Greet {
     DisableAttributes();
     vao.Disable();
     GLCall(glEnable(GL_CULL_FACE));
+    GLCall(glPolygonMode(GL_FRONT_AND_BACK, GL_FILL));
+    GLCall(glFrontFace(GL_CW));
   }
 
   void Mesh::EnableAttributes() const

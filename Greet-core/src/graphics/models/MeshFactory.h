@@ -25,5 +25,6 @@ namespace Greet {
       static uint IndexGrid(uint x, uint z, uint gridWidth, uint gridLength);
       static MeshData* LowPolyGrid(float x, float y, float z, float width, float length, uint gridWidth, uint gridLength, float* heightMap, float height);
       static MeshData* Grid(float x, float y, float z, float width, float length, uint gridWidth, uint gridLength);
+      static MeshData* Sphere(const Vec3& position, float radius, uint latitudes, uint longitudes);
   };
 }

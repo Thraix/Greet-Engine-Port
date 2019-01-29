@@ -38,7 +38,7 @@ namespace Greet
       inline const int GetDX() const { return x; }
       inline const int GetDY() const { return y; }
       uint GetCategory() const {return WINDOW_EVENT;}
-      EventType GetType() const {return EventType::WINDOW_RESIZE;}
+      EventType GetType() const {return EventType::WINDOW_MOVE;}
   };
   class WindowFocusChangeEvent : public Event
   {

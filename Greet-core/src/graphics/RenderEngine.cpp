@@ -94,14 +94,14 @@ namespace Greet {
     for (auto it = m_scenes2d.rbegin(); it != m_scenes2d.rend(); it++)
     {
       it->second->OnEvent(event);
-      if(event.flags | EVENT_HANDLED)
+      if(event.flags & EVENT_HANDLED)
         return;
     }
     // The order here doesn't matter
     for (auto it = m_scenes3d.rbegin(); it != m_scenes3d.rend(); it++)
     {
       it->second->OnEvent(event);
-      if(event.flags | EVENT_HANDLED)
+      if(event.flags & EVENT_HANDLED)
         return;
     }
   }

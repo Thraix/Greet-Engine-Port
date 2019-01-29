@@ -26,7 +26,6 @@ class Core : public App
       progressBarValue = 0;
       FontManager::Add(new FontContainer("/usr/share/fonts/truetype/ubuntu/Ubuntu-C.ttf","roboto"));
 
-      // TODO: This should be done by the engine
       guiScene = new GUIScene(new GUIRenderer(), Shader::FromFile("res/shaders/gui.shader"));
 
       guiScene->AddFrame(FrameFactory::GetFrame("res/guis/gui.xml"));

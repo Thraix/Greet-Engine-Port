@@ -1,7 +1,9 @@
 #pragma once
 
 #include <graphics/Renderable2D.h>
+
 #define __PRETTY_FUNCTION__ __func__
+
 namespace Greet {
   class Group : public Renderable
   {

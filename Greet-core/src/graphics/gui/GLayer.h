@@ -18,6 +18,7 @@ namespace Greet {
   class GUIScene : public Scene
   {
     private:
+      Mat3 projectionMatrix;
       std::vector<Frame*> frames;
       Component* m_focused;
       GUIRenderer* m_renderer;

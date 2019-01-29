@@ -29,7 +29,6 @@ namespace Greet {
     m_distanceWanted = m_distance;
     m_heightWanted = m_height;
     m_positionWanted = m_position;
-    m_rotationVector.z = 0;
     SetDistanceClamp(distanceMin, distanceMax);
     SetHeightClamp(heightMin, heightMax);
     CalculateInformation();
@@ -48,11 +47,6 @@ namespace Greet {
     m_distance += (m_distanceWanted - m_distance) * factor1;
     m_height += (m_heightWanted - m_height) * factor2;
     CalculateInformation();
-  }
-
-  const Vec3& TPCamera::GetRotationVector() const
-  { 
-    return m_rotationVector;
   }
 
   const Mat4& TPCamera::GetViewMatrix() const
@@ -135,12 +129,6 @@ namespace Greet {
     }
   }
 
-  void TPCamera::CalculateRotationVector()
-  {
-    m_rotationVector.x = Math::ToDegrees(asin(m_height));
-    m_rotationVector.y = m_rotation;
-  }
-
   void TPCamera::CalculateViewMatrix()
   {
     m_viewMatrix = Mat4::TPCamera(m_position, m_distance, m_height, m_rotation);
@@ -148,7 +136,6 @@ namespace Greet {
 
   void TPCamera::CalculateInformation()
   {
-    CalculateRotationVector();
     CalculateViewMatrix();
   }
 

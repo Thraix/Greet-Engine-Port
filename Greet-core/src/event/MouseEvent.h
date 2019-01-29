@@ -68,11 +68,11 @@ namespace Greet {
   class MouseScrollEvent : public Event
   {
     private:
-      float scrollVertical;
       float scrollHorizontal;
+      float scrollVertical;
     public:
-      MouseScrollEvent(float scrollVertical, float scrollHorizontal)
-        : scrollVertical{scrollVertical}, scrollHorizontal{scrollHorizontal}
+      MouseScrollEvent(float scrollHorizontal, float scrollVertical)
+        : scrollHorizontal{scrollHorizontal}, scrollVertical{scrollVertical}
       {}
 
       inline const int GetScrollHorizontal() const { return scrollHorizontal; }

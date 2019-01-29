@@ -197,9 +197,9 @@ namespace Greet {
   {
     mouseButtonDown[button] = action == GLFW_PRESS;
     if (action == GLFW_RELEASE)
-      EventDispatcher::OnEvent(MouseReleaseEvent(mousePosPixel.x,mousePosPixel.y,button));
+      EventDispatcher::OnEvent(MouseReleaseEvent(mousePos.x,mousePos.y,button));
     else if (action == GLFW_PRESS)
-      EventDispatcher::OnEvent(MousePressEvent(mousePosPixel.x, mousePosPixel.y, button));
+      EventDispatcher::OnEvent(MousePressEvent(mousePos.x, mousePos.y, button));
     isMouseButtonDown = mouseButtonDown[button];
     if(!isMouseButtonDown)
     {
@@ -215,9 +215,10 @@ namespace Greet {
 
   void Window::mouse_position_callback(GLFWwindow* window, double xpos, double ypos)
   {
-    EventDispatcher::OnEvent(MouseMoveEvent{(float)xpos, (float)ypos, (float)(xpos - mousePosPixel.x), (float)(ypos - mousePosPixel.y)});
     Vec2 mousePosDelta = mousePos;
     mousePos = Vec2(xpos / width, 1.0f - (ypos / height))*2.0f - 1.0f;
+    mousePosDelta = mousePos - mousePosDelta;
+    EventDispatcher::OnEvent(MouseMoveEvent{mousePos.x, mousePos.y, mousePosDelta.x, mousePosDelta.y});
     mousePosPixel = Vec2(xpos, ypos);
   }
 

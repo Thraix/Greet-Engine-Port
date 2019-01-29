@@ -11,7 +11,7 @@ uniform mat4 viewMatrix;
 
 void main()
 {
-	gl_Position = (projectionMatrix * viewMatrix *  vec4(position, 1.0f));
+	gl_Position = (projectionMatrix * viewMatrix *  vec4(position, 0.0f));
 	vert_texCoord = position;
 }
 

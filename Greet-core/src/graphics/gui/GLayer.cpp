@@ -7,7 +7,7 @@
 namespace Greet {
 
   GUIScene::GUIScene(GUIRenderer* renderer, Shader&& shader)
-    : m_renderer(renderer), m_shader(std::move(shader))
+    : m_renderer(renderer), m_shader(std::move(shader)), projectionMatrix(Mat3::Orthographic(0, Window::GetWidth(), 0, Window::GetHeight()))
   {
     m_focused = nullptr;
 
@@ -17,7 +17,7 @@ namespace Greet {
       texIDs[i] = i;
     }
     m_shader.Enable();
-    m_shader.SetUniformMat3("pr_matrix", Mat3::Orthographic(0, Window::GetWidth(), 0, Window::GetHeight()));
+    m_shader.SetUniformMat3("pr_matrix", projectionMatrix);
     m_shader.SetUniform1iv("textures", 32, texIDs);
     m_shader.Disable();
   }
@@ -47,12 +47,14 @@ namespace Greet {
 
   bool GUIScene::OnPressed(MousePressEvent& event)
   {
+    Vec2 pos = ~projectionMatrix * event.GetPosition();
+    MousePressEvent transformedEvent{pos.x,pos.y,event.GetButton()};
     for (auto it = frames.rbegin(); it != frames.rend(); ++it)
     {
-      Vec2 pos = event.GetPosition() - (*it)->GetMargin().LeftTop();
+      Vec2 pos = transformedEvent.GetPosition() - (*it)->GetMargin().LeftTop();
       if((*it)->IsMouseInside(pos))
       {
-        (*it)->OnMousePressed(event, pos - (*it)->GetPosition());
+        (*it)->OnMousePressed(transformedEvent, pos - (*it)->GetPosition());
         return true;
       }
     }
@@ -63,22 +65,32 @@ namespace Greet {
   void GUIScene::OnReleased(MouseReleaseEvent& event)
   {
     if (m_focused != nullptr)
-      m_focused->MouseReleased(event, event.GetPosition() - m_focused->GetRealPosition());
+    {
+      Vec2 pos = ~projectionMatrix * event.GetPosition();
+      MouseReleaseEvent transformedEvent{pos.x,pos.y,event.GetButton()};
+      m_focused->MouseReleased(transformedEvent, transformedEvent.GetPosition() - m_focused->GetRealPosition());
+    }
   }
 
   void GUIScene::OnMoved(MouseMoveEvent& event)
   {
+    Mat3 projectionInv = ~projectionMatrix;
+    Vec2 pos = projectionInv * event.GetPosition();
+    Vec2 delta = projectionInv * event.GetDeltaPosition();
+    MouseMoveEvent transformedEvent{pos.x,pos.y, delta.x, delta.y};
+
     if (m_focused != nullptr)
     {
-      m_focused->MouseMoved(event, event.GetPosition() - m_focused->GetRealPosition());
+      m_focused->MouseMoved(transformedEvent, transformedEvent.GetPosition() - m_focused->GetRealPosition());
       if(m_focused->UsingMouse())
         return;
     }
 
     for (auto it = frames.rbegin(); it != frames.rend(); ++it)
     {
-      (*it)->OnMouseMoved(event, event.GetPosition() - (*it)->GetPosition() - (*it)->GetMargin().LeftTop());
+      (*it)->OnMouseMoved(transformedEvent, transformedEvent.GetPosition() - (*it)->GetPosition() - (*it)->GetMargin().LeftTop());
     }
+    event.flags |= transformedEvent.flags;
   }
 
   void GUIScene::OnPressed(KeyPressEvent& event)
@@ -100,8 +112,9 @@ namespace Greet {
 
   void GUIScene::WindowResize(WindowResizeEvent& event)
   {
+    projectionMatrix = Mat3::Orthographic(0, Window::GetWidth(), 0, Window::GetHeight());
     m_shader.Enable();
-    m_shader.SetUniformMat3("pr_matrix", Mat3::Orthographic(0, Window::GetWidth(), 0, Window::GetHeight()));
+    m_shader.SetUniformMat3("pr_matrix", projectionMatrix);
     m_shader.Disable();
     for (auto it = frames.begin(); it != frames.end(); ++it)
     {

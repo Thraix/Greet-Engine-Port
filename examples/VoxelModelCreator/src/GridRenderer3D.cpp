@@ -1,0 +1,132 @@
+#include "GridRenderer3D.h"
+
+namespace vmc
+{
+  using namespace Greet;
+
+  GridRenderer3D::GridRenderer3D()
+    : Renderer3D(), lineShader(Shader::FromFile("res/shaders/simple.shader")), vao(), vbo(2 * sizeof(Vec3), BufferType::ARRAY, BufferDrawType::DYNAMIC), ibo(2 * sizeof(uint), BufferType::INDEX, BufferDrawType::STATIC)
+  {
+    meshdata = MeshFactory::Cube2(0.5f, 0.5f, 0.5f, 1, 1, 1);
+    Vec2* texCoords = new Vec2[6 * 4];
+    for (int i = 0;i < 6;i++)
+    {
+      texCoords[i * 4 + 0] = Vec2(0, 0);
+      texCoords[i * 4 + 1] = Vec2(1, 0);
+      texCoords[i * 4 + 2] = Vec2(1, 1);
+      texCoords[i * 4 + 3] = Vec2(0, 1);
+    }
+
+    meshdata->AddAttribute(new AttributeData<Vec2>(ATTRIBUTE_TEXCOORD, texCoords));
+    mesh = new Mesh(meshdata);
+    material = new Material(Shader::FromFile("res/shaders/voxel.shader"));
+    //material->AddUniform<uint>(Uniform1ui("color"));
+    mmodel = new MaterialModel(mesh, material);
+    emodel = new EntityModel(mmodel, 0, 0, 0, 1, 1, 1, 0, 0, 0);
+
+
+    // For drawing lines...
+    vao.Enable();
+    vbo.Enable();
+    vbo.UpdateData(nullptr);
+
+    GLCall(glEnableVertexAttribArray(0));
+
+    GLCall(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vec3), 0));
+    vbo.Disable();
+    vao.Disable();
+
+    m_indices = new uint[2]{ 0,1 };
+    ibo.Enable();
+    ibo.UpdateData(m_indices);
+    ibo.Disable();
+
+  }
+  void GridRenderer3D::UpdateShader()
+  {
+    material->SetShader(Shader::FromFile("res/shaders/voxel.shader"));
+  }
+
+  void GridRenderer3D::Begin(Camera* camera)
+  {
+    Renderer3D::Begin(camera);
+    glLineWidth(1.0f);
+  }
+
+  void GridRenderer3D::DrawCube(Camera* camera, const Vec3& pos, const Vec3& size, uint color, bool culling)
+  {
+    material->SetColor(color);
+    mesh->SetEnableCulling(false);
+    emodel->SetScale(size);
+    emodel->SetPosition(pos);
+    emodel->SetRotation(Vec3(0, 0, 0));
+    emodel->UpdateTransformation();
+    emodel->PreRender(this, camera);
+    emodel->Render(this, camera);
+    emodel->PostRender(this, camera);
+  }
+
+  void GridRenderer3D::Submit(Camera* camera, const Cube& cube)
+  {
+    material->SetColor(cube.color);
+    mesh->SetEnableCulling(false);
+    emodel->SetScale(Vec3(1, 1, 1));
+    emodel->SetPosition(cube.GetPosition());
+    emodel->SetRotation(Vec3(0, 0, 0));
+    emodel->UpdateTransformation();
+    emodel->GetMaterialModel().GetMaterial().Bind();
+    BindMatrices(emodel->GetMaterialModel().GetMaterial().GetShader(), camera);
+    emodel->GetMaterialModel().GetMesh().Bind();
+
+    emodel->GetMaterialModel().GetMaterial().GetShader().SetUniformMat4("transformationMatrix", emodel->GetTransformationMatrix());
+    emodel->GetMaterialModel().GetMesh().Render();
+    emodel->GetMaterialModel().GetMesh().Unbind();
+    emodel->GetMaterialModel().GetMaterial().GetShader().Disable();
+    //emodel->PreRender(this, camera);
+    //emodel->Render(this, camera);
+    //emodel->PostRender(this, camera);
+  }
+
+  void GridRenderer3D::DrawLineCube(Camera* camera, const Vec3& pos, const Vec3& size, const Vec4& color)
+  {
+    DrawLine(camera, Vec3(pos.x, pos.y, pos.z), Vec3(pos.x + size.x, pos.y, pos.z), color);
+    DrawLine(camera, Vec3(pos.x, pos.y + size.y, pos.z), Vec3(pos.x + size.x, pos.y + size.y, pos.z), color);
+    DrawLine(camera, Vec3(pos.x, pos.y + size.y, pos.z + size.z), Vec3(pos.x + size.x, pos.y + size.y, pos.z + size.z), color);
+    DrawLine(camera, Vec3(pos.x, pos.y, pos.z + size.z), Vec3(pos.x + size.x, pos.y, pos.z + size.z), color);
+
+    DrawLine(camera, Vec3(pos.x, pos.y, pos.z), Vec3(pos.x, pos.y+size.y, pos.z), color);
+    DrawLine(camera, Vec3(pos.x + size.x, pos.y, pos.z), Vec3(pos.x + size.x, pos.y + size.y, pos.z), color);
+    DrawLine(camera, Vec3(pos.x + size.x, pos.y, pos.z + size.z), Vec3(pos.x + size.x, pos.y + size.y, pos.z + size.z), color);
+    DrawLine(camera, Vec3(pos.x, pos.y, pos.z + size.z), Vec3(pos.x, pos.y + size.y, pos.z + size.z), color);
+
+    DrawLine(camera, Vec3(pos.x, pos.y, pos.z), Vec3(pos.x, pos.y, pos.z+size.z), color);
+    DrawLine(camera, Vec3(pos.x, pos.y + size.y, pos.z), Vec3(pos.x, pos.y + size.y, pos.z+size.z), color);
+    DrawLine(camera, Vec3(pos.x + size.x, pos.y + size.y, pos.z), Vec3(pos.x + size.x, pos.y + size.y, pos.z + size.z), color);
+    DrawLine(camera, Vec3(pos.x + size.x, pos.y, pos.z), Vec3(pos.x + size.x, pos.y, pos.z + size.z), color);
+  }
+
+  void GridRenderer3D::DrawLine(Camera* camera, const Vec3& start, const Vec3& end, const Vec4& color)
+  {
+    lineShader.Enable();
+    lineShader.SetUniformMat4("projectionMatrix", camera->GetProjectionMatrix());
+    lineShader.SetUniformMat4("viewMatrix", camera->GetViewMatrix());
+    lineShader.SetUniform4f("mat_color", color);
+
+    vbo.Enable();
+    Vec3* buffer = (Vec3*)vbo.MapBuffer();
+
+    buffer[0] = start;
+    buffer[1] = end;
+
+    vbo.UnmapBuffer();
+    vbo.Disable();
+
+    vao.Enable();
+    ibo.Enable();
+    GLCall(glDrawElements(GL_LINES, 2, GL_UNSIGNED_INT, NULL));
+    ibo.Disable();
+    vao.Disable();
+
+    lineShader.Disable();
+  }
+}

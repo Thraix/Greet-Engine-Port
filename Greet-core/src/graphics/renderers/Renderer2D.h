@@ -4,32 +4,54 @@
 #include <math/Maths.h>
 #include <graphics/fonts/Font.h>
 #include <logging/Log.h>
-#include <graphics/renderers/Renderer.h>
 #include <graphics/Sprite.h>
 
 namespace Greet{
 
   class Renderable;
   class Renderable2D;
-  class Renderable4Poly;
   class RenderablePoly;
 
-  class Renderer2D : public Renderer
+  class Renderer2D
   {
+    protected:
+      std::stack<Mat3> m_transformationStack;
+      const Mat3* m_transformationBack;
     public:
+      Renderer2D()
+      {
+        m_transformationStack.push(Mat3::Identity());
+        m_transformationBack = &m_transformationStack.top();
+      }
+
       virtual ~Renderer2D() {}
       virtual void Begin() {}
       virtual void Flush() = 0;
       virtual void End() {}
 
-      virtual void Submit(const Renderable2D *renderable) = 0;
-      virtual void Submit(const RenderablePoly *renderable) = 0;
-      virtual void Submit(const Transform& transform, uint texID, Vec2 texPos, Vec2 texSize, uint color, uint maskTexId, const Vec2& maskTexPos, const Vec2& maskTexSize) = 0;
-      virtual void Submit(const Vec2& position, const Vec2& size, uint texID, Vec2 texPos, Vec2 texSize, uint color, uint maskTexId, const Vec2& maskTexPos, const Vec2& maskTexSize) = 0;
-      virtual void SubmitString(const std::string& text, const Vec2& position, Font* font, const uint& color, float scale) = 0;
+      virtual void Submit(const Renderable2D* renderable) = 0;
 
-      virtual void DrawRect(const Vec2& position, const Vec2& size, const uint& color) = 0;
-      virtual void FillRect(const Vec2& position, const Vec2& size, const uint& color) = 0;
-      virtual void FillRect(const Vec2& position, const Vec2& size, const uint& color, const Sprite* mask) = 0;
+      void PushMatrix(const Mat3 &matrix, bool override = false)
+      {
+        if (override)
+          m_transformationStack.push(matrix);
+        else
+          m_transformationStack.push(*m_transformationBack * matrix);
+        m_transformationBack = &m_transformationStack.top();
+
+      }
+      void PopMatrix()
+      {
+        if (m_transformationStack.size() > 1)
+          m_transformationStack.pop();
+        else
+          Log::Warning("Trying to pop the last matrix.");
+        m_transformationBack = &m_transformationStack.top();
+      }
+
+      const Mat3& GetMatrix() const
+      {
+        return *m_transformationBack;
+      }
   };
 }
