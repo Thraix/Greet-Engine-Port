@@ -90,7 +90,6 @@ namespace Greet {
 
   void BatchRenderer::SubmitString(const std::string& text, const Vec2& position, Font* font, const uint& color, float scale)
   {
-    using namespace ftgl;
     uint ts = GetTextureSlot(font->GetFontAtlasId());
     FontAtlas* atlas = font->GetFontAtlas();
     float x = position.x;
