@@ -1,23 +1,26 @@
 #include "Joystick.h"
 
+#include <internal/GreetGL.h>
 #include <logging/Log.h>
 #include <event/JoystickEvent.h>
 #include <event/EventDispatcher.h>
 #include <cstring>
 
 namespace Greet {
-  Joystick::Joystick(uint jsNum, float calibrateLeft, float calibrateRight)
-    : m_jsNum(jsNum)
+  Joystick::Joystick(int jsNum)
+    : m_jsNum{jsNum}, m_connected{false}, m_wasConnected{false}, 
+    buttonCount{0}, axisCount{0},
+    buttons{nullptr}, axis{nullptr},
+    previousButtons{nullptr}, previousAxis{nullptr}
   {
-    m_connected = false;
-    m_wasConnected = false;
-    previousButtons = nullptr;
   }
 
   Joystick::~Joystick()
   {
     if(previousButtons != nullptr)
       delete[] previousButtons;
+    if(previousAxis != nullptr)
+      delete[] previousAxis;
   }
 
   void Joystick::SetState(bool connected)
@@ -28,8 +31,8 @@ namespace Greet {
       buttons = glfwGetJoystickButtons(m_jsNum, &buttonCount);
       previousButtons = new unsigned char[buttonCount];
       previousAxis = new float[axisCount];
-      memcpy(previousButtons,buttons,buttonCount);
-      memcpy(previousAxis,axis,axisCount);
+      memcpy(previousButtons,buttons,buttonCount*sizeof(unsigned char));
+      memcpy(previousAxis,axis,axisCount*sizeof(float));
       m_connected = true;
       m_wasConnected = true;
     }
@@ -40,7 +43,7 @@ namespace Greet {
       if(previousButtons != nullptr)
         delete[] previousButtons;
       if(previousAxis != nullptr)
-        delete[] previousButtons;
+        delete[] previousAxis;
       previousButtons = nullptr;
       previousAxis = nullptr;
       m_connected = false;

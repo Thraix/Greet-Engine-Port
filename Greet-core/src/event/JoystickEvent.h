@@ -11,9 +11,10 @@ namespace Greet {
       int joystick;
       int button;
       JoystickButtonEvent (int joystick, int button)
-        : button(button) {}
+        : joystick{joystick}, button{button} {}
     public:
-      inline const int GetButton() const { return button; }
+      int GetJoystick() const { return joystick; }
+      int GetButton() const { return button; }
       uint GetCategory() const {return INPUT_EVENT | JOYSTICK_EVENT;}
   };
 
@@ -85,6 +86,38 @@ namespace Greet {
 
       EventType GetType() const {return EventType::JOYSTICK_STICK_MOVE;}
       uint GetCategory() const {return INPUT_EVENT | JOYSTICK_EVENT;}
+  };
+
+  class JoystickConnectionEvent : public Event
+  {
+    private:
+      int joystick;
+
+    protected:
+      JoystickConnectionEvent(int joystick)
+        : joystick{joystick}
+      {}
+    public:
+      int GetJoystick() const { return joystick; }
+      uint GetCategory() const {return JOYSTICK_EVENT;}
+  };
+
+  class JoystickConnectEvent : public JoystickConnectionEvent
+  {
+    public:
+      JoystickConnectEvent(int joystick)
+        : JoystickConnectionEvent{joystick}
+      {}
+      EventType GetType() const { return EventType::JOYSTICK_CONNECT;}
+  };
+
+  class JoystickDisconnectEvent : public JoystickConnectionEvent
+  {
+    public:
+      JoystickDisconnectEvent(int joystick)
+        : JoystickConnectionEvent{joystick}
+      {}
+      EventType GetType() const { return EventType::JOYSTICK_DISCONNECT;}
   };
 
 }

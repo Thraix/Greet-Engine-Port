@@ -92,11 +92,6 @@
 #include <internal/App.h>
 #include <internal/GreetGL.h>
 #include <internal/GreetTypes.h>
-#include <listeners/JoystickState.h>
-#include <listeners/OnClickListener.h>
-#include <listeners/WindowFocus.h>
-#include <listeners/WindowListener.h>
-#include <listeners/WindowResize.h>
 #include <logging/Log.h>
 #include <logging/LogLevel.h>
 #include <logging/LogStream.h>

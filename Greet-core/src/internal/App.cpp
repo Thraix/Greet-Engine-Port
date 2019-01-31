@@ -4,16 +4,18 @@
 #include <thread>
 #include <logging/Log.h>
 #include <graphics/RenderEngine.h>
+#include <utility>
+#include <functional>
+#include <event/EventDispatcher.h>
 
 namespace Greet {
 
   App::App(const std::string& title, uint width, uint height)
     : m_fps(0), m_ups(0)
   {
+    using namespace std::placeholders;
+    EventDispatcher::AddGlobalEventReceiver("Application", std::bind(&App::OnEvent, std::ref(*this), _1));
     Window::CreateWindow(title,width,height);
-    Window::AddResizeCallback(this);
-    Window::AddJoystickCallback(this);
-    Window::AddWindowFocusCallback(this);
     //std::ofstream file(".logging");
     //LogStream* fileStream = new LogStream(file, LogLevel::error, "fileStream");
     //Log::addLogStream(fileStream);

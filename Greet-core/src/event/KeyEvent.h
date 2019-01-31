@@ -13,7 +13,7 @@ namespace Greet {
       KeyEvent(uint button)
         : button(button) {}
     public:
-      inline const uint GetButton() const { return button; }
+      uint GetButton() const { return button; }
       uint GetCategory() const {return INPUT_EVENT | KEYBOARD_EVENT;}
   };
 

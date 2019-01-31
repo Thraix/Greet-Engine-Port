@@ -1,7 +1,6 @@
 #pragma once
 
 #include <vector>
-#include <internal/GreetTypes.h>
 #include <math/Maths.h>
 #include <internal/GreetGL.h>
 
@@ -35,7 +34,7 @@ namespace Greet {
       const unsigned char* buttons;
 
     private:
-      Joystick(uint jsNum, float m_calibrateLeft, float m_calibrateRight);
+      Joystick(int jsNum);
       void SetState(bool connected);
       void Update();
       bool CheckConnect();

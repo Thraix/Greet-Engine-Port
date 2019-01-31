@@ -2,10 +2,11 @@
 
 #include <graphics/Window.h>
 #include <utils/Timer.h>
+#include <event/Event.h>
 
 namespace Greet {
 
-  class App : public WindowListener, public JoystickStateListener
+  class App
   {
     protected:
       Timer* m_timer;
@@ -21,9 +22,7 @@ namespace Greet {
       virtual void Tick() = 0;
       virtual void Update(float elapsedTime) = 0;
       virtual void Render() = 0;
-      virtual void WindowResize(int width, int height){}
-      virtual void JoystickState(uint joystick, bool connect){}
-      virtual void WindowFocus(bool focused) {}
+      virtual void OnEvent(Event& event) {}
 
       void SetFrameCap(uint frameCap)
       {
@@ -40,8 +39,8 @@ namespace Greet {
         return (uint)(1.0 / frameCap);
       }
 
-      const uint GetFPS() const { return m_fps; }
-      const uint GetUPS() const { return m_ups; }
+      uint GetFPS() const { return m_fps; }
+      uint GetUPS() const { return m_ups; }
 
     public:
       void Start();

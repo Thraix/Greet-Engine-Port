@@ -36,7 +36,6 @@ namespace vmc
 		{
       using namespace std::placeholders;
       FontManager::Add(new FontContainer("/usr/share/fonts/truetype/ubuntu/Ubuntu-C.ttf","roboto"));
-      EventDispatcher::AddGlobalEventReceiver("Application", std::bind(&Core::OnEvent, std::ref(*this), _1));
 			SetFrameCap(144);
 
       guiScene = new GUIScene(new GUIRenderer(), Shader::FromFile("res/shaders/gui.shader"));
@@ -77,9 +76,9 @@ namespace vmc
 		bool screenshot = false;
 		void Render() override
 		{
-		}
+    }
 
-    void OnEvent(Event& event)
+    void OnEvent(Event& event) override
     {
       if(EVENT_IS_TYPE(event, EventType::WINDOW_RESIZE))
       {

@@ -7,7 +7,7 @@ MKDIR_P=mkdir -p
 BIN=bin/
 OBJPATH=$(BIN)intermediates
 INCLUDES=-I./../../Greet-core/src/ -I./../../deps/includes/ 
-OBJECTS=
+OBJECTS=$(OBJPATH)/GuiTesting.o 
 CFLAGS=$(INCLUDES) -std=c++17 -c -w -g3 -D_DEBUG -g 
 LIBDIR=-L./../../Greet-core/bin/ 
 LDFLAGS=-Wl,-rpath=../../Greet-core/bin/ 
@@ -31,3 +31,6 @@ $(OUTPUT): $(OBJECTS)
 install: all
 	$(info Installing Sandbox to /usr/bin/)
 	@cp $(OUTPUT) /usr/bin/Sandbox.a
+$(OBJPATH)/GuiTesting.o : src/GuiTesting.cpp
+	$(info -[100%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<

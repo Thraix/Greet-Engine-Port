@@ -10,10 +10,11 @@
 #include <event/WindowEvent.h>
 #include <event/KeyEvent.h>
 #include <event/MouseEvent.h>
+#include <event/JoystickEvent.h>
 
 namespace Greet {
 
-  std::vector<Joystick> Window::joysticks;
+  std::vector<std::unique_ptr<Joystick>> Window::joysticks;
   bool Window::focus;
   Vec2 Window::mousePos;
   Vec2 Window::mousePosPixel;
@@ -24,12 +25,7 @@ namespace Greet {
   Vec4 Window::bgColor;
   bool Window::mouseButtonDown[MAX_MOUSEBUTTONS];
   bool Window::isMouseButtonDown;
-  uint Window::joystickCheck;
 
-
-  std::vector<WindowResizeListener*> Window::windowResize;
-  std::vector<WindowFocusListener*> Window::windowFocus;
-  std::vector<JoystickStateListener*> Window::joystickState;
 
   void Window::CreateWindow(std::string title, uint width, uint height)
   {
@@ -40,13 +36,18 @@ namespace Greet {
     Window::height = height;
 
     memset(mouseButtonDown,false,MAX_MOUSEBUTTONS);
-    for (int i = 0; i < MAX_JOYSTICKS; i++)
-    {
-      joysticks.push_back(Joystick(i, 0.3f, 0.3f));
-    }
-    if (!init())
+    if (!Init())
     {
       glfwTerminate();
+    }
+    for (int i = 0; i < MAX_JOYSTICKS; i++)
+    {
+      joysticks.push_back(std::unique_ptr<Joystick>{new Joystick{i}});
+      if(glfwJoystickPresent(i) == GLFW_TRUE)
+      {
+        joysticks.back()->SetState(true); 
+        EventDispatcher::OnEvent(JoystickConnectEvent{i});
+      }
     }
   }
 
@@ -57,12 +58,14 @@ namespace Greet {
     AtlasManager::Destroy();
     ComponentFactory::Cleanup();
     FrameFactory::Cleanup();
+    joysticks.clear();
     glfwTerminate();
   }
 
-  bool Window::init()
+  bool Window::Init()
   {
     ASSERT(glfwInit(),"Failed to initialize GLFW!");
+
     glfwWindowHint(GLFW_SAMPLES, 4);
     window = glfwCreateWindow(width, height, title.c_str(), NULL, NULL);
     ASSERT(window,"Failed to initialize window!");
@@ -113,21 +116,12 @@ namespace Greet {
 
   void Window::Update()
   {
-    if (focus){
-      for (int i = MAX_JOYSTICKS-1; i >= 0; i--)
-      {
-        if (joysticks[i].m_connected)
-        {
-          joysticks[i].Update();
-          if (joystickState.size()>0 && !joysticks[i].m_connected && joysticks[i].m_wasConnected)
-          {
-            for (uint j = 0;j < joystickState.size();j++)
-              joystickState[j]->JoystickState(j, JOYSTICK_STATE_DISCONNECTED);
-            joystickCheck = i;
-          }
-        }
-      }
-    }
+    // Only update the joystick if we have focus.
+    // Otherwise it will send events all the time
+    if (focus)
+      for (int i = 0; i < MAX_JOYSTICKS; i++)
+        if (joysticks[i]->m_connected)
+          joysticks[i]->Update();
   }
 
   void Window::Render()
@@ -142,45 +136,12 @@ namespace Greet {
     GLCall(glClearColor(color.x, color.y, color.z, color.w));
   }
 
-  void Window::AddResizeCallback(WindowResizeListener* listener)
-  {
-    windowResize.push_back(listener);
-  }
-
-  void Window::RemoveResizeCallback(WindowResizeListener* listener)
-  {
-
-    windowResize.erase(std::remove(windowResize.begin(), windowResize.end(), listener));
-  }
-
-  void Window::AddWindowFocusCallback(WindowFocusListener* listener)
-  {
-    windowFocus.push_back(listener);
-  }
-
-  void Window::RemoveWindowFocusCallback(WindowFocusListener* listener)
-  {
-    windowFocus.erase(std::remove(windowFocus.begin(), windowFocus.end(), listener));
-  }
-
-  void Window::AddJoystickCallback(JoystickStateListener* listener)
-  {
-    joystickState.push_back(listener);
-  }
-
-  void Window::RemoveJoystickCallback(JoystickStateListener* listener)
-  {
-    joystickState.erase(std::remove(joystickState.begin(), joystickState.end(), listener));
-  }
-
   void Window::window_resize(GLFWwindow *window, int width, int height)
   {
     glViewport(0, 0, width, height);
     Window::width = width;
     Window::height = height;
     EventDispatcher::OnEvent(WindowResizeEvent{width,height});
-    for (uint i = 0;i < Window::windowResize.size();i++)
-      windowResize[i]->WindowResize(width,height);
   }
 
   void Window::key_callback(GLFWwindow *window, int key, int scancode, int action, int mods)
@@ -251,8 +212,10 @@ namespace Greet {
 
   void Window::joystick_callback(int joy, int event)
   {
-    joysticks[joy].SetState(event == GLFW_CONNECTED);
-    for (uint i = 0;i < joystickState.size();i++)
-      joystickState[i]->JoystickState(joy, event == GLFW_CONNECTED);
+    joysticks[joy]->SetState(event == GLFW_CONNECTED);
+    if(event == GLFW_CONNECTED)
+      EventDispatcher::OnEvent(JoystickConnectEvent{joy});
+    else
+      EventDispatcher::OnEvent(JoystickDisconnectEvent{joy});
   }
 }

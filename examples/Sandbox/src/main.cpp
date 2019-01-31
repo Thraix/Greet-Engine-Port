@@ -310,8 +310,6 @@ class Core : public App
       data->AddAttribute(new AttributeData<uint>(ATTRIBUTE_COLOR, colors));
     }
 
-
-
     float Random()
     {
       return (float)((double)rand() / (RAND_MAX));
@@ -336,155 +334,108 @@ class Core : public App
       waterMaterial->GetShader().SetUniform1f("time", waterTime);
       waterMaterial->GetShader().Disable();
 
-      //sphere->SetPosition(camera->GetPosition());
-
       progressFloat++;
       if (progressFloat > 1000)
         progressFloat = 0;
-      //fps->text = toString(slider->getValue());
-#if 0 // FPCamera
-      vec2 velocityY = movement->getVelocity();
-      if (velocityY.lengthSQ() != 0)
-      {
-        velocityY = velocityY.rotate(camera->yaw);
-        camera->position += vec3(velocityY.x, 0, velocityY.y);
-      }
-      camera->position.y += velocityPos.y - velocityNeg.y;
-      vec2 rotationVec = rotation->getVelocity();
-      camera->pitch += rotationVec.x;
-      camera->yaw += rotationVec.y;
-      if (Window::isJoystickConnected(0))
-      {
-        Joystick& joystick = Window::getJoystick(0);
-        if (abs(joystick.getLeftStick().length()) > 0.2)
-        {
-          float r = toRadians(camera->yaw);
-          vec2 rot = joystick.getLeftStick().rotateR(r)*0.2;
-          camera->position += vec3(rot.x, 0.0, rot.y);
-        }
-        if (abs(joystick.getRightStick().x) > 0.2)
-        {
-          camera->pitch += joystick.getRightStick().x * 2;
-        }
-        if (abs(joystick.getRightStick().y) > 0.2)
-        {
-          camera->yaw += joystick.getRightStick().y * 2;
-        }
-        if (joystick.isButtonDown(GLFW_JOYSTICK_A))
-        {
-          camera->position.y += 0.2;
-        }
-        if (joystick.isButtonDown(GLFW_JOYSTICK_B))
-        {
-          camera->position.y -= 0.2;
-        }
-      }
-#else
-
-#endif
-      //model->rotate(elapsedTime*100, elapsedTime * 100, elapsedTime * 100);
-      //model->update(elapsedTime);
-      //model2->update(elapsedTime);
-      //lightSource->update(elapsedTime);
-      //for (uint i = 0;i < 2000;i++)
-      //{
-      //	models[i].update(elapsedTime);
-      //}
       hue += elapsedTime / 3.0f;
       while (hue >= 1)
         hue--;
       cursor->m_color = ColorUtils::Vec3ToColorHex(ColorUtils::HSVtoRGB(hue, 1, 1,1.0));
-      //cursor->setPosition(vec2(p.x, p.y));
     }
-    /*
 
-    void OnPressed(const KeyPressedEvent& e) override
+    void OnEvent(Event& event) override
     {
-      if (e.GetButton() == GLFW_KEY_F5)
+      if(EVENT_IS_TYPE(event, EventType::MOUSE_MOVE))
       {
-        modelMaterial->SetShader(Shader::FromFile("res/shaders/3dshader.shader"));
-        terrainMaterial->SetShader(Shader::FromFile("res/shaders/terrain.shader"));
-        flatMaterial->SetShader(Shader::FromFile("res/shaders/flat3d.shader"));
-        Light* l = new Light(Vec3(10, 10, 10), 0xffffffff);
+        cursor->SetPosition(((MouseMoveEvent&)event).GetPosition());
+      }
+      else if(EVENT_IS_TYPE(event, EventType::KEY_RELEASE))
+      {
+        KeyReleaseEvent& e = (KeyReleaseEvent&)event;
+        movement->onInput(e.GetButton(),false);
+        rotation->onInput(e.GetButton(),false);
+        if (e.GetButton() == GLFW_KEY_LEFT_SHIFT)
+        {
+          velocityNeg.y = 0;
+        }
+        if (e.GetButton() == GLFW_KEY_SPACE)
+        { 
+          velocityPos.y = 0;
+        }
+      }
+      else if(EVENT_IS_TYPE(event, EventType::JOYSTICK_CONNECT))
+      {
+        Log::Info("Controller ", ((JoystickConnectEvent&)event).GetJoystick(), " connected!");
+      }
+      else if(EVENT_IS_TYPE(event, EventType::JOYSTICK_DISCONNECT))
+      {
+        Log::Info("Controller ", ((JoystickDisconnectEvent&)event).GetJoystick(), " disconnected!");
+      }
+      else if(EVENT_IS_TYPE(event, EventType::WINDOW_RESIZE))
+      {
+        uilayer->SetProjectionMatrix(Mat3::Orthographic(0,Window::GetWidth(),0,Window::GetHeight()));
+      }
+      else if(EVENT_IS_TYPE(event, EventType::KEY_PRESS))
+      {
+        KeyPressEvent& e = (KeyPressEvent&)event;
+        if (e.GetButton() == GLFW_KEY_F5)
+        {
+          modelMaterial->SetShader(Shader::FromFile("res/shaders/3dshader.shader"));
+          terrainMaterial->SetShader(Shader::FromFile("res/shaders/terrain.shader"));
+          flatMaterial->SetShader(Shader::FromFile("res/shaders/flat3d.shader"));
+          Light* l = new Light(Vec3(10, 10, 10), 0xffffffff);
 
-        modelMaterial->GetShader().Enable();
-        l->SetToUniform(modelMaterial->GetShader(), "light");
-        modelMaterial->GetShader().Disable();
-        flatMaterial->GetShader().Enable();
-        l->SetToUniform(flatMaterial->GetShader(), "light");
-        flatMaterial->GetShader().Disable();
-        //terrainShader->enable();
-        //l->setToUniform(terrainShader, "light");
-        //terrainShader->disable();
-        delete l;
+          modelMaterial->GetShader().Enable();
+          l->SetToUniform(modelMaterial->GetShader(), "light");
+          modelMaterial->GetShader().Disable();
+          flatMaterial->GetShader().Enable();
+          l->SetToUniform(flatMaterial->GetShader(), "light");
+          flatMaterial->GetShader().Disable();
+          //terrainShader->enable();
+          //l->setToUniform(terrainShader, "light");
+          //terrainShader->disable();
+          delete l;
+        }
+        if (e.GetButton() == GLFW_KEY_F1)
+        {
+          Log::Info("pos=", camera->GetPosition(), " height=", camera->GetHeight(), " distance=", camera->GetDistance(), ", rotation=", camera->GetRotation());
+        }
+        if (e.GetButton() == GLFW_KEY_F2)
+        {
+          camera->SetPosition(Vec3(-3.5, -7.8, 5.5));
+          camera->SetDistance(18);
+          camera->SetHeight(0.66);
+          camera->SetRotation(38.5);
+        }
+        if (e.GetButton() == GLFW_KEY_F10)
+        {
+          Utils::Screenshot(Window::GetWidth(), Window::GetHeight());
+        }
+        if (e.GetButton() == GLFW_KEY_X)
+        {
+          Vec3 p = layer3d->GetScreenCoordination(Vec3(0,0,0),Window::GetWidth(),Window::GetHeight());
+        }
+        movement->onInput(e.GetButton(),true);
+        rotation->onInput(e.GetButton(),true);
+        if (e.GetButton() == GLFW_KEY_LEFT_SHIFT)
+        {
+          velocityNeg.y = 0.2;
+        }
+        if (e.GetButton() == GLFW_KEY_SPACE)
+        {
+          velocityPos.y = 0.2;
+        }
       }
-      if (e.GetButton() == GLFW_KEY_F1)
+      else if(EVENT_IS_TYPE(event, EventType::JOYSTICK_PRESS))
       {
-        Log::Info("pos=", camera->GetPosition(), " height=", camera->GetHeight(), " distance=", camera->GetDistance(), ", rotation=", camera->GetRotation());
-      }
-      if (e.GetButton() == GLFW_KEY_F2)
-      {
-        camera->SetPosition(Vec3(-3.5, -7.8, 5.5));
-        camera->SetDistance(18);
-        camera->SetHeight(0.66);
-        camera->SetRotation(38.5);
-      }
-      if (e.GetButton() == GLFW_KEY_F10)
-      {
-        Utils::Screenshot(Window::GetWidth(), Window::GetHeight());
-      }
-      if (e.GetButton() == GLFW_KEY_X)
-      {
-        Vec3 p = layer3d->GetScreenCoordination(Vec3(0,0,0),Window::GetWidth(),Window::GetHeight());
-      }
-      movement->onInput(e.GetButton(),true);
-      rotation->onInput(e.GetButton(),true);
-      if (e.GetButton() == GLFW_KEY_LEFT_SHIFT)
-      {
-        velocityNeg.y = 0.2;
-      }
-      if (e.GetButton() == GLFW_KEY_SPACE)
-      {
-        velocityPos.y = 0.2;
+        JoystickPressEvent& e = (JoystickPressEvent&)event;
+        Log::Info("Joystick button pressed joy=", e.GetJoystick(), " button=", e.GetButton());
       }
     }
-
-    void OnReleased(const KeyReleasedEvent& e)  override
-    {
-      movement->onInput(e.GetButton(),false);
-      rotation->onInput(e.GetButton(),false);
-      if (e.GetButton() == GLFW_KEY_LEFT_SHIFT)
-      {
-        velocityNeg.y = 0;
-      }
-      if (e.GetButton() == GLFW_KEY_SPACE)
-      { 
-        velocityPos.y = 0;
-      }
-    }
-
-    void OnMoved(const MouseMovedEvent& e) override
-    {
-      cursor->SetPosition(Vec2(e.GetX(), e.GetY()));
-    }
-    */
 
     bool screenshot = false;
     void Render() override
     {
-    }
-
-    void WindowResize(int width, int height) override
-    {
-      uilayer->SetProjectionMatrix(Mat3::Orthographic(0,Window::GetWidth(),0,Window::GetHeight()));
-    }
-
-    void JoystickState(uint joy, bool connected) override
-    {
-      if (connected)
-        Log::Info("Controller ", joy, " connected!");
-      else
-        Log::Info("Controller ", joy, " disconnected!");
     }
 };
 

@@ -1,7 +1,6 @@
 #pragma once
 
 #include <graphics/shaders/Shader.h>
-#include <listeners/WindowResize.h>
 #include <graphics/layers/Scene.h>
 #include <graphics/renderers/GUIRenderer.h>
 #include <event/Event.h>

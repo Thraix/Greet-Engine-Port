@@ -16,10 +16,10 @@ namespace Greet {
         : Event(),position(x,y),button(button)
       {}
     public:
-      inline const float GetX() const { return position.x; }
-      inline const float GetY() const { return position.y; }
-      inline const Vec2& GetPosition() const { return position; }
-      inline const uint GetButton() const { return button; }
+      float GetX() const { return position.x; }
+      float GetY() const { return position.y; }
+      const Vec2& GetPosition() const { return position; }
+      uint GetButton() const { return button; }
 
       uint GetCategory() const {return INPUT_EVENT | MOUSE_EVENT;}
   };
@@ -55,12 +55,12 @@ namespace Greet {
         : position(Vec2(x,y)), deltaPosition(Vec2(dx,dy))
       {}
 
-      inline const float GetX() const { return position.x; }
-      inline const float GetY() const { return position.y; }
-      inline const float GetDX() const { return deltaPosition.x; }
-      inline const float GetDY() const { return deltaPosition.y; }
-      inline const Vec2& GetPosition() const { return position; }
-      inline const Vec2& GetDeltaPosition() const { return deltaPosition; }
+      float GetX() const { return position.x; }
+      float GetY() const { return position.y; }
+      float GetDX() const { return deltaPosition.x; }
+      float GetDY() const { return deltaPosition.y; }
+      const Vec2& GetPosition() const { return position; }
+      const Vec2& GetDeltaPosition() const { return deltaPosition; }
       EventType GetType() const {return EventType::MOUSE_MOVE;}
       uint GetCategory() const {return INPUT_EVENT | MOUSE_EVENT;}
   };
@@ -75,8 +75,8 @@ namespace Greet {
         : scrollHorizontal{scrollHorizontal}, scrollVertical{scrollVertical}
       {}
 
-      inline const int GetScrollHorizontal() const { return scrollHorizontal; }
-      inline const int GetScrollVertical() const { return scrollVertical; }
+      const float GetScrollHorizontal() const { return scrollHorizontal; }
+      const float GetScrollVertical() const { return scrollVertical; }
       uint GetCategory() const {return INPUT_EVENT | MOUSE_EVENT;}
       EventType GetType() const {return EventType::MOUSE_SCROLL;}
 
