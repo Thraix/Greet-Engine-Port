@@ -1,7 +1,6 @@
 #include "ColorPickerWindow.h"
 
 #include <graphics/gui/Label.h>
-#include <graphics/gui/GLayer.h>
 #include <functional>
 
 namespace Greet

@@ -1,7 +1,7 @@
 #include "Style.h"
 
 #include <graphics/gui/Component.h>
-#include <graphics/gui/GLayer.h>
+#include <graphics/gui/GUIScene.h>
 
 namespace Greet
 {

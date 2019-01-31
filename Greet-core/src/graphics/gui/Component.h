@@ -5,7 +5,7 @@
 #include <event/MouseEvent.h>
 #include <event/KeyEvent.h>
 #include <graphics/gui/ComponentFactory.h>
-#include <graphics/gui/GLayer.h>
+#include <graphics/gui/GUIScene.h>
 
 namespace Greet
 {

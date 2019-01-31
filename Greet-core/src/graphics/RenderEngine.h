@@ -12,6 +12,7 @@ namespace Greet {
       // they are the same but 3d scenes are always rendered first
       static std::map<std::string, Scene*> m_scenes2d;
       static std::map<std::string, Scene*> m_scenes3d;
+      static Scene* focusedScene;
 
     public:
       static void Add2DScene(Scene* scene, const std::string& name);

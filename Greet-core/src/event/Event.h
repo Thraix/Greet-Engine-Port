@@ -32,9 +32,8 @@ namespace Greet {
 
   class Event
   {
-    public:
+    private:
       uint flags = 0;
-
     protected:
       Event()
       {}
@@ -42,6 +41,8 @@ namespace Greet {
     public:
       virtual EventType GetType() const = 0;
       virtual uint GetCategory() const = 0;
+      uint GetFlags() const { return flags; }
+      void AddFlag(uint flag) { flags |= flag;}
 
   };
 }

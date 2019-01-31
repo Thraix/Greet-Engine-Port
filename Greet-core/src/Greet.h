@@ -47,9 +47,9 @@
 #include <graphics/gui/Container.h>
 #include <graphics/gui/Divider.h>
 #include <graphics/gui/Frame.h>
-#include <graphics/gui/GLayer.h>
 #include <graphics/gui/GUIMouseListener.h>
 #include <graphics/gui/GUIProperty.h>
+#include <graphics/gui/GUIScene.h>
 #include <graphics/gui/GUIUtils.h>
 #include <graphics/gui/HueSlider.h>
 #include <graphics/gui/Label.h>

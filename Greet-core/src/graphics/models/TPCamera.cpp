@@ -197,7 +197,9 @@ namespace Greet {
       Zoom(mEvent.GetScrollVertical());
     }
     if(m_mouse1 | m_mouse2 | m_mouse3)
-      event.flags |= EVENT_HANDLED | EVENT_FOCUSED;
+      event.AddFlag(EVENT_HANDLED | EVENT_FOCUSED);
+    else
+      event.AddFlag(EVENT_UNFOCUSED);
   }
 
 }

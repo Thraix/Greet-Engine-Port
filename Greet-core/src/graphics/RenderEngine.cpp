@@ -5,8 +5,8 @@
 namespace Greet {
 
   std::map<std::string, Scene*> RenderEngine::m_scenes2d;
-
   std::map<std::string, Scene*> RenderEngine::m_scenes3d;
+  Scene* RenderEngine::focusedScene = nullptr;
 
   void RenderEngine::Add2DScene(Scene* scene, const std::string& name)
   {
@@ -90,18 +90,39 @@ namespace Greet {
 
   void RenderEngine::OnEvent(Event& event)
   {
+    if(focusedScene)
+    {
+      focusedScene->OnEvent(event);
+      if(event.GetFlags() & EVENT_UNFOCUSED)
+        focusedScene = nullptr;
+      if(event.GetFlags()  & EVENT_HANDLED)
+        return;
+    }
+
     // The last to be rendered will be on top so check input there first.
     for (auto it = m_scenes2d.rbegin(); it != m_scenes2d.rend(); it++)
     {
+      if(it->second == focusedScene)
+        continue;
       it->second->OnEvent(event);
-      if(event.flags & EVENT_HANDLED)
+      // Generally when you request focus you also handle the input.
+      // But there might be a case where that is not the case.
+      if(event.GetFlags() & EVENT_FOCUSED)
+        focusedScene = it->second;
+      if(event.GetFlags() & EVENT_HANDLED)
         return;
     }
-    // The order here doesn't matter
+
     for (auto it = m_scenes3d.rbegin(); it != m_scenes3d.rend(); it++)
     {
+      if(it->second == focusedScene)
+        continue;
       it->second->OnEvent(event);
-      if(event.flags & EVENT_HANDLED)
+      // Generally when you request focus you also handle the input.
+      // But there might be a case where that is not the case.
+      if(event.GetFlags() & EVENT_FOCUSED)
+        focusedScene = it->second;
+      if(event.GetFlags() & EVENT_HANDLED)
         return;
     }
   }

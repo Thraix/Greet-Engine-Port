@@ -1,4 +1,4 @@
-#include "GLayer.h"
+#include "GUIScene.h"
 
 #include <graphics/gui/GUIUtils.h>
 #include <event/EventDispatcher.h>
@@ -45,7 +45,7 @@ namespace Greet {
       Scene::OnEvent(event);
   }
 
-  bool GUIScene::OnPressed(MousePressEvent& event)
+  void GUIScene::OnPressed(MousePressEvent& event)
   {
     Vec2 pos = ~projectionMatrix * event.GetPosition();
     MousePressEvent transformedEvent{pos.x,pos.y,event.GetButton()};
@@ -55,11 +55,13 @@ namespace Greet {
       if((*it)->IsMouseInside(pos))
       {
         (*it)->OnMousePressed(transformedEvent, pos - (*it)->GetPosition());
-        return true;
+        event.AddFlag( EVENT_FOCUSED  | EVENT_HANDLED);
+        return;
       }
     }
+    event.AddFlag( transformedEvent.GetFlags());
     RequestFocus(nullptr);
-    return false;
+    event.AddFlag(EVENT_UNFOCUSED);
   }
 
   void GUIScene::OnReleased(MouseReleaseEvent& event)
@@ -69,6 +71,7 @@ namespace Greet {
       Vec2 pos = ~projectionMatrix * event.GetPosition();
       MouseReleaseEvent transformedEvent{pos.x,pos.y,event.GetButton()};
       m_focused->MouseReleased(transformedEvent, transformedEvent.GetPosition() - m_focused->GetRealPosition());
+      event.AddFlag(EVENT_HANDLED);
     }
   }
 
@@ -83,31 +86,42 @@ namespace Greet {
     {
       m_focused->MouseMoved(transformedEvent, transformedEvent.GetPosition() - m_focused->GetRealPosition());
       if(m_focused->UsingMouse())
+      {
+        event.AddFlag(EVENT_HANDLED);
         return;
+      }
     }
 
     for (auto it = frames.rbegin(); it != frames.rend(); ++it)
     {
       (*it)->OnMouseMoved(transformedEvent, transformedEvent.GetPosition() - (*it)->GetPosition() - (*it)->GetMargin().LeftTop());
     }
-    event.flags |= transformedEvent.flags;
   }
 
   void GUIScene::OnPressed(KeyPressEvent& event)
   {
     if (m_focused != nullptr)
+    {
       m_focused->KeyPressed(event);
+      event.AddFlag(EVENT_HANDLED);
+    }
   }
 
   void GUIScene::OnReleased(KeyReleaseEvent& event)
   {
     if (m_focused != nullptr)
+    {
       m_focused->KeyReleased(event);
+      event.AddFlag(EVENT_HANDLED);
+    }
   }
   void GUIScene::OnTyped(KeyTypeEvent& event)
   {
     if (m_focused != nullptr)
+    {
       m_focused->KeyTyped(event);
+      event.AddFlag(EVENT_HANDLED);
+    }
   }
 
   void GUIScene::WindowResize(WindowResizeEvent& event)

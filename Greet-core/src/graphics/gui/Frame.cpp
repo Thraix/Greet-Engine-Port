@@ -3,7 +3,6 @@
 #include <graphics/gui/GUIUtils.h>
 #include <utils/Utils.h>
 #include <utils/AABBUtils.h>
-#include <graphics/gui/GLayer.h>
 
 namespace Greet {
 

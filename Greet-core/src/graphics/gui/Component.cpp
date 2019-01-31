@@ -1,7 +1,6 @@
 #include "Component.h"
 
 #include <utils/AABBUtils.h>
-#include <graphics/gui/GLayer.h>
 #include <utils/UUID.h>
 #include <functional>
 #include <cstdlib>

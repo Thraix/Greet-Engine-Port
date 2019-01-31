@@ -28,7 +28,7 @@ namespace Greet {
       GUIScene(GUIRenderer* renderer, Shader&& shader);
 
       void OnEvent(Event& event);
-      bool OnPressed(MousePressEvent& event);
+      void OnPressed(MousePressEvent& event);
       void OnReleased(MouseReleaseEvent& event);
       void OnMoved(MouseMoveEvent& event);
       void OnPressed(KeyPressEvent& event);
