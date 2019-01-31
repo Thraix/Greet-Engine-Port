@@ -2,6 +2,8 @@
 
 #include <random>
 
+#include <functional>
+#include <utility>
 #include "Grid.h"
 
 using namespace Greet;
@@ -32,7 +34,9 @@ namespace vmc
 
 		void Init() override
 		{
+      using namespace std::placeholders;
       FontManager::Add(new FontContainer("/usr/share/fonts/truetype/ubuntu/Ubuntu-C.ttf","roboto"));
+      EventDispatcher::AddGlobalEventReceiver("Application", std::bind(&Core::OnEvent, std::ref(*this), _1));
 			SetFrameCap(144);
 
       guiScene = new GUIScene(new GUIRenderer(), Shader::FromFile("res/shaders/gui.shader"));
@@ -69,25 +73,31 @@ namespace vmc
 		void Update(float elapsedTime) override
 		{
 		}
-/*
-		void OnPressed(const KeyPressedEvent& e) override
-		{
-			if (e.GetButton() == GLFW_KEY_F10)
-			{
-				Utils::Screenshot(Window::GetWidth(), Window::GetHeight());
-			}
-		}
-
-		void OnMoved(const MouseMovedEvent& e) override
-		{
-			cursor->SetPosition(Vec2(e.GetX(), e.GetY()));
-		}
-    */
 
 		bool screenshot = false;
 		void Render() override
 		{
 		}
+
+    void OnEvent(Event& event)
+    {
+      if(EVENT_IS_TYPE(event, EventType::WINDOW_RESIZE))
+      {
+        uilayer->SetProjectionMatrix(Mat3::Orthographic(0,Window::GetWidth(), 0, Window::GetHeight()));
+      }
+      if(EVENT_IS_TYPE(event, EventType::MOUSE_MOVE))
+      {
+        MouseMoveEvent& mEvent = (MouseMoveEvent&)event;
+        Vec2 pos = ~ uilayer->GetProjectionMatrix() * mEvent.GetPosition();
+        cursor->SetPosition(pos);
+      }
+      else if(EVENT_IS_TYPE(event, EventType::KEY_PRESS))
+      {
+        KeyPressEvent& kEvent = (KeyPressEvent&)event;
+        if(kEvent.GetButton() == GLFW_KEY_F10)
+          Utils::Screenshot(Window::GetWidth(), Window::GetHeight());
+      }
+    }
 	};
 }
 
