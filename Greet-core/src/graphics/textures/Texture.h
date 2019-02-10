@@ -33,26 +33,19 @@ namespace Greet {
     RGBA = GL_RGBA
   };
 
-  enum class TextureFormat
-  {
-    NORMAL,
-    INVERTED,
-  };
-
   struct TextureParams
   {
     TextureParams()
-      : filter(TextureFilter::LINEAR), wrap(TextureWrap::CLAMP_TO_EDGE), internalFormat(TextureInternalFormat::RGBA),format(TextureFormat::INVERTED)
+      : filter(TextureFilter::LINEAR), wrap(TextureWrap::CLAMP_TO_EDGE), internalFormat(TextureInternalFormat::RGBA)
     {}
 
-    TextureParams(TextureFilter filter, TextureWrap wrap, TextureInternalFormat internalFormat, TextureFormat format)
-      : filter(filter), wrap(wrap), internalFormat(internalFormat), format(format)
+    TextureParams(TextureFilter filter, TextureWrap wrap, TextureInternalFormat internalFormat)
+      : filter(filter), wrap(wrap), internalFormat(internalFormat)
     {}
 
     TextureFilter filter;
     TextureWrap wrap;
     TextureInternalFormat internalFormat;
-    TextureFormat format;
   };
 
   

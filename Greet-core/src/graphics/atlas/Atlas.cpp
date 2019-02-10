@@ -3,7 +3,7 @@
 namespace Greet {
 
   Atlas::Atlas(uint atlasSize, uint textureSize)
-    : Texture2D(atlasSize,atlasSize,TextureParams(TextureFilter::NEAREST,TextureWrap::NONE,TextureInternalFormat::RGBA,TextureFormat::INVERTED)), m_textureSize(textureSize)
+    : Texture2D(atlasSize,atlasSize,TextureParams(TextureFilter::NEAREST,TextureWrap::NONE,TextureInternalFormat::RGBA)), m_textureSize(textureSize)
   {
     ASSERT(atlasSize > m_textureSize, "ATLAS", "Atlas size must be greater than the textures sizes");
     //ASSERT(!(atlasSize == 0) && !(atlasSize & (atlasSize - 1)),"ATLAS", "Atlas size must be a power of two");
@@ -40,7 +40,7 @@ namespace Greet {
     GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER));
     GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER));
 
-    GLCall(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_width, m_height, 0, GL_BGRA, GL_UNSIGNED_BYTE, bits));
+    GLCall(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_width, m_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, bits));
 
     GLCall(glBindTexture(GL_TEXTURE_2D, 0));
   }
@@ -49,21 +49,20 @@ namespace Greet {
   {
     uint width;
     uint height;
-    uint bpp;
-    BYTE* bits = ImageUtils::loadImage(filePath.c_str(), &width, &height,&bpp);
+    BYTE* bits = ImageUtils::loadImage(filePath.c_str(), &width, &height);
     if (width != m_textureSize || height != m_textureSize)
     {
       Log::Error("The given textures size is not valid: ",name.c_str()," (",width,",",height,")");
       return false;
     }
-    bool success = AddTexture(bits,bpp,name);
+    bool success = AddTexture(bits,name);
 
     delete[] bits;
 
     return success;
   }
 
-  bool Atlas::AddTexture(BYTE* bits, uint bpp, const std::string& name)
+  bool Atlas::AddTexture(BYTE* bits, const std::string& name)
   {
     uint textures = m_width / m_textureSize;
     if (textureMap.size() >= textures*textures)
@@ -83,7 +82,7 @@ namespace Greet {
         x = i % m_texturesSide;
         y = (i - x) / m_texturesSide;
         GLCall(glBindTexture(GL_TEXTURE_2D, *texId));
-        GLCall(glTexSubImage2D(GL_TEXTURE_2D, 0, x*m_textureSize,m_textureSize*m_texturesSide -m_textureSize - y*m_textureSize,m_textureSize,m_textureSize,bpp == 32 ? GL_BGRA : GL_BGR, GL_UNSIGNED_BYTE, bits));
+        GLCall(glTexSubImage2D(GL_TEXTURE_2D, 0, x*m_textureSize,m_textureSize*m_texturesSide -m_textureSize - y*m_textureSize,m_textureSize,m_textureSize,GL_RGBA, GL_UNSIGNED_BYTE, bits));
         GLCall(glBindTexture(GL_TEXTURE_2D, 0));
         return true;
       }

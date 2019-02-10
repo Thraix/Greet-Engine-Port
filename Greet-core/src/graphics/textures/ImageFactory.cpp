@@ -6,31 +6,30 @@
 
 namespace Greet { namespace ImageFactory 
   {
-    BYTE* GetBadFormatImage(uint* width, uint* height, uint* bpp)
+    BYTE* GetBadFormatImage(uint* width, uint* height)
     {
-      return GetErrorImage(width,height,bpp,0xff00ff,0xaa00aa);
+      return GetErrorImage(width,height,0xff00ff,0xaa00aa);
     }
 
-    BYTE* GetBadBPPImage(uint* width, uint* height, uint* bpp)
+    BYTE* GetBadBPPImage(uint* width, uint* height)
     {
-      return GetErrorImage(width,height,bpp,0xffff00,0xaaaa00);
+      return GetErrorImage(width,height,0xffff00,0xaaaa00);
     }
 
-    BYTE* GetCantReadImage(uint* width, uint* height, uint* bpp)
+    BYTE* GetCantReadImage(uint* width, uint* height)
     {
-      return GetErrorImage(width,height,bpp,0x00ffff,0x00aaaa);
+      return GetErrorImage(width,height,0x00ffff,0x00aaaa);
     }
 
-    BYTE* GetCropErrorImage(uint* width, uint* height, uint* bpp)
+    BYTE* GetCropErrorImage(uint* width, uint* height)
     {
-      return GetErrorImage(width,height,bpp,0xff0000,0xaa0000);
+      return GetErrorImage(width,height,0xff0000,0xaa0000);
     }
 
-    BYTE* GetErrorImage(uint* width, uint* height, uint* bpp, uint lightColor, uint darkColor)
+    BYTE* GetErrorImage(uint* width, uint* height, uint lightColor, uint darkColor)
     {
       *width = 16;
       *height = 16;
-      *bpp = 32;
       uint pitch = 4 * *width;
       BYTE* bits = new BYTE[*width * *height * 4];
       uint add = 0;

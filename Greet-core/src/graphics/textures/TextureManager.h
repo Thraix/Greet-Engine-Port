@@ -1,7 +1,6 @@
 #pragma once
 
-
-#include <vector>
+#include <map>
 #include <graphics/textures/Texture2D.h>
 #include <graphics/textures/CubeMap.h>
 

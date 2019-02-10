@@ -17,7 +17,7 @@ namespace Greet
 
     FT_Set_Pixel_Sizes(face, 0, fontSize);
 
-    atlas = Texture2D(width,height,TextureParams(TextureFilter::LINEAR,TextureWrap::NONE,TextureInternalFormat::RGBA, TextureFormat::INVERTED)); 
+    atlas = Texture2D(width,height,TextureParams(TextureFilter::LINEAR,TextureWrap::NONE,TextureInternalFormat::RGBA)); 
     m_pixels = new char[width*height*4];
     memset(m_pixels, 0, width*height*4);
   }

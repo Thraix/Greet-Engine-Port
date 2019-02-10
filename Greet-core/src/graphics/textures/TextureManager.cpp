@@ -1,5 +1,7 @@
 #include "TextureManager.h"
 
+#include <utils/ErrorHandle.h>
+
 namespace Greet{
 
   std::map<std::string, CubeMap> TextureManager::m_cubeMaps;

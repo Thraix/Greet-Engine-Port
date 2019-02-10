@@ -29,19 +29,18 @@ namespace Greet {
 
     uint width;
     uint height;
-    uint bpp;
     BYTE* bits;
-    bits = ImageUtils::loadImage(image.c_str(), &width, &height, &bpp);
+    bits = ImageUtils::loadImage(image.c_str(), &width, &height);
     uint w = width / 4;
     uint h = height / 3;
-    LoadImage(ImageUtils::cropImage(bits,width,height,bpp,0,h,w,h),w,h,bpp,GL_TEXTURE_CUBE_MAP_POSITIVE_X);
-    LoadImage(ImageUtils::cropImage(bits,width,height,bpp,w*2,h,w,h),w,h,bpp,GL_TEXTURE_CUBE_MAP_NEGATIVE_X);
+    LoadImage(ImageUtils::cropImage(bits,width,height,0,h,w,h),w,h,GL_TEXTURE_CUBE_MAP_POSITIVE_X);
+    LoadImage(ImageUtils::cropImage(bits,width,height,w*2,h,w,h),w,h,GL_TEXTURE_CUBE_MAP_NEGATIVE_X);
 
-    LoadImage(ImageUtils::cropImage(bits,width,height,bpp,w,0,w,h),w,h,bpp,GL_TEXTURE_CUBE_MAP_POSITIVE_Y);
-    LoadImage(ImageUtils::cropImage(bits,width,height,bpp,w,h*2,w,h),w,h,bpp,GL_TEXTURE_CUBE_MAP_NEGATIVE_Y);
+    LoadImage(ImageUtils::cropImage(bits,width,height,w,0,w,h),w,h,GL_TEXTURE_CUBE_MAP_POSITIVE_Y);
+    LoadImage(ImageUtils::cropImage(bits,width,height,w,h*2,w,h),w,h,GL_TEXTURE_CUBE_MAP_NEGATIVE_Y);
 
-    LoadImage(ImageUtils::cropImage(bits,width,height,bpp,w,h,w,h),w,h,bpp,GL_TEXTURE_CUBE_MAP_POSITIVE_Z);
-    LoadImage(ImageUtils::cropImage(bits,width,height,bpp,w*3,h,w,h),w,h,bpp,GL_TEXTURE_CUBE_MAP_NEGATIVE_Z);
+    LoadImage(ImageUtils::cropImage(bits,width,height,w,h,w,h),w,h,GL_TEXTURE_CUBE_MAP_POSITIVE_Z);
+    LoadImage(ImageUtils::cropImage(bits,width,height,w*3,h,w,h),w,h,GL_TEXTURE_CUBE_MAP_NEGATIVE_Z);
     LoadParameters();
     delete[] bits;
 
@@ -78,16 +77,15 @@ namespace Greet {
   {
     uint width;
     uint height;
-    uint bpp;
     BYTE* bits;
-    bits = ImageUtils::loadImage(image.c_str(), &width, &height, &bpp);
-    LoadImage(bits,width,height,bpp,mapLocation);
+    bits = ImageUtils::loadImage(image.c_str(), &width, &height);
+    LoadImage(bits,width,height,mapLocation);
   }
 
-  void CubeMap::LoadImage(BYTE* bits, uint width, uint height, uint bpp, uint mapLocation)
+  void CubeMap::LoadImage(BYTE* bits, uint width, uint height, uint mapLocation)
   {
-    ImageUtils::flipImage(bits,width,height,bpp);
-    GLCall(glTexImage2D(mapLocation, 0, bpp == 32 ? GL_RGBA : GL_RGB, width, height, 0, bpp == 32 ? GL_BGRA : GL_BGR, GL_UNSIGNED_BYTE, bits));
+    ImageUtils::flipImage(bits,width,height);
+    GLCall(glTexImage2D(mapLocation, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, bits));
     delete[] bits;
 
   }

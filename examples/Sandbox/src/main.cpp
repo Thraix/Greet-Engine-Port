@@ -189,7 +189,7 @@ class Core : public App
       cursor = new Renderable2D(Vec2(0,0),Vec2(32,32),0xffffffff, new Sprite(TextureManager::Get2D("cursor")), new Sprite(TextureManager::Get2D("mask")));
       uilayer->Add(cursor);
 
-      //renderer3d->Submit(stall);
+      renderer3d->Submit(stall);
       //renderer3d->Submit(dragon);
       renderer3d->Submit(terrain);
       renderer3d->Submit(sphere);

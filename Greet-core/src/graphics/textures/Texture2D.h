@@ -29,7 +29,6 @@ namespace Greet {
       void LoadTexture(const std::string& filename);
       void GenTexture(uint width, uint height);
       void GenTexture(BYTE* bits);
-      uint GetFormat() const;
 
   };
 }

@@ -4,7 +4,7 @@
 
 namespace Greet {
 
-#define EVENT_IS_TYPE(event, type) (event).GetType() == (type)
+#define EVENT_IS_TYPE(event, type) ((event).GetType() == (type))
 #define EVENT_IS_CATEGORY(event, category) ((event).GetCategory() & (category)) == (category)
 
   enum EventCategory : uint

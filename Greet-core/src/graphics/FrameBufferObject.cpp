@@ -42,7 +42,7 @@ namespace Greet {
       Log::Error("The given attachment is already in use: ", attachmentId);
     }
     GLCall(glBindFramebuffer(GL_FRAMEBUFFER, m_fbo));
-    Texture2D colorTexture(m_width,m_height,TextureParams(TextureFilter::LINEAR,TextureWrap::NONE,TextureInternalFormat::RGB,TextureFormat::NORMAL));
+    Texture2D colorTexture(m_width,m_height,TextureParams(TextureFilter::LINEAR,TextureWrap::NONE,TextureInternalFormat::RGB));
     GLCall(glFramebufferTexture2D(GL_FRAMEBUFFER, attachmentId, GL_TEXTURE_2D, colorTexture.GetTexId(), 0));
     m_colorTextures.emplace(attachmentId,colorTexture);
     uint size = m_colorTextures.size();
@@ -58,7 +58,7 @@ namespace Greet {
   void FrameBufferObject::AttachDepthTexture()
   {
     GLCall(glBindFramebuffer(GL_FRAMEBUFFER, m_fbo));
-    m_depthTexture = std::move(Texture2D(m_width,m_height,TextureParams(TextureFilter::NEAREST,TextureWrap::NONE,TextureInternalFormat::DEPTH_COMPONENT,TextureFormat::NORMAL)));
+    m_depthTexture = std::move(Texture2D(m_width,m_height,TextureParams(TextureFilter::NEAREST,TextureWrap::NONE,TextureInternalFormat::DEPTH_COMPONENT)));
     GLCall(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_depthTexture.GetTexId(), 0));
     GLCall(glBindFramebuffer(GL_FRAMEBUFFER,0));
   }
