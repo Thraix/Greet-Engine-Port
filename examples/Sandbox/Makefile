@@ -13,7 +13,7 @@ LIBDIR=-L./../../Greet-core/bin/
 LDFLAGS=-Wl,-rpath=../../Greet-core/bin/ 
 LIBS=$(LIBDIR) -lgreet -lGL -lGLEW -lglfw -lfreeimage -lfreetype 
 OUTPUT=$(BIN)Sandbox.a
-.PHONY: directories all rebuild clean
+.PHONY: all directories rebuild clean
 all: directories $(OUTPUT)
 directories: $(BIN) $(OBJPATH)
 $(BIN):

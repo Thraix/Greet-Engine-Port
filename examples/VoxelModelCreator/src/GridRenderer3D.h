@@ -12,7 +12,6 @@ namespace vmc
 		Greet::Shader* simpleShader;
 
 		Greet::EntityModel* emodel;
-		Greet::MaterialModel* mmodel;
 		Greet::Material* material;
 		Greet::Mesh* mesh;
 		Greet::MeshData* meshdata;

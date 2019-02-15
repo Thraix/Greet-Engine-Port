@@ -1,13 +1,16 @@
 #pragma once
 
-#include <graphics/models/MaterialModel.h>
+#include <graphics/models/Material.h>
+#include <graphics/models/Mesh.h>
+
 namespace Greet {
 
   class Renderer3D;
 
   class EntityModel {
     private:
-      const MaterialModel* m_model;
+      Material* material;
+      Mesh* mesh;
     private:
       Vec3 m_position;
       Vec3 m_scale;
@@ -15,17 +18,19 @@ namespace Greet {
       Mat4 m_transformationMatrix;
       bool m_hasChanged;
     public:
-      EntityModel(const MaterialModel* model, float x, float y, float z, float sx, float sy, float sz, float rx, float ry, float rz);
-      EntityModel(const MaterialModel* model, Vec3 position, Vec3 scale, Vec3 rotation);
-      EntityModel(const MaterialModel* model);
+      EntityModel(Mesh* mesh, Material* material, float x, float y, float z, float sx, float sy, float sz, float rx, float ry, float rz);
+      EntityModel(Mesh* mesh, Material* material, Vec3 position, Vec3 scale, Vec3 rotation);
+      EntityModel(Mesh* mesh, Material* material);
 
       void PreRender(const Renderer3D* renderer, const Camera* camera) const;
       void Render(const Renderer3D* renderer, const Camera* camera) const;
       void PostRender(const Renderer3D* renderer, const Camera* camera) const;
 
-      inline const MaterialModel& GetMaterialModel() const { return *m_model; }
-      void SetMaterialModel(const MaterialModel* model) { m_model = model;}
-      inline const Mat4& GetTransformationMatrix() const { return m_transformationMatrix; }
+      Material* GetMaterial() const { return material; }
+      void SetMaterial(Material* material) { this->material = material;}
+      Mesh* GetMesh() const { return mesh; }
+      void SetMesh(Mesh* mesh) { this->mesh = mesh;}
+      const Mat4& GetTransformationMatrix() const { return m_transformationMatrix; }
       virtual void Update(float timeElapsed);
       void UpdateTransformation();
       void SetPosition(const Vec3& pos) { m_position = pos; m_hasChanged = true; }

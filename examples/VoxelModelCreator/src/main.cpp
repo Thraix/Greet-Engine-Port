@@ -46,8 +46,7 @@ namespace vmc
 			TextureManager::Add("mask", Texture2D("res/textures/mask.png",TextureParams(
         TextureFilter::LINEAR, 
         TextureWrap::CLAMP_TO_EDGE, 
-        TextureInternalFormat::RGB,
-        TextureFormat::INVERTED)));
+        TextureInternalFormat::RGB)));
 			TextureManager::Add("guimask", Texture2D("res/textures/guimask.png"));
 			TextureManager::Add("skybox", CubeMap("res/textures/skybox.png"));
 			FontManager::Add(new FontContainer("Anonymous Pro.ttf", "anonymous"));

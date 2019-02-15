@@ -3,37 +3,40 @@
 #include <graphics/renderers/Renderer3D.h>
 
 namespace Greet {
-  EntityModel::EntityModel(const MaterialModel* model, float x, float y, float z, float sx, float sy, float sz, float rx, float ry, float rz)
-    : m_model(model), m_position(Vec3(x,y,z)), m_scale(Vec3(sx,sy,sz)), m_rotation(Vec3(rx,ry,rz))
+  EntityModel::EntityModel(Mesh* mesh, Material* material, float x, float y, float z, float sx, float sy, float sz, float rx, float ry, float rz)
+    : mesh{mesh}, material(material), m_position(Vec3(x,y,z)), m_scale(Vec3(sx,sy,sz)), m_rotation(Vec3(rx,ry,rz))
   {
     UpdateTransformation();
   }
 
-  EntityModel::EntityModel(const MaterialModel* model, Vec3 position, Vec3 scale, Vec3 rotation)
-    : m_model(model), m_position(position), m_scale(scale), m_rotation(rotation)
+  EntityModel::EntityModel(Mesh* mesh, Material* material, Vec3 position, Vec3 scale, Vec3 rotation)
+    : mesh{mesh}, material(material), m_position(position), m_scale(scale), m_rotation(rotation)
   {
     UpdateTransformation();
   }
 
-  EntityModel::EntityModel(const MaterialModel* model)
-    :m_model(model), m_position(Vec3(0,0,0)), m_scale(Vec3(1,1,1)), m_rotation(0,0,0)
+  EntityModel::EntityModel(Mesh* mesh, Material* material)
+    : mesh{mesh}, material(material), m_position(Vec3(0,0,0)), m_scale(Vec3(1,1,1)), m_rotation(0,0,0)
   {
     UpdateTransformation();
   }
 
   void EntityModel::PreRender(const Renderer3D* renderer, const Camera* camera) const
   {
-    m_model->PreRender(renderer,camera, m_transformationMatrix);
+    material->Bind(camera);
+    material->GetShader().SetUniformMat4("transformationMatrix", m_transformationMatrix);
   }
 
   void EntityModel::Render(const Renderer3D* renderer, const Camera* camera) const
   {
-    m_model->Render(renderer,camera, m_transformationMatrix);
+    mesh->Bind();
+    mesh->Render();
+    mesh->Unbind();
   }
 
   void EntityModel::PostRender(const Renderer3D* renderer, const Camera* camera) const
   {
-    m_model->PostRender(renderer,camera, m_transformationMatrix);
+    GetMaterial()->Unbind();
   }
 
   void EntityModel::Update(float timeElapsed)
