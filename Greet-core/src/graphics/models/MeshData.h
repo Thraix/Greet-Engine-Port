@@ -61,18 +61,18 @@ namespace Greet {
     friend class Mesh;
     private:
       std::vector<AttributeDataBase*> m_data;
-      Vec3* m_vertices;
+      Vec3<float>* m_vertices;
       uint* m_indices;
       uint m_vertexCount;
       uint m_indexCount;
     public:
-      MeshData(Vec3* vertices, uint vertexCount, uint* indices, uint indexCount);
+      MeshData(Vec3<float>* vertices, uint vertexCount, uint* indices, uint indexCount);
       virtual ~MeshData();
       void AddAttribute(AttributeDataBase* data);
       AttributeDataBase* GetAttribute(AttributeDefaults defaults) const;
       AttributeDataBase* RemoveAttribute(AttributeDefaults defaults);
 
-      Vec3* GetVertices() const { return m_vertices; }
+      Vec3<float>* GetVertices() const { return m_vertices; }
       uint* GetIndices() const { return m_indices; }
       uint GetVertexCount() const { return m_vertexCount; }
       uint GetIndexCount() const { return m_indexCount; }
@@ -85,5 +85,5 @@ namespace Greet {
 }
 
 #define ATTRIBUTE_COLOR		Greet::AttributeDefaults(MESH_COLORS_LOCATION, 4, sizeof(unsigned int), GL_UNSIGNED_BYTE,GL_TRUE)
-#define ATTRIBUTE_NORMAL	Greet::AttributeDefaults(MESH_NORMALS_LOCATION,3, sizeof(Greet::Vec3) ,GL_FLOAT,GL_FALSE)
+#define ATTRIBUTE_NORMAL	Greet::AttributeDefaults(MESH_NORMALS_LOCATION,3, sizeof(Greet::Vec3<float>) ,GL_FLOAT,GL_FALSE)
 #define ATTRIBUTE_TEXCOORD	Greet::AttributeDefaults(MESH_TEXCOORDS_LOCATION,2, sizeof(Greet::Vec2),GL_FLOAT,GL_FALSE)

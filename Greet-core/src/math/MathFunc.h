@@ -1,8 +1,6 @@
 #pragma once
 
 #include <math.h>
-#include <math/Vec4.h>
-#include <math/Vec2.h>
 #include <internal/GreetTypes.h>
 #include <iostream>
 

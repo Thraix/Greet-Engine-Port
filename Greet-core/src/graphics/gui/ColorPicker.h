@@ -10,7 +10,7 @@ namespace Greet
     private:
       REGISTER_COMPONENT_DECLARATION(ColorPicker);
     public:
-      typedef std::function<void(Component* comp, const Vec3& previous, const Vec3& current)> OnColorChangeCallback;
+      typedef std::function<void(Component* comp, const Vec3<float>& previous, const Vec3<float>& current)> OnColorChangeCallback;
     public:
       OnColorChangeCallback onColorChangeCallback;
     private:
@@ -20,10 +20,10 @@ namespace Greet
       virtual ~ColorPicker();
 
       void MousePressed(MousePressEvent& e, const Vec2& translatedPos) override;
-      void OnColorChanged(const Vec3& previous, const Vec3& current);
+      void OnColorChanged(const Vec3<float>& previous, const Vec3<float>& current);
 
       void SetOnColorChangeCallback(OnColorChangeCallback callback);
-      void CallOnColorChangeCallback(const Vec3& previous, const Vec3& current);
+      void CallOnColorChangeCallback(const Vec3<float>& previous, const Vec3<float>& current);
   };
 
 }

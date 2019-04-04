@@ -7,7 +7,7 @@
 
 namespace Greet {
 
-  MeshData::MeshData(Vec3* vertices, uint vertexCount, uint* indices, uint indexCount)
+  MeshData::MeshData(Vec3<float>* vertices, uint vertexCount, uint* indices, uint indexCount)
     : m_vertices(vertices), m_indices(indices), m_vertexCount(vertexCount), m_indexCount(indexCount)
   {
 
@@ -57,7 +57,7 @@ namespace Greet {
   {
     std::set<uint> usedProvokingVertices; 
     std::map<uint,uint> usedIndices; 
-    std::vector<Vec3> newVertices;
+    std::vector<Vec3<float>> newVertices;
     std::vector<uint> newIndices;
 
     // Loop through all triangles
@@ -88,7 +88,7 @@ namespace Greet {
       if(foundProvoking)
       {
         uint provokingIndex = m_indices[i+provokingOffset];
-        Vec3 provokingVertex = m_vertices[provokingIndex];
+        Vec3<float> provokingVertex = m_vertices[provokingIndex];
         usedProvokingVertices.emplace(provokingIndex);
 
         auto vertex = usedIndices.find(provokingIndex);
@@ -144,7 +144,7 @@ namespace Greet {
     {
       indices[i] = newIndices[i];
     }
-    Vec3* vertices = new Vec3[newVertices.size()];
+    Vec3<float>* vertices = new Vec3<float>[newVertices.size()];
     for(uint i = 0;i<newVertices.size();i++)
     {
       vertices[i] = newVertices[i];
@@ -179,7 +179,7 @@ namespace Greet {
     }
 
     // Write all vertex data.
-    fout.write((char*)m_vertices, m_vertexCount * sizeof(Vec3));
+    fout.write((char*)m_vertices, m_vertexCount * sizeof(Vec3<float>));
 
     // Write index data.
     fout.write((char*)m_indices, m_indexCount * sizeof(uint)); 
@@ -224,7 +224,7 @@ namespace Greet {
     // Read how many attributes we have. 
     uint vertexCount;
     fin.read((char*)&vertexCount,sizeof(uint));
-    fileSize -= vertexCount * sizeof(Vec3);
+    fileSize -= vertexCount * sizeof(Vec3<float>);
     if(fileSize < 0)
     {
       Log::Error("Could not read MESH file, file is too small to contain vertex data");
@@ -297,8 +297,8 @@ namespace Greet {
       Log::Warning("MESH file is larger than expected. Something might be wrong...");
 
     // Read vertices
-    Vec3* vertices = new Vec3[vertexCount];
-    fin.read((char*)vertices,vertexCount*sizeof(Vec3));
+    Vec3<float>* vertices = new Vec3<float>[vertexCount];
+    fin.read((char*)vertices,vertexCount*sizeof(Vec3<float>));
 
     // Read indices 
     uint* indices = new uint[indexCount];

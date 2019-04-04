@@ -27,7 +27,7 @@ namespace Greet{
       };
       Vec2();
       Vec2(float x, float y);
-      Vec2(const Vec3& vec3);
+      Vec2(const Vec3<float>& vec3);
       Vec2(const Vec4& vec4);
 
       float Length();

@@ -5,7 +5,7 @@
 
 namespace Greet
 {
-  ColorPickerWindow::ColorPickerWindow(const Vec2& pos, const Vec3& color)
+  ColorPickerWindow::ColorPickerWindow(const Vec2& pos, const Vec3<float>& color)
   {
     name = "ColorPickerWindow";
     shouldCloseUnfocus = true;
@@ -13,7 +13,7 @@ namespace Greet
     // However that would need to be integrated with the engine and
     // I have no idea how to do this.
 
-    Vec3 hsv = ColorUtils::RGBtoHSV(Vec4(color.r,color.g,color.b,1));
+    Vec3<float> hsv(ColorUtils::RGBtoHSV(Vec4(color.r,color.g,color.b,1)));
 
     Style s = Style{}.SetBackgroundColor(ColorUtils::ColorHexToVec4(0xff263238))
       .SetBorderColor(ColorUtils::ColorHexToVec4(0xff37474f))
@@ -236,9 +236,9 @@ namespace Greet
   void ColorPickerWindow::UpdateColor(float hue, float sat, float val, InputChangeType type)
   {
     Style s = colorDisplay->GetNormalStyle();
-    Vec3 prevRGB = color;
+    Vec3<float> prevRGB = color;
     Vec4 rgb = ColorUtils::HSVtoRGB(hue,sat,val,1);
-    color = Vec3(rgb);
+    color = Vec3<float>(rgb);
     s.SetBackgroundColor(rgb);
     colorDisplay->SetNormalStyle(s);
     svSlider->SetHue(hue);
@@ -265,8 +265,8 @@ namespace Greet
     {
       hexTextBox->SetText(LogUtils::DecToHex(((int)(255*rgb.r) << 16) | ((int)(255*rgb.g) << 8)  | (int)(255*rgb.b),6));
     }
-    if(Vec3(rgb) != prevRGB)
-      CallOnColorChangeCallback(prevRGB, Vec3(rgb));
+    if(Vec3<float>(rgb) != prevRGB)
+      CallOnColorChangeCallback(prevRGB, Vec3<float>(rgb));
   }
 
   void ColorPickerWindow::SliderChanged()
@@ -311,7 +311,7 @@ namespace Greet
     onColorChangeCallback = callback;
   }
 
-  void ColorPickerWindow::CallOnColorChangeCallback(const Vec3& previous, const Vec3& current)
+  void ColorPickerWindow::CallOnColorChangeCallback(const Vec3<float>& previous, const Vec3<float>& current)
   {
     if(onColorChangeCallback)
       onColorChangeCallback(previous, current);

@@ -1,8 +1,9 @@
 #pragma once
 
-#include <math/Vec3.h>
-
 namespace Greet {
+
+  template <typename Real>
+  struct Vec3; 
 
   class Quaternion
   {
@@ -20,13 +21,13 @@ namespace Greet {
       Quaternion& Conjugate();
 
       Quaternion& Multiply(const Quaternion& other);
-      Quaternion& Multiply(const Vec3& other);
+      Quaternion& Multiply(const Vec3<float>& other);
 
-      friend Quaternion operator*(const Quaternion& first, const Quaternion &second);
-      friend Quaternion operator*(const Quaternion& first, const Vec3 &second);
+      friend Quaternion operator*(const Quaternion& first, const Quaternion& second);
+      friend Quaternion operator*(const Quaternion& first, const Vec3<float>& second);
 
       Quaternion& operator*=(const Quaternion &other);
-      Quaternion& operator*=(const Vec3 &other);
+      Quaternion& operator*=(const Vec3<float>  &other);
   };
 
 }

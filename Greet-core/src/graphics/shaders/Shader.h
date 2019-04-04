@@ -40,9 +40,9 @@ namespace Greet {
       void SetUniform1iv(const char *name, uint count, int* value) const;
       void SetUniform1ui(const char *name, uint value) const;
       void SetUniform1uiv(const char *name, uint count, uint* values) const;
-      void SetUniform2f(const char *name, const Vec2 &value) const;
-      void SetUniform3f(const char *name, const Vec3 &value) const;
-      void SetUniform4f(const char *name, const Vec4 &value) const;
+      void SetUniform2f(const char *name, const Vec2& value) const;
+      void SetUniform3f(const char *name, const Vec3<float>& value) const;
+      void SetUniform4f(const char *name, const Vec4& value) const;
       void SetUniformMat3(const char *name, const Mat3 &value) const;
       void SetUniformMat4(const char *name, const Mat4 &value) const;
     public:

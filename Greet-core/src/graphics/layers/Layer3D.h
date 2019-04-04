@@ -24,7 +24,7 @@ namespace Greet {
       void AddRenderer(Renderer3D* renderer);
       void RemoveRenderer(Renderer3D* renderer);
 
-      Vec3 GetScreenCoordination(const Vec3& coordinate, uint screenWidth, uint screenHeight) const;
-      void GetWorldCoordination(const Vec2& mousePos, Vec3* near, Vec3* direction) const;
+      Vec3<float> GetScreenCoordination(const Vec3<float>& coordinate, uint screenWidth, uint screenHeight) const;
+      void GetWorldCoordination(const Vec2& mousePos, Vec3<float>* near, Vec3<float>* direction) const;
   };
 }

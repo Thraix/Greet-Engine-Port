@@ -28,7 +28,7 @@ namespace Greet {
       bool wireframe = false;
 
     public:
-      Mesh(const Vec3* vertices, uint vertexCount, const uint* indices, uint indexCount);
+      Mesh(const Vec3<float>* vertices, uint vertexCount, const uint* indices, uint indexCount);
       Mesh(MeshData* data);
       Mesh(Mesh&&) = default;
       Mesh& operator=(Mesh&&) = default;
@@ -48,7 +48,7 @@ namespace Greet {
       inline void SetEnableWireframe(bool _wireframe) { wireframe = _wireframe; }
       inline bool IsEnableWireframe() const { return wireframe; }
 
-      void AddAttribute(uint location, const Vec3* data);
+      void AddAttribute(uint location, const Vec3<float>* data);
       void AddAttribute(uint location, const Vec2* data);
       //void addAttribute(uint location, uint attributeSize, const float* data);
       void AddAttribute(uint location, uint attributeSize, const uint* data);
@@ -56,7 +56,7 @@ namespace Greet {
       void AddAttribute(uint location, void* data, uint dataSize, uint typeCount, uint glType, bool normalized);
 
       void SetDefaultAttribute4f(uint location, const Vec4& data);
-      void SetDefaultAttribute3f(uint location, const Vec3& data);
+      void SetDefaultAttribute3f(uint location, const Vec3<float>& data);
     private:
       bool HasVBO(uint location) const;
       void EnableAttributes() const;

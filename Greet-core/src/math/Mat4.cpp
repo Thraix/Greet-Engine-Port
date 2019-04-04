@@ -75,7 +75,7 @@ namespace Greet {
     return result;
   }
 
-  Mat4 Mat4::TransformationMatrix(Vec3 position, Vec3 rotation, Vec3 scale)
+  Mat4 Mat4::TransformationMatrix(const Vec3<float>& position, const Vec3<float>& rotation, const Vec3<float>& scale)
   {
     return
       Mat4::Translate(position) *
@@ -85,7 +85,7 @@ namespace Greet {
       Mat4::Scale(scale);
   }
 
-  Mat4 Mat4::ViewMatrix(Vec3 position, Vec3 rotation)
+  Mat4 Mat4::ViewMatrix(const Vec3<float>& position, const Vec3<float>& rotation)
   {
     return
       Mat4::RotateX(rotation.x) *
@@ -94,18 +94,18 @@ namespace Greet {
       Mat4::Translate(-position.x, -position.y, -position.z);
   }
 
-  Mat4 Mat4::TPCamera(Vec3 position, float distance, float height, float rotation)
+  Mat4 Mat4::TPCamera(const Vec3<float>& position, float distance, float height, float rotation)
   {
     return 
       RotateRX(asin(height)) * 
       Mat4::RotateY(90) * 
-      Mat4::Translate(Vec3(sqrt(1 - height*height) * distance, -height * distance, 0)) * 
+      Mat4::Translate(Vec3<float>(sqrt(1 - height*height) * distance, -height * distance, 0)) * 
       Mat4::RotateY(rotation) * 
       Mat4::Translate(-position.x, -position.y, -position.z);
   }
 
 
-  Mat4 Mat4::Translate(const Vec3& translation)
+  Mat4 Mat4::Translate(const Vec3<float>& translation)
   {
     Mat4 result(1.0f);
 
@@ -126,7 +126,7 @@ namespace Greet {
     return result;
   }
 
-  Mat4 Mat4::Scale(const Vec3& scaling)
+  Mat4 Mat4::Scale(const Vec3<float>& scaling)
   {
     Mat4 result(1.0f);
 
@@ -197,12 +197,12 @@ namespace Greet {
     return result;
   }
 
-  Mat4 Mat4::Rotate(float deg, const Vec3& axis)
+  Mat4 Mat4::Rotate(float deg, const Vec3<float>& axis)
   {
     return RotateR(Math::ToRadians(deg), axis);
   }
 
-  Mat4 Mat4::RotateR(float rad, const Vec3& axis)
+  Mat4 Mat4::RotateR(float rad, const Vec3<float>& axis)
   {
     Mat4 result(1.0f);
 
@@ -395,7 +395,7 @@ namespace Greet {
     return Vec4(x, y, z, w);
   }
 
-  Vec4 Mat4::Multiply(const Vec3 &other) const
+  Vec4 Mat4::Multiply(const Vec3<float> &other) const
   {
     float x = columns[0].x * other.x + columns[1].x * other.y + columns[2].x * other.z + columns[3].x;
     float y = columns[0].y * other.x + columns[1].y * other.y + columns[2].y * other.z + columns[3].y;
@@ -427,7 +427,7 @@ namespace Greet {
     return first.Multiply(second);
   }
 
-  Vec4 operator*(const Mat4 &first, const Vec3 &second)
+  Vec4 operator*(const Mat4 &first, const Vec3<float> &second)
   {
     return first.Multiply(second);
   }

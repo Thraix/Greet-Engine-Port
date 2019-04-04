@@ -3,18 +3,18 @@
 namespace Greet {
 
   // Calculate a normal of 3 points in space
-  Vec3 MeshFactory::CalculateNormal(Vec3 p1, Vec3 p2, Vec3 p3)
+  Vec3<float> MeshFactory::CalculateNormal(const Vec3<float>& p1, const Vec3<float>& p2, const Vec3<float>& p3)
   {
-    Vec3 v1 = p2 - p1;
-    Vec3 v2 = p3 - p1;
-    Vec3 normal = v1.Cross(v2);
+    Vec3<float> v1 = p2 - p1;
+    Vec3<float> v2 = p3 - p1;
+    Vec3<float> normal = v1.Cross(v2);
     return normal;
   }
 
-  void MeshFactory::CalculateNormals(Vec3* vertices, uint vertexCount, uint* indices, uint indexCount, Vec3* normals)
+  void MeshFactory::CalculateNormals(Vec3<float>* vertices, uint vertexCount, uint* indices, uint indexCount, Vec3<float>* normals)
   {
-    Vec3 faceNormal;
-    Vec3 p1, p2, p3;
+    Vec3<float> faceNormal;
+    Vec3<float> p1, p2, p3;
     memset(normals, 0, sizeof(float) * 3 * vertexCount);
     for (uint i = 0; i < indexCount; i += 3)
     {
@@ -28,14 +28,14 @@ namespace Greet {
     }
     for (uint i = 0; i < vertexCount; i++)
     {
-      ((Vec3*)normals)[i].Normalize();
+      ((Vec3<float>*)normals)[i].Normalize();
     }
   }
 
   // Calculate normals for a mesh
-  Vec3* MeshFactory::CalculateNormals(Vec3* vertices, uint vertexCount, uint* indices, uint indexCount)
+  Vec3<float>* MeshFactory::CalculateNormals(Vec3<float>* vertices, uint vertexCount, uint* indices, uint indexCount)
   {
-    Vec3* normals = new Vec3[vertexCount];
+    Vec3<float>* normals = new Vec3<float>[vertexCount];
     CalculateNormals(vertices, vertexCount, indices, indexCount, normals);
     return normals;
   }
@@ -48,8 +48,8 @@ namespace Greet {
       count = 4;
     }
     uint indexCount = 3 * (count - 2);
-    Vec3* vertices = new Vec3[count];
-    Vec3* normals = new Vec3[count];
+    Vec3<float>* vertices = new Vec3<float>[count];
+    Vec3<float>* normals = new Vec3<float>[count];
     uint* indices = new uint[indexCount];
     float radius = 0;
 
@@ -71,8 +71,8 @@ namespace Greet {
     float angle = 2 * M_PI / (float)count;
     for(uint i = 0; i < count;i++)
     {
-      vertices[i] = Vec3(cos(angle/2 + angle*i), 0, sin(angle/2 + angle*i)) * radius;
-      normals[i] = Vec3(0,1,0);
+      vertices[i] = Vec3<float>(cos(angle/2 + angle*i), 0, sin(angle/2 + angle*i)) * radius;
+      normals[i] = Vec3<float>(0,1,0);
     }
 
     for(uint i = 0;i < count - 2; i++)
@@ -83,58 +83,58 @@ namespace Greet {
     }
 
     MeshData* meshData = new MeshData(vertices, count, indices, indexCount);
-    meshData->AddAttribute(new AttributeData<Vec3>(ATTRIBUTE_NORMAL, normals));
+    meshData->AddAttribute(new AttributeData<Vec3<float>>(ATTRIBUTE_NORMAL, normals));
     return meshData;
   }
 
   MeshData* MeshFactory::Quad(float x, float y, float z, float width, float length)
   {
-    Vec3 vertices[4];
+    Vec3<float> vertices[4];
     float halfWidth = width / 2.0f;
     float halfLength = length / 2.0f;
-    vertices[0]  = Vec3(x-halfWidth, y, z-halfLength);
-    vertices[1]  = Vec3(x+halfWidth, y, z-halfLength);
-    vertices[2]  = Vec3(x+halfWidth, y, z+halfLength);
-    vertices[3]  = Vec3(x-halfWidth, y, z+halfLength);
+    vertices[0]  = Vec3<float>(x-halfWidth, y, z-halfLength);
+    vertices[1]  = Vec3<float>(x+halfWidth, y, z-halfLength);
+    vertices[2]  = Vec3<float>(x+halfWidth, y, z+halfLength);
+    vertices[3]  = Vec3<float>(x-halfWidth, y, z+halfLength);
 
-    Vec3 normals[4];	
-    normals[0]  = Vec3(0.0f, 1.0f, 0.0f);
-    normals[1]  = Vec3(0.0f, 1.0f, 0.0f);
-    normals[2]  = Vec3(0.0f, 1.0f, 0.0f);
-    normals[3]  = Vec3(0.0f, 1.0f, 0.0f);
+    Vec3<float> normals[4];	
+    normals[0]  = Vec3<float>(0.0f, 1.0f, 0.0f);
+    normals[1]  = Vec3<float>(0.0f, 1.0f, 0.0f);
+    normals[2]  = Vec3<float>(0.0f, 1.0f, 0.0f);
+    normals[3]  = Vec3<float>(0.0f, 1.0f, 0.0f);
 
     uint* indices = new uint[6]{0,1,2,0,2,3};
     MeshData* meshdata = new MeshData(vertices,4,indices,6);
-    meshdata->AddAttribute(new AttributeData<Vec3>(ATTRIBUTE_NORMAL,normals));
+    meshdata->AddAttribute(new AttributeData<Vec3<float>>(ATTRIBUTE_NORMAL,normals));
     return meshdata;
   }
   // x, y, z
   MeshData* MeshFactory::Cube(float x, float y, float z, float width, float height, float length)
   {
-    Vec3* vertices = new Vec3[8];
+    Vec3<float>* vertices = new Vec3<float>[8];
     float halfWidth = width / 2.0f;
     float halfHeight = height / 2.0f;
     float halfLength = length / 2.0f;
 
-    vertices[0]  = Vec3(x-halfWidth, y-halfHeight, z-halfLength);
-    vertices[1]  = Vec3(x-halfWidth, y+halfHeight, z-halfLength);
-    vertices[2]  = Vec3(x-halfWidth, y+halfHeight, z+halfLength);
-    vertices[3]  = Vec3(x-halfWidth, y-halfHeight, z+halfLength);
+    vertices[0]  = Vec3<float>(x-halfWidth, y-halfHeight, z-halfLength);
+    vertices[1]  = Vec3<float>(x-halfWidth, y+halfHeight, z-halfLength);
+    vertices[2]  = Vec3<float>(x-halfWidth, y+halfHeight, z+halfLength);
+    vertices[3]  = Vec3<float>(x-halfWidth, y-halfHeight, z+halfLength);
 
-    vertices[4]  = Vec3(x+halfWidth, y-halfHeight, z-halfLength);
-    vertices[5]  = Vec3(x+halfWidth, y+halfHeight, z-halfLength);
-    vertices[6]  = Vec3(x+halfWidth, y+halfHeight, z+halfLength);
-    vertices[7]  = Vec3(x+halfWidth, y-halfHeight, z+halfLength);
+    vertices[4]  = Vec3<float>(x+halfWidth, y-halfHeight, z-halfLength);
+    vertices[5]  = Vec3<float>(x+halfWidth, y+halfHeight, z-halfLength);
+    vertices[6]  = Vec3<float>(x+halfWidth, y+halfHeight, z+halfLength);
+    vertices[7]  = Vec3<float>(x+halfWidth, y-halfHeight, z+halfLength);
 
-    Vec3* normals = new Vec3[8];
-    normals[0] = Vec3(-1.0f, -1.0f, -1.0f);
-    normals[1] = Vec3(-1.0f,  1.0f, -1.0f);
-    normals[2] = Vec3(-1.0f,  1.0f,  1.0f);
-    normals[3] = Vec3(-1.0f, -1.0f,  1.0f);
-    normals[4] = Vec3( 1.0f, -1.0f, -1.0f);
-    normals[5] = Vec3( 1.0f,  1.0f, -1.0f);
-    normals[6] = Vec3( 1.0f,  1.0f,  1.0f);
-    normals[7] = Vec3( 1.0f, -1.0f,  1.0f);
+    Vec3<float>* normals = new Vec3<float>[8];
+    normals[0] = Vec3<float>(-1.0f, -1.0f, -1.0f);
+    normals[1] = Vec3<float>(-1.0f,  1.0f, -1.0f);
+    normals[2] = Vec3<float>(-1.0f,  1.0f,  1.0f);
+    normals[3] = Vec3<float>(-1.0f, -1.0f,  1.0f);
+    normals[4] = Vec3<float>( 1.0f, -1.0f, -1.0f);
+    normals[5] = Vec3<float>( 1.0f,  1.0f, -1.0f);
+    normals[6] = Vec3<float>( 1.0f,  1.0f,  1.0f);
+    normals[7] = Vec3<float>( 1.0f, -1.0f,  1.0f);
 
     uint* indices = new uint[36]{
       0, 2, 1, 0, 3, 2,
@@ -145,80 +145,80 @@ namespace Greet {
         3, 0, 4, 3, 4, 7 };
 
     MeshData* meshdata = new MeshData(vertices,8,indices,36);
-    meshdata->AddAttribute(new AttributeData<Vec3>(ATTRIBUTE_NORMAL, normals));
+    meshdata->AddAttribute(new AttributeData<Vec3<float>>(ATTRIBUTE_NORMAL, normals));
     return meshdata;
   }
 
   // x, y, z
   MeshData* MeshFactory::Cube2(float x, float y, float z, float width, float height, float length)
   {
-    Vec3* vertices = new Vec3[24];
+    Vec3<float>* vertices = new Vec3<float>[24];
     float halfWidth = width / 2.0f;
     float halfHeight = height / 2.0f;
     float halfLength = length / 2.0f;
 
 
-    vertices[0] = Vec3(x - halfWidth, y - halfHeight, z - halfLength);
-    vertices[1] = Vec3(x - halfWidth, y + halfHeight, z - halfLength);
-    vertices[2] = Vec3(x - halfWidth, y + halfHeight, z + halfLength);
-    vertices[3] = Vec3(x - halfWidth, y - halfHeight, z + halfLength);
+    vertices[0] = Vec3<float>(x - halfWidth, y - halfHeight, z - halfLength);
+    vertices[1] = Vec3<float>(x - halfWidth, y + halfHeight, z - halfLength);
+    vertices[2] = Vec3<float>(x - halfWidth, y + halfHeight, z + halfLength);
+    vertices[3] = Vec3<float>(x - halfWidth, y - halfHeight, z + halfLength);
 
-    vertices[4] = Vec3(x + halfWidth, y - halfHeight, z - halfLength);
-    vertices[5] = Vec3(x + halfWidth, y + halfHeight, z - halfLength);
-    vertices[6] = Vec3(x + halfWidth, y + halfHeight, z + halfLength);
-    vertices[7] = Vec3(x + halfWidth, y - halfHeight, z + halfLength);
+    vertices[4] = Vec3<float>(x + halfWidth, y - halfHeight, z - halfLength);
+    vertices[5] = Vec3<float>(x + halfWidth, y + halfHeight, z - halfLength);
+    vertices[6] = Vec3<float>(x + halfWidth, y + halfHeight, z + halfLength);
+    vertices[7] = Vec3<float>(x + halfWidth, y - halfHeight, z + halfLength);
 
-    vertices[8] = Vec3(x - halfWidth, y - halfHeight, z - halfLength);
-    vertices[9] = Vec3(x - halfWidth, y - halfHeight, z + halfLength);
-    vertices[10] = Vec3(x + halfWidth, y - halfHeight, z + halfLength);
-    vertices[11] = Vec3(x + halfWidth, y - halfHeight, z - halfLength);
+    vertices[8] = Vec3<float>(x - halfWidth, y - halfHeight, z - halfLength);
+    vertices[9] = Vec3<float>(x - halfWidth, y - halfHeight, z + halfLength);
+    vertices[10] = Vec3<float>(x + halfWidth, y - halfHeight, z + halfLength);
+    vertices[11] = Vec3<float>(x + halfWidth, y - halfHeight, z - halfLength);
 
-    vertices[12] = Vec3(x - halfWidth, y + halfHeight, z - halfLength);
-    vertices[13] = Vec3(x - halfWidth, y + halfHeight, z + halfLength);
-    vertices[14] = Vec3(x + halfWidth, y + halfHeight, z + halfLength);
-    vertices[15] = Vec3(x + halfWidth, y + halfHeight, z - halfLength);
+    vertices[12] = Vec3<float>(x - halfWidth, y + halfHeight, z - halfLength);
+    vertices[13] = Vec3<float>(x - halfWidth, y + halfHeight, z + halfLength);
+    vertices[14] = Vec3<float>(x + halfWidth, y + halfHeight, z + halfLength);
+    vertices[15] = Vec3<float>(x + halfWidth, y + halfHeight, z - halfLength);
 
 
-    vertices[16] = Vec3(x - halfWidth, y - halfHeight, z - halfLength);
-    vertices[17] = Vec3(x + halfWidth, y - halfHeight, z - halfLength);
-    vertices[18] = Vec3(x + halfWidth, y + halfHeight, z - halfLength);
-    vertices[19] = Vec3(x - halfWidth, y + halfHeight, z - halfLength);
+    vertices[16] = Vec3<float>(x - halfWidth, y - halfHeight, z - halfLength);
+    vertices[17] = Vec3<float>(x + halfWidth, y - halfHeight, z - halfLength);
+    vertices[18] = Vec3<float>(x + halfWidth, y + halfHeight, z - halfLength);
+    vertices[19] = Vec3<float>(x - halfWidth, y + halfHeight, z - halfLength);
 
-    vertices[20] = Vec3(x - halfWidth, y - halfHeight, z + halfLength);
-    vertices[21] = Vec3(x + halfWidth, y - halfHeight, z + halfLength);
-    vertices[22] = Vec3(x + halfWidth, y + halfHeight, z + halfLength);
-    vertices[23] = Vec3(x - halfWidth, y + halfHeight, z + halfLength);
+    vertices[20] = Vec3<float>(x - halfWidth, y - halfHeight, z + halfLength);
+    vertices[21] = Vec3<float>(x + halfWidth, y - halfHeight, z + halfLength);
+    vertices[22] = Vec3<float>(x + halfWidth, y + halfHeight, z + halfLength);
+    vertices[23] = Vec3<float>(x - halfWidth, y + halfHeight, z + halfLength);
 
-    Vec3* normals = new Vec3[24 * 3];
-    normals[0] = Vec3(-1.0f, 0.0f, 0.0f);
-    normals[1] = Vec3(-1.0f, 0.0f, 0.0f);
-    normals[2] = Vec3(-1.0f, 0.0f, 0.0f);
-    normals[3] = Vec3(-1.0f, 0.0f, 0.0f);
+    Vec3<float>* normals = new Vec3<float>[24 * 3];
+    normals[0] = Vec3<float>(-1.0f, 0.0f, 0.0f);
+    normals[1] = Vec3<float>(-1.0f, 0.0f, 0.0f);
+    normals[2] = Vec3<float>(-1.0f, 0.0f, 0.0f);
+    normals[3] = Vec3<float>(-1.0f, 0.0f, 0.0f);
 
-    normals[4] = Vec3(1.0f, 0.0f, 0.0f);
-    normals[5] = Vec3(1.0f, 0.0f, 0.0f);
-    normals[6] = Vec3(1.0f, 0.0f, 0.0f);
-    normals[7] = Vec3(1.0f, 0.0f, 0.0f);
+    normals[4] = Vec3<float>(1.0f, 0.0f, 0.0f);
+    normals[5] = Vec3<float>(1.0f, 0.0f, 0.0f);
+    normals[6] = Vec3<float>(1.0f, 0.0f, 0.0f);
+    normals[7] = Vec3<float>(1.0f, 0.0f, 0.0f);
 
-    normals[8] = Vec3(0.0f, -1.0f, 0.0f);
-    normals[9] = Vec3(0.0f, -1.0f, 0.0f);
-    normals[10] = Vec3(0.0f, -1.0f, 0.0f);
-    normals[11] = Vec3(0.0f, -1.0f, 0.0f);
+    normals[8] = Vec3<float>(0.0f, -1.0f, 0.0f);
+    normals[9] = Vec3<float>(0.0f, -1.0f, 0.0f);
+    normals[10] = Vec3<float>(0.0f, -1.0f, 0.0f);
+    normals[11] = Vec3<float>(0.0f, -1.0f, 0.0f);
 
-    normals[12] = Vec3(0.0f, 1.0f, 0.0f);
-    normals[13] = Vec3(0.0f, 1.0f, 0.0f);
-    normals[14] = Vec3(0.0f, 1.0f, 0.0f);
-    normals[15] = Vec3(0.0f, 1.0f, 0.0f);
+    normals[12] = Vec3<float>(0.0f, 1.0f, 0.0f);
+    normals[13] = Vec3<float>(0.0f, 1.0f, 0.0f);
+    normals[14] = Vec3<float>(0.0f, 1.0f, 0.0f);
+    normals[15] = Vec3<float>(0.0f, 1.0f, 0.0f);
 
-    normals[16] = Vec3(0.0f, 0.0f, -1.0f);
-    normals[17] = Vec3(0.0f, 0.0f, -1.0f);
-    normals[18] = Vec3(0.0f, 0.0f, -1.0f);
-    normals[19] = Vec3(0.0f, 0.0f, -1.0f);
+    normals[16] = Vec3<float>(0.0f, 0.0f, -1.0f);
+    normals[17] = Vec3<float>(0.0f, 0.0f, -1.0f);
+    normals[18] = Vec3<float>(0.0f, 0.0f, -1.0f);
+    normals[19] = Vec3<float>(0.0f, 0.0f, -1.0f);
 
-    normals[20] = Vec3(0.0f, 0.0f, 1.0f);
-    normals[21] = Vec3(0.0f, 0.0f, 1.0f);
-    normals[22] = Vec3(0.0f, 0.0f, 1.0f);
-    normals[23] = Vec3(0.0f, 0.0f, 1.0f);
+    normals[20] = Vec3<float>(0.0f, 0.0f, 1.0f);
+    normals[21] = Vec3<float>(0.0f, 0.0f, 1.0f);
+    normals[22] = Vec3<float>(0.0f, 0.0f, 1.0f);
+    normals[23] = Vec3<float>(0.0f, 0.0f, 1.0f);
 
 
     uint* indices = new uint[36]{
@@ -230,7 +230,7 @@ namespace Greet {
         20, 21, 22, 20, 22, 23 };
 
     MeshData* meshdata = new MeshData(vertices, 24, indices, 36);
-    meshdata->AddAttribute(new AttributeData<Vec3>(ATTRIBUTE_NORMAL, normals));
+    meshdata->AddAttribute(new AttributeData<Vec3<float>>(ATTRIBUTE_NORMAL, normals));
     return meshdata;
   }
 
@@ -245,29 +245,29 @@ namespace Greet {
     float corner = size*0.4082483f; // size/sqrt(6) -> Center to corner
     float face = height - corner; // Center to face 
 
-    Vec3 v1 = Vec3(x, y-face, z + l1);
-    Vec3 v2 = Vec3(x + halfSize, y - face, z - l2);
-    Vec3 v3 = Vec3(x - halfSize, y - face, z - l2);
-    Vec3 v4 = Vec3(x, y + corner, z);
+    Vec3<float> v1 = Vec3<float>(x, y-face, z + l1);
+    Vec3<float> v2 = Vec3<float>(x + halfSize, y - face, z - l2);
+    Vec3<float> v3 = Vec3<float>(x - halfSize, y - face, z - l2);
+    Vec3<float> v4 = Vec3<float>(x, y + corner, z);
 
 
-    Vec3* vertices = new Vec3[4];
+    Vec3<float>* vertices = new Vec3<float>[4];
     vertices[0] = v1;
     vertices[1] = v2;
     vertices[2] = v3;
     vertices[3] = v4;
 
 
-    Vec3* normals = new Vec3[4 * 3];
+    Vec3<float>* normals = new Vec3<float>[4 * 3];
 
-    normals[0] = (v1 - Vec3(x, y, z)).Normalize();
-    normals[1] = (v2 - Vec3(x, y, z)).Normalize();
-    normals[2] = (v3 - Vec3(x, y, z)).Normalize();
-    normals[3] = (v4 - Vec3(x, y, z)).Normalize();
+    normals[0] = (v1 - Vec3<float>(x, y, z)).Normalize();
+    normals[1] = (v2 - Vec3<float>(x, y, z)).Normalize();
+    normals[2] = (v3 - Vec3<float>(x, y, z)).Normalize();
+    normals[3] = (v4 - Vec3<float>(x, y, z)).Normalize();
 
     uint* indices = new uint[12]{ 0, 2, 1, 1, 3, 0, 2, 0, 3, 1, 2, 3};
     MeshData* meshdata = new MeshData(vertices, 4, indices, 12);
-    meshdata->AddAttribute(new AttributeData<Vec3>(ATTRIBUTE_NORMAL,normals));
+    meshdata->AddAttribute(new AttributeData<Vec3<float>>(ATTRIBUTE_NORMAL,normals));
     return meshdata;
   }
 
@@ -286,7 +286,7 @@ namespace Greet {
 
     uint vertexCount = (gridWidth + 1) * (gridLength+ 1);
 
-    Vec3* vertices = new Vec3[vertexCount];
+    Vec3<float>* vertices = new Vec3<float>[vertexCount];
 
     // decenter x and y
     x -= width / 2.0f;
@@ -298,7 +298,7 @@ namespace Greet {
       for (uint ix = 0; ix <= gridWidth; ix++)
       {
         float heightM = heightMap == NULL ? 0 : heightMap[ix + iz*(gridWidth + 1)];
-        vertices[ix + iz*(gridWidth + 1)] = Vec3(x + ix*tileWidth, y + heightM*height, z + iz*tileLength);
+        vertices[ix + iz*(gridWidth + 1)] = Vec3<float>(x + ix*tileWidth, y + heightM*height, z + iz*tileLength);
       }
     }
 
@@ -332,9 +332,9 @@ namespace Greet {
       }
     }
 
-    Vec3* normals = CalculateNormals(vertices, vertexCount, indices, indexCount);
+    Vec3<float>* normals = CalculateNormals(vertices, vertexCount, indices, indexCount);
     MeshData* data = new MeshData(vertices, vertexCount, indices, indexCount);
-    data->AddAttribute(new AttributeData<Vec3>(ATTRIBUTE_NORMAL, normals));
+    data->AddAttribute(new AttributeData<Vec3<float>>(ATTRIBUTE_NORMAL, normals));
 
     return data;
   }
@@ -370,7 +370,7 @@ namespace Greet {
 
     uint vertexCount = (gridWidth + 1) * (gridLength + 1) + (gridWidth - 1)*(gridLength - 1);
 
-    Vec3* vertices = new Vec3[vertexCount];
+    Vec3<float>* vertices = new Vec3<float>[vertexCount];
 
     // decenter x and y
     x -= width / 2.0f;
@@ -381,7 +381,7 @@ namespace Greet {
       for (uint ix = 0; ix <= gridWidth; ix++)
       {
         float heightM = heightMap == NULL ? 0 : heightMap[ix + iz*(gridWidth + 1)];
-        Vec3 vec = Vec3(x + ix*tileWidth, y + heightM*height, z + iz*tileLength);
+        Vec3<float> vec = Vec3<float>(x + ix*tileWidth, y + heightM*height, z + iz*tileLength);
         uint index = IndexGrid(ix,iz,gridWidth, gridLength);
         vertices[index] = vec;
         if(iz < gridLength - 1 && ix != 0 && ix != gridWidth)
@@ -449,14 +449,14 @@ namespace Greet {
       }
     }
 
-    Vec3* normals = CalculateNormals(vertices, vertexCount, indices, indexCount);
+    Vec3<float>* normals = CalculateNormals(vertices, vertexCount, indices, indexCount);
     MeshData* data = new MeshData(vertices, vertexCount, indices, indexCount);
-    data->AddAttribute(new AttributeData<Vec3>(ATTRIBUTE_NORMAL, normals));
+    data->AddAttribute(new AttributeData<Vec3<float>>(ATTRIBUTE_NORMAL, normals));
 
     return data;
   }
 
-  MeshData* MeshFactory::Sphere(const Vec3& position, float radius, uint latitudes, uint longitudes)
+  MeshData* MeshFactory::Sphere(const Vec3<float>& position, float radius, uint latitudes, uint longitudes)
   {
     if(latitudes < 1 || longitudes < 4)
     {
@@ -466,9 +466,9 @@ namespace Greet {
     }
 
     uint vertexCount = 2 + longitudes * latitudes;
-    Vec3* vertices = new Vec3[vertexCount];
-    vertices[0] = Vec3(0,-radius, 0);
-    vertices[vertexCount - 1] = Vec3(0,radius, 0);
+    Vec3<float>* vertices = new Vec3<float>[vertexCount];
+    vertices[0] = Vec3<float>(0,-radius, 0);
+    vertices[vertexCount - 1] = Vec3<float>(0,radius, 0);
 
     float angleY = M_PI / (latitudes + 1);
     float angleLong = 2 * M_PI / longitudes;
@@ -525,8 +525,8 @@ namespace Greet {
     }
 
     MeshData* data = new MeshData(vertices, vertexCount, indices, indexCount);
-    Vec3* normals = CalculateNormals(vertices, vertexCount, indices, indexCount);
-    data->AddAttribute(new AttributeData<Vec3>(ATTRIBUTE_NORMAL, normals));
+    Vec3<float>* normals = CalculateNormals(vertices, vertexCount, indices, indexCount);
+    data->AddAttribute(new AttributeData<Vec3<float>>(ATTRIBUTE_NORMAL, normals));
 
     return data;
 

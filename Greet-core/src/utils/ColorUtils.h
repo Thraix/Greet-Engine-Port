@@ -88,7 +88,7 @@ namespace Greet { namespace ColorUtils {
     return RGBtoHSV(rgb.x,rgb.y,rgb.z,rgb.w);
   }
 
-  inline uint Vec3ToColorHex(Vec3 color)
+  inline uint Vec3ToColorHex(const Vec3<float>& color)
   {
     return 0xff000000 | ((int)(color.x * 255) << 16) | ((int)(color.y * 255) << 8) | (int)(color.z * 255);
   }

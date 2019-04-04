@@ -18,7 +18,7 @@ namespace Greet {
     this->y = y;
   }
 
-  Vec2::Vec2(const Vec3& vec3)
+  Vec2::Vec2(const Vec3<float>& vec3)
     : x(vec3.x), y(vec3.y)
   {
 

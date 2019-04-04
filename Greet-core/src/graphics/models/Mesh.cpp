@@ -6,7 +6,7 @@
 
 namespace Greet {
 
-  Mesh::Mesh(const Vec3* vertices, uint vertexCount, const uint* indices, uint indexCount)
+  Mesh::Mesh(const Vec3<float>* vertices, uint vertexCount, const uint* indices, uint indexCount)
     : vao{}, ibo{(uint)(indexCount*sizeof(uint)), BufferType::INDEX, BufferDrawType::STATIC}
   {
     m_drawMode = GL_TRIANGLES;
@@ -90,9 +90,9 @@ namespace Greet {
     }
   }
 
-  void Mesh::AddAttribute(uint location, const Vec3* data)
+  void Mesh::AddAttribute(uint location, const Vec3<float>* data)
   {
-    AddAttribute(location, (void*)data, sizeof(Vec3), 3, GL_FLOAT, false);
+    AddAttribute(location, (void*)data, sizeof(Vec3<float>), 3, GL_FLOAT, false);
   }
 
   void Mesh::AddAttribute(uint location, const Vec2* data)
@@ -147,7 +147,7 @@ namespace Greet {
     vao.Disable();
   }
 
-  void Mesh::SetDefaultAttribute3f(uint location, const Vec3& data)
+  void Mesh::SetDefaultAttribute3f(uint location, const Vec3<float>& data)
   {
     vao.Enable();
     GLCall(glVertexAttrib3f(location,data.x,data.y,data.z));

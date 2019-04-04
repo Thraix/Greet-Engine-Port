@@ -20,18 +20,18 @@ namespace Greet {
   {
     std::vector<std::string> dataLine;
 
-    std::vector<Vec3> positions;
+    std::vector<Vec3<float>> positions;
     std::vector<Vec2> texCoords;
-    std::vector<Vec3> normals;
+    std::vector<Vec3<float>> normals;
     std::vector<uint> indices;
 
     std::ifstream input(filename);
     std::map<std::string, uint> verticesMap;
 
     // These are the same length.
-    std::vector<Vec3> vertexPos;
+    std::vector<Vec3<float>> vertexPos;
     std::vector<Vec2> vertexTexCoords;
-    std::vector<Vec3> vertexNormals;
+    std::vector<Vec3<float>> vertexNormals;
 
     for (std::string line; getline(input, line); )
     {
@@ -40,7 +40,7 @@ namespace Greet {
       iss >> s;
       if (s == "v")
       {
-        Vec3 vector{};
+        Vec3<float> vector{};
         iss >> vector.x;
         iss >> vector.y;
         iss >> vector.z;
@@ -55,7 +55,7 @@ namespace Greet {
       }
       else if (s == "vn")
       {
-        Vec3 vector{};
+        Vec3<float> vector{};
         iss >> vector.x;
         iss >> vector.y;
         iss >> vector.z;
@@ -102,13 +102,13 @@ namespace Greet {
     }
 
     input.close();
-    Vec3* positionsArray = new Vec3[vertexPos.size()];
-    Vec3* normalsArray = new Vec3[vertexNormals.size()];
+    Vec3<float>* positionsArray = new Vec3<float>[vertexPos.size()];
+    Vec3<float>* normalsArray = new Vec3<float>[vertexNormals.size()];
     Vec2* texCoordsArray = new Vec2[vertexTexCoords.size()];
     uint* indicesArray = new uint[indices.size()];
-    memcpy(positionsArray, vertexPos.data(), vertexPos.size() * sizeof(Vec3));
+    memcpy(positionsArray, vertexPos.data(), vertexPos.size() * sizeof(Vec3<float>));
     memcpy(texCoordsArray, vertexTexCoords.data(), vertexTexCoords.size() * sizeof(Vec2));
-    memcpy(normalsArray, vertexNormals.data(), vertexNormals.size() * sizeof(Vec3));
+    memcpy(normalsArray, vertexNormals.data(), vertexNormals.size() * sizeof(Vec3<float>));
     memcpy(indicesArray, indices.data(), indices.size() * sizeof(uint));
 
     MeshData* mesh = new MeshData(positionsArray, vertexPos.size(), indicesArray, indices.size());
@@ -118,7 +118,7 @@ namespace Greet {
       delete[] texCoordsArray;
 
     if(vertexNormals.size() > 0)
-      mesh->AddAttribute(new AttributeData<Vec3>(ATTRIBUTE_NORMAL, normalsArray));
+      mesh->AddAttribute(new AttributeData<Vec3<float>>(ATTRIBUTE_NORMAL, normalsArray));
     else
       delete[] normalsArray;
 

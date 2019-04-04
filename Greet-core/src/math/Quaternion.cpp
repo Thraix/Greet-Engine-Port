@@ -1,6 +1,7 @@
 #include "Quaternion.h"
 
 #include "MathFunc.h"
+#include "Vec3.h"
 
 
 namespace Greet {
@@ -43,7 +44,7 @@ namespace Greet {
     return *this;
   }
 
-  Quaternion& Quaternion::Multiply(const Vec3& other)
+  Quaternion& Quaternion::Multiply(const Vec3<float>& other)
   {
     float w_ = -x * other.x - y * other.y - z * other.z;
     float x_ =  w * other.x + y * other.z - z * other.y;
@@ -61,7 +62,7 @@ namespace Greet {
     return Quaternion(first.x,first.y,first.z,first.w).Multiply(second);
   }
 
-  Quaternion operator*(const Quaternion& first, const Vec3 &second)
+  Quaternion operator*(const Quaternion& first, const Vec3<float>& second)
   {
     return Quaternion(first.x, first.y, first.z, first.w).Multiply(second);
   }
@@ -71,7 +72,7 @@ namespace Greet {
     return Multiply(other);
   }
 
-  Quaternion& Quaternion::operator*=(const Vec3 &other)
+  Quaternion& Quaternion::operator*=(const Vec3<float>& other)
   {
     return Multiply(other);
   }

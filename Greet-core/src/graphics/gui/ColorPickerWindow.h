@@ -15,10 +15,10 @@ namespace Greet
         SLIDER, RGB_TEXTBOX, HSV_TEXTBOX, HEX_TEXTBOX
       };
     public:
-      typedef std::function<void(const Vec3& previous, const Vec3& current)> OnColorChangeCallback;
+      typedef std::function<void(const Vec3<float>& previous, const Vec3<float>& current)> OnColorChangeCallback;
 
     protected:
-      Vec3 color;
+      Vec3<float> color;
       HueSlider* hSlider;
       SatValSlider* svSlider;
 
@@ -43,9 +43,9 @@ namespace Greet
 
     public:
       ColorPickerWindow();
-      ColorPickerWindow(const Vec2& pos, const Vec3& color);
+      ColorPickerWindow(const Vec2& pos, const Vec3<float>& color);
 
       void SetOnColorChangeCallback(OnColorChangeCallback callback);
-      void CallOnColorChangeCallback(const Vec3& previous, const Vec3& current);
+      void CallOnColorChangeCallback(const Vec3<float>& previous, const Vec3<float>& current);
   };
 }

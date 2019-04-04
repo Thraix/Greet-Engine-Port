@@ -6,73 +6,272 @@
 
 #include <iostream>
 #include <math/Vec4.h>
+#include <math/MathFunc.h>
+#include <math/Quaternion.h>
+#include <cassert>
 
 namespace Greet{
 
+  template<typename Real>
   struct Vec3
   {
     union
     {
-      float vals[3];
+      Real vals[3];
       struct {
-        float x, y, z;
+        Real x, y, z;
       };
       struct {
-        float r, g, b;
+        Real r, g, b;
       };
       struct {
-        float h, s, v;
+        Real h, s, v;
       };
     };
-    Vec3() = default;
-    Vec3(float x, float y, float z);
-    Vec3(const Vec4& vec4);
+    Vec3()
+      : x{}, y{}, z{}
+    {}
 
-    float Length() const;
-    float Dot(const Vec3& vec) const;
-    Vec3 Cross(const Vec3& vec) const;
+    Vec3(const Real& x, const Real& y, const Real& z)
+      : x{x}, y{y}, z{z}
+    {}
+
+    explicit Vec3(const Vec4& vec4)
+      : x{vec4.x}, y{vec4.y}, z{vec4.z}
+    {}
+
+    Real Length() const
+    {
+      return sqrt(x * x + y * y + z * z);
+    }
+
+    Real Dot(const Vec3& vec) const
+    {
+      return x * vec.x + y * vec.y + z  * vec.z;
+    }
+
+    Vec3<Real> Cross(const Vec3<Real>& vec) const
+    {
+      return Vec3(y * vec.z - z * vec.y, z * vec.x - x * vec.z, x * vec.y - y * vec.x);
+    }
 
     // All These modifies the current vec3
-    Vec3& Normalize();
-    Vec3& Rotate(const float& angle, const Vec3& axis);
-    Vec3& Add(const Vec3& other);
-    Vec3& Subtract(const Vec3& other);
-    Vec3& Multiply(const Vec3& other);
-    Vec3& Divide(const Vec3& other);
+    Vec3& Normalize()
+    {
+      return Divide(Length());
+    }
 
-    Vec3& Add(const float other);
-    Vec3& Subtract(const float other);
-    Vec3& Multiply(const float other);
-    Vec3& Divide(const float other);
+    template <typename std::enable_if<std::is_floating_point<Real>::value>::type* = nullptr >
+    Vec3<Real>& Rotate(const Real& angle, const Vec3& axis)
+    {
+      Real sh = (Real)sin(Math::ToRadians(angle / 2.0));
+      Real ch = (Real)cos(Math::ToRadians(angle / 2.0));
 
-    bool Compare(const Vec3& other);
+      Real rX = axis.x * sh;
+      Real rY = axis.y * sh;
+      Real rZ = axis.z * sh;
+      Real rW = ch;
 
-    friend Vec3 operator+(const Vec3& first, const Vec3 &second);
-    friend Vec3 operator-(const Vec3& first, const Vec3 &second);
-    friend Vec3 operator*(const Vec3& first, const Vec3 &second);
-    friend Vec3 operator/(const Vec3& first, const Vec3 &second);
+      Quaternion rotation(rX,rY,rZ,rW);
+      Quaternion conjugate = rotation.Conjugate();
 
-    friend Vec3 operator+(const Vec3& first, const float c);
-    friend Vec3 operator-(const Vec3& first, const float c);
-    friend Vec3 operator*(const Vec3& first, const float c);
-    friend Vec3 operator/(const Vec3& first, const float c);
+      Quaternion w = rotation * (*this) * conjugate;
 
-    float operator[](uint i);
+      x = w.x;
+      y = w.y;
+      z = w.z;
 
-    Vec3& operator+=(const Vec3 &other);
-    Vec3& operator-=(const Vec3 &other);
-    Vec3& operator*=(const Vec3 &other);
-    Vec3& operator/=(const Vec3 &other);
+      return *this;
+    }
 
+    Vec3& Add(const Vec3& other)
+    {
+      x += other.x;
+      y += other.y;
+      z += other.z;
+      return *this;
+    }
 
-    Vec3& operator+=(const float c);
-    Vec3& operator-=(const float c);
-    Vec3& operator*=(const float c);
-    Vec3& operator/=(const float c);
+    Vec3& Subtract(const Vec3& other)
+    {
+      x -= other.x;
+      y -= other.y;
+      z -= other.z;
+      return *this;
+    }
 
-    bool operator!=(const Vec3 &second);
-    bool operator==(const Vec3 &second);
+    Vec3& Multiply(const Vec3& other)
+    {
+      x *= other.x;
+      y *= other.y;
+      z *= other.z;
+      return *this;
+    }
 
-    friend std::ostream& operator<<(std::ostream& stream, const Vec3& vec);
+    Vec3& Divide(const Vec3& other)
+    {
+      x /= other.x;
+      y /= other.y;
+      z /= other.z;
+      return *this;
+    }
+
+    Vec3& Add(const Real& other)
+    {
+      x += other;
+      y += other;
+      z += other;
+      return *this;
+    }
+
+    Vec3& Subtract(const Real& other)
+    {
+      x -= other;
+      y -= other;
+      z -= other;
+      return *this;
+    }
+
+    Vec3& Multiply(const Real& other)
+    {
+      x *= other;
+      y *= other;
+      z *= other;
+      return *this;
+    }
+
+    Vec3& Divide(const Real& other)
+    {
+      x /= other;
+      y /= other;
+      z /= other;
+      return *this;
+    }
+
+    bool Compare(const Vec3& other)
+    {
+      return x == other.x && y == other.y && z == other.z;
+    }
+
+    friend Vec3 operator+(const Vec3& first, const Vec3 &second)
+    {
+      return Vec3(first).Add(second);
+    }
+
+    friend Vec3 operator-(const Vec3& first, const Vec3 &second)
+    {
+      return Vec3(first).Subtract(second);
+    }
+
+    friend Vec3 operator*(const Vec3& first, const Vec3 &second)
+    {
+      return Vec3(first).Multiply(second);
+    }
+
+    friend Vec3 operator/(const Vec3& first, const Vec3 &second)
+    {
+      return Vec3(first).Divide(second);
+    }
+
+    friend Vec3 operator+(const Vec3& vec, const Real& c)
+    {
+      return Vec3(vec).Add(c);
+    }
+
+    friend Vec3 operator-(const Vec3& vec, const Real& c)
+    {
+      return Vec3(vec).Subtract(c);
+    }
+
+    friend Vec3 operator*(const Vec3& vec, const Real& c)
+    {
+      return Vec3(vec).Multiply(c);
+    }
+
+    friend Vec3 operator/(const Vec3& vec, const Real& c)
+    {
+      return Vec3(vec).Divide(c);
+    }
+
+    friend Vec3 operator+(const Real& c, const Vec3& vec)
+    {
+      return Vec3(vec).Add(c);
+    }
+
+    friend Vec3 operator-(const Real& c, const Vec3& vec)
+    {
+      return Vec3(c - vec.x,c - vec.y,c - vec.z);
+    }
+
+    friend Vec3 operator*(const Real& c, const Vec3& vec)
+    {
+      return Vec3(vec).Multiply(c);
+    }
+
+    friend Vec3 operator/(const Real& c, const Vec3& vec)
+    {
+      return Vec3(c / vec.x, c / vec.y, c / vec.z);
+    }
+
+    Real operator[](uint i)
+    {
+      assert(i < 3);
+      return *((&x)+i);
+    }
+
+    Vec3& operator+=(const Vec3 &other)
+    {
+      return Add(other);
+    }
+
+    Vec3& operator-=(const Vec3 &other)
+    {
+      return Subtract(other);
+    }
+
+    Vec3& operator*=(const Vec3 &other)
+    {
+      return Multiply(other);
+    }
+
+    Vec3& operator/=(const Vec3 &other)
+    {
+      return Divide(other);
+    }
+
+    Vec3& operator+=(const Real& c)
+    {
+      return Divide(c);
+    }
+
+    Vec3& operator-=(const Real& c)
+    {
+      return Divide(c);
+    }
+
+    Vec3& operator*=(const Real& c)
+    {
+      return Divide(c);
+    }
+
+    Vec3& operator/=(const Real& c)
+    {
+      return Divide(c);
+    }
+
+    bool operator!=(const Vec3 &second)
+    {
+      return !Compare(second);
+    }
+
+    bool operator==(const Vec3 &second)
+    {
+      return Compare(second);
+    }
+
+    friend std::ostream& operator<<(std::ostream& stream, const Vec3& vec)
+    {
+      return stream << "(" << vec.x << ", " << vec.y << ", " << vec.z << ")";
+    }
   };
 }
