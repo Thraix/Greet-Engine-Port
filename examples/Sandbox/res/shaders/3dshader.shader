@@ -17,6 +17,7 @@ uniform mat4 transformationMatrix;
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
 uniform vec3 light_position = vec3(0.0, 0.0, -10.0);
+uniform vec4 mat_color = vec4(1,1,1,1);
 
 const float density = 0.007;
 const float gradient = 1.5;
@@ -27,7 +28,7 @@ void main()
 	vec4 worldPosition = transformationMatrix * vec4(position, 1.0f);
 	vec4 positionRelativeToCamera = viewMatrix * worldPosition;
 	gl_Position = projectionMatrix * positionRelativeToCamera;
-	vert_color = vec4(color.b, color.g, color.r, color.a);
+	vert_color = mat_color * vec4(color.b, color.g, color.r, color.a);
 
 	vert_texCoord = texCoord;
 	surfaceNormal = (transformationMatrix * vec4(normal, 0.0)).xyz;
@@ -56,13 +57,14 @@ uniform sampler2D textureSampler;
 uniform vec3 light_color = vec3(1.0f, 1.0f, 1.0f);
 uniform vec3 fogColor;
 uniform float hasTexture = 1.0;
-uniform float shadeDamper = 10.0;
-uniform float reflectivity = 1;
+uniform float specularExponent = 10.0;
+uniform float specularStrength = 1;
+uniform float diffuseStrength = 1;
+uniform float ambient = 0.3;
 
 void main()
 {
 	out_color = vert_color;
-	out_color *= vec4(0.6f, 0.6f, 0.6f, 1.0f);
 	if (hasTexture > 0.5)
 	{
 		out_color *= texture(textureSampler, vert_texCoord);
@@ -71,34 +73,12 @@ void main()
 	}
 	vec3 unitNormal = normalize(surfaceNormal);
 	vec3 unitLightVector = normalize(toLightVector);
-
-	float nDot = dot(unitNormal, unitLightVector);
-	float brightness = max(nDot, 0.5);
-	vec3 diffuse = light_color * brightness;
-
 	vec3 unitVectorToCamera = normalize(toCameraVector);
 	vec3 lightDirection = -unitLightVector;
-	vec3 reflection = reflect(lightDirection, unitNormal);
 
-	float specularFactor = dot(reflection, unitVectorToCamera);
-	specularFactor = max(specularFactor, 0.0);
+	float diffuse = diffuseStrength * max(dot(unitNormal, unitLightVector), 0.0);
+	float specular = specularStrength * pow(max(dot(reflect(lightDirection, unitNormal), unitVectorToCamera), 0.0f), specularExponent);
 
-	float dampedFactor = pow(specularFactor, shadeDamper);
-
-	vec3 finalSpecular = dampedFactor  * reflectivity * light_color;
-	out_color *= vec4(diffuse, 1.0f);
-	out_color += vec4(finalSpecular, 0.0);
-
+	out_color *= vec4((ambient + (diffuse + specular) * light_color), 1.0f);
 	out_color = mix(vec4(fogColor.xyz, 1.0), vec4(out_color.rgb, 1.0), visibility);
-	float luminance = (out_color.r + out_color.g + out_color.b) / 3.0;
-	//out_color.rgb = floor(luminance * 4.0)/4.0 * fogColor;
-	if (luminance > 0.8)
-		out_brightColor = vec4(luminance, luminance, luminance, 1);
-	else
-		out_brightColor = vec4(0, 0, 0, 1);
-	//out_color = vec4(finalSpecular.xyz,1.0);
-	//out_color = vec4(out_color.rgb*visibility,1.0);
-	//out_color.a = 1.0f;
-	//out_color = vec4(surfaceNormal*0.5f+0.5f,1.0f);
-
 }

@@ -5,6 +5,7 @@
 #include <graphics/models/EntityModel.h>
 #include <graphics/models/Camera.h>
 #include <utils/OBJUtils.h>
+#include <utils/Utils.h>
 #include <graphics/textures/TextureManager.h>
 #include <graphics/Skybox.h>
 #include <graphics/models/MeshFactory.h>
@@ -15,7 +16,7 @@ namespace Greet {
   class BatchRenderer3D : public Renderer3D
   {
     private:
-      std::map<MaterialModel, std::vector<EntityModel*>> m_map;
+      std::map<Material*, std::vector<EntityModel*>, Utils::ptr_less<Material>> m_map;
     public:
       BatchRenderer3D()
         : Renderer3D(){}

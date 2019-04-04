@@ -10,11 +10,11 @@ namespace Greet {
       return;
     }
 
-    auto it = m_map.find(model->GetMaterialModel());
+    auto it = m_map.find(model->GetMaterial());
     if(it == m_map.end())
     {
       std::vector<EntityModel*> vector{model};
-      m_map.emplace(model->GetMaterialModel(), vector);
+      m_map.emplace(model->GetMaterial(), vector);
     }
     else
       (*it).second.push_back(model);
@@ -24,17 +24,16 @@ namespace Greet {
   {
     for (auto&& entityModels : m_map)
     {
-      entityModels.first.GetMaterial().Bind();
-      BindMatrices(entityModels.first.GetMaterial().GetShader(),camera);
-      const Mesh& mesh = entityModels.first.GetMesh();
-      mesh.Bind();
+      entityModels.first->Bind(camera);
+      BindMatrices(entityModels.first->GetShader(),camera);
       for (auto&& entityModel : entityModels.second)
       {
-        entityModels.first.GetMaterial().GetShader().SetUniformMat4("transformationMatrix", entityModel->GetTransformationMatrix());
-        mesh.Render();
+        entityModel->GetMaterial()->GetShader().SetUniformMat4("transformationMatrix", entityModel->GetTransformationMatrix());
+        entityModel->GetMesh()->Bind();
+        entityModel->GetMesh()->Render();
+        entityModel->GetMesh()->Unbind();
       }
-        mesh.Unbind();
-      entityModels.first.GetMaterial().Unbind();
+      entityModels.first->Unbind();
     }
   }
 

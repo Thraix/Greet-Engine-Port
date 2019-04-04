@@ -30,6 +30,7 @@ class Core : public App
     EntityModel* tetrahedron;
     std::vector<EntityModel> models;
     FrameBufferObject* fbo;
+    Light* light;
 
 
     float progressFloat;
@@ -66,6 +67,7 @@ class Core : public App
       delete uilayer;
       delete movement;
       delete rotation;
+      delete light;
     }
 
     void Init() override
@@ -93,63 +95,57 @@ class Core : public App
       modelMaterial = new Material(Shader::FromFile("res/shaders/3dshader.shader"));
       flatMaterial = new Material(Shader::FromFile("res/shaders/flat3d.shader"));
       stallMaterial = new Material(Shader::FromFile("res/shaders/3dshader.shader"), TextureManager::Get2D("stall"));
+      modelMaterial->SetSpecularStrength(0.25)->SetSpecularExponent(1)->SetDiffuseStrength(0.25);
       {
         terrainMaterial = new Material(Shader::FromFile("res/shaders/terrain.shader"));
         waterMaterial = new Material(Shader::FromFile("res/shaders/water.shader"));
-        waterMaterial->SetShineDamper(20);
-        waterMaterial->SetReflectivity(0.4);
+        waterMaterial->SetSpecularExponent(50);
+        waterMaterial->SetSpecularStrength(0.4);
         waterMaterial->GetShader().Enable();
         waterMaterial->GetShader().SetUniform1f("waterLevel",0.45f * 20.0f);
         waterMaterial->GetShader().Disable();
 
-        terrainMaterial->SetReflectivity(0.5f);
-        terrainMaterial->SetShineDamper(5.0f);
+        terrainMaterial->SetSpecularStrength(0.5f);
+        terrainMaterial->SetSpecularExponent(5.0f);
 
         uint gridWidth = 99;
         uint gridLength = 99;
         float* noise = Noise::GenNoise(gridWidth+1, gridWidth + 1,5,8, 8,0.5f);
         MeshData* gridMesh = MeshFactory::LowPolyGrid(0, 0, 0, gridWidth+1, gridLength+1, gridWidth, gridLength, noise,1);
         RecalcGrid(gridMesh, gridWidth, gridLength);
-        MaterialModel* terrainModelMaterial = new MaterialModel(new Mesh(gridMesh), terrainMaterial);
-        terrain = new EntityModel(terrainModelMaterial, Vec3<float>(0, -15, 0), Vec3<float>(1.0f, 1.0f, 1.0f), Vec3<float>(0.0f, 0.0f, 0.0f));
+        terrain = new EntityModel(new Mesh(gridMesh), terrainMaterial, Vec3<float>(0, -15, 0), Vec3<float>(1.0f, 1.0f, 1.0f), Vec3<float>(0.0f, 0.0f, 0.0f));
         gridMesh->RemoveAttribute(ATTRIBUTE_NORMAL);
         gridMesh->RemoveAttribute(ATTRIBUTE_COLOR);
         CalcGridVertexOffset(gridMesh);
 
-        MaterialModel* waterModelMaterial = new MaterialModel(new Mesh(gridMesh), waterMaterial);
-        water = new EntityModel(waterModelMaterial, Vec3<float>(0, -15, 0), Vec3<float>(1.0f, 1.0f, 1.0f), Vec3<float>(0.0f, 0.0f, 0.0f));
+        water = new EntityModel(new Mesh(gridMesh), waterMaterial, Vec3<float>(0, -15, 0), Vec3<float>(1.0f, 1.0f, 1.0f), Vec3<float>(0.0f, 0.0f, 0.0f));
         delete gridMesh;
       }
 
       MeshData* polygonMesh = MeshFactory::Polygon(6, 10, MeshFactory::PolygonSizeFormat::SIDE_LENGTH);
-      MaterialModel* terrainModel = new MaterialModel(new Mesh(polygonMesh), terrainMaterial);
-      polygon = new EntityModel(terrainModel, Vec3<float>(0,1,0), Vec3<float>(1,1,1), Vec3<float>(0,0,0));
+      polygon = new EntityModel(new Mesh(polygonMesh), terrainMaterial, Vec3<float>(0,1,0), Vec3<float>(1,1,1), Vec3<float>(0,0,0));
 
 
       MeshData* cubeMesh = MeshFactory::Cube(0,0,0,1,1,1);
-      MaterialModel* cubeModelMaterial = new MaterialModel(new Mesh(cubeMesh), modelMaterial);
-      cube = new EntityModel(cubeModelMaterial, Vec3<float>(1,0,0), Vec3<float>(1, 1, 1), Vec3<float>(0, 0, 0));
+      cube = new EntityModel(new Mesh(cubeMesh), modelMaterial, Vec3<float>(1,0,0), Vec3<float>(1, 1, 1), Vec3<float>(0, 0, 0));
       delete cubeMesh;
 
       MeshData* sphereMeshData = MeshFactory::Sphere(Vec3<float>(0,0,0), 0.5f, 20, 20);
       //sphereMeshData->LowPolify();
       Mesh* sphereMesh = new Mesh(sphereMeshData);
       //sphereMesh->SetEnableWireframe(true);
-      MaterialModel* sphereModelMaterial = new MaterialModel(sphereMesh, modelMaterial);
-      sphere = new EntityModel(sphereModelMaterial, Vec3<float>(0,0,0), Vec3<float>(1, 1, 1), Vec3<float>(0, 0, 0));
+      sphere = new EntityModel(sphereMesh, modelMaterial, Vec3<float>(0,0,0), Vec3<float>(1, 1, 1), Vec3<float>(0, 0, 0));
       delete sphereMeshData;
 
       MeshData* tetrahedronMesh = MeshFactory::Tetrahedron(0,0,0,10);
-      MaterialModel* tetrahedronModelMaterial = new MaterialModel(new Mesh(tetrahedronMesh), modelMaterial);
-      tetrahedron = new EntityModel(tetrahedronModelMaterial, Vec3<float>(30, 0, 10), Vec3<float>(1, 1, 1), Vec3<float>(0, 0, 0));
+      tetrahedron = new EntityModel(new Mesh(tetrahedronMesh), modelMaterial, Vec3<float>(30, 0, 10), Vec3<float>(1, 1, 1), Vec3<float>(0, 0, 0));
       delete tetrahedronMesh;
 
       MeshData* stallMeshData = OBJUtils::LoadObj("res/objs/stall.obj");
       //
       Mesh* stallMesh = new Mesh(stallMeshData);
-      stallMaterial->SetReflectivity(0.1)->SetShineDamper(1);
-      MaterialModel* stallModelMaterial = new MaterialModel(stallMesh, stallMaterial);
-      stall = new EntityModel(stallModelMaterial, Vec3<float>(0.0f, 0.0f, -25), Vec3<float>(3.0f, 3.0f, 3.0f), Vec3<float>(0.0f, 0.0f, 0.0f));
+      stallMaterial->SetSpecularStrength(0.1)->SetSpecularExponent(1);
+      stall = new EntityModel(stallMesh, stallMaterial, Vec3<float>(0.0f, 0.0f, -25), Vec3(3.0f, 3.0f, 3.0f), Vec3(0.0f, 0.0f, 0.0f));
 
       // MEMORY LEAK WITH MESHDATA
       MeshData* data = OBJUtils::LoadObj("res/objs/dragon.obj");
@@ -159,8 +155,7 @@ class Core : public App
       data->LowPolify();
       data->WriteToFile("res/objs/dragon.gobj");
       Mesh* dragonMesh = new Mesh(data);
-      MaterialModel* dragonModelMaterial = new MaterialModel(dragonMesh, flatMaterial);
-      dragon = new EntityModel(dragonModelMaterial, Vec3<float>(20.0f, 0.0f, -25), Vec3<float>(1.0f, 1.0f, 1.0f), Vec3<float>(0.0f, 0.0f, 0.0f));
+      dragon = new EntityModel(dragonMesh, flatMaterial, Vec3<float>(20.0f, 0.0f, -25), Vec3(1.0f, 1.0f, 1.0f), Vec3(0.0f, 0.0f, 0.0f));
 
       //Mesh* gridMesh = MeshFactory::cube(0,0,0,10,10,10);
       //gridMesh->setEnableCulling(false);
@@ -172,17 +167,15 @@ class Core : public App
       //	models.push_back(EntityModel(*modelModelMaterial, vec3(random()*100, random() * 100, random() * 100), vec3(1.0f, 1.0f, 1.0f), vec3(random() * 360, random() * 360, random() * 360)));
       //}
 
-      Light* l = new Light(Vec3<float>(10, 10, 10), 0xffffffff);
+      light = new Light(Vec3<float>(10, 20, 10), 0xffffffff);
       const Shader& modelShader = modelMaterial->GetShader();
       modelShader.Enable();
-      l->SetToUniform(modelShader, "light");
+      light->SetToUniform(modelShader, "light");
       modelShader.Disable();
       const Shader& flatShader = flatMaterial->GetShader();
       flatShader.Enable();
-      l->SetToUniform(flatShader, "light");
+      light->SetToUniform(flatShader, "light");
       flatShader.Disable();
-
-      delete l;
 
       uilayer = new Layer(new BatchRenderer(), ShaderFactory::DefaultShader(), Mat3::Orthographic(0.0f, (float)Window::GetWidth(), 0.0f, (float)Window::GetHeight()));
       Vec4 colorPink = ColorUtils::GetMaterialColorAsHSV(300 /360.0f, 3);
@@ -341,6 +334,7 @@ class Core : public App
       while (hue >= 1)
         hue--;
       cursor->m_color = ColorUtils::Vec3ToColorHex(Vec3<float>(ColorUtils::HSVtoRGB(hue, 1, 1,1.0)));
+      sphere->SetPosition(light->position);
     }
 
     void OnEvent(Event& event) override
@@ -383,18 +377,15 @@ class Core : public App
           modelMaterial->SetShader(Shader::FromFile("res/shaders/3dshader.shader"));
           terrainMaterial->SetShader(Shader::FromFile("res/shaders/terrain.shader"));
           flatMaterial->SetShader(Shader::FromFile("res/shaders/flat3d.shader"));
-          Light* l = new Light(Vec3<float>(10, 10, 10), 0xffffffff);
-
           modelMaterial->GetShader().Enable();
-          l->SetToUniform(modelMaterial->GetShader(), "light");
+          light->SetToUniform(modelMaterial->GetShader(), "light");
           modelMaterial->GetShader().Disable();
           flatMaterial->GetShader().Enable();
-          l->SetToUniform(flatMaterial->GetShader(), "light");
+          light->SetToUniform(flatMaterial->GetShader(), "light");
           flatMaterial->GetShader().Disable();
           //terrainShader->enable();
           //l->setToUniform(terrainShader, "light");
           //terrainShader->disable();
-          delete l;
         }
         if (e.GetButton() == GLFW_KEY_F1)
         {

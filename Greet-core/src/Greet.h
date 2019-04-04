@@ -69,7 +69,6 @@
 #include <graphics/models/EntityModel.h>
 #include <graphics/models/FPCamera.h>
 #include <graphics/models/Material.h>
-#include <graphics/models/MaterialModel.h>
 #include <graphics/models/Mesh.h>
 #include <graphics/models/MeshData.h>
 #include <graphics/models/MeshFactory.h>

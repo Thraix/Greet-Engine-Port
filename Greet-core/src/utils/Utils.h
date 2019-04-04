@@ -9,6 +9,14 @@
 
 namespace Greet { namespace Utils {
 
+  template<class T> struct ptr_less 
+  {
+    bool operator()(T* lhs, T* rhs) 
+    {
+      return *lhs < *rhs; 
+    }
+  };
+
   inline const std::string CurrentDateTime()
   {
     time_t now = time(0);

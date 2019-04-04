@@ -21,8 +21,7 @@ namespace vmc
     mesh = new Mesh(meshdata);
     material = new Material(Shader::FromFile("res/shaders/voxel.shader"));
     //material->AddUniform<uint>(Uniform1ui("color"));
-    mmodel = new MaterialModel(mesh, material);
-    emodel = new EntityModel(mmodel, 0, 0, 0, 1, 1, 1, 0, 0, 0);
+    emodel = new EntityModel(mesh, material, 0, 0, 0, 1, 1, 1, 0, 0, 0);
 
 
     // For drawing lines...
@@ -55,7 +54,7 @@ namespace vmc
 
   void GridRenderer3D::DrawCube(Camera* camera, const Vec3& pos, const Vec3& size, uint color, bool culling)
   {
-    material->SetColor(color);
+    material->SetColor(ColorUtils::ColorHexToVec4(color));
     mesh->SetEnableCulling(false);
     emodel->SetScale(size);
     emodel->SetPosition(pos);
@@ -68,20 +67,20 @@ namespace vmc
 
   void GridRenderer3D::Submit(Camera* camera, const Cube& cube)
   {
-    material->SetColor(cube.color);
+    material->SetColor(ColorUtils::ColorHexToVec4(cube.color));
     mesh->SetEnableCulling(false);
     emodel->SetScale(Vec3(1, 1, 1));
     emodel->SetPosition(cube.GetPosition());
     emodel->SetRotation(Vec3(0, 0, 0));
     emodel->UpdateTransformation();
-    emodel->GetMaterialModel().GetMaterial().Bind();
-    BindMatrices(emodel->GetMaterialModel().GetMaterial().GetShader(), camera);
-    emodel->GetMaterialModel().GetMesh().Bind();
+    emodel->GetMaterial()->Bind(camera);
+    BindMatrices(emodel->GetMaterial()->GetShader(), camera);
+    emodel->GetMesh()->Bind();
 
-    emodel->GetMaterialModel().GetMaterial().GetShader().SetUniformMat4("transformationMatrix", emodel->GetTransformationMatrix());
-    emodel->GetMaterialModel().GetMesh().Render();
-    emodel->GetMaterialModel().GetMesh().Unbind();
-    emodel->GetMaterialModel().GetMaterial().GetShader().Disable();
+    emodel->GetMaterial()->GetShader().SetUniformMat4("transformationMatrix", emodel->GetTransformationMatrix());
+    emodel->GetMesh()->Render();
+    emodel->GetMesh()->Unbind();
+    emodel->GetMaterial()->GetShader().Disable();
     //emodel->PreRender(this, camera);
     //emodel->Render(this, camera);
     //emodel->PostRender(this, camera);
