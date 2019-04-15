@@ -30,27 +30,22 @@ namespace Greet { namespace ImageFactory
     {
       *width = 16;
       *height = 16;
-      uint pitch = 4 * *width;
       BYTE* bits = new BYTE[*width * *height * 4];
-      uint add = 0;
+      BYTE* ptr = bits;
       for(uint y = 0;y<*height;y++)
       {
-        BYTE* pixel = (BYTE*)bits;
         for(uint x = 0;x<*width;x++)
         {
           uint color = lightColor;
           if(x == 0 || y == *height-1)
             color = darkColor;
-          pixel[FI_RGBA_RED] = (color & 0xff0000) >> 16;
-          pixel[FI_RGBA_GREEN] = (color & 0xff00) >> 8;
-          pixel[FI_RGBA_BLUE] = (color & 0xff) >> 0;
-          pixel[FI_RGBA_ALPHA] = 0xff;
-          pixel+=4;
+          ptr[FI_RGBA_RED] = (color & 0xff0000) >> 16;
+          ptr[FI_RGBA_GREEN] = (color & 0xff00) >> 8;
+          ptr[FI_RGBA_BLUE] = (color & 0xff) >> 0;
+          ptr[FI_RGBA_ALPHA] = 0xff;
+          ptr += 4;
         }
-        bits += pitch ;
-        add += pitch;
       }
-      bits -= add;
       return bits;
     }
   }}

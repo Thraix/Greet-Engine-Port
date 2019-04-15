@@ -9,7 +9,7 @@
 
 namespace Greet {
 
-  void ImageUtils::printImage(BYTE* bits, uint width, uint height)
+  void ImageUtils::PrintImage(BYTE* bits, uint width, uint height)
   {
     for (uint y = 0;y<height;y++)
     {
@@ -27,7 +27,7 @@ namespace Greet {
     }
   }
 
-  BYTE* ImageUtils::flipImage(BYTE*& bits, uint width, uint height)
+  BYTE* ImageUtils::FlipImage(BYTE* bits, uint width, uint height)
   {
     BYTE* result = new BYTE[width*height*4];
     result += 4*width*height;
@@ -42,12 +42,10 @@ namespace Greet {
       }
     }
 
-    delete[] bits;
-    bits = result;
-    return bits;
+    return result;
   }
 
-  BYTE* ImageUtils::loadImage(const char* filepath, uint* width, uint* height)
+  bool ImageUtils::LoadImage(const char* filepath, BYTE*& bits, uint* width, uint* height)
   {
     FREE_IMAGE_FORMAT fif = FIF_UNKNOWN;
 
@@ -62,7 +60,8 @@ namespace Greet {
     {
       Log::Error("FreeImage file format is not supported or file not exist: ", filepath);
       ErrorHandle::SetErrorCode(GREET_ERROR_IMAGE_FORMAT);
-      return ImageFactory::GetBadFormatImage(width,height);
+      bits = ImageFactory::GetBadFormatImage(width,height);
+      return false;
     }
 
     if (FreeImage_FIFSupportsReading(fif))
@@ -71,11 +70,12 @@ namespace Greet {
     {
       Log::Error("FreeImage file Cannot be read: ", filepath);
       ErrorHandle::SetErrorCode(GREET_ERROR_IMAGE_READ);
-      return ImageFactory::GetCantReadImage(width,height);
+      bits = ImageFactory::GetCantReadImage(width,height);
+      return false;
     }
 
 
-    BYTE* bits = FreeImage_GetBits(dib);
+    BYTE* fiBits = FreeImage_GetBits(dib);
 
     *width = FreeImage_GetWidth(dib);
     *height = FreeImage_GetHeight(dib);
@@ -86,10 +86,11 @@ namespace Greet {
       Log::Error("Bits per pixel is not valid (24 or 32): ", filepath);
       ErrorHandle::SetErrorCode(GREET_ERROR_IMAGE_BPP);
       FreeImage_Unload(dib);
-      return ImageFactory::GetBadBPPImage(width,height);
+      bits = ImageFactory::GetBadBPPImage(width,height);
+      return false;
     }
 
-    BYTE* result = new BYTE[(*width) * (*height) * 4];
+    bits = new BYTE[(*width) * (*height) * 4];
     uint resultI = 0;
     uint bitsI = 0;
     for(uint y = 0; y < *height; y++)
@@ -97,21 +98,21 @@ namespace Greet {
       for(uint x = 0; x < *width; x++)
       {
         // Incase the order of FreeImage is not RGB (its probably BGRA)
-        result[resultI++] = bits[bitsI + FI_RGBA_RED];
-        result[resultI++] = bits[bitsI + FI_RGBA_GREEN];
-        result[resultI++] = bits[bitsI + FI_RGBA_BLUE];
+        bits[resultI++] = fiBits[bitsI + FI_RGBA_RED];
+        bits[resultI++] = fiBits[bitsI + FI_RGBA_GREEN];
+        bits[resultI++] = fiBits[bitsI + FI_RGBA_BLUE];
         if(bpp == 4)
-          result[resultI++] = bits[bitsI + FI_RGBA_ALPHA];
+          bits[resultI++] = fiBits[bitsI + FI_RGBA_ALPHA];
         else
-          result[resultI++] = 0xff; 
+          bits[resultI++] = 0xff; 
         bitsI += bpp;
       }
     }
     FreeImage_Unload(dib);
-    return result;
+    return true;
   }
 
-  BYTE* ImageUtils::cropImage(const BYTE* bits, uint width,  uint height,  uint cx,  uint cy,  uint cwidth,  uint cheight)
+  BYTE* ImageUtils::CropImage(const BYTE* bits, uint width,  uint height,  uint cx,  uint cy,  uint cwidth,  uint cheight)
   {
     if (cx >= width || cy >= height || cx + cwidth > width || cy + cheight > height)
     {
@@ -133,10 +134,11 @@ namespace Greet {
     return result;
   }
 
-  void ImageUtils::saveImageBytes(const char* filepath, const char* output)
+  void ImageUtils::SaveImageBytes(const char* filepath, const char* output)
   {
     uint width,height,bpp;
-    BYTE* bits = loadImage(filepath,&width,&height);
+    BYTE* bits;
+    LoadImage(filepath, bits, &width, &height);
 
     std::ofstream fout;
     fout.open(output, std::ios_base::binary | std::ios_base::out);

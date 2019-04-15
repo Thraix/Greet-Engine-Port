@@ -42,7 +42,8 @@ namespace Greet {
 
   void Texture2D::LoadTexture(const std::string& filename)
   {
-    BYTE* bits = ImageUtils::loadImage(filename.c_str(),&m_width,&m_height);
+    BYTE* bits;
+    ImageUtils::LoadImage(filename.c_str(),bits, &m_width,&m_height);
     GenTexture(bits);
     delete[] bits;
   }

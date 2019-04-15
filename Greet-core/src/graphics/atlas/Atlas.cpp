@@ -49,7 +49,8 @@ namespace Greet {
   {
     uint width;
     uint height;
-    BYTE* bits = ImageUtils::loadImage(filePath.c_str(), &width, &height);
+    BYTE* bits;
+    ImageUtils::LoadImage(filePath.c_str(), bits, &width, &height);
     if (width != m_textureSize || height != m_textureSize)
     {
       Log::Error("The given textures size is not valid: ",name.c_str()," (",width,",",height,")");
