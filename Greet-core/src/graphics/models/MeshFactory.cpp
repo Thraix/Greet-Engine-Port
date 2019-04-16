@@ -89,7 +89,7 @@ namespace Greet {
 
   MeshData* MeshFactory::Quad(float x, float y, float z, float width, float length)
   {
-    Vec3<float> vertices[4];
+    Vec3<float>* vertices = new Vec3<float>[4];
     float halfWidth = width / 2.0f;
     float halfLength = length / 2.0f;
     vertices[0]  = Vec3<float>(x-halfWidth, y, z-halfLength);
@@ -97,13 +97,13 @@ namespace Greet {
     vertices[2]  = Vec3<float>(x+halfWidth, y, z+halfLength);
     vertices[3]  = Vec3<float>(x-halfWidth, y, z+halfLength);
 
-    Vec3<float> normals[4];	
+    Vec3<float>* normals = new Vec3<float>[4];	
     normals[0]  = Vec3<float>(0.0f, 1.0f, 0.0f);
     normals[1]  = Vec3<float>(0.0f, 1.0f, 0.0f);
     normals[2]  = Vec3<float>(0.0f, 1.0f, 0.0f);
     normals[3]  = Vec3<float>(0.0f, 1.0f, 0.0f);
 
-    uint* indices = new uint[6]{0,1,2,0,2,3};
+    uint* indices = new uint[6]{0,2,1,0,3,2};
     MeshData* meshdata = new MeshData(vertices,4,indices,6);
     meshdata->AddAttribute(new AttributeData<Vec3<float>>(ATTRIBUTE_NORMAL,normals));
     return meshdata;
