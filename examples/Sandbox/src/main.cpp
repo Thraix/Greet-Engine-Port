@@ -3,6 +3,7 @@
 #include <graphics/renderers/GUIRenderer.h>
 #include "keyboardcontrol.h"
 #include "tree.h"
+#include "Portal.h"
 #include <random>
 
 using namespace Greet;
@@ -49,7 +50,7 @@ class Core : public App
     Core()
       : App("Best Game Ever", 960, 540)
     {
-      SetFrameCap(0);
+      SetFrameCap(144);
     }
 
     ~Core()
@@ -73,6 +74,7 @@ class Core : public App
     void Init() override
     {
       TextureManager::Add("stall",Texture2D("res/textures/stallTexture.png"));
+      TextureManager::Add("portal", Texture2D("res/textures/portal.png"));
       TextureManager::Add("cursor",Texture2D("res/textures/cursor.png"));
       TextureManager::Add("mask",Texture2D("res/textures/mask.png"));
       TextureManager::Add("mask2",Texture2D("res/textures/mask2.png"));
@@ -182,6 +184,7 @@ class Core : public App
       cursor = new Renderable2D(Vec2(0,0),Vec2(32,32),0xffffffff, new Sprite(TextureManager::Get2D("cursor")), new Sprite(TextureManager::Get2D("mask")));
       uilayer->Add(cursor);
 
+      renderer3d->Submit(new Portal({1.0f,1.0f,1.0f}));
       renderer3d->Submit(stall);
       //renderer3d->Submit(dragon);
       renderer3d->Submit(terrain);

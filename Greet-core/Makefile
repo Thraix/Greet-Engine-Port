@@ -202,7 +202,7 @@ $(OBJPATH)/Shader.o : src/graphics/shaders/Shader.cpp src/graphics/shaders/Shade
 $(OBJPATH)/ShaderFactory.o : src/graphics/shaders/ShaderFactory.cpp src/graphics/shaders/Shader.h src/math/Maths.h src/math/Mat3.h src/math/Vec2.h src/math/Vec3.h src/math/MathFunc.h src/internal/GreetTypes.h src/math/Quaternion.h src/math/Vec4.h   src/math/Mat4.h      src/math/Transform.h     src/graphics/shaders/ShaderFactory.h  src/graphics/shaders/basiclightshader.frag src/graphics/shaders/debugshader.frag src/graphics/shaders/default2dshader.frag src/graphics/shaders/default2dshader.vert src/graphics/shaders/ledshader.frag src/graphics/shaders/skyboxshader.frag src/graphics/shaders/skyboxshader.vert
 	$(info -[69%]- $<)
 	$(CC) $(CFLAGS) -o $@ $<
-$(OBJPATH)/CubeMap.o : src/graphics/textures/CubeMap.cpp src/graphics/textures/CubeMap.h src/graphics/textures/Texture.h src/internal/GreetGL.h src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  src/utils/LogUtils.h src/internal/GreetTypes.h    src/utils/ImageUtils.h    
+$(OBJPATH)/CubeMap.o : src/graphics/textures/CubeMap.cpp src/graphics/textures/CubeMap.h src/graphics/textures/Texture.h src/internal/GreetGL.h src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  src/utils/LogUtils.h src/internal/GreetTypes.h    src/utils/ImageUtils.h    src/utils/ErrorHandle.h  src/utils/Utils.h   
 	$(info -[70%]- $<)
 	$(CC) $(CFLAGS) -o $@ $<
 $(OBJPATH)/ImageFactory.o : src/graphics/textures/ImageFactory.cpp src/graphics/textures/ImageFactory.h src/internal/GreetTypes.h src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  src/utils/Utils.h src/internal/GreetGL.h  src/utils/LogUtils.h   

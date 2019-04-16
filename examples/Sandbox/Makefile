@@ -31,6 +31,6 @@ $(OUTPUT): $(OBJECTS)
 install: all
 	$(info Installing Sandbox to /usr/bin/)
 	@cp $(OUTPUT) /usr/bin/Sandbox.a
-$(OBJPATH)/main.o : src/main.cpp src/keyboardcontrol.h src/tree.h
+$(OBJPATH)/main.o : src/main.cpp src/Portal.h src/keyboardcontrol.h src/tree.h
 	$(info -[100%]- $<)
 	$(CC) $(CFLAGS) -o $@ $<
