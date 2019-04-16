@@ -70,9 +70,14 @@ namespace Greet {
       virtual void Disable() const;
 
       uint GetTexId() const;
+      bool Invalid() const { return texId.get() == 0;};
       friend bool operator<(const Texture& tex1, const Texture& tex2)
       {
         return *tex1.texId< *tex2.texId;
+      }
+      friend bool operator==(const Texture& tex1, const Texture& tex2)
+      {
+        return *tex1.texId == *tex2.texId;
       }
   };
 

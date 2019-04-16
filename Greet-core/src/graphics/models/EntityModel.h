@@ -22,9 +22,12 @@ namespace Greet {
       EntityModel(Mesh* mesh, Material* material, Vec3<float> position, Vec3<float> scale, Vec3<float> rotation);
       EntityModel(Mesh* mesh, Material* material);
 
-      void PreRender(const Renderer3D* renderer, const Camera* camera) const;
-      void Render(const Renderer3D* renderer, const Camera* camera) const;
-      void PostRender(const Renderer3D* renderer, const Camera* camera) const;
+      virtual void PreRender() const;
+      virtual void Render(const Renderer3D* renderer, const Camera* camera) const;
+      virtual void PostRender() const;
+
+      virtual void BindShader(const Renderer3D* renderer, const Camera* camera) const;
+      virtual void UnbindShader(const Renderer3D* renderer, const Camera* camera) const;
 
       Material* GetMaterial() const { return material; }
       void SetMaterial(Material* material) { this->material = material;}

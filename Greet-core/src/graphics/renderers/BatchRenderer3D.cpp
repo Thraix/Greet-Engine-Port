@@ -29,9 +29,9 @@ namespace Greet {
       for (auto&& entityModel : entityModels.second)
       {
         entityModel->GetMaterial()->GetShader().SetUniformMat4("transformationMatrix", entityModel->GetTransformationMatrix());
-        entityModel->GetMesh()->Bind();
-        entityModel->GetMesh()->Render();
-        entityModel->GetMesh()->Unbind();
+        entityModel->PreRender();
+        entityModel->Render(this, camera);
+        entityModel->PostRender();
       }
       entityModels.first->Unbind();
     }

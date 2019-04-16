@@ -10,26 +10,28 @@ namespace Greet{
   Texture2D TextureManager::emptyTexture2D{};
   CubeMap TextureManager::emptyCubeMap{};
 
-  void TextureManager::Add(const std::string& name, Texture2D&& texture)
+  const Texture2D& TextureManager::Add(const std::string& name, Texture2D&& texture)
   {
-    if(m_texture2Ds.find(name) != m_texture2Ds.end())
+    auto it = m_texture2Ds.find(name);
+    if(it != m_texture2Ds.end())
     {
       ErrorHandle::SetErrorCode(GREET_ERROR_MANAGER_ADD);
       Log::Error("Given texture name already exists: ", name);
-      return;
+      return it->second;
     }
-    m_texture2Ds.emplace(name,std::move(texture));
+    return m_texture2Ds.emplace(name,std::move(texture)).first->second;
   }
 
-  void TextureManager::Add(const std::string& name, CubeMap&& texture)
+  const CubeMap& TextureManager::Add(const std::string& name, CubeMap&& texture)
   {
-    if(m_cubeMaps.find(name) != m_cubeMaps.end())
+    auto it = m_cubeMaps.find(name);
+    if(it != m_cubeMaps.end())
     {
       ErrorHandle::SetErrorCode(GREET_ERROR_MANAGER_ADD);
       Log::Error("Given texture name already exists: ", name);
-      return;
+      return it->second;
     }
-    m_cubeMaps.emplace(name,std::move(texture));
+    return m_cubeMaps.emplace(name,std::move(texture)).first->second;
   }
 
   const Texture2D& TextureManager::Get2D(const std::string& texturename)

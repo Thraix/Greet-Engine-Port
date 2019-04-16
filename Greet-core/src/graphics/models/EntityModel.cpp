@@ -21,20 +21,28 @@ namespace Greet {
     UpdateTransformation();
   }
 
-  void EntityModel::PreRender(const Renderer3D* renderer, const Camera* camera) const
+  void EntityModel::BindShader(const Renderer3D* renderer, const Camera* camera) const
   {
     material->Bind(camera);
     material->GetShader().SetUniformMat4("transformationMatrix", m_transformationMatrix);
   }
 
-  void EntityModel::Render(const Renderer3D* renderer, const Camera* camera) const
+  void EntityModel::PreRender() const
   {
     mesh->Bind();
+  }
+
+  void EntityModel::Render(const Renderer3D* renderer, const Camera* camera) const
+  {
     mesh->Render();
+  }
+
+  void EntityModel::PostRender() const
+  {
     mesh->Unbind();
   }
 
-  void EntityModel::PostRender(const Renderer3D* renderer, const Camera* camera) const
+  void EntityModel::UnbindShader(const Renderer3D* renderer, const Camera* camera) const
   {
     GetMaterial()->Unbind();
   }

@@ -14,8 +14,8 @@ namespace Greet {
       static CubeMap emptyCubeMap;
     public:
 
-      static void Add(const std::string& name, Texture2D&& texture);
-      static void Add(const std::string& name, CubeMap&& texture);
+      static const Texture2D& Add(const std::string& name, Texture2D&& texture);
+      static const CubeMap&  Add(const std::string& name, CubeMap&& texture);
       static const Texture& Get(const std::string& texturename);
       static const Texture2D& Get2D(const std::string& texturename);
       static const CubeMap& Get3D(const std::string& texturename);
