@@ -71,7 +71,7 @@ namespace Greet {
     vao.Disable();
     GLCall(glEnable(GL_CULL_FACE));
     GLCall(glPolygonMode(GL_FRONT_AND_BACK, GL_FILL));
-    GLCall(glFrontFace(GL_CW));
+    GLCall(glFrontFace(GL_CCW));
   }
 
   void Mesh::EnableAttributes() const
