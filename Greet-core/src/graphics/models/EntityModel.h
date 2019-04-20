@@ -28,6 +28,7 @@ namespace Greet {
 
       virtual void BindShader(const Renderer3D* renderer, const Camera* camera) const;
       virtual void UnbindShader(const Renderer3D* renderer, const Camera* camera) const;
+      virtual void BindTransformation() const;
 
       Material* GetMaterial() const { return material; }
       void SetMaterial(Material* material) { this->material = material;}

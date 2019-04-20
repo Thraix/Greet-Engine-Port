@@ -112,6 +112,19 @@ namespace Greet {
     return true;
   }
 
+  BYTE* ImageUtils::CreateHeightmapImage(float* heightMap, uint width, uint height)
+  {
+    BYTE* data = new BYTE[width * height * 4];
+    for(int i = 0;i<width*height;i++)
+    {
+        data[i * 4 + FI_RGBA_RED]   = heightMap[i] * 255;
+        data[i * 4 + FI_RGBA_GREEN] = heightMap[i] * 255;
+        data[i * 4 + FI_RGBA_BLUE]  = heightMap[i] * 255;
+        data[i * 4 + FI_RGBA_ALPHA] = 0xff;
+    }
+    return data;
+  }
+
   BYTE* ImageUtils::CropImage(const BYTE* bits, uint width,  uint height,  uint cx,  uint cy,  uint cwidth,  uint cheight)
   {
     if (cx >= width || cy >= height || cx + cwidth > width || cy + cheight > height)

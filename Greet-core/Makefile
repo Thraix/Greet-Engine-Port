@@ -253,7 +253,7 @@ $(OBJPATH)/ErrorHandle.o : src/utils/ErrorHandle.cpp src/utils/ErrorHandle.h src
 $(OBJPATH)/ImageUtils.o : src/utils/ImageUtils.cpp src/graphics/textures/ImageFactory.h src/internal/GreetTypes.h src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  src/utils/ErrorHandle.h  src/utils/Utils.h src/internal/GreetGL.h  src/utils/LogUtils.h    src/utils/ImageUtils.h   src/utils/StringUtils.h
 	$(info -[89%]- $<)
 	$(CC) $(CFLAGS) -o $@ $<
-$(OBJPATH)/Noise.o : src/utils/Noise.cpp src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  src/utils/Noise.h src/internal/GreetTypes.h
+$(OBJPATH)/Noise.o : src/utils/Noise.cpp src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  src/math/MathFunc.h src/internal/GreetTypes.h src/utils/Noise.h 
 	$(info -[90%]- $<)
 	$(CC) $(CFLAGS) -o $@ $<
 $(OBJPATH)/OBJUtils.o : src/utils/OBJUtils.cpp src/graphics/models/MeshFactory.h src/graphics/models/MeshData.h src/internal/GreetGL.h src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  src/utils/LogUtils.h src/internal/GreetTypes.h   src/math/Maths.h src/math/Mat3.h src/math/Vec2.h src/math/Vec3.h src/math/MathFunc.h  src/math/Quaternion.h src/math/Vec4.h   src/math/Mat4.h      src/math/Transform.h      src/utils/FileUtils.h  src/utils/OBJUtils.h src/graphics/models/Mesh.h src/graphics/buffers/Buffer.h  src/graphics/buffers/VertexArray.h    src/utils/StringUtils.h

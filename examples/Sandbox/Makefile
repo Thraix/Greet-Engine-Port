@@ -7,7 +7,7 @@ MKDIR_P=mkdir -p
 BIN=bin/
 OBJPATH=$(BIN)intermediates
 INCLUDES=-I./../../Greet-core/src/ -I./../../deps/includes/ 
-OBJECTS=$(OBJPATH)/main.o 
+OBJECTS=$(OBJPATH)/Chunk.o $(OBJPATH)/main.o 
 CFLAGS=$(INCLUDES) -std=c++17 -c -w -g3 -D_DEBUG -g 
 LIBDIR=-L./../../Greet-core/bin/ 
 LDFLAGS=-Wl,-rpath=../../Greet-core/bin/ 
@@ -31,6 +31,9 @@ $(OUTPUT): $(OBJECTS)
 install: all
 	$(info Installing Sandbox to /usr/bin/)
 	@cp $(OUTPUT) /usr/bin/Sandbox.a
-$(OBJPATH)/main.o : src/main.cpp src/Portal.h src/keyboardcontrol.h src/tree.h
+$(OBJPATH)/Chunk.o : src/Chunk.cpp src/Chunk.h
+	$(info -[50%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
+$(OBJPATH)/main.o : src/main.cpp src/Portal.h src/World.h src/Chunk.h src/keyboardcontrol.h src/tree.h
 	$(info -[100%]- $<)
 	$(CC) $(CFLAGS) -o $@ $<

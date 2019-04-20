@@ -11,5 +11,6 @@ namespace Greet {
     static bool LoadImage(const char* filepath, BYTE*& bits, uint* width, uint* height);
     static BYTE* CropImage(const BYTE* bits, uint width,  uint height,  uint cx,  uint cy,  uint cwidth,  uint cheight);
     static void SaveImageBytes(const char* filepath, const char* output);
+    static BYTE* CreateHeightmapImage(float* heightMap, uint width, uint height);
   };
 }

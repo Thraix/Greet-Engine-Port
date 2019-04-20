@@ -17,14 +17,15 @@ namespace Greet {
        * width = width of the noise
        * height = height of the noise
        * octave = number of iterations the noise should go through
-       * frequencyX = number of pixels in the first iteration in the x axis
-       * frequencyY = number of pixels in the first iteration in the y axis
+       * stepX = number of pixels in the first iteration in the x axis
+       * stepY = number of pixels in the first iteration in the y axis
        */
-      static float* GenNoise(uint width, uint height, uint octave, uint frequencyX, uint frequencyY, float persistance);
+      static float* GenNoise(uint width, uint height, uint octave, uint stepX, uint stepY, float persistance, uint offsetX=0, uint offsetY=0);
     private:
-      static float Smooth(uint noiseX, uint noiseY, const float* noise, uint noiseWidth, uint noiseHeight);
+      static float Smooth(int x, int y, uint octave);
+      static float Eval(int x, int y, uint width, uint height, float stepX, float stepY, uint octaves, float persistance);
     public:
-      static float PRNG(int x, int y);
+      static float PRNG(int x, int y, int octave);
       /*
          |---| d1
          --- v1 -------- v2

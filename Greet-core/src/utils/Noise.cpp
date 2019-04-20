@@ -1,89 +1,88 @@
 #include "Noise.h"
 #include <string>
 #include <cmath>
+#include <cstring>
 #include <logging/Log.h>
+#include <math/MathFunc.h>
+#include <unordered_map>
 
 namespace Greet {
 
-  float* Noise::GenNoise(uint width, uint height, uint octave, uint frequencyX, uint frequencyY, float persistance)
+  float Noise::Eval(int x, int y,uint width, uint height, float stepX, float stepY, uint octaves, float persistance)
   {
-    uint noiseWidth = (frequencyX << (octave-1)) + 3;
-    uint noiseHeight = (frequencyY << (octave-1)) + 3;
-    float* noise = new float[noiseWidth*noiseHeight];
-    float* smoothNoise = new float[(noiseWidth-2)*(noiseWidth-2)];
-    for (uint y = 0;y < noiseHeight;y++)
-    {
-      for (uint x = 0;x < noiseWidth;x++)
-      {
-        noise[x + y*noiseWidth] = PRNG(x,y);
-      }
-    }
-    for (uint y = 1;y < noiseHeight-1;y++)
-    {
-      for (uint x = 1;x < noiseWidth-1;x++)
-      {
-        smoothNoise[x-1 + (y-1)*(noiseWidth-2)] = Smooth(x, y, noise, noiseWidth, noiseHeight);
-      }
-    }
 
-    float* persistances = new float[octave];
-    persistances[0] = persistance;
-    float totalPersistance = persistance;
-    for (uint i = 1;i < octave;i++)
+    float totalPersistance = 0;
+    float p = persistance;
+    // Calculate the total persistance to normalize the end value
+    for(int i = 0;i<octaves;i++)
     {
-      persistances[i] = persistances[i - 1] * persistance;
-      totalPersistance += persistances[i];
+      totalPersistance += p;
+      p*=p;
     }
+    float value = 0.0f;
 
-    for (uint i = 1;i < octave;i++)
+    for(int i = 0;i<octaves;i++)
     {
-      persistances[i] = persistances[i] / totalPersistance;
+      // Convert to 1 step grid system.
+      float xx = x / stepX; 
+      float yy = y / stepY; 
+
+      // Retrieve the 4 noise points round the "pixel" 
+      float tl = Smooth(xx, yy, i);
+      float tr = Smooth(xx+1, yy, i);
+      float bl = Smooth(xx, yy+1, i);
+      float br = Smooth(xx+1, yy+1, i);
+
+      // Interpolate the 4 values
+      value += Interpolate(tl, tr, bl, br, xx - (int)xx, yy - (int)yy) * persistance;
+
+      // Decrease the step by half
+      // This should maybe be a parameter in the future
+      stepX *= 0.5f;
+      stepY *= 0.5f;
+      persistance *= persistance;
     }
+    return value / totalPersistance;
+  }
+
+  float Noise::Smooth(int x, int y, uint octave)
+  {
+    // Smooth values ( center * 0.5 + edges * 0.08333 + corners * 0.0416666)
+    return PRNG(x, y, octave) * 0.5 +
+      (PRNG(x-1, y, octave) + PRNG(x+1, y, octave) + PRNG(x, y-1, octave) + PRNG(x, y+1, octave)) * 0.08333f +
+      (PRNG(x-1, y-1, octave) + PRNG(x+1, y-1, octave) + PRNG(x-1, y+1, octave) + PRNG(x+1, y+1, octave)) * 0.0416666f;
+  }
+
+  float* Noise::GenNoise(uint width, uint height, uint octave, uint stepX, uint stepY, float persistance, uint offsetX, uint offsetY)
+  {
     float* result = new float[width * height];
 
-    for (uint y = 0;y < height;y++)
+    // Calculate the noise for each "pixel"
+    // Could be improved by not computing the same noise values multiple timers
+    for(int y = 0;y<height;y++)
     {
-      for (uint x = 0;x < width;x++)
+      for(int x = 0;x<width;x++)
       {
-        float value = 0;
-        for (uint i = 0;i < octave;i++)
-        {
-          float d1 = x * frequencyX*(i + 1) / (float)width;
-          float d2 = y * frequencyY*(i + 1) / (float)height;
-          uint noiseX = (uint)floor(d1);
-          uint noiseY = (uint)floor(d2);
-          value += Interpolate(smoothNoise[noiseX + noiseY*(noiseWidth-2)],smoothNoise[noiseX+1+noiseY*(noiseWidth-2)],smoothNoise[noiseX+(noiseY+1)*(noiseWidth-2)],smoothNoise[noiseX + 1 + (noiseY + 1) * (noiseWidth - 2)],d1-noiseX,d2-noiseY)*persistances[i];
-        }
-        result[x + y * width] = value;
+        result[x + y * width] = Eval(x + offsetX, y + offsetY, width, height, stepX, stepY, octave, persistance);
       }
     }
-    delete[] noise;
-    delete[] smoothNoise;
-    delete[] persistances;
-
     return result;
   }
 
-  float Noise::Smooth(uint noiseX, uint noiseY, const float* noise, uint noiseWidth, uint noiseHeight)
+  float Noise::PRNG(int x, int y, int octave)
   {
-    float center = noise[noiseX + noiseY*noiseWidth]*0.5f;
-    float edges = (noise[noiseX - 1 + noiseY * noiseWidth] + noise[noiseX + 1 + noiseY * noiseWidth] + noise[noiseX + (noiseY - 1) * noiseWidth] + noise[noiseX + (noiseY + 1) * noiseWidth])*0.08333f;
-    float corners = (noise[noiseX-1 + (noiseY-1) * noiseWidth] + noise[noiseX + 1 + (noiseY-1) * noiseWidth]+noise[noiseX-1 + (noiseY+1) * noiseWidth]+noise[noiseX+1 + (noiseY+1) * noiseWidth])*0.0416666f;
-    return center + edges + corners;
+    // hash the values to get a better "random" n value
+    size_t n = std::hash<int>()(x * 34184077) ^ std::hash<int>()(y * 15487067) ^ std::hash<int>()(octave * 87855217);
+    return (double)( ( n * (n * n * 20947 + 794327) + 1376312589) & 0x7fffffff) / 1073741823.0*0.5;
   }
 
-  float Noise::PRNG(int x, int y)
-  {
-    int n = x + y * 141263;
-    n = (n << 11) ^ n;
-    return (float)( ( ( n * (n * n * 20947 + 794327) + 1376312589) & 0x7fffffff) / 1073741824.0*0.5);
-  }
-
+  // 2d interpolation
   float Noise::Interpolate(float v1, float v2, float v3, float v4, float d1, float d2)
   {
     return Interpolate(Interpolate(v1, v2, d1), Interpolate(v3, v4, d1), d2);
   }
 
+  // 1d interpolation
   float Noise::Interpolate(float v1, float v2, float d)
   {
     float c = 0.5f+cos(d * M_PI) * 0.5f;

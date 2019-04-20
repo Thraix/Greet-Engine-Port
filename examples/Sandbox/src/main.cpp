@@ -1,9 +1,11 @@
 #include <Greet.h>
 
 #include <graphics/renderers/GUIRenderer.h>
+#include <utils/ImageUtils.h>
 #include "keyboardcontrol.h"
 #include "tree.h"
 #include "Portal.h"
+#include "World.h"
 #include <random>
 
 using namespace Greet;
@@ -73,6 +75,11 @@ class Core : public App
 
     void Init() override
     {
+      uint noiseS = 200;
+      float* noise = Noise::GenNoise(noiseS, noiseS, 4, 16, 16, 0.8f);
+      BYTE* image = ImageUtils::CreateHeightmapImage(noise, noiseS, noiseS);
+
+      TextureManager::Add("noise",Texture2D(image, noiseS, noiseS, TextureParams(TextureFilter::NEAREST, TextureWrap::CLAMP_TO_EDGE, TextureInternalFormat::RGBA)));
       TextureManager::Add("stall",Texture2D("res/textures/stallTexture.png"));
       TextureManager::Add("portal", Texture2D("res/textures/portal.png"));
       TextureManager::Add("cursor",Texture2D("res/textures/cursor.png"));
@@ -112,6 +119,7 @@ class Core : public App
 
         uint gridWidth = 99;
         uint gridLength = 99;
+#if 1 
         float* noise = Noise::GenNoise(gridWidth+1, gridWidth + 1,5,8, 8,0.5f);
         MeshData* gridMesh = MeshFactory::LowPolyGrid(0, 0, 0, gridWidth+1, gridLength+1, gridWidth, gridLength, noise,1);
         RecalcGrid(gridMesh, gridWidth, gridLength);
@@ -122,6 +130,7 @@ class Core : public App
 
         water = new EntityModel(new Mesh(gridMesh), waterMaterial, Vec3<float>(0, -15, 0), Vec3<float>(1.0f, 1.0f, 1.0f), Vec3<float>(0.0f, 0.0f, 0.0f));
         delete gridMesh;
+#endif
       }
 
       MeshData* polygonMesh = MeshFactory::Polygon(6, 10, MeshFactory::PolygonSizeFormat::SIDE_LENGTH);
@@ -183,14 +192,15 @@ class Core : public App
       Vec4 colorPink = ColorUtils::GetMaterialColorAsHSV(300 /360.0f, 3);
       cursor = new Renderable2D(Vec2(0,0),Vec2(32,32),0xffffffff, new Sprite(TextureManager::Get2D("cursor")), new Sprite(TextureManager::Get2D("mask")));
       uilayer->Add(cursor);
+      uilayer->Add(new Renderable2D(Vec2(0,0), Vec2(noiseS, noiseS), 0xffffffff, new Sprite(TextureManager::Get2D("noise")), nullptr));
 
       renderer3d->Submit(new Portal({1.0f,1.0f,1.0f}));
       renderer3d->Submit(stall);
       //renderer3d->Submit(dragon);
-      renderer3d->Submit(terrain);
+      //renderer3d->Submit(terrain);
       renderer3d->Submit(sphere);
       renderer3d->Submit(cube);
-      waterRenderer->Submit(water);
+      //waterRenderer->Submit(water);
       //renderer3d->Submit(polygon);
       //renderer3d->Submit(tetrahedron);
       //for (uint i = 0;i < 2000;i++)
@@ -202,11 +212,12 @@ class Core : public App
       //Tree t(renderer3d,0,0,0);
       uint pos = 0;
       //		Log::info(JSONLoader::isNumber("0.1234s",pos));
-      RenderEngine::Add2DScene(uilayer, "uilayer");
+      RenderEngine::Add3DScene(uilayer, "uilayer");
       layer3d = new Layer3D(camera, skybox);
       layer3d->AddRenderer(renderer3d);
       layer3d->AddRenderer(waterRenderer);
       RenderEngine::Add3DScene(layer3d, "3dWorld");
+      RenderEngine::Add3DScene(new World(camera, 10, 10), "World");
     }
 
     void RecalcPositions(Vec3<float>* vertex)
@@ -452,6 +463,7 @@ int main()
      file.close();
      system("pause");
      */
+
   Core game;
   game.Start();
 }

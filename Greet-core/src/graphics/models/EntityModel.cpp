@@ -24,9 +24,14 @@ namespace Greet {
   void EntityModel::BindShader(const Renderer3D* renderer, const Camera* camera) const
   {
     material->Bind(camera);
-    material->GetShader().SetUniformMat4("transformationMatrix", m_transformationMatrix);
+    BindTransformation();
   }
 
+  void EntityModel::BindTransformation() const
+  {
+    material->GetShader().SetUniformMat4("transformationMatrix", m_transformationMatrix);
+  
+  }
   void EntityModel::PreRender() const
   {
     mesh->Bind();
