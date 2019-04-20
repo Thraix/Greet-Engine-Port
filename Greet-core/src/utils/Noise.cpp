@@ -53,7 +53,7 @@ namespace Greet {
       (PRNG(x-1, y-1, octave) + PRNG(x+1, y-1, octave) + PRNG(x-1, y+1, octave) + PRNG(x+1, y+1, octave)) * 0.0416666f;
   }
 
-  float* Noise::GenNoise(uint width, uint height, uint octave, uint stepX, uint stepY, float persistance, uint offsetX, uint offsetY)
+  float* Noise::GenNoise(uint width, uint height, uint octave, uint stepX, uint stepY, float persistance, int offsetX, int offsetY)
   {
     float* result = new float[width * height];
 
