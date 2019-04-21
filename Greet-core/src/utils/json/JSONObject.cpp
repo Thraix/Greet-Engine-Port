@@ -24,7 +24,7 @@ namespace Greet {
 
   }
 
-  bool JSONObject::HasKey(const std::string& key)
+  bool JSONObject::HasKey(const std::string& key) const
   {
     if (m_values.find(key) != m_values.end())
       return true;

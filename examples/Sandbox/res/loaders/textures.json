@@ -1,0 +1,34 @@
+{
+  "basePath": "res/textures/",
+  "textures":
+  [
+    {
+      "name": "stall",
+      "path": "stallTexture.png"
+    },
+    {"name": "portal"},
+    {"name": "cursor"},
+    {"name": "mask"},
+    {"name": "mask2"},
+    {
+      "name": "skybox",
+      "type": "CubeMap"
+    },
+    {
+      "name": "lensFlare1",
+      "path": "lens_flare1.png"
+    },
+    {
+      "name": "lensFlare2",
+      "path": "lens_flare2.png"
+    },
+    {
+      "name": "lensFlare3",
+      "path": "lens_flare3.png"
+    },
+    {
+      "name": "lensFlare4",
+      "path": "lens_flare4.png"
+    }
+  ]
+}

@@ -109,6 +109,7 @@
 #include <utils/ErrorHandle.h>
 #include <utils/FileUtils.h>
 #include <utils/ImageUtils.h>
+#include <utils/Loaders.h>
 #include <utils/LogUtils.h>
 #include <utils/Noise.h>
 #include <utils/OBJUtils.h>

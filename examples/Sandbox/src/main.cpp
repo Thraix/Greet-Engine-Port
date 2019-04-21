@@ -79,17 +79,9 @@ class Core : public App
       float* noise = Noise::GenNoise(noiseS, noiseS, 4, 16, 16, 0.8f);
       BYTE* image = ImageUtils::CreateHeightmapImage(noise, noiseS, noiseS);
 
+      Loaders::LoadTextures("res/loaders/textures.json");
       TextureManager::Add("noise",Texture2D(image, noiseS, noiseS, TextureParams(TextureFilter::NEAREST, TextureWrap::CLAMP_TO_EDGE, TextureInternalFormat::RGBA)));
-      TextureManager::Add("stall",Texture2D("res/textures/stallTexture.png"));
-      TextureManager::Add("portal", Texture2D("res/textures/portal.png"));
-      TextureManager::Add("cursor",Texture2D("res/textures/cursor.png"));
-      TextureManager::Add("mask",Texture2D("res/textures/mask.png"));
-      TextureManager::Add("mask2",Texture2D("res/textures/mask2.png"));
-      TextureManager::Add("skybox",CubeMap("res/textures/skybox.png"));
-      TextureManager::Add("lensflare1",Texture2D("res/textures/lens_flare1.png"));
-      TextureManager::Add("lensflare2",Texture2D("res/textures/lens_flare2.png"));
-      TextureManager::Add("lensflare3",Texture2D("res/textures/lens_flare3.png"));
-      TextureManager::Add("lensflare4",Texture2D("res/textures/lens_flare4.png"));
+
       FontManager::Add(new FontContainer("res/fonts/Anonymous Pro.ttf", "anonymous"));
       FontManager::Add(new FontContainer("res/fonts/Roboto-Thin.ttf", "roboto"));
 
