@@ -75,7 +75,7 @@ class Core : public App
 
     void Init() override
     {
-      uint noiseS = 200;
+      uint noiseS = 100;
       float* noise = Noise::GenNoise(noiseS, noiseS, 4, 16, 16, 0.8f);
       BYTE* image = ImageUtils::CreateHeightmapImage(noise, noiseS, noiseS);
 

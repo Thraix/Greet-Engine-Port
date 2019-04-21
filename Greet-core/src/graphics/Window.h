@@ -75,6 +75,7 @@ namespace Greet {
       inline static Vec4 GetBackgroundColor() { return bgColor; }
       inline static int GetWidth() { return width; };
       inline static int GetHeight() { return height; };
+      inline static float GetAspect() { return width / (float) height; }
       inline static void SetTitle(const std::string& title) { glfwSetWindowTitle(window,title.c_str()); }
 
       //Mouse Positions
