@@ -241,17 +241,17 @@ namespace Greet{
 
     Vec3& operator+=(const Real& c)
     {
-      return Divide(c);
+      return Add(c);
     }
 
     Vec3& operator-=(const Real& c)
     {
-      return Divide(c);
+      return Subtract(c);
     }
 
     Vec3& operator*=(const Real& c)
     {
-      return Divide(c);
+      return Multiply(c);
     }
 
     Vec3& operator/=(const Real& c)

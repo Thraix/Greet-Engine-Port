@@ -71,6 +71,7 @@ namespace Greet {
       static void Tick();
 
       static void SetBackgroundColor(Vec4 color);
+      static void GrabMouse(bool grab);
 
       inline static Vec4 GetBackgroundColor() { return bgColor; }
       inline static int GetWidth() { return width; };

@@ -136,6 +136,14 @@ namespace Greet {
     GLCall(glClearColor(color.x, color.y, color.z, color.w));
   }
 
+  void Window::GrabMouse(bool grab)
+  {
+    if(grab)
+      glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); 
+    else
+      glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL); 
+  }
+
   void Window::window_resize(GLFWwindow *window, int width, int height)
   {
     glViewport(0, 0, width, height);

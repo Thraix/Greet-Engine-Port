@@ -141,9 +141,7 @@ namespace Greet {
 
   void TPCamera::Move(const Vec2& delta) {
     if (m_mouse3) {
-      m_heightWanted -= delta.y * m_heightSpeed;
-      Math::Clamp(&m_heightWanted, m_heightMin, m_heightMax);
-      m_rotationWanted += m_rotationSpeed * delta.x;
+      Rotate(delta);
     }
     if (m_mouse2)
     {
@@ -155,6 +153,13 @@ namespace Greet {
       m_positionWanted.x -= deltaR.y * m_distanceSpeed * m_distance * (Window::GetHeight()/(float)Window::GetWidth());
       m_positionWanted.z -= deltaR.x * m_distanceSpeed * m_distance;
     }
+  }
+
+  void TPCamera::Rotate(const Vec2& delta)
+  {
+    m_heightWanted -= delta.y * m_heightSpeed;
+    Math::Clamp(&m_heightWanted, m_heightMin, m_heightMax);
+    m_rotationWanted += m_rotationSpeed * delta.x;
   }
 
   void TPCamera::Zoom(float delta)

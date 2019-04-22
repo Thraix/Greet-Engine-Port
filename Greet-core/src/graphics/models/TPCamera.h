@@ -74,6 +74,7 @@ namespace Greet {
       void SetInputMove(const std::string& inputName);
 
       void Move(const Vec2& delta);
+      void Rotate(const Vec2& delta);
       void Zoom(float delta);
       void OnEvent(Event& event) override;
 
