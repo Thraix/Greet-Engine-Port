@@ -148,7 +148,7 @@ namespace Greet{
       return *this;
     }
 
-    bool Compare(const Vec3& other)
+    bool Compare(const Vec3& other) const
     {
       return x == other.x && y == other.y && z == other.z;
     }
@@ -259,14 +259,28 @@ namespace Greet{
       return Divide(c);
     }
 
-    bool operator!=(const Vec3 &second)
+    bool operator!=(const Vec3 &second) const
     {
       return !Compare(second);
     }
 
-    bool operator==(const Vec3 &second)
+    bool operator==(const Vec3 &second) const
     {
       return Compare(second);
+    }
+
+    bool operator<(const Vec3& rhs) const
+    {
+      if(x < rhs.x)
+        return true;
+      else if(x == rhs.x)
+      {
+        if(y < rhs.y)
+          return true;
+        else if(y == rhs.y)
+          return z < rhs.z;
+      }
+      return false;
     }
 
     friend std::ostream& operator<<(std::ostream& stream, const Vec3& vec)
