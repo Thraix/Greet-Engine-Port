@@ -61,7 +61,7 @@ namespace Greet{
       return Divide(Length());
     }
 
-    template <typename std::enable_if<std::is_floating_point<Real>::value>::type* = nullptr >
+    template <typename std::enable_if<std::is_floating_point<Real>::value>* = nullptr>
     Vec3<Real>& Rotate(const Real& angle, const Vec3& axis)
     {
       Real sh = (Real)sin(Math::ToRadians(angle / 2.0));
@@ -84,6 +84,8 @@ namespace Greet{
       return *this;
     }
 
+    template <typename std::enable_if<!std::is_floating_point<Real>::value>* = nullptr>
+    Vec3<Real>& Rotate(const Real& angle, const Vec3& axis) = delete;
     Vec3& Add(const Vec3& other)
     {
       x += other.x;
@@ -213,7 +215,7 @@ namespace Greet{
       return Vec3(c / vec.x, c / vec.y, c / vec.z);
     }
 
-    Real operator[](uint i)
+    Real operator[](uint i) const
     {
       assert(i < 3);
       return *((&x)+i);
