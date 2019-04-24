@@ -13,8 +13,8 @@ namespace Greet {
     delete id;
   }
 
-  Shader::Shader(const std::string& geomSrc, const std::string& vertSrc, const std::string& fragSrc)
-    : m_shaderID{new uint{Load(geomSrc, vertSrc, fragSrc,true)}}
+  Shader::Shader(const std::string& vertSrc, const std::string& fragSrc, const std::string& geomSrc)
+    : m_shaderID{new uint{Load(vertSrc, fragSrc, geomSrc, true)}}
   {}
 
   Shader::Shader(const std::string& vertSrc, const std::string& fragSrc)
@@ -23,10 +23,10 @@ namespace Greet {
 
   uint Shader::Load(const std::string& vertSrc, const std::string& fragSrc)
   {
-    return Load("", vertSrc, fragSrc, false);
+    return Load(vertSrc, fragSrc, "", false);
   }
 
-  uint Shader::Load(const std::string& geomSrc, const std::string& vertSrc, const std::string& fragSrc, bool hasGeometry)
+  uint Shader::Load(const std::string& vertSrc, const std::string& fragSrc, const std::string& geomSrc, bool hasGeometry)
   {
     GLCall(uint program = glCreateProgram()); 
 
@@ -66,6 +66,7 @@ namespace Greet {
       if (shaderType == GL_FRAGMENT_SHADER)
       {
         Log::Error("Failed to compile fragment Shader!\n", &error[0]);
+        Log::Info(shaderSrc);
         ErrorHandle::SetErrorCode(GREET_ERROR_SHADER_FRAGMENT);
         // Should never fail
         GLCall(glShaderSource(shader, 1, &ShaderFactory::default_shader_frag, NULL));
@@ -173,9 +174,9 @@ namespace Greet {
 
   Shader Shader::FromFile(const std::string& shaderPath)
   {
-    const uint VERTEX = 0;
-    const uint FRAGMENT = 1;
-    const uint GEOMETRY = 2;
+    const static uint VERTEX = 0;
+    const static uint FRAGMENT = 1;
+    const static uint GEOMETRY = 2;
     std::stringstream ss[3];
     std::ifstream file(shaderPath);
     if (!file.good())
@@ -210,12 +211,12 @@ namespace Greet {
   }
 
 
-  Shader Shader::FromFile(const std::string& geomPath, const std::string& vertPath, const std::string& fragPath)
+  Shader Shader::FromFile(const std::string& vertPath, const std::string& fragPath, const std::string& geomPath)
   {	
     std::string vertSourceString = FileUtils::read_file(vertPath.c_str());
     std::string fragSourceString = FileUtils::read_file(fragPath.c_str());
     std::string geomSourceString = FileUtils::read_file(geomPath.c_str());
-    return Shader(geomSourceString, vertSourceString,fragSourceString);
+    return Shader(vertSourceString,fragSourceString,geomSourceString);
   }
 
   Shader Shader::FromSource(const std::string& vertSrc, const std::string& fragSrc)
@@ -223,8 +224,8 @@ namespace Greet {
     return Shader(vertSrc, fragSrc);
   }
 
-  Shader Shader::FromSource(const std::string& geomSrc, const std::string& vertSrc, const std::string& fragSrc)
+  Shader Shader::FromSource(const std::string& vertSrc, const std::string& fragSrc, const std::string& geomSrc)
   {
-    return Shader(vertSrc, fragSrc);
+    return Shader(vertSrc, fragSrc, geomSrc);
   }
 }

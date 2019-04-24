@@ -18,10 +18,10 @@ namespace Greet {
       std::unique_ptr<uint, ShaderDeleter> m_shaderID;
 
     private:
-      Shader(const std::string& geomSrc, const std::string& vertSrc, const std::string& fragSrc);
+      Shader(const std::string& vertSrc, const std::string& fragSrc, const std::string& geomSrc);
       Shader(const std::string& vertSrc, const std::string& fragSrc);
 
-      uint Load(const std::string& geomSrc, const std::string& vertSrc, const std::string& fragSrc, bool hasGeometry);
+      uint Load(const std::string& vertSrc, const std::string& fragSrc, const std::string& geomSrc, bool hasGeometry);
       uint Load(const std::string& vertSrc, const std::string& fragSrc);
       uint AttachShader(const uint program, const std::string& shaderSrc, const uint shaderType);
       uint GetUniformLocation(const char*name) const;
@@ -48,9 +48,9 @@ namespace Greet {
     public:
       static Shader FromFile(const std::string& shaderPath);
       static Shader FromFile(const std::string& vertPath, const std::string& fragPath);
-      static Shader FromFile(const std::string& geomPath, const std::string& vertPath, const std::string& fragPath);
+      static Shader FromFile(const std::string& vertPath, const std::string& fragPath, const std::string& geomPath);
       static Shader FromSource(const std::string& vertSrc, const std::string& fragSrc);
-      static Shader FromSource(const std::string& geomSrc, const std::string& vertSrc, const std::string& fragSrc);
+      static Shader FromSource(const std::string& vertSrc, const std::string& fragSrc, const std::string& geomSrc);
   };
 
 }
