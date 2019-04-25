@@ -94,6 +94,32 @@ namespace Greet {
       Mat4::Translate(-position.x, -position.y, -position.z);
   }
 
+  Mat4 Mat4::AlignAxis(const Vec3<float>& point, const Vec3<float>& normal, const Vec3<float>& forward)
+  {
+    Vec3<float> yaxis = normal;
+    yaxis.Normalize();
+    
+    Vec3<float> xaxis = (forward.Cross(yaxis)).Normalize();
+    Vec3<float> zaxis = xaxis.Cross(yaxis);
+
+    Mat4 result(1.0f);
+
+    result.elements[_0_0] = xaxis.x;
+    result.elements[_0_1] = xaxis.y;
+    result.elements[_0_2] = xaxis.z;
+    result.elements[_1_0] = yaxis.x;
+    result.elements[_1_1] = yaxis.y;
+    result.elements[_1_2] = yaxis.z;
+    result.elements[_2_0] = zaxis.x;
+    result.elements[_2_1] = zaxis.y;
+    result.elements[_2_2] = zaxis.z;
+
+    result.elements[_3_0] = point.x;
+    result.elements[_3_1] = point.y;
+    result.elements[_3_2] = point.z;
+    return result;
+  }
+
   Mat4 Mat4::TPCamera(const Vec3<float>& position, float distance, float height, float rotation)
   {
     return 

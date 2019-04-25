@@ -9,7 +9,7 @@ namespace Greet {
 
   void ShaderDeleter::operator()(uint* id)
   {
-    glDeleteProgram(*id);
+    GLCall(glDeleteProgram(*id));
     delete id;
   }
 
@@ -43,8 +43,6 @@ namespace Greet {
     }
     GLCall(glLinkProgram(program));
     GLCall(glValidateProgram(program));
-
-
     return program;
   }
 
@@ -66,7 +64,6 @@ namespace Greet {
       if (shaderType == GL_FRAGMENT_SHADER)
       {
         Log::Error("Failed to compile fragment Shader!\n", &error[0]);
-        Log::Info(shaderSrc);
         ErrorHandle::SetErrorCode(GREET_ERROR_SHADER_FRAGMENT);
         // Should never fail
         GLCall(glShaderSource(shader, 1, &ShaderFactory::default_shader_frag, NULL));
@@ -82,6 +79,11 @@ namespace Greet {
       {
         Log::Error("Failed to compile geometry Shader!\n", &error[0]);
         ErrorHandle::SetErrorCode(GREET_ERROR_SHADER_GEOMETRY);
+        return 0;
+      }
+      else
+      {
+        Log::Error("Failed to compile unknown shader!\n", &error[0]);
         return 0;
       }
       GLCall(glCompileShader(shader));

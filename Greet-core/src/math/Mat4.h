@@ -31,6 +31,7 @@ namespace Greet {
 
     static Mat4 TransformationMatrix(const Vec3<float>& position, const Vec3<float>& rotation, const Vec3<float>& scale);
     static Mat4 ViewMatrix(const Vec3<float>& position, const Vec3<float>& rotation);
+    static Mat4 AlignAxis(const Vec3<float>& point, const Vec3<float>& normal, const Vec3<float>& up);
 
     /* 
        View Matrix of a third person camera around an object.
