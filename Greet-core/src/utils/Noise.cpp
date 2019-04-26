@@ -45,48 +45,6 @@ namespace Greet {
     return value / totalPersistance;
   }
 
-  float Noise::Eval(int x, int y, int z, uint width, uint height, uint length, float stepX, float stepY, float stepZ, uint octaves, float persistance)
-  {
-    float totalPersistance = 0;
-    float p = persistance;
-    // Calculate the total persistance to normalize the end value
-    for(int i = 0;i<octaves;i++)
-    {
-      totalPersistance += p;
-      p*=p;
-    }
-    float value = 0.0f;
-
-    for(int i = 0;i<octaves;i++)
-    {
-      // Convert to 1 step grid system.
-      float xx = x / stepX; 
-      float yy = y / stepY; 
-      float zz = z / stepZ; 
-
-      // Retrieve the 4 noise points round the "pixel" 
-      float btl = Smooth(xx, yy, zz, i);
-      float btr = Smooth(xx+1, yy, zz, i);
-      float bbl = Smooth(xx, yy+1, zz, i);
-      float bbr = Smooth(xx+1, yy+1, zz, i);
-      float ftl = Smooth(xx, yy, zz+1, i);
-      float ftr = Smooth(xx+1, yy, zz+1, i);
-      float fbl = Smooth(xx, yy+1, zz+1, i);
-      float fbr = Smooth(xx+1, yy+1, zz+1, i);
-
-      // Interpolate the 4 values
-      value += Interpolate(btl, btr, bbl, bbr, ftl, ftr, fbl, fbr, xx - (int)xx, yy - (int)yy, zz - (int)zz) * persistance;
-
-      // Decrease the step by half
-      // This should maybe be a parameter in the future
-      stepX *= 0.5f;
-      stepY *= 0.5f;
-      stepZ *= 0.5f;
-      persistance *= persistance;
-    }
-    return value / totalPersistance;
-  }
-
   float Noise::Smooth(int x, int y, uint octave)
   {
     // Smooth values ( center * 0.5 + edges * 0.08333 + corners * 0.0416666)
@@ -95,8 +53,14 @@ namespace Greet {
       (PRNG(x-1, y-1, octave) + PRNG(x+1, y-1, octave) + PRNG(x-1, y+1, octave) + PRNG(x+1, y+1, octave)) * 0.0416666f;
   }
 
-  float Noise::Smooth(int x, int y, int z, uint octave)
+  float Noise::Smooth(int x, int y, int z, uint octave, NoiseData3D& data)
   {
+    float smoothCache = data.smoothCache[data.Index(x,y,z)];
+    if(smoothCache)
+    {
+      return smoothCache;
+    }
+
     double result = 0.0f;
     for(int i = -1;i<=1;i++)
     {
@@ -104,7 +68,14 @@ namespace Greet {
       {
         for(int k = -1;k<=1;k++)
         {
-          float noise = PRNG(x+k, y+j, z+i, octave);
+          //float randomCache = data.randomCache[data.Index(x+k,y+j,z+i)];
+          //float noise = randomCache;
+          float noise = 0.0f;
+          if(!noise)
+          {
+            noise = PRNG(x+k, y+j, z+i, octave);
+            //data.randomCache[data.Index(x+k,y+j,z+i)] = noise;
+          }
           int manhattanDistance = abs(i) + abs(j) + abs(k);
           switch(manhattanDistance)
           {
@@ -124,24 +95,80 @@ namespace Greet {
         }
       }
     }
+    data.smoothCache[data.Index(x,y,z)] = result;
     return result;
   }
 
-  float* Noise::GenNoise(uint width, uint height, uint length, uint octave, uint stepX, uint stepY, uint stepZ, float persistance, int offsetX, int offsetY, int offsetZ)
+  float* Noise::GenNoise(uint width, uint height, uint length, uint octaves, uint stepX, uint stepY, uint stepZ, float persistance, int offsetX, int offsetY, int offsetZ)
   {
     float* result = new float[width * height * length];
+    //float* randomCache = new float[width * height * length];
+    float* smoothCache = new float[width * height * length];
 
+    memset(result, 0, sizeof(float) * width * height * length);
+    //memset(randomCache, 0, sizeof(float) * width * height * length);
+    memset(smoothCache, 0, sizeof(float) * width * height * length);
+
+    NoiseData3D data;
+    data.width = width;
+    data.height = height; 
+    data.length = length;
+    data.result = result;
+    data.smoothCache = smoothCache;
+    //data.randomCache = randomCache;
+
+    float totalPersistance = 0;
+    float p = persistance;
+    // Calculate the total persistance to normalize the end value
+    for(int i = 0;i<octaves;i++)
+    {
+      totalPersistance += p;
+      p*=p;
+    }
+
+    float sX = stepX,sY = stepY,sZ = stepZ;
     // Calculate the noise for each "pixel"
     // Could be improved by not computing the same noise values multiple timers
-    for(int z = 0;z<length;z++)
+    // Retrieve the 4 noise points round the "pixel" 
+    for(int i = 0;i<octaves;i++)
     {
-      for(int y = 0;y<height;y++)
+      float persistanceNorm = persistance / totalPersistance;
+      for(int z = 0;z<length;z++)
       {
-        for(int x = 0;x<width;x++)
+        for(int y = 0;y<height;y++)
         {
-          result[x + y * width + z * width * height] = Eval(x + offsetX, y + offsetY, z + offsetZ, width, height, length, stepX, stepY, stepZ, octave, persistance);
+          for(int x = 0;x<width;x++)
+          {
+            // Convert to 1 step grid system.
+            float xx = (x + offsetX) / sX; 
+            float yy = (y + offsetY) / sY; 
+            float zz = (z + offsetZ) / sZ; 
+
+            float btl = Smooth(xx  , yy  , zz  , i, data);
+            float btr = Smooth(xx+1, yy  , zz  , i, data);
+            float bbl = Smooth(xx  , yy+1, zz  , i, data);
+            float bbr = Smooth(xx+1, yy+1, zz  , i, data);
+            float ftl = Smooth(xx  , yy  , zz+1, i, data);
+            float ftr = Smooth(xx+1, yy  , zz+1, i, data);
+            float fbl = Smooth(xx  , yy+1, zz+1, i, data);
+            float fbr = Smooth(xx+1, yy+1, zz+1, i, data);
+
+
+            // Interpolate the 8 values
+            float value = Interpolate(btl, btr, bbl, bbr, ftl, ftr, fbl, fbr, xx - (int)xx, yy - (int)yy, zz - (int)zz) * persistanceNorm;
+
+            result[x + y * width + z * width * height] += value;
+          }
         }
       }
+
+      persistance *= persistance;
+      sX *= 0.5f;
+      sY *= 0.5f;
+      sZ *= 0.5f;
+      // Reset the cache
+      //memset(randomCache, 0, sizeof(float) * width * height * length);
+      memset(data.smoothCache, 0, sizeof(float) * width * height * length);
     }
     return result;
   }

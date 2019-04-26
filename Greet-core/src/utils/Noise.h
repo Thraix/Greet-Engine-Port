@@ -3,6 +3,18 @@
 #include <internal/GreetTypes.h>
 
 namespace Greet {
+
+  struct NoiseData3D
+  {
+    uint width,height,length;
+    uint x,y,z;
+    float* result;
+    float* smoothCache;
+    //float* randomCache;
+
+    uint Index(uint x, uint y, uint z) { return x + y * width + z * width * height; } 
+  };
+
   class Noise
   {
 
@@ -29,8 +41,7 @@ namespace Greet {
       static float Eval(int x, int y, uint width, uint height, float stepX, float stepY, uint octaves, float persistance);
 
       // 3D
-      static float Smooth(int x, int y, int z, uint octave);
-      static float Eval(int x, int y, int z, uint width, uint height, uint length, float stepX, float stepY, float stepZ, uint octaves, float persistance);
+      static float Smooth(int x, int y, int z, uint octave, NoiseData3D& data);
     public:
       static float PRNG(int x, int y, int z, int octave);
       static float PRNG(int x, int y, int octave);
