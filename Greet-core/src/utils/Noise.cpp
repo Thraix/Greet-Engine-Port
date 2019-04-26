@@ -170,6 +170,7 @@ namespace Greet {
       //memset(randomCache, 0, sizeof(float) * width * height * length);
       memset(data.smoothCache, 0, sizeof(float) * width * height * length);
     }
+    delete[] smoothCache;
     return result;
   }
 
