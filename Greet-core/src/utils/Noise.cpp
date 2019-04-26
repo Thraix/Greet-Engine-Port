@@ -53,13 +53,11 @@ namespace Greet {
       (PRNG(x-1, y-1, octave) + PRNG(x+1, y-1, octave) + PRNG(x-1, y+1, octave) + PRNG(x+1, y+1, octave)) * 0.0416666f;
   }
 
-  float Noise::Smooth(int x, int y, int z, uint octave, NoiseData3D& data)
+  float Noise::Smooth(int x, int y, int z, int xCache, int yCache, int zCache, uint octave, NoiseData3D& data)
   {
-    float smoothCache = data.smoothCache[data.Index(x,y,z)];
+    float smoothCache = data.SmoothCache(xCache,yCache,zCache);
     if(smoothCache)
-    {
       return smoothCache;
-    }
 
     double result = 0.0f;
     for(int i = -1;i<=1;i++)
@@ -95,19 +93,16 @@ namespace Greet {
         }
       }
     }
-    data.smoothCache[data.Index(x,y,z)] = result;
+    data.SmoothCache(xCache,yCache,zCache) = result;
     return result;
   }
 
-  float* Noise::GenNoise(uint width, uint height, uint length, uint octaves, uint stepX, uint stepY, uint stepZ, float persistance, int offsetX, int offsetY, int offsetZ)
+  std::vector<float> Noise::GenNoise(uint width, uint height, uint length, uint octaves, uint stepX, uint stepY, uint stepZ, float persistance, int offsetX, int offsetY, int offsetZ)
   {
-    float* result = new float[width * height * length];
-    //float* randomCache = new float[width * height * length];
-    float* smoothCache = new float[width * height * length];
-
-    memset(result, 0, sizeof(float) * width * height * length);
-    //memset(randomCache, 0, sizeof(float) * width * height * length);
-    memset(smoothCache, 0, sizeof(float) * width * height * length);
+    std::vector<float> result(width * height * length);
+    std::vector<float> smoothCache((width+1) * (height+1) * (length+1));
+    std::fill(result.begin(), result.end(), 0);
+    std::fill(smoothCache.begin(), smoothCache.end(), 0);
 
     NoiseData3D data;
     data.width = width;
@@ -144,14 +139,18 @@ namespace Greet {
             float yy = (y + offsetY) / sY; 
             float zz = (z + offsetZ) / sZ; 
 
-            float btl = Smooth(xx  , yy  , zz  , i, data);
-            float btr = Smooth(xx+1, yy  , zz  , i, data);
-            float bbl = Smooth(xx  , yy+1, zz  , i, data);
-            float bbr = Smooth(xx+1, yy+1, zz  , i, data);
-            float ftl = Smooth(xx  , yy  , zz+1, i, data);
-            float ftr = Smooth(xx+1, yy  , zz+1, i, data);
-            float fbl = Smooth(xx  , yy+1, zz+1, i, data);
-            float fbr = Smooth(xx+1, yy+1, zz+1, i, data);
+            float xCache = x / sX; 
+            float yCache = y / sY; 
+            float zCache = z / sZ; 
+
+            float btl = Smooth(xx  , yy  , zz  , xCache  , yCache  , zCache  , i, data);
+            float btr = Smooth(xx+1, yy  , zz  , xCache+1, yCache  , zCache  , i, data);
+            float bbl = Smooth(xx  , yy+1, zz  , xCache  , yCache+1, zCache  , i, data);
+            float bbr = Smooth(xx+1, yy+1, zz  , xCache+1, yCache+1, zCache  , i, data);
+            float ftl = Smooth(xx  , yy  , zz+1, xCache  , yCache  , zCache+1, i, data);
+            float ftr = Smooth(xx+1, yy  , zz+1, xCache+1, yCache  , zCache+1, i, data);
+            float fbl = Smooth(xx  , yy+1, zz+1, xCache  , yCache+1, zCache+1, i, data);
+            float fbr = Smooth(xx+1, yy+1, zz+1, xCache+1, yCache+1, zCache+1, i, data);
 
 
             // Interpolate the 8 values
@@ -166,11 +165,10 @@ namespace Greet {
       sX *= 0.5f;
       sY *= 0.5f;
       sZ *= 0.5f;
+
       // Reset the cache
-      //memset(randomCache, 0, sizeof(float) * width * height * length);
-      memset(data.smoothCache, 0, sizeof(float) * width * height * length);
+      std::fill(data.smoothCache.begin(), data.smoothCache.end(), 0);
     }
-    delete[] smoothCache;
     return result;
   }
 
