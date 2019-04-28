@@ -37,6 +37,7 @@ namespace Greet {
       Buffer& operator=(Buffer&&) = default;
 
       void UpdateData(void* data) const;
+      void UpdateData(void* data, uint dataSize);
       void* MapBuffer() const;
       void UnmapBuffer() const;
 
