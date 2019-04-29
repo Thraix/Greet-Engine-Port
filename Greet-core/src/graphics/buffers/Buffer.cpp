@@ -34,13 +34,13 @@ namespace Greet {
 
   void* Buffer::MapBuffer() const
   {
-    GLCall(void* buffer = glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY));
+    GLCall(void* buffer = glMapBuffer((uint)type, GL_WRITE_ONLY));
     return buffer;
   }
 
   void Buffer::UnmapBuffer() const
   {
-    GLCall(glUnmapBuffer(GL_ARRAY_BUFFER));
+    GLCall(glUnmapBuffer((uint)type));
   }
 
   void Buffer::Disable() const
