@@ -27,6 +27,9 @@ namespace Greet {
       JSONObject(std::map<std::string,std::string> values,std::map<std::string,JSONObject> objects,std::map<std::string,JSONArray> arrays);
 
       bool HasKey(const std::string& key) const;
+      bool HasValueKey(const std::string& key) const;
+      bool HasArrayKey(const std::string& key) const;
+      bool HasObjectKey(const std::string& key) const;
 
       void AddValue(std::string key, std::string value);
       void AddArray(std::string key, JSONArray value);

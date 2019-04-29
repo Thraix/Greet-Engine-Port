@@ -35,6 +35,21 @@ namespace Greet {
     return false;
   }
 
+  bool JSONObject::HasValueKey(const std::string& key) const
+  {
+    return m_values.find(key) != m_values.end();
+  }
+
+  bool JSONObject::HasArrayKey(const std::string& key) const
+  {
+    return m_arrays.find(key) != m_arrays.end();
+  }
+
+  bool JSONObject::HasObjectKey(const std::string& key) const
+  {
+    return m_objects.find(key) != m_objects.end();
+  }
+
   void JSONObject::AddValue(std::string key, std::string value)
   {
     if (HasKey(key))
