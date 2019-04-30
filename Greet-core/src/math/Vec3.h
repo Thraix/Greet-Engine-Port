@@ -49,6 +49,11 @@ namespace Greet{
       return sqrt(x * x + y * y + z * z);
     }
 
+    Real LengthSQ() const
+    {
+      return x * x + y * y + z  * z;
+    }
+
     Real Dot(const Vec3& vec) const
     {
       return x * vec.x + y * vec.y + z  * vec.z;
@@ -294,4 +299,31 @@ namespace Greet{
       return stream << "(" << vec.x << ", " << vec.y << ", " << vec.z << ")";
     }
   };
+  namespace Vec 
+  {
+    template <typename Real>
+    static Real Dot(const Vec3<Real>& lhs, const Vec3<Real>& rhs)
+    {
+      return lhs.x * rhs.x + lhs.y * rhs.y + lhs.z  * rhs.z;
+    }
+
+    template <typename Real>
+    static Vec3<Real> Cross(const Vec3<Real>& lhs, const Vec3<Real>& rhs)
+    {
+      return Vec3(lhs.y * rhs.z - lhs.z * rhs.y, lhs.z * rhs.x - lhs.x * rhs.z, lhs.x * rhs.y - lhs.y * rhs.x);
+    }
+
+    template <typename Real>
+    static Vec3<Real> Max(const Vec3<Real>& lhs, const Vec3<Real>& rhs)
+    {
+      return Vec3<Real>{std::max(lhs.x,rhs.x),std::max(lhs.y,rhs.y),std::max(lhs.z,rhs.z)};
+    }
+
+    template <typename Real>
+    static Vec3<Real> Min(const Vec3<Real>& lhs, const Vec3<Real>& rhs)
+    {
+      return Vec3<Real>{std::min(lhs.x,rhs.x),std::min(lhs.y,rhs.y),std::min(lhs.z,rhs.z)};
+    }
+  }
+
 }
