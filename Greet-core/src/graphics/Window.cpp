@@ -146,7 +146,7 @@ namespace Greet {
   void Window::TransformMousePosToScreen(Vec2& pos)
   {
     pos.x = (pos.x + 1.0f) * 0.5f * Greet::Window::GetWidth();
-    pos.y = (pos.y + 1.0f) * 0.5f * Greet::Window::GetHeight();
+    pos.y = (1.0f - (pos.y + 1.0f) * 0.5f) * Greet::Window::GetHeight();
   }
 
   void Window::window_resize(GLFWwindow *window, int width, int height)
