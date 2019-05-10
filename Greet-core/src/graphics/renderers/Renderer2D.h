@@ -29,7 +29,7 @@ namespace Greet{
       virtual void Flush() = 0;
       virtual void End() {}
 
-      virtual void Submit(const Renderable2D* renderable) = 0;
+      virtual void Submit(const Renderable2D& renderable) = 0;
 
       void PushMatrix(const Mat3 &matrix, bool override = false)
       {

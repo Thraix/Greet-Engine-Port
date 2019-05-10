@@ -24,19 +24,25 @@ namespace Greet{
       Vec2 m_position;
       Vec2 m_size;
     protected:
-      Sprite* m_sprite;
-      Sprite* m_mask;
+      std::optional<Sprite> m_sprite;
+      std::optional<Sprite> m_mask;
     protected:
 
     public:
-      Renderable2D(const Vec2& position,const Vec2& size, uint color, Sprite* sprite, Sprite* mask)
+      Renderable2D(const Vec2& position,const Vec2& size, uint color, Sprite sprite)
+        : m_position(position),m_size(size), m_color(color), m_sprite(sprite)
+      {	
+
+      }
+
+      Renderable2D(const Vec2& position,const Vec2& size, uint color, Sprite sprite, Sprite mask)
         : m_position(position),m_size(size), m_color(color), m_sprite(sprite), m_mask(mask)
       {	
 
       }
 
       Renderable2D()
-        : m_position(Vec2(0, 0)), m_size(Vec2(1, 1)), m_color(0xffffffff), m_sprite(new Sprite()), m_mask(new Sprite())
+        : m_position(Vec2(0, 0)), m_size(Vec2(1, 1)), m_color(0xffffffff)
       {
 
       }
@@ -50,13 +56,12 @@ namespace Greet{
 
       virtual ~Renderable2D()
       {
-        delete m_sprite;
       }
 
       virtual void Submit(Renderer2D* renderer) const override
       {
         if (render)
-          renderer->Submit(this);
+          renderer->Submit(*this);
       }
 
       virtual bool Update(float timeElapsed) override 
@@ -66,13 +71,13 @@ namespace Greet{
         return false;
       }
 
-      inline uint GetTexID() const { return m_sprite == NULL ? 0 : m_sprite->GetTextureID(); }
-      inline uint GetMaskTexID() const { return m_mask == NULL ? 0 : m_mask->GetTextureID(); }
-      inline Vec2 GetTexPos() const { return m_sprite == NULL ? Vec2(0, 0) : m_sprite->GetTexPos(); }
-      inline Vec2 GetTexSize() const { return m_sprite == NULL ? Vec2(1, 1) : m_sprite->GetTexSize(); }
-      inline Vec2 GetMaskTexPos() const { return m_mask == NULL ? Vec2(0, 0) : m_mask->GetTexPos(); }
-      inline Vec2 GetMaskTexSize() const { return m_mask == NULL ? Vec2(1, 1) : m_mask->GetTexSize(); }
-      inline Sprite& GetSprite() const { return *m_sprite; }
-      inline Sprite& GetMask() const { return *m_mask; }
+      inline uint GetTexID() const { return m_sprite ? m_sprite->GetTextureID() : 0; }
+      inline uint GetMaskTexID() const { return m_mask ? m_mask->GetTextureID() : 0; }
+      inline Vec2 GetTexPos() const { return m_sprite ? m_sprite->GetTexPos() : Vec2(0, 0); }
+      inline Vec2 GetTexSize() const { return m_sprite ? m_sprite->GetTexSize() : Vec2(1, 1); }
+      inline Vec2 GetMaskTexPos() const { return m_mask ? m_mask->GetTexPos() : Vec2(0, 0); }
+      inline Vec2 GetMaskTexSize() const { return m_mask ? m_mask->GetTexSize() : Vec2(1, 1); }
+      inline const std::optional<Sprite>& GetSprite() const { return m_sprite; }
+      inline const std::optional<Sprite>& GetMask() const { return m_mask; }
   };
 }

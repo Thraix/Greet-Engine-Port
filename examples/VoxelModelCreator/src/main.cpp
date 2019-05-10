@@ -51,7 +51,7 @@ namespace vmc
 			TextureManager::Add("skybox", CubeMap("res/textures/skybox.png"));
 			FontManager::Add(new FontContainer("Anonymous Pro.ttf", "anonymous"));
 
-			cursor = new Renderable2D(Vec2(0, 0), Vec2(32, 32), 0xffffffff, new Sprite(TextureManager::Get2D("cursor")), new Sprite(TextureManager::Get2D("mask")));
+			cursor = new Renderable2D(Vec2(0, 0), Vec2(32, 32), 0xffffffff, Sprite(TextureManager::Get2D("cursor")), Sprite(TextureManager::Get2D("mask")));
 			uilayer = new Layer(new BatchRenderer(), ShaderFactory::DefaultShader(), Mat3::Orthographic(0.0f, (float)Window::GetWidth(), 0.0f, (float)Window::GetHeight()));
 			uilayer->Add(cursor);
 

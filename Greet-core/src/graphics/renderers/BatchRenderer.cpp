@@ -70,22 +70,22 @@ namespace Greet {
   }
 #endif
 
-  void BatchRenderer::Submit(const Renderable2D* renderable)
+  void BatchRenderer::Submit(const Renderable2D& renderable)
   {
 
-    const uint color = renderable->GetColor();
+    const uint color = renderable.GetColor();
 
-    const Vec2 texPos = renderable->GetTexPos();
-    const Vec2 texSize = renderable->GetTexSize();
+    const Vec2 texPos = renderable.GetTexPos();
+    const Vec2 texSize = renderable.GetTexSize();
 
-    const Vec2 maskTexPos = renderable->GetMaskTexPos();
-    const Vec2 maskTexSize = renderable->GetMaskTexSize();
+    const Vec2 maskTexPos = renderable.GetMaskTexPos();
+    const Vec2 maskTexSize = renderable.GetMaskTexSize();
 
-    const GLuint texID = renderable->GetTexID();
-    const GLuint maskTexID = renderable->GetMaskTexID();
+    const GLuint texID = renderable.GetTexID();
+    const GLuint maskTexID = renderable.GetMaskTexID();
     uint ts = GetTextureSlot(texID);
     uint mts = GetTextureSlot(maskTexID);
-    Draw(renderable->GetPosition(),renderable->GetSize(), texPos, texSize, ts, color, mts,maskTexPos,maskTexSize);
+    Draw(renderable.GetPosition(),renderable.GetSize(), texPos, texSize, ts, color, mts,maskTexPos,maskTexSize);
   }
 
   void BatchRenderer::SubmitString(const std::string& text, const Vec2& position, Font* font, const uint& color)

@@ -182,9 +182,9 @@ class Core : public App
 
       uilayer = new Layer(new BatchRenderer(), ShaderFactory::DefaultShader(), Mat3::Orthographic(0.0f, (float)Window::GetWidth(), 0.0f, (float)Window::GetHeight()));
       Vec4 colorPink = ColorUtils::GetMaterialColorAsHSV(300 /360.0f, 3);
-      cursor = new Renderable2D(Vec2(0,0),Vec2(32,32),0xffffffff, new Sprite(TextureManager::Get2D("cursor")), new Sprite(TextureManager::Get2D("mask")));
+      cursor = new Renderable2D(Vec2(0,0),Vec2(32,32),0xffffffff, Sprite(TextureManager::Get2D("cursor")), Sprite(TextureManager::Get2D("mask")));
       uilayer->Add(cursor);
-      uilayer->Add(new Renderable2D(Vec2(0,0), Vec2(noiseS, noiseS), 0xffffffff, new Sprite(TextureManager::Get2D("noise")), nullptr));
+      uilayer->Add(new Renderable2D(Vec2(0,0), Vec2(noiseS, noiseS), 0xffffffff, Sprite(TextureManager::Get2D("noise"))));
 
       renderer3d->Submit(new Portal({1.0f,1.0f,1.0f}));
       renderer3d->Submit(stall);

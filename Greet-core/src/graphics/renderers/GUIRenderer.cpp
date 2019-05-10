@@ -122,9 +122,9 @@ namespace Greet
     m_viewports.pop();
   }
 
-  void GUIRenderer::Submit(const Renderable2D* renderable)
+  void GUIRenderer::Submit(const Renderable2D& renderable)
   {
-    SubmitRect(renderable->GetPosition(), renderable->GetSize(), ColorUtils::ColorHexToVec4(renderable->GetColor()), false);
+    SubmitRect(renderable.GetPosition(), renderable.GetSize(), ColorUtils::ColorHexToVec4(renderable.GetColor()), false);
   }
 
   void GUIRenderer::SubmitLine(const Vec2& pos, float length, float width, bool vertical, const Vec4& color, bool isHsv)

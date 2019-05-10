@@ -41,7 +41,7 @@ namespace Greet {
       BatchRenderer();
       virtual ~BatchRenderer();
       void Begin() override;
-      void Submit(const Renderable2D* renderable) override;
+      void Submit(const Renderable2D& renderable) override;
 #if 0
       void Submit(const RenderablePoly* renderable);
 #endif

@@ -49,7 +49,7 @@ namespace Greet
       void End();
       void Flush();
       void Draw();
-      void Submit(const Renderable2D* renderable);
+      void Submit(const Renderable2D& renderable);
       void SubmitLine(const Vec2& pos, float length, float width, bool vertical, const Vec4& color, bool isHsv);
       void SubmitString(const std::string& text, const Vec2& position, Font* font, const Vec4& color, bool isHsv = true);
       void SubmitTriangle(const Vec2& pos1, const Vec2& pos2, const Vec2& pos3, const Vec4& color, bool isHsv = true);
