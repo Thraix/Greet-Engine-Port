@@ -73,6 +73,7 @@ namespace Greet {
       static void SetBackgroundColor(Vec4 color);
       static void GrabMouse(bool grab);
 
+      static void TransformMousePosToScreen(Vec2& pos);
       inline static Vec4 GetBackgroundColor() { return bgColor; }
       inline static int GetWidth() { return width; };
       inline static int GetHeight() { return height; };
