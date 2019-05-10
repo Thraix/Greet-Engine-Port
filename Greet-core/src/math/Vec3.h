@@ -274,6 +274,11 @@ namespace Greet{
     {
       return !Compare(second);
     }
+    
+    Vec3 operator-() const
+    {
+      return Vec3(-x, -y, -z);
+    }
 
     bool operator==(const Vec3 &second) const
     {
