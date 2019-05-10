@@ -36,9 +36,9 @@ namespace vmc
 
 		}
 
-    Greet::Vec3 GetPosition() const
+    Greet::Vec3<float> GetPosition() const
 		{
-			return Greet::Vec3(x, y, z);
+			return Greet::Vec3<float>(x, y, z);
 		}
 
 		// Only Allowes 1000 x 1000 x 1000 grids.

@@ -6,7 +6,7 @@ namespace vmc { namespace Ray {
 
 	using namespace Greet;
 
-	std::vector<Cube> GetCubeRay(Vec3 near, Vec3 direction, uint gridSize)
+	std::vector<Cube> GetCubeRay(Vec3<float> near, Vec3<float> direction, uint gridSize)
 	{
 		Vec3 invDirection = Vec3(1.0f / direction.x, 1.0f / direction.y, 1.0f / direction.z);
 		std::vector<Cube> cubes;

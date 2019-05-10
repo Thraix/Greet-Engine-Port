@@ -11,8 +11,8 @@ namespace vmc
 
 	struct Square
 	{
-		Greet::Vec3 p1;
-		Greet::Vec3 p2;
+		Greet::Vec3<float> p1;
+		Greet::Vec3<float> p2;
 		uint color;
 	};
 

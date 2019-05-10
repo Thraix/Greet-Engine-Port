@@ -80,7 +80,7 @@ class Core : public App
       Log::Info("Slider changed value from ", oldValue, " to ", newValue);
     }
 
-    void OnColorChangeCallback(Component* component, const Vec3& oldValue, const Vec3& current)
+    void OnColorChangeCallback(Component* component, const Vec3<float>& oldValue, const Vec3<float>& current)
     {
       Window::SetBackgroundColor(Vec4(current.r,current.g,current.b,1));
     }

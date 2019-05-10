@@ -7,7 +7,7 @@ namespace vmc
   const uint Grid::GRID_SIZE = 100;
 
   Grid::Grid()
-    : Layer3D(new TPCamera(Mat4::ProjectionMatrix(Window::GetWidth()/(float)Window::GetHeight(), 90, 0.1f, 1000.0f),Vec3(GRID_SIZE / 2+0.5f, GRID_SIZE / 2 + 0.5f, GRID_SIZE / 2 + 0.5f), 15, 0, 0, 1, 80, -0.8, 0.8f), new Skybox(TextureManager::Get3D("skybox"))), toolBox(this)
+    : Layer3D(new TPCamera(Mat4::ProjectionMatrix(Window::GetWidth()/(float)Window::GetHeight(), 90, 0.1f, 1000.0f),Vec3<float>(GRID_SIZE / 2+0.5f, GRID_SIZE / 2 + 0.5f, GRID_SIZE / 2 + 0.5f), 15, 0, 0, 1, 80, -0.8, 0.8f), new Skybox(TextureManager::Get3D("skybox"))), toolBox(this)
       //m_colorPicker(colorPicker)
   {
     renderer = new GridRenderer3D();
@@ -78,7 +78,7 @@ namespace vmc
     Layer3D::Update(timeElapsed);
     renderer->Update(timeElapsed);
 
-    Vec3 near, direction;
+    Vec3<float> near, direction;
     GetWorldCoordination(Window::GetMousePos(), &near, &direction);
 
 
@@ -106,12 +106,12 @@ namespace vmc
   {
     Layer3D::Render();
     glLineWidth(2.0f);
-    renderer->DrawLineCube(camera, Vec3(-0.5f, -0.5f, -0.5f), Vec3(GRID_SIZE + 1, GRID_SIZE + 1, GRID_SIZE + 1), Vec4(0, 0, 0, 1));
+    renderer->DrawLineCube(camera, Vec3<float>(-0.5f, -0.5f, -0.5f), Vec3<float>(GRID_SIZE + 1, GRID_SIZE + 1, GRID_SIZE + 1), Vec4(0, 0, 0, 1));
     GLCall(glPolygonMode(GL_FRONT_AND_BACK, GL_LINE));
     if (hasSelected)
     {
       float outline = 0.01f;
-      renderer->DrawLineCube(camera, selected.GetPosition() - outline, Vec3(1, 1, 1) + outline*2, Vec4(0,0,0,1));
+      renderer->DrawLineCube(camera, selected.GetPosition() - outline, Vec3<float>(1, 1, 1) + outline*2, Vec4(0,0,0,1));
       //renderer->DrawCube(selected.GetPosition() - outline, Vec3(1.0f, 1.0f, 1.0f) + outline * 2, 0xff000000, true);
     }
 
@@ -128,9 +128,9 @@ namespace vmc
       const TPCamera& cam = (const TPCamera&)camera;
       Vec3 pos = cam.GetPosition();
       float length = cam.GetDistance() * 0.6;
-      renderer->DrawLine(camera, pos, pos + Vec3(length, 0, 0), Vec4(1, 0, 0, 1));
-      renderer->DrawLine(camera, pos, pos + Vec3(0, length, 0), Vec4(0, 1, 0, 1));
-      renderer->DrawLine(camera, pos, pos + Vec3(0, 0, length), Vec4(0, 0, 1, 1));
+      renderer->DrawLine(camera, pos, pos + Vec3<float>(length, 0, 0), Vec4(1, 0, 0, 1));
+      renderer->DrawLine(camera, pos, pos + Vec3<float>(0, length, 0), Vec4(0, 1, 0, 1));
+      renderer->DrawLine(camera, pos, pos + Vec3<float>(0, 0, length), Vec4(0, 0, 1, 1));
     }
     renderer->End(camera);
   }
@@ -229,7 +229,7 @@ namespace vmc
     JSONArray jsonArray;
     for (auto it = m_grid.begin();it != m_grid.end();++it)
     {
-      Vec3 position = it->GetPosition();
+      Vec3<float> position = it->GetPosition();
       JSONObject cubeObj;
       cubeObj.AddValue("x", std::to_string((uint)position.x));
       cubeObj.AddValue("y", std::to_string((uint)position.y));

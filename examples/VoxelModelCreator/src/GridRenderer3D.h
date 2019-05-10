@@ -28,9 +28,9 @@ namespace vmc
 
 		void UpdateShader();
 		void Begin(Greet::Camera* camera) override;
-		void DrawCube(Greet::Camera* camera, const Greet::Vec3& pos, const Greet::Vec3& size, uint color, bool culling);
+		void DrawCube(Greet::Camera* camera, const Greet::Vec3<float>& pos, const Greet::Vec3<float>& size, uint color, bool culling);
 		virtual void Submit(Greet::Camera* camera, const Cube& cube);
-		void DrawLineCube(Greet::Camera* camera, const Greet::Vec3& pos, const Greet::Vec3& size, const Greet::Vec4& color);
-		void DrawLine(Greet::Camera* camera, const Greet::Vec3& start, const Greet::Vec3& end, const Greet::Vec4& color);
+		void DrawLineCube(Greet::Camera* camera, const Greet::Vec3<float>& pos, const Greet::Vec3<float>& size, const Greet::Vec4& color);
+		void DrawLine(Greet::Camera* camera, const Greet::Vec3<float>& start, const Greet::Vec3<float>& end, const Greet::Vec4& color);
 	};
 }
