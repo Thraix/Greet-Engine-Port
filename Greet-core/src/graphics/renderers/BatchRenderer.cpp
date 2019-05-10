@@ -88,40 +88,48 @@ namespace Greet {
     Draw(renderable->GetPosition(),renderable->GetSize(), texPos, texSize, ts, color, mts,maskTexPos,maskTexSize);
   }
 
-  void BatchRenderer::SubmitString(const std::string& text, const Vec2& position, Font* font, const uint& color, float scale)
+  void BatchRenderer::SubmitString(const std::string& text, const Vec2& position, Font* font, const uint& color)
   {
-    uint ts = GetTextureSlot(font->GetFontAtlasId());
+    float ts = GetTextureSlot(font->GetFontAtlasId());
+    if (ts == 0 && font->GetFontAtlasId() != 0)
+    {
+      Flush();
+      ts = GetTextureSlot(font->GetFontAtlasId());
+    }
+
     FontAtlas* atlas = font->GetFontAtlas();
-    float x = position.x;
+    const Vec2& scale = Vec2(1,1);//Vec2(64.0, 64.0) / font->GetSize();//font->getScale();
     Vec2 pos;
     Vec2 size;
     Vec2 uv0;
     Vec2 uv1;
+    Vec2 roundPos = Vec2(round(position.x), round(position.y));
+    float x = roundPos.x;
     for (uint i = 0;i < text.length();i++)
     {
       const Glyph& glyph = atlas->GetGlyph(text[i]);
       pos.x = x;
-      pos.y = position.y - glyph.ascending;
-      size.x = glyph.width * scale;
-      size.y = glyph.height * scale;
+      pos.y = roundPos.y - glyph.ascending * scale.y;
+      size.x = glyph.width * scale.x;
+      size.y = glyph.height * scale.y;
 
-      float u0 = glyph.textureCoords.left;
-      float v0 = 1 - glyph.textureCoords.top;
-      float u1 = glyph.textureCoords.right;
-      float v1 = 1 - glyph.textureCoords.bottom;
+      uv0.x = glyph.textureCoords.left;
+      uv0.y = 1.0-glyph.textureCoords.top;
+      uv1.x = glyph.textureCoords.right;
+      uv1.y = 1.0-glyph.textureCoords.bottom;
+      Log::Info(glyph.textureCoords.top, " ", glyph.textureCoords.bottom);
 
-      float x0 = x;
-      float y0 = position.y - glyph.ascending * scale;
-      float x1 = x0 + glyph.width * scale;
-      float y1 = y0 + glyph.height * scale;
+      AppendVertexBuffer(Vec2(pos.x       ,pos.y       ), Vec2(uv0.x,uv0.y),ts,color, 0, Vec2(0, 0));
+      AppendVertexBuffer(Vec2(pos.x       ,pos.y+size.y), Vec2(uv0.x,uv1.y),ts,color, 0, Vec2(0, 0));
+      AppendVertexBuffer(Vec2(pos.x+size.x,pos.y+size.y), Vec2(uv1.x,uv1.y),ts,color, 0, Vec2(0, 0));
+      AppendVertexBuffer(Vec2(pos.x+size.x,pos.y       ), Vec2(uv1.x,uv0.y),ts,color, 0, Vec2(0, 0));
 
-      AppendVertexBuffer(Vec2(x0,y0),Vec2(u0,v0),ts,color, 0, Vec2(0, 0));
-      AppendVertexBuffer(Vec2(x0,y1),Vec2(u0,v1),ts,color, 0, Vec2(0, 0));
-      AppendVertexBuffer(Vec2(x1,y1),Vec2(u1,v1),ts,color, 0, Vec2(0, 0));
-      AppendVertexBuffer(Vec2(x1,y0),Vec2(u1,v0),ts,color, 0, Vec2(0, 0));
-      x += glyph.advanceX * scale;
       AddIndicesPoly(4);
       m_iboSize += 6;
+
+
+
+      x += (glyph.advanceX - glyph.kerning )* scale.x;
     }
   }
 
