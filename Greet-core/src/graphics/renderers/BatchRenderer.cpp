@@ -117,7 +117,6 @@ namespace Greet {
       uv0.y = 1.0-glyph.textureCoords.top;
       uv1.x = glyph.textureCoords.right;
       uv1.y = 1.0-glyph.textureCoords.bottom;
-      Log::Info(glyph.textureCoords.top, " ", glyph.textureCoords.bottom);
 
       AppendVertexBuffer(Vec2(pos.x       ,pos.y       ), Vec2(uv0.x,uv0.y),ts,color, 0, Vec2(0, 0));
       AppendVertexBuffer(Vec2(pos.x       ,pos.y+size.y), Vec2(uv0.x,uv1.y),ts,color, 0, Vec2(0, 0));
