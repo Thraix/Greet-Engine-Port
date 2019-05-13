@@ -13,12 +13,45 @@ namespace Greet {
     delete id;
   }
 
+  Shader::Shader(const std::string& _filename)
+    : filename{_filename}, m_shaderID{new uint}
+  {
+    Log::Info("Shader(filename): ", _filename);
+    const static uint VERTEX = 0;
+    const static uint FRAGMENT = 1;
+    const static uint GEOMETRY = 2;
+    std::stringstream ss[3];
+    std::ifstream file(_filename);
+    if (!file.good())
+    {
+      Log::Error("Shader::FromFile Couldn't find shader in path \'", _filename, "\'");
+      m_shaderID = std::move(ShaderFactory::DefaultShader().m_shaderID);
+      return;
+    }
+    std::string line;
+    uint shader = VERTEX;
+    while (std::getline(file, line))
+    {
+      if (line == "//vertex")
+        shader = VERTEX;
+      else if (line == "//fragment")
+        shader = FRAGMENT;
+      else if (line == "//geometry")
+        shader = GEOMETRY;
+      else
+        ss[shader] << line << std::endl;
+    }
+    *m_shaderID = Load(ss[VERTEX].str(), ss[FRAGMENT].str(), ss[GEOMETRY].str(), !ss[GEOMETRY].str().empty());
+  }
+
   Shader::Shader(const std::string& vertSrc, const std::string& fragSrc, const std::string& geomSrc)
-    : m_shaderID{new uint{Load(vertSrc, fragSrc, geomSrc, true)}}
-  {}
+    : filename{"test"}, m_shaderID{new uint{Load(vertSrc, fragSrc, geomSrc, true)}}
+  {
+
+  }
 
   Shader::Shader(const std::string& vertSrc, const std::string& fragSrc)
-    : m_shaderID{new uint{Load(vertSrc,fragSrc)}}
+    : filename{"test"}, m_shaderID{new uint{Load(vertSrc,fragSrc)}}
   {}
 
   uint Shader::Load(const std::string& vertSrc, const std::string& fragSrc)
@@ -166,6 +199,7 @@ namespace Greet {
 
   void Shader::Enable() const
   {
+    uint i = *m_shaderID.get();
     GLCall(glUseProgram(*m_shaderID.get()));
   }
 
@@ -176,33 +210,7 @@ namespace Greet {
 
   Shader Shader::FromFile(const std::string& shaderPath)
   {
-    const static uint VERTEX = 0;
-    const static uint FRAGMENT = 1;
-    const static uint GEOMETRY = 2;
-    std::stringstream ss[3];
-    std::ifstream file(shaderPath);
-    if (!file.good())
-    {
-      Log::Error("Shader::FromFile Couldn't find shader in path \'", shaderPath, "\'");
-      return ShaderFactory::DefaultShader();
-    }
-    std::string line;
-    uint shader = VERTEX;
-    while (std::getline(file, line))
-    {
-      if (line == "//vertex")
-        shader = VERTEX;
-      else if (line == "//fragment")
-        shader = FRAGMENT;
-      else if (line == "//geometry")
-        shader = GEOMETRY;
-      else
-        ss[shader] << line << std::endl;
-    }
-    if (ss[2].str().empty())
-      return Shader(ss[VERTEX].str(), ss[FRAGMENT].str());
-    else
-      return Shader(ss[VERTEX].str(), ss[FRAGMENT].str(), ss[GEOMETRY].str());
+    return std::move(Shader(shaderPath));
   }
 
   Shader Shader::FromFile(const std::string& vertPath, const std::string& fragPath)

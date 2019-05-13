@@ -14,10 +14,12 @@ namespace Greet {
 
   class Shader final
   {
-    private:
+   private:
+      std::string filename;
       std::unique_ptr<uint, ShaderDeleter> m_shaderID;
 
     private:
+      Shader(const std::string& filename);
       Shader(const std::string& vertSrc, const std::string& fragSrc, const std::string& geomSrc);
       Shader(const std::string& vertSrc, const std::string& fragSrc);
 
