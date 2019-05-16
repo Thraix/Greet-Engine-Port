@@ -71,7 +71,7 @@ namespace Greet
     minPos = 0;
     maxPos = 1;
     // Default defaultValue should be in the middle
-    SetValue(GUIUtils::GetIntFromXML(xmlObject, "defaultValue", (maxValue-minValue)/2.0f));
+    SetValue(GUIUtils::GetFloatFromXML(xmlObject, "defaultValue", (maxValue-minValue)/2.0f));
   }
 
   void Slider::Measure() 
