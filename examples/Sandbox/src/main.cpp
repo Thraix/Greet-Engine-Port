@@ -6,7 +6,6 @@
 #include "tree.h"
 #include "Portal.h"
 #include "World.h"
-#include "Shader2.h"
 #include <random>
 
 using namespace Greet;
