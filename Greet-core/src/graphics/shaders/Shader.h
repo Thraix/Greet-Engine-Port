@@ -1,9 +1,12 @@
 #pragma once
 
 #include <string>
+#include <set>
 #include <math/Maths.h>
 #include <memory>
 #include <functional>
+#include <utils/Utils.h>
+#include <utils/FileUtils.h>
 
 namespace Greet {
 
@@ -14,9 +17,13 @@ namespace Greet {
 
   class Shader final
   {
-   private:
-      std::string filename;
+    private:
       std::unique_ptr<uint, ShaderDeleter> m_shaderID;
+#if _GREET_HOTSWAP
+      static std::set<Shader*, Utils::ptr_less<Shader>> hotswapShaders;
+      std::string filename;
+      TimeModified modified;
+#endif
 
     private:
       Shader(const std::string& filename);
@@ -29,8 +36,9 @@ namespace Greet {
       uint GetUniformLocation(const char*name) const;
 
     public:
-      Shader(Shader&&) = default;
-      Shader& operator=(Shader&&) = default;
+      Shader(Shader&&);
+      Shader& operator=(Shader&&);
+      ~Shader();
       void Enable() const;
       static void Disable();
       void BindAttributeOutput(uint attachmentId, const std::string& name) const;
@@ -47,12 +55,16 @@ namespace Greet {
       void SetUniform4f(const char *name, const Vec4& value) const;
       void SetUniformMat3(const char *name, const Mat3 &value) const;
       void SetUniformMat4(const char *name, const Mat4 &value) const;
+      bool operator<(const Shader& s);
     public:
       static Shader FromFile(const std::string& shaderPath);
       static Shader FromFile(const std::string& vertPath, const std::string& fragPath);
       static Shader FromFile(const std::string& vertPath, const std::string& fragPath, const std::string& geomPath);
       static Shader FromSource(const std::string& vertSrc, const std::string& fragSrc);
       static Shader FromSource(const std::string& vertSrc, const std::string& fragSrc, const std::string& geomSrc);
+#ifdef _GREET_HOTSWAP
+      static void CheckHotswap(float timeElapsed);
+#endif
   };
 
 }

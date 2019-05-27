@@ -7,8 +7,8 @@ MKDIR_P=mkdir -p
 BIN=bin/
 OBJPATH=$(BIN)intermediates
 INCLUDES=-I./../../Greet-core/src/ -I./../../deps/includes/ 
-OBJECTS=$(OBJPATH)/Chunk.o $(OBJPATH)/main.o 
-CFLAGS=$(INCLUDES) -std=c++17 -c -w -g3 -D_DEBUG -g 
+OBJECTS=$(OBJPATH)/Chunk.o $(OBJPATH)/Shader2.o $(OBJPATH)/main.o 
+CFLAGS=$(INCLUDES) -std=c++17 -c -w -g3 -D_DEBUG -D_GREET_HOTSWAP -g 
 LIBDIR=-L./../../Greet-core/bin/ 
 LDFLAGS=-Wl,-rpath=../../Greet-core/bin/ 
 LIBS=$(LIBDIR) -lgreet -lGL -lGLEW -lglfw -lfreeimage -lfreetype 
@@ -32,8 +32,11 @@ install: all
 	$(info Installing Sandbox to /usr/bin/)
 	@cp $(OUTPUT) /usr/bin/Sandbox.a
 $(OBJPATH)/Chunk.o : src/Chunk.cpp src/Chunk.h
-	$(info -[50%]- $<)
+	$(info -[33%]- $<)
 	$(CC) $(CFLAGS) -o $@ $<
-$(OBJPATH)/main.o : src/main.cpp src/Portal.h src/World.h src/Chunk.h src/keyboardcontrol.h src/tree.h
+$(OBJPATH)/Shader2.o : src/Shader2.cpp src/Shader2.h
+	$(info -[66%]- $<)
+	$(CC) $(CFLAGS) -o $@ $<
+$(OBJPATH)/main.o : src/main.cpp src/Portal.h src/Shader2.h src/World.h src/Chunk.h src/keyboardcontrol.h src/tree.h
 	$(info -[100%]- $<)
 	$(CC) $(CFLAGS) -o $@ $<

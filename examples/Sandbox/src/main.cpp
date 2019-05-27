@@ -6,10 +6,12 @@
 #include "tree.h"
 #include "Portal.h"
 #include "World.h"
+#include "Shader2.h"
 #include <random>
 
 using namespace Greet;
 
+#if 0
 class Core : public App
 {
   private:
@@ -97,6 +99,7 @@ class Core : public App
       flatMaterial = new Material(Shader::FromFile("res/shaders/flat3d.shader"));
       stallMaterial = new Material(Shader::FromFile("res/shaders/3dshader.shader"), TextureManager::Get2D("stall"));
       modelMaterial->SetSpecularStrength(0.25)->SetSpecularExponent(1)->SetDiffuseStrength(0.25);
+
       {
         terrainMaterial = new Material(Shader::FromFile("res/shaders/terrain.shader"));
         waterMaterial = new Material(Shader::FromFile("res/shaders/water.shader"));
@@ -189,10 +192,10 @@ class Core : public App
       renderer3d->Submit(new Portal({1.0f,1.0f,1.0f}));
       renderer3d->Submit(stall);
       //renderer3d->Submit(dragon);
-      //renderer3d->Submit(terrain);
+      renderer3d->Submit(terrain);
       renderer3d->Submit(sphere);
       renderer3d->Submit(cube);
-      //waterRenderer->Submit(water);
+      waterRenderer->Submit(water);
       //renderer3d->Submit(polygon);
       //renderer3d->Submit(tetrahedron);
       //for (uint i = 0;i < 2000;i++)
@@ -204,12 +207,12 @@ class Core : public App
       //Tree t(renderer3d,0,0,0);
       uint pos = 0;
       //		Log::info(JSONLoader::isNumber("0.1234s",pos));
-      RenderEngine::Add3DScene(uilayer, "uilayer");
+      RenderEngine::Add2DScene(uilayer, "uilayer");
       layer3d = new Layer3D(camera, skybox);
       layer3d->AddRenderer(renderer3d);
       layer3d->AddRenderer(waterRenderer);
-      RenderEngine::Add3DScene(layer3d, "3dWorld");
-      RenderEngine::Add3DScene(new World(camera, 10, 10), "World");
+      RenderEngine::Add3DScene(layer3d, "World");
+      //RenderEngine::Add3DScene(new World(camera, 10, 10), "WorldTerrain");
     }
 
     void RecalcPositions(Vec3<float>* vertex)
@@ -435,6 +438,25 @@ class Core : public App
     {
     }
 };
+#endif
+
+class TestApp : public App
+{
+  public:
+    TestApp()
+      :App{"Best Game Ever",540,360}{}
+    ~TestApp(){}
+    virtual void Init(){
+
+      Shader s1{Shader::FromFile("res/shaders/3dshader.shader")};
+      s1.Enable();
+      Shader s2{Shader::FromFile("res/shaders/flat3d.shader")};
+      Shader s3{Shader::FromFile("res/shaders/terrain.shader")};
+    };
+    virtual void Tick(){};
+    virtual void Update(float elapsedTime){};
+    virtual void Render(){};
+};
 
 #include <fstream>
 int main()
@@ -456,6 +478,6 @@ int main()
      system("pause");
      */
 
-  Core game;
+  TestApp game;
   game.Start();
 }

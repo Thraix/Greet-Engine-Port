@@ -1,6 +1,7 @@
 #include "RenderEngine.h"
 
 #include <logging/Log.h>
+#include <graphics/shaders/Shader.h>
 
 namespace Greet {
 
@@ -73,6 +74,9 @@ namespace Greet {
 
   void RenderEngine::Update(float timeElapsed)
   {
+#ifdef _GREET_HOTSWAP
+    Shader::CheckHotswap(timeElapsed);
+#endif
     for (auto it = m_scenes3d.begin(); it != m_scenes3d.end(); it++)
     {
       it->second->PreUpdate(timeElapsed);

@@ -12,7 +12,7 @@ namespace Greet {
   }
 
   Material::Material(Shader&& shader)
-    : m_shader(std::move(shader)), m_texture(TextureManager::GetEmptyTexture2D()), color(Vec4(1,1,1,1))
+    : m_shader(std::move(shader)), m_texture(TextureManager::GetEmptyTexture2D()), color(Vec4(1,1,1,1)), uuid{UUID::GetInstance().GetUUID()}
   {
     UpdateTexture();
   }

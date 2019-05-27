@@ -5,6 +5,7 @@
 #include <graphics/textures/TextureManager.h>
 #include <logging/Log.h>
 
+#if 0
 class Portal : public Greet::EntityModel
 {
   private:
@@ -37,3 +38,4 @@ class Portal : public Greet::EntityModel
     }
 
 };
+#endif
