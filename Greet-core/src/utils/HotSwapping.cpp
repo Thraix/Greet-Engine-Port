@@ -2,6 +2,7 @@
 
 namespace Greet
 {
-    std::vector<HotswapResource> HotSwapping::resources;
+    std::map<uint, HotswapResource> HotSwapping::resources;
+    uint HotswapResource::ids = 0;
 } 
 

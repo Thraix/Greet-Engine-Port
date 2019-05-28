@@ -18,7 +18,8 @@ namespace Greet {
   Shader::Shader(const std::string& filename)
     : m_shaderID{new uint{Load(filename)}}
   {
-    HotSwapping::AddHotswapResource(this, filename);
+    hotswap = std::make_optional(HotSwapping::AddHotswapResource(this, filename));
+    Log::Error(hotswap.has_value(), "Optional has no value after set");
     Log::Info(*m_shaderID.get());
   }
 
@@ -36,14 +37,26 @@ namespace Greet {
 
   Shader::Shader(Shader&& shader)
     :
-      m_shaderID{std::move(shader.m_shaderID)}
+      m_shaderID{std::move(shader.m_shaderID)}, hotswap{std::move(shader.hotswap)}
   {
     Log::Info("Moved address: ", this);
+    if(hotswap.has_value())
+    {
+      (*hotswap)->second.MoveResource(this);
+      Log::Info("Moved hotswap resource");
+    }
   }
 
   Shader& Shader::operator=(Shader&& shader)
   {
     m_shaderID = std::move(shader.m_shaderID);
+    hotswap = std::move(shader.hotswap);
+
+    if(hotswap.has_value())
+    {
+      (*hotswap)->second.MoveResource(this);
+      Log::Info("Moved hotswap resource");
+    }
 
     return *this;
   }

@@ -7,6 +7,7 @@
 #include <functional>
 #include <utils/Utils.h>
 #include <utils/FileUtils.h>
+#include <utils/HotSwapping.h>
 
 namespace Greet {
 
@@ -19,6 +20,7 @@ namespace Greet {
   {
     private:
       std::unique_ptr<uint, ShaderDeleter> m_shaderID;
+      std::optional<std::map<uint, HotswapResource>::iterator> hotswap;
 
     private:
       Shader(const std::string& filename);
