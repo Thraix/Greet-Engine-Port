@@ -19,17 +19,13 @@ namespace Greet {
   {
     private:
       std::unique_ptr<uint, ShaderDeleter> m_shaderID;
-#if _GREET_HOTSWAP
-      static std::set<Shader*, Utils::ptr_less<Shader>> hotswapShaders;
-      std::string filename;
-      TimeModified modified;
-#endif
 
     private:
       Shader(const std::string& filename);
       Shader(const std::string& vertSrc, const std::string& fragSrc, const std::string& geomSrc);
       Shader(const std::string& vertSrc, const std::string& fragSrc);
 
+      uint Load(const std::string& filename);
       uint Load(const std::string& vertSrc, const std::string& fragSrc, const std::string& geomSrc, bool hasGeometry);
       uint Load(const std::string& vertSrc, const std::string& fragSrc);
       uint AttachShader(const uint program, const std::string& shaderSrc, const uint shaderType);
@@ -39,6 +35,8 @@ namespace Greet {
       Shader(Shader&&);
       Shader& operator=(Shader&&);
       ~Shader();
+
+      void ReloadResource(const std::string& filename);
       void Enable() const;
       static void Disable();
       void BindAttributeOutput(uint attachmentId, const std::string& name) const;
@@ -62,9 +60,6 @@ namespace Greet {
       static Shader FromFile(const std::string& vertPath, const std::string& fragPath, const std::string& geomPath);
       static Shader FromSource(const std::string& vertSrc, const std::string& fragSrc);
       static Shader FromSource(const std::string& vertSrc, const std::string& fragSrc, const std::string& geomSrc);
-#ifdef _GREET_HOTSWAP
-      static void CheckHotswap(float timeElapsed);
-#endif
   };
 
 }

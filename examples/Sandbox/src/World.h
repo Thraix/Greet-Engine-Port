@@ -4,7 +4,6 @@
 #include <internal/GreetTypes.h>
 #include <graphics/layers/Scene.h>
 #include <graphics/models/EntityModel.h>
-#if 0
 class World : public Greet::Scene
 {
   Greet::Camera* camera;
@@ -50,4 +49,3 @@ class World : public Greet::Scene
 
     }
 };
-#endif

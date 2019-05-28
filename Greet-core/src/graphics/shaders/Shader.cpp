@@ -4,25 +4,65 @@
 #include <utils/FileUtils.h>
 #include <fstream>
 #include <sstream>
+#include <utils/HotSwapping.h>
 
 namespace Greet {
 
   void ShaderDeleter::operator()(uint* id)
   {
+    Log::Info(*id);
     GLCall(glDeleteProgram(*id));
     delete id;
   }
-#ifdef _GREET_HOTSWAP
-  std::set<Shader*, Utils::ptr_less<Shader>> Shader::hotswapShaders;
-#endif 
 
   Shader::Shader(const std::string& filename)
-    : 
-#ifdef _GREET_HOTSWAP
-      filename{filename}, 
-      modified{FileUtils::GetTimeModified(filename)},
-#endif
-      m_shaderID{new uint}
+    : m_shaderID{new uint{Load(filename)}}
+  {
+    HotSwapping::AddHotswapResource(this, filename);
+    Log::Info(*m_shaderID.get());
+  }
+
+  Shader::Shader(const std::string& vertSrc, const std::string& fragSrc, const std::string& geomSrc)
+    : m_shaderID{new uint{Load(vertSrc, fragSrc, geomSrc, true)}}
+  {
+
+  }
+
+  Shader::Shader(const std::string& vertSrc, const std::string& fragSrc)
+    : m_shaderID{new uint{Load(vertSrc,fragSrc)}}
+  {
+
+  }
+
+  Shader::Shader(Shader&& shader)
+    :
+      m_shaderID{std::move(shader.m_shaderID)}
+  {
+    Log::Info("Moved address: ", this);
+  }
+
+  Shader& Shader::operator=(Shader&& shader)
+  {
+    m_shaderID = std::move(shader.m_shaderID);
+
+    return *this;
+  }
+
+  Shader::~Shader()
+  {
+    Log::Info(this);
+  }
+
+  void Shader::ReloadResource(const std::string& filename)
+  {
+    Log::Info("Reload address: ", this);
+    if(m_shaderID)
+      m_shaderID.reset(new uint{Load(filename)});
+    else
+      Log::Error("Invalid pointer");
+  }
+
+  uint Shader::Load(const std::string& filename)
   {
     const static uint VERTEX = 0;
     const static uint FRAGMENT = 1;
@@ -32,8 +72,7 @@ namespace Greet {
     if (!file.good())
     {
       Log::Error("Shader::FromFile Couldn't find shader in path \'", filename, "\'");
-      m_shaderID = std::move(ShaderFactory::DefaultShader().m_shaderID);
-      return;
+      return Load(ShaderFactory::default_shader_vert, ShaderFactory::default_shader_frag);
     }
     std::string line;
     uint shader = VERTEX;
@@ -48,59 +87,7 @@ namespace Greet {
       else
         ss[shader] << line << std::endl;
     }
-    *m_shaderID = Load(ss[VERTEX].str(), ss[FRAGMENT].str(), ss[GEOMETRY].str(), !ss[GEOMETRY].str().empty());
-#ifdef _GREET_HOTSWAP
-    hotswapShaders.emplace(this);
-#endif
-  }
-
-  Shader::Shader(const std::string& vertSrc, const std::string& fragSrc, const std::string& geomSrc)
-    : 
-#ifdef _GREET_HOTSWAP
-      filename{"test"}, 
-#endif
-      m_shaderID{new uint{Load(vertSrc, fragSrc, geomSrc, true)}}
-  {
-
-  }
-
-  Shader::Shader(const std::string& vertSrc, const std::string& fragSrc)
-    : 
-#ifdef _GREET_HOTSWAP
-      filename{"test"}, 
-#endif
-      m_shaderID{new uint{Load(vertSrc,fragSrc)}}
-  {
-
-  }
-
-  Shader::Shader(Shader&& shader)
-    :
-#ifdef _GREET_HOTSWAP
-      filename{std::move(shader.filename)}, 
-      modified{std::move(shader.modified)},
-#endif
-      m_shaderID{std::move(shader.m_shaderID)}
-  {
-  }
-
-  Shader& Shader::operator=(Shader&& shader)
-  {
-#ifdef _GREET_HOTSWAP
-    filename = std::move(shader.filename);
-    modified = std::move(shader.modified);
-#endif
-    m_shaderID = std::move(shader.m_shaderID);
-
-    return *this;
-  }
-
-  Shader::~Shader()
-  {
-#ifdef _GREET_HOTSWAP
-    if(m_shaderID)
-      hotswapShaders.erase(hotswapShaders.find(this));
-#endif
+    return Load(ss[VERTEX].str(), ss[FRAGMENT].str(), ss[GEOMETRY].str(), !ss[GEOMETRY].str().empty());
   }
 
   uint Shader::Load(const std::string& vertSrc, const std::string& fragSrc)
@@ -291,19 +278,4 @@ namespace Greet {
   {
     return Shader(vertSrc, fragSrc, geomSrc);
   }
-
-#ifdef _GREET_HOTSWAP
-  void Shader::CheckHotswap(float timeElapsed)
-  {
-    for(auto it = hotswapShaders.begin(); it != hotswapShaders.end();it++)
-    {
-      TimeModified mod = FileUtils::GetTimeModified((*it)->filename);
-      if((*it)->modified < mod)
-      {
-        Log::Info("Shader Updated!");
-        //UpdateShader();
-      }
-    }
-  }
-#endif
 }

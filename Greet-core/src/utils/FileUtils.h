@@ -2,7 +2,6 @@
 
 #include <stdio.h>  /* defines FILENAME_MAX */
 #include <sys/stat.h>
-#include <sys/stat.h>
 #ifdef _WIN32
 #include <direct.h>
 #define GetCurrentDir _getcwd
@@ -31,6 +30,10 @@ namespace Greet {
         return time.tv_nsec < rhs.time.tv_nsec;
       else
         return time.tv_sec < rhs.time.tv_sec;
+    }
+    friend std::ostream& operator<<(std::ostream& stream, const TimeModified& time)
+    {
+      return stream << time.time.tv_sec << "." << time.time.tv_nsec;
     }
   };
 

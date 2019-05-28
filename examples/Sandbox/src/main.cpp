@@ -10,7 +10,7 @@
 
 using namespace Greet;
 
-#if 0
+#if 1
 class Core : public App
 {
   private:
@@ -477,6 +477,6 @@ int main()
      system("pause");
      */
 
-  TestApp game;
+  Core game;
   game.Start();
 }
