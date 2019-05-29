@@ -10,7 +10,6 @@ namespace Greet {
 
   void ShaderDeleter::operator()(uint* id)
   {
-    Log::Info(*id);
     GLCall(glDeleteProgram(*id));
     delete id;
   }
@@ -18,9 +17,7 @@ namespace Greet {
   Shader::Shader(const std::string& filename)
     : m_shaderID{new uint{Load(filename)}}, uniforms{GetUniforms(*m_shaderID.get())}
   {
-    Log::Info(filename);
     hotswap = HotSwapping::AddHotswapResource(this, filename);
-    Log::Info(*m_shaderID.get());
   }
 
   Shader::Shader(const std::string& vertSrc, const std::string& fragSrc, const std::string& geomSrc)
@@ -38,12 +35,9 @@ namespace Greet {
   Shader::Shader(Shader&& shader)
     : m_shaderID{std::move(shader.m_shaderID)}, hotswap{std::move(shader.hotswap)}, uniforms{std::move(shader.uniforms)}
   {
-    Log::Info("Moved address: ", this);
-    Log::Info("Uniforms size after move: ", uniforms.size());
     if(hotswap.has_value())
     {
       (*hotswap)->second.MoveResource(this);
-      Log::Info("Moved hotswap resource");
     }
   }
 
@@ -56,7 +50,6 @@ namespace Greet {
     if(hotswap.has_value())
     {
       (*hotswap)->second.MoveResource(this);
-      Log::Info("Moved hotswap resource");
     }
 
     return *this;
@@ -64,12 +57,10 @@ namespace Greet {
 
   Shader::~Shader()
   {
-    Log::Info(this);
   }
 
   void Shader::ReloadResource(const std::string& filename)
   {
-    Log::Info("Reload address: ", this);
     if(m_shaderID)
     {
       std::array<std::stringstream,3> ss = ReadFile(filename);
@@ -299,7 +290,6 @@ namespace Greet {
       }
       std::string name(nameData.data());
       uniforms.emplace(name, i);
-      Log::Info("Found uniform \'", name, "\' with type: ", type);
     }
     return uniforms;
   }
