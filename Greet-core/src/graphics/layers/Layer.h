@@ -84,7 +84,7 @@ namespace Greet {
       }
 
       virtual void ViewportResize(float x, float y, float width, float height) {}
-      virtual void WindowResize(int width, int height) {}
+      virtual void WindowResize(WindowResizeEvent& event) override {}
       Mat3 GetProjectionMatrix() const { return m_projectionMatrix; };
       inline const Shader& GetShader() const { return m_shader; }
       inline uint Size() const { return m_renderables.size(); }
