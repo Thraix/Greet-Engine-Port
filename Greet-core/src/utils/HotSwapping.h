@@ -75,12 +75,20 @@ namespace Greet
       static_assert(sizeof(T) != sizeof(T), "The given resource hasn't implemented the function \'void ReloadResource(const std::string&)\'");
       return resources.end();
     }
+#if defined(_DEBUG) && defined(_GREET_HOTSWAP)
 
     template <typename T>
-    static std::map<uint, HotswapResource>::iterator AddHotswapResource(T* t, const std::string& filePath)
+    static std::optional<std::map<uint, HotswapResource>::iterator> AddHotswapResource(T* t, const std::string& filePath)
     {
       return AddHotswapResourceHelper(t,filePath,0);
     }
+#else 
+    template <typename T>
+    static std::optional<std::map<uint, HotswapResource>::iterator> AddHotswapResource(T* t, const std::string& filePath)
+    {
+      return {}; 
+    }
+#endif
 
     static void CheckResources()
     {

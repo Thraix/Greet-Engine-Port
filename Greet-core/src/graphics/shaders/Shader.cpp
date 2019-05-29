@@ -19,9 +19,7 @@ namespace Greet {
     : m_shaderID{new uint{Load(filename)}}, uniforms{GetUniforms(*m_shaderID.get())}
   {
     Log::Info(filename);
-    hotswap = std::make_optional(HotSwapping::AddHotswapResource(this, filename));
-    if(!hotswap.has_value())
-      Log::Error("Optional has no value after set");
+    hotswap = HotSwapping::AddHotswapResource(this, filename);
     Log::Info(*m_shaderID.get());
   }
 
@@ -97,12 +95,123 @@ namespace Greet {
           AttachShader(program, geomShader);
         GLCall(glLinkProgram(program));
         GLCall(glValidateProgram(program));
-        GLCall(glDeleteProgram(*m_shaderID.get()));
+        uint oldProgram = *m_shaderID.get();
         *m_shaderID = program;
+        MoveUniforms(program, oldProgram);
+        GLCall(glDeleteProgram(oldProgram));
       }
     }
     else
       Log::Error("Invalid pointer");
+  }
+
+  void Shader::MoveUniforms(uint program, uint oldProgram)
+  {
+    std::map<std::string, int> oldUniforms = uniforms;
+    uniforms = GetUniforms(program);
+
+    std::vector<UniformData> newUniforms = GetListOfUniforms(program);
+    GLint numActiveUniforms = 0;
+    glGetProgramiv(program, GL_ACTIVE_UNIFORMS, &numActiveUniforms);
+    std::vector<GLchar> nameData(256);
+    Enable();
+    for(auto it = newUniforms.begin(); it != newUniforms.end();++it)
+    {
+      auto found = oldUniforms.find(it->name);
+      if(found != oldUniforms.end())
+      {
+        GLint arraySize = 0;
+        GLenum type = 0;
+        GLsizei actualLength = 0;
+        glGetActiveUniform(oldProgram, found->second, nameData.size(), &actualLength, &arraySize, &type, &nameData[0]);
+
+        // Type has changed
+        if(it->type != type || it->arraySize != arraySize)
+          continue;
+        if(it->type == GL_FLOAT)
+        {
+          if(it->arraySize == 1)
+          {
+            float f;
+            glGetUniformfv(oldProgram, found->second, &f);
+            SetUniform1f(it->name, f);      
+          }
+          else
+          {
+            float f[it->arraySize];
+            glGetnUniformfv(oldProgram, found->second, sizeof(f), f);
+            SetUniform1fv(it->name, it->arraySize, f);      
+          }
+        }
+        else if(it->type == GL_FLOAT_VEC2)
+        {
+          Vec2 f;
+          glGetnUniformfv(oldProgram, found->second, sizeof(Vec2), (float*)&f);
+          SetUniform2f(it->name, f);      
+        }
+        else if(it->type == GL_FLOAT_VEC3)
+        {
+          Vec3<float> f;
+          glGetnUniformfv(oldProgram, found->second, sizeof(Vec3<float>), (float*)&f);
+          SetUniform3f(it->name, f);      
+        }
+        else if(it->type == GL_FLOAT_VEC4)
+        {
+          Vec4 f;
+          glGetnUniformfv(oldProgram, found->second, sizeof(Vec4), (float*)&f);
+          SetUniform4f(it->name, f);      
+        }
+        else if(it->type == GL_FLOAT)
+        {
+          Vec4 f;
+          glGetnUniformfv(oldProgram, found->second, sizeof(Vec4), (float*)&f);
+          SetUniform4f(it->name, f);      
+        }
+        else if(it->type == GL_INT)
+        {
+          if(it->arraySize == 1)
+          {
+            int i;
+            glGetUniformiv(oldProgram, found->second, &i);
+            SetUniform1i(it->name, i);      
+          }
+          else
+          {
+            int i[it->arraySize];
+            glGetnUniformiv(oldProgram, found->second, sizeof(i), i);
+            SetUniform1iv(it->name, it->arraySize, i);      
+          }
+        }
+        else if(it->type == GL_UNSIGNED_INT)
+        {
+          if(it->arraySize == 1)
+          {
+            uint i;
+            glGetUniformuiv(oldProgram, found->second, &i);
+            SetUniform1ui(it->name, i);      
+          }
+          else
+          {
+            uint i[it->arraySize];
+            glGetnUniformuiv(oldProgram, found->second, sizeof(i), i);
+            SetUniform1uiv(it->name, it->arraySize, i);      
+          }
+        }
+        else if(it->type == GL_FLOAT)
+        {
+          Mat3 mat;
+          glGetnUniformfv(oldProgram, found->second, sizeof(Mat3), mat.elements);
+          SetUniformMat3(it->name, mat);      
+        }
+        else if(it->type == GL_FLOAT)
+        {
+          Mat4 mat;
+          glGetnUniformfv(oldProgram, found->second, sizeof(Mat4), mat.elements);
+          SetUniformMat4(it->name, mat);      
+        }
+      }
+    }
+
   }
 
   std::array<std::stringstream,3> Shader::ReadFile(const std::string& filename)
@@ -189,8 +298,35 @@ namespace Greet {
         }
       }
       std::string name(nameData.data());
-      uniforms.emplace(name, glGetUniformLocation(program, name.c_str()));
+      uniforms.emplace(name, i);
       Log::Info("Found uniform \'", name, "\' with type: ", type);
+    }
+    return uniforms;
+  }
+
+  std::vector<UniformData> Shader::GetListOfUniforms(uint program)
+  {
+    std::vector<UniformData> uniforms;
+    GLint numActiveUniforms = 0;
+    glGetProgramiv(program, GL_ACTIVE_UNIFORMS, &numActiveUniforms);
+    std::vector<GLchar> nameData(256);
+    for(int i= 0; i< numActiveUniforms; ++i)
+    {
+      GLint arraySize = 0;
+      GLenum type = 0;
+      GLsizei actualLength = 0;
+      glGetActiveUniform(program, i, nameData.size(), &actualLength, &arraySize, &type, &nameData[0]);
+
+      // For some reason arrays return 'arrayName[0]'
+      for(int i = 0;i<actualLength;i++)
+      {
+        if(nameData[i] == '[')
+        {
+          nameData[i] = '\0';
+          break;
+        }
+      }
+      uniforms.push_back({nameData.data(), arraySize, type});
     }
     return uniforms;
   }
