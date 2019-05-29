@@ -28,11 +28,15 @@ namespace Greet {
       Shader(const std::string& vertSrc, const std::string& fragSrc, const std::string& geomSrc);
       Shader(const std::string& vertSrc, const std::string& fragSrc);
 
+      std::array<std::stringstream,3> ReadFile(const std::string& filename);
       uint Load(const std::string& filename);
       uint Load(const std::string& vertSrc, const std::string& fragSrc, const std::string& geomSrc, bool hasGeometry);
       uint Load(const std::string& vertSrc, const std::string& fragSrc);
-      uint AttachShader(const uint program, const std::string& shaderSrc, const uint shaderType);
+      uint CompileAttachShader(const uint program, const std::string& shaderSrc, const uint shaderType, bool safeFail);
+      uint CompileShader(const uint program, const std::string& shaderSrc, const uint shaderType, bool safeFail);
+      void AttachShader(const uint program, uint shader);
       int GetUniformLocation(const std::string& name) const;
+      std::map<std::string, int> GetUniforms(const uint program);
 
     public:
       Shader(Shader&&);
@@ -43,7 +47,6 @@ namespace Greet {
       void Enable() const;
       static void Disable();
       void BindAttributeOutput(uint attachmentId, const std::string& name) const;
-      std::map<std::string, int> GenUniforms(const uint program);
 
       void SetUniformBoolean(const std::string& name, bool value) const;
       void SetUniform1f(const std::string& name, float value) const;

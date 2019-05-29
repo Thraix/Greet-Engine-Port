@@ -16,7 +16,7 @@ namespace Greet {
   }
 
   Shader::Shader(const std::string& filename)
-    : m_shaderID{new uint{Load(filename)}}, uniforms{GenUniforms(*m_shaderID.get())}
+    : m_shaderID{new uint{Load(filename)}}, uniforms{GetUniforms(*m_shaderID.get())}
   {
     Log::Info(filename);
     hotswap = std::make_optional(HotSwapping::AddHotswapResource(this, filename));
@@ -26,13 +26,13 @@ namespace Greet {
   }
 
   Shader::Shader(const std::string& vertSrc, const std::string& fragSrc, const std::string& geomSrc)
-    : m_shaderID{new uint{Load(vertSrc, fragSrc, geomSrc, true)}}, uniforms{GenUniforms(*m_shaderID.get())}
+    : m_shaderID{new uint{Load(vertSrc, fragSrc, geomSrc, true)}}, uniforms{GetUniforms(*m_shaderID.get())}
   {
 
   }
 
   Shader::Shader(const std::string& vertSrc, const std::string& fragSrc)
-    : m_shaderID{new uint{Load(vertSrc,fragSrc)}}, uniforms{GenUniforms(*m_shaderID.get())}
+    : m_shaderID{new uint{Load(vertSrc,fragSrc)}}, uniforms{GetUniforms(*m_shaderID.get())}
   {
 
   }
@@ -73,22 +73,49 @@ namespace Greet {
   {
     Log::Info("Reload address: ", this);
     if(m_shaderID)
-      m_shaderID.reset(new uint{Load(filename)});
+    {
+      std::array<std::stringstream,3> ss = ReadFile(filename);
+      if(!ss[0].str().empty())
+      {
+        uint vertShader = CompileShader(*m_shaderID.get(), ss[0].str(), GL_VERTEX_SHADER, false);
+        if(!vertShader)
+          return;
+        uint fragShader = CompileShader(*m_shaderID.get(), ss[1].str(), GL_FRAGMENT_SHADER, false);
+        if(!fragShader)
+          return;
+        uint geomShader = 0;
+        if(!ss[2].str().empty())
+        {
+          geomShader = CompileShader(*m_shaderID.get(), ss[2].str(), GL_GEOMETRY_SHADER, false);
+          if(!geomShader)
+            return;
+        }
+        GLCall(uint program = glCreateProgram());
+        AttachShader(program, vertShader);
+        AttachShader(program, fragShader);
+        if(geomShader)
+          AttachShader(program, geomShader);
+        GLCall(glLinkProgram(program));
+        GLCall(glValidateProgram(program));
+        GLCall(glDeleteProgram(*m_shaderID.get()));
+        *m_shaderID = program;
+      }
+    }
     else
       Log::Error("Invalid pointer");
   }
 
-  uint Shader::Load(const std::string& filename)
+  std::array<std::stringstream,3> Shader::ReadFile(const std::string& filename)
   {
+    std::array<std::stringstream, 3> ss;
     const static uint VERTEX = 0;
     const static uint FRAGMENT = 1;
     const static uint GEOMETRY = 2;
-    std::stringstream ss[3];
     std::ifstream file(filename);
     if (!file.good())
     {
       Log::Error("Shader::FromFile Couldn't find shader in path \'", filename, "\'");
-      return Load(ShaderFactory::default_shader_vert, ShaderFactory::default_shader_frag);
+      return ss;
     }
     std::string line;
     uint shader = VERTEX;
@@ -103,7 +130,15 @@ namespace Greet {
       else
         ss[shader] << line << std::endl;
     }
-    return Load(ss[VERTEX].str(), ss[FRAGMENT].str(), ss[GEOMETRY].str(), !ss[GEOMETRY].str().empty());
+    return ss;
+  }
+
+  uint Shader::Load(const std::string& filename)
+  {
+    std::array<std::stringstream,3> ss =  ReadFile(filename);
+    if(!ss[0].str().empty())
+      return Load(ss[0].str(), ss[1].str(), ss[2].str(), !ss[2].str().empty());
+    return Load(ShaderFactory::default_shader_vert, ShaderFactory::default_shader_frag);
   }
 
   uint Shader::Load(const std::string& vertSrc, const std::string& fragSrc)
@@ -115,23 +150,23 @@ namespace Greet {
   {
     GLCall(uint program = glCreateProgram()); 
 
-    uint shader = AttachShader(program, vertSrc, GL_VERTEX_SHADER);
+    uint shader = CompileAttachShader(program, vertSrc, GL_VERTEX_SHADER, true);
     if (!shader)
       return shader;
-    shader = AttachShader(program, fragSrc, GL_FRAGMENT_SHADER);
+    shader = CompileAttachShader(program, fragSrc, GL_FRAGMENT_SHADER, true);
     if (!shader)
       return shader;
     if (hasGeometry)
     {
       // If this fails just ignore it
-      AttachShader(program, geomSrc, GL_GEOMETRY_SHADER);
+      CompileAttachShader(program, geomSrc, GL_GEOMETRY_SHADER, true);
     }
     GLCall(glLinkProgram(program));
     GLCall(glValidateProgram(program));
     return program;
   }
 
-  std::map<std::string, int> Shader::GenUniforms(const uint program)
+  std::map<std::string, int> Shader::GetUniforms(const uint program)
   {
     std::map<std::string, int> uniforms;
     GLint numActiveUniforms = 0;
@@ -155,12 +190,21 @@ namespace Greet {
       }
       std::string name(nameData.data());
       uniforms.emplace(name, glGetUniformLocation(program, name.c_str()));
-      Log::Info("Found uniform \'", name, "\' ", arraySize);
+      Log::Info("Found uniform \'", name, "\' with type: ", type);
     }
     return uniforms;
   }
 
-  uint Shader::AttachShader(const uint program, const std::string& shaderSrc, const uint shaderType)
+  uint Shader::CompileAttachShader(const uint program, const std::string& shaderSrc, const uint shaderType, bool safeFail)
+  {
+    uint shader = CompileShader(program, shaderSrc, shaderType, safeFail);
+    if(shader == 0)
+      return 0;
+    AttachShader(program, shader);
+    return 1;
+  }
+
+  uint Shader::CompileShader(const uint program, const std::string& shaderSrc, const uint shaderType, bool safeFail)
   {
     GLCall(uint shader = glCreateShader(shaderType));
     const char* src = shaderSrc.c_str();
@@ -179,32 +223,60 @@ namespace Greet {
       {
         Log::Error("Failed to compile fragment Shader!\n", &error[0]);
         ErrorHandle::SetErrorCode(GREET_ERROR_SHADER_FRAGMENT);
-        // Should never fail
-        GLCall(glShaderSource(shader, 1, &ShaderFactory::default_shader_frag, NULL));
+        if(safeFail)
+        {
+          // Should never fail
+          GLCall(glShaderSource(shader, 1, &ShaderFactory::default_shader_frag, NULL));
+        }
+        else
+        {
+          GLCall(glDeleteShader(shader));
+          return 0;
+        }
       }
       else if (shaderType == GL_VERTEX_SHADER)
       {
         Log::Error("Failed to compile vertex Shader!\n", &error[0]);
         ErrorHandle::SetErrorCode(GREET_ERROR_SHADER_VERTEX);
-        // Should never fail
-        GLCall(glShaderSource(shader, 1, &ShaderFactory::default_shader_vert, NULL));
+        if(safeFail)
+        {
+          // Should never fail
+          GLCall(glShaderSource(shader, 1, &ShaderFactory::default_shader_vert, NULL));
+        }
+        else
+        {
+          GLCall(glDeleteShader(shader));
+          return 0;
+        }
       }
       else if (shaderType == GL_GEOMETRY_SHADER)
       {
         Log::Error("Failed to compile geometry Shader!\n", &error[0]);
         ErrorHandle::SetErrorCode(GREET_ERROR_SHADER_GEOMETRY);
-        return 0;
+        {
+          GLCall(glDeleteShader(shader));
+          return 0;
+        }
       }
       else
       {
         Log::Error("Failed to compile unknown shader!\n", &error[0]);
-        return 0;
+        {
+          GLCall(glDeleteShader(shader));
+          return 0;
+        }
       }
       GLCall(glCompileShader(shader));
     }	
+    return shader;
+  }
+
+
+
+  void Shader::AttachShader(const uint program, uint shader)
+  {
     GLCall(glAttachShader(program, shader));
     GLCall(glDeleteShader(shader));
-    return 1;
   }
 
   void Shader::BindAttributeOutput(uint attachmentId, const std::string& name) const
