@@ -14,6 +14,7 @@ namespace Greet {
     :Texture(GL_TEXTURE_2D), m_params(params)
   {
     LoadTexture(filename);
+    hotswap = HotSwapping::AddHotswapResource(this, filename);
   }
 
   Texture2D::Texture2D(BYTE* bits, uint width, uint height, TextureParams params)
@@ -40,12 +41,31 @@ namespace Greet {
 
   }
 
+  Texture2D::Texture2D(Texture2D&& texture)
+    : Texture{std::move(texture)}, m_width{std::move(texture.m_width)}, m_height{std::move(texture.m_height)}, 
+    m_params{std::move(texture.m_params)}, hotswap{std::move(texture.hotswap)}
+  {
+    if(hotswap)
+      hotswap.value()->second.MoveResource(this);
+  }
+
+  Texture2D& Texture2D::operator=(Texture2D&& texture)
+  {
+    m_width = std::move(texture.m_width);
+    m_height = std::move(texture.m_height);
+    m_params = std::move(texture.m_params);
+    hotswap = std::move(texture.hotswap);
+    if(hotswap)
+      hotswap.value()->second.MoveResource(this);
+    return *this;
+  }
+
   void Texture2D::LoadTexture(const std::string& filename)
   {
-    BYTE* bits;
-    ImageUtils::LoadImage(filename.c_str(),bits, &m_width,&m_height);
-    GenTexture(bits);
-    delete[] bits;
+      BYTE* bits;
+      ImageUtils::LoadImage(filename.c_str(),bits, &m_width,&m_height);
+      GenTexture(bits);
+      delete[] bits;
   }
 
   void Texture2D::GenTexture(uint width, uint height)
@@ -71,5 +91,11 @@ namespace Greet {
   {
     Enable();
     GLCall(glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, m_width, m_height, (uint)m_params.internalFormat,GL_UNSIGNED_BYTE, pixels));
+  }
+
+  void Texture2D::ReloadResource(const std::string& filename)
+  {
+    if(texId)
+      LoadTexture(filename);
   }
 }
