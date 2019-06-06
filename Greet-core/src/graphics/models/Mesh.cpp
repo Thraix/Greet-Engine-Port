@@ -105,12 +105,12 @@ namespace Greet {
     AddAttribute(location, (void*)data, sizeof(byte), attributeSize, GL_UNSIGNED_BYTE, true);
   }
 
-  void Mesh::AddAttribute(AttributeData* attr)
+  void Mesh::AddAttribute(const AttributeData& attr)
   {
-    AddAttribute(attr->location, attr->data.data(), attr->memoryValueSize, attr->vertexValueSize, attr->glType, attr->normalized);
+    AddAttribute(attr.location, attr.data.data(), attr.memoryValueSize, attr.vertexValueSize, attr.glType, attr.normalized);
   }
 
-  void Mesh::AddAttribute(uint location, void* data, uint typeSize, uint typeCount, uint glType, bool normalized)
+  void Mesh::AddAttribute(uint location, const void* data, uint typeSize, uint typeCount, uint glType, bool normalized)
   {
     if (HasVBO(location))
       return;

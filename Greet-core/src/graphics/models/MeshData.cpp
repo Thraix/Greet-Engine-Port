@@ -21,12 +21,12 @@ namespace Greet {
   {
   }
 
-  void MeshData::AddAttribute(AttributeData* data)
+  void MeshData::AddAttribute(AttributeData&& data)
   {
-    if(data->data.size() / data->memoryValueSize != m_vertices.size())
+    if(data.data.size() / data.memoryValueSize != m_vertices.size())
     {
       Log::Error("Attribute length doesn't match vertices length");
-      Log::Error("Attribute Length: ", data->data.size() / data->memoryValueSize);
+      Log::Error("Attribute Length: ", data.data.size() / data.memoryValueSize);
       Log::Error("Vertices Length:  ", m_vertices.size());
       ASSERT(false, "");
     }
@@ -34,26 +34,26 @@ namespace Greet {
       m_data.push_back(data);
   }
 
-  AttributeData* MeshData::GetAttribute(AttributeDefaults defaults) const
+  const AttributeData* MeshData::GetAttribute(AttributeDefaults defaults) const
   {
     for (auto it = m_data.begin(); it != m_data.end(); it++)
     {
-      if ((*it)->location == defaults.location)
+      if ((*it).location == defaults.location)
       {
-        return *it;
+        return &*it;
       }
     }
-    return {};
+    return nullptr;
   }
 
   AttributeData* MeshData::RemoveAttribute(AttributeDefaults defaults)
   {
     for (auto it = m_data.begin(); it != m_data.end(); it++)
     {
-      if (((AttributeData*)*it)->location == defaults.location)
+      if ((*it).location == defaults.location)
       {
         m_data.erase(it);
-        return *it;
+        return &*it;
       }
     }
     return nullptr;
@@ -169,11 +169,11 @@ namespace Greet {
     // Write the different data of the mesh
     for(auto it = m_data.begin();it != m_data.end(); ++it)
     {
-      fout.write((char*)&(*it)->location,sizeof(uint));
-      fout.write((char*)&(*it)->vertexValueSize,sizeof(uint));
-      fout.write((char*)&(*it)->memoryValueSize,sizeof(uint));
-      fout.write((char*)&(*it)->glType,sizeof(uint));
-      fout.write((char*)&(*it)->normalized,sizeof(bool));
+      fout.write((char*)&(*it).location,sizeof(uint));
+      fout.write((char*)&(*it).vertexValueSize,sizeof(uint));
+      fout.write((char*)&(*it).memoryValueSize,sizeof(uint));
+      fout.write((char*)&(*it).glType,sizeof(uint));
+      fout.write((char*)&(*it).normalized,sizeof(bool));
     }
 
     // Write all vertex data.
@@ -186,7 +186,7 @@ namespace Greet {
     // Write all attribute data
     for(auto it = m_data.begin();it != m_data.end(); ++it)
     {
-      fout.write((char*)(*it)->data.data(), (*it)->memoryValueSize * vertexCount);
+      fout.write((char*)(*it).data.data(), (*it).memoryValueSize * vertexCount);
     }
     fout.close();
   }
@@ -309,7 +309,7 @@ namespace Greet {
     {
       std::vector<char> data = std::vector<char>(it->memoryValueSize * vertexCount);
       fin.read(data.data(),it->memoryValueSize * vertexCount);
-      meshData->AddAttribute(new AttributeData(*it, data));
+      meshData->AddAttribute(AttributeData(*it, data));
     }
 
     fin.close();

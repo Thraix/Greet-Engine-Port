@@ -105,10 +105,10 @@ namespace Greet {
 
     MeshData* mesh = new MeshData(vertexPos, indices);
     if(vertexTexCoords.size() > 0)
-      mesh->AddAttribute(new AttributeData(ATTRIBUTE_TEXCOORD, vertexTexCoords));
+      mesh->AddAttribute(AttributeData(ATTRIBUTE_TEXCOORD, vertexTexCoords));
 
     if(vertexNormals.size() > 0)
-      mesh->AddAttribute(new AttributeData(ATTRIBUTE_NORMAL, vertexNormals));
+      mesh->AddAttribute(AttributeData(ATTRIBUTE_NORMAL, vertexNormals));
 
     return mesh;
   }

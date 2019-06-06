@@ -83,7 +83,7 @@ namespace Greet {
     }
 
     MeshData* meshData = new MeshData(vertices, indices);
-    meshData->AddAttribute(new AttributeData(ATTRIBUTE_NORMAL, normals));
+    meshData->AddAttribute(AttributeData(ATTRIBUTE_NORMAL, normals));
     return meshData;
   }
 
@@ -105,7 +105,7 @@ namespace Greet {
 
     std::vector<uint> indices{0,2,1,0,3,2};
     MeshData* meshdata = new MeshData(vertices,indices);
-    meshdata->AddAttribute(new AttributeData(ATTRIBUTE_NORMAL,normals));
+    meshdata->AddAttribute(AttributeData(ATTRIBUTE_NORMAL,normals));
     return meshdata;
   }
   // x, y, z
@@ -145,7 +145,7 @@ namespace Greet {
       3, 0, 4, 3, 4, 7 };
 
     MeshData* meshdata = new MeshData(vertices,indices);
-    meshdata->AddAttribute(new AttributeData(ATTRIBUTE_NORMAL, normals));
+    meshdata->AddAttribute(AttributeData(ATTRIBUTE_NORMAL, normals));
     return meshdata;
   }
 
@@ -230,7 +230,7 @@ namespace Greet {
         20, 21, 22, 20, 22, 23 };
 
     MeshData* meshdata = new MeshData(vertices, indices);
-    meshdata->AddAttribute(new AttributeData(ATTRIBUTE_NORMAL, normals));
+    meshdata->AddAttribute(AttributeData(ATTRIBUTE_NORMAL, normals));
     return meshdata;
   }
 
@@ -267,7 +267,7 @@ namespace Greet {
 
     std::vector<uint> indices{ 0, 2, 1, 1, 3, 0, 2, 0, 3, 1, 2, 3};
     MeshData* meshdata = new MeshData(vertices, indices);
-    meshdata->AddAttribute(new AttributeData(ATTRIBUTE_NORMAL,normals));
+    meshdata->AddAttribute(AttributeData(ATTRIBUTE_NORMAL,normals));
     return meshdata;
   }
 
@@ -334,7 +334,7 @@ namespace Greet {
 
     std::vector<Vec3<float>> normals = CalculateNormals(vertices,indices);
     MeshData* data = new MeshData(vertices, indices);
-    data->AddAttribute(new AttributeData(ATTRIBUTE_NORMAL, normals));
+    data->AddAttribute(AttributeData(ATTRIBUTE_NORMAL, normals));
 
     return data;
   }
@@ -449,7 +449,7 @@ namespace Greet {
 
     std::vector<Vec3<float>> normals = CalculateNormals(vertices,indices);
     MeshData* data = new MeshData(vertices, indices);
-    data->AddAttribute(new AttributeData(ATTRIBUTE_NORMAL, normals));
+    data->AddAttribute(AttributeData(ATTRIBUTE_NORMAL, normals));
 
     return data;
   }
@@ -524,7 +524,7 @@ namespace Greet {
 
     MeshData* data = new MeshData(vertices, indices);
     std::vector<Vec3<float>> normals = CalculateNormals(vertices, indices);
-    data->AddAttribute(new AttributeData(ATTRIBUTE_NORMAL, normals));
+    data->AddAttribute(AttributeData(ATTRIBUTE_NORMAL, normals));
 
     return data;
 

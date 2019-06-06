@@ -10,11 +10,11 @@ namespace Greet {
 
   struct AttributeDefaults
   {
-    const uint location;
-    const uint vertexValueSize;
-    const uint memoryValueSize;
-    const uint glType;
-    const bool normalized;
+    uint location;
+    uint vertexValueSize;
+    uint memoryValueSize;
+    uint glType;
+    bool normalized;
     AttributeDefaults(uint location, uint vertexValueSize, uint memoryValueSize, uint glType, bool normalized)
       : location(location), vertexValueSize(vertexValueSize), memoryValueSize(memoryValueSize), glType(glType), normalized(normalized)
     {
@@ -25,11 +25,11 @@ namespace Greet {
   struct AttributeData
   {
     public:
-      const uint location;
-      const uint vertexValueSize;
-      const uint memoryValueSize;
-      const uint glType;
-      const bool normalized;
+      uint location;
+      uint vertexValueSize;
+      uint memoryValueSize;
+      uint glType;
+      bool normalized;
       std::vector<char> data;
     public:
       template <typename T>
@@ -50,13 +50,13 @@ namespace Greet {
     private:
       std::vector<Vec3<float>> m_vertices;
       std::vector<uint> m_indices;
-      std::vector<AttributeData*> m_data;
+      std::vector<AttributeData> m_data;
     public:
       MeshData(const std::vector<Vec3<float>>& vertices, const std::vector<uint>& indices);
       MeshData(std::vector<Vec3<float>>&& vertices, std::vector<uint>&& indices);
       virtual ~MeshData();
-      void AddAttribute(AttributeData* data);
-      AttributeData* GetAttribute(AttributeDefaults defaults) const;
+      void AddAttribute(AttributeData&& data);
+      const AttributeData* GetAttribute(AttributeDefaults defaults) const;
       AttributeData* RemoveAttribute(AttributeDefaults defaults);
 
       const std::vector<Vec3<float>>& GetVertices() const { return m_vertices; }

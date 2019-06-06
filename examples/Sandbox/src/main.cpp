@@ -156,7 +156,7 @@ class Core : public App
       MeshData* data = OBJUtils::LoadObj("res/objs/dragon.obj");
       std::vector<Vec3<float>> normals = std::vector<Vec3<float>>(data->GetVertexCount());
       MeshFactory::CalculateNormals(data->GetVertices(), data->GetIndices(), normals);
-      data->AddAttribute(new AttributeData(ATTRIBUTE_NORMAL, normals));
+      data->AddAttribute(AttributeData(ATTRIBUTE_NORMAL, normals));
       data->LowPolify();
       data->WriteToFile("res/objs/dragon.gobj");
       Mesh* dragonMesh = new Mesh(data);
@@ -285,7 +285,7 @@ class Core : public App
         offsets[indices[i]*4 + 2] = round(v2.x);
         offsets[indices[i]*4 + 3] = round(v2.z);
       }
-      data->AddAttribute(new AttributeData(AttributeDefaults(4, 4, 4 * sizeof(byte), GL_BYTE,GL_FALSE), offsets));
+      data->AddAttribute(AttributeData(AttributeDefaults(4, 4, 4 * sizeof(byte), GL_BYTE,GL_FALSE), offsets));
     }
 
     void RecalcGrid(MeshData* data, uint gridWidth, uint gridLength)
@@ -308,7 +308,7 @@ class Core : public App
         normals[indices[i]] = MeshFactory::CalculateNormal(vertices[indices[i]], vertices[indices[i + 1]], vertices[indices[i + 2]]);
         RecalcColors(vertices[indices[i]], vertices[indices[i+1]], vertices[indices[i+2]], &colors[indices[i]]);
       }
-      data->AddAttribute(new AttributeData(ATTRIBUTE_COLOR, colors));
+      data->AddAttribute(AttributeData(ATTRIBUTE_COLOR, colors));
     }
 
     float Random()

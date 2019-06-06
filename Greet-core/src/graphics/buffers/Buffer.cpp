@@ -21,12 +21,12 @@ namespace Greet {
     GLCall(glBindBuffer((uint)type, *id));
   }
 
-  void Buffer::UpdateData(void* data) const
+  void Buffer::UpdateData(const void* data) const
   {
     GLCall(glBufferData((uint)type, dataSize, data, (uint)drawType));
   }
 
-  void Buffer::UpdateData(void* data, uint dataSize)
+  void Buffer::UpdateData(const void* data, uint dataSize)
   {
     this->dataSize = dataSize;
     GLCall(glBufferData((uint)type, dataSize, data, (uint)drawType));

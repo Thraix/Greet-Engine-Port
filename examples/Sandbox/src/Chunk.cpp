@@ -96,7 +96,7 @@ void Chunk::CalcGridVertexOffset(MeshData* data)
     offsets[indices[i]*4 + 2] = round(v2.x);
     offsets[indices[i]*4 + 3] = round(v2.z);
   }
-  data->AddAttribute(new AttributeData(AttributeDefaults(4, 4, 4 * sizeof(byte), GL_BYTE,GL_FALSE), offsets));
+  data->AddAttribute(AttributeData(AttributeDefaults(4, 4, 4 * sizeof(byte), GL_BYTE,GL_FALSE), offsets));
 }
 
 void Chunk::RecalcGrid(MeshData* data)
@@ -119,5 +119,5 @@ void Chunk::RecalcGrid(MeshData* data)
     normals[indices[i]] = MeshFactory::CalculateNormal(vertices[indices[i]], vertices[indices[i + 1]], vertices[indices[i + 2]]);
     RecalcColors(vertices[indices[i]], vertices[indices[i+1]], vertices[indices[i+2]], &colors[indices[i]]);
   }
-  data->AddAttribute(new AttributeData(ATTRIBUTE_COLOR, colors));
+  data->AddAttribute(AttributeData(ATTRIBUTE_COLOR, colors));
 }
