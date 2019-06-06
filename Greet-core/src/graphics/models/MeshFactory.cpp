@@ -40,7 +40,7 @@ namespace Greet {
     return normals;
   }
 
-  MeshData* MeshFactory::Polygon(uint count, float size, PolygonSizeFormat format)
+  MeshData MeshFactory::Polygon(uint count, float size, PolygonSizeFormat format)
   {
     if(count < 3)
     {
@@ -82,12 +82,12 @@ namespace Greet {
       indices[i*3 + 2] = 1 + i;
     }
 
-    MeshData* meshData = new MeshData(vertices, indices);
-    meshData->AddAttribute(AttributeData(ATTRIBUTE_NORMAL, normals));
-    return meshData;
+    MeshData data(vertices, indices);
+    data.AddAttribute(AttributeData(ATTRIBUTE_NORMAL, normals));
+    return data;
   }
 
-  MeshData* MeshFactory::Quad(float x, float y, float z, float width, float length)
+  MeshData MeshFactory::Quad(float x, float y, float z, float width, float length)
   {
     std::vector<Vec3<float>> vertices = std::vector<Vec3<float>>(4);
     float halfWidth = width / 2.0f;
@@ -104,12 +104,12 @@ namespace Greet {
     normals[3]  = Vec3<float>(0.0f, 1.0f, 0.0f);
 
     std::vector<uint> indices{0,2,1,0,3,2};
-    MeshData* meshdata = new MeshData(vertices,indices);
-    meshdata->AddAttribute(AttributeData(ATTRIBUTE_NORMAL,normals));
+    MeshData meshdata(vertices,indices);
+    meshdata.AddAttribute(AttributeData(ATTRIBUTE_NORMAL,normals));
     return meshdata;
   }
   // x, y, z
-  MeshData* MeshFactory::Cube(float x, float y, float z, float width, float height, float length)
+  MeshData MeshFactory::Cube(float x, float y, float z, float width, float height, float length)
   {
     std::vector<Vec3<float>> vertices = std::vector<Vec3<float>>(8);
     float halfWidth = width / 2.0f;
@@ -144,13 +144,13 @@ namespace Greet {
       2, 5, 1, 2, 6, 5,
       3, 0, 4, 3, 4, 7 };
 
-    MeshData* meshdata = new MeshData(vertices,indices);
-    meshdata->AddAttribute(AttributeData(ATTRIBUTE_NORMAL, normals));
+    MeshData meshdata(vertices,indices);
+    meshdata.AddAttribute(AttributeData(ATTRIBUTE_NORMAL, normals));
     return meshdata;
   }
 
   // x, y, z
-  MeshData* MeshFactory::Cube2(float x, float y, float z, float width, float height, float length)
+  MeshData MeshFactory::Cube2(float x, float y, float z, float width, float height, float length)
   {
     std::vector<Vec3<float>> vertices = std::vector<Vec3<float>>(24);
     float halfWidth = width / 2.0f;
@@ -229,12 +229,12 @@ namespace Greet {
         16, 18, 17, 16, 19, 18,
         20, 21, 22, 20, 22, 23 };
 
-    MeshData* meshdata = new MeshData(vertices, indices);
-    meshdata->AddAttribute(AttributeData(ATTRIBUTE_NORMAL, normals));
+    MeshData meshdata(vertices, indices);
+    meshdata.AddAttribute(AttributeData(ATTRIBUTE_NORMAL, normals));
     return meshdata;
   }
 
-  MeshData* MeshFactory::Tetrahedron(float x, float y, float z, float size)
+  MeshData MeshFactory::Tetrahedron(float x, float y, float z, float size)
   {
     float tan30 = 0.5773502f;  //   tan(30/180*PI)
     float cos30 = 1.1547005f; //   1 / cos(30/180*PI) 
@@ -266,17 +266,17 @@ namespace Greet {
     normals[3] = (v4 - Vec3<float>(x, y, z)).Normalize();
 
     std::vector<uint> indices{ 0, 2, 1, 1, 3, 0, 2, 0, 3, 1, 2, 3};
-    MeshData* meshdata = new MeshData(vertices, indices);
-    meshdata->AddAttribute(AttributeData(ATTRIBUTE_NORMAL,normals));
+    MeshData meshdata(vertices, indices);
+    meshdata.AddAttribute(AttributeData(ATTRIBUTE_NORMAL,normals));
     return meshdata;
   }
 
-  MeshData* MeshFactory::Grid(float x, float y, float z, float width, float length, uint gridWidth, uint gridLength)
+  MeshData MeshFactory::Grid(float x, float y, float z, float width, float length, uint gridWidth, uint gridLength)
   {
     return Grid(x,y,z,width,length,gridWidth,gridLength,NULL,0);
   }
 
-  MeshData* MeshFactory::Grid(float x, float y, float z, float width, float length, uint gridWidth, uint gridLength, float* heightMap, float height)
+  MeshData MeshFactory::Grid(float x, float y, float z, float width, float length, uint gridWidth, uint gridLength, float* heightMap, float height)
   {
     if (gridWidth < 1 || gridLength < 1)
       return Quad(x, y, z, width, length);
@@ -333,8 +333,8 @@ namespace Greet {
     }
 
     std::vector<Vec3<float>> normals = CalculateNormals(vertices,indices);
-    MeshData* data = new MeshData(vertices, indices);
-    data->AddAttribute(AttributeData(ATTRIBUTE_NORMAL, normals));
+    MeshData data(vertices, indices);
+    data.AddAttribute(AttributeData(ATTRIBUTE_NORMAL, normals));
 
     return data;
   }
@@ -360,7 +360,7 @@ namespace Greet {
     return 0;
   }
 
-  MeshData* MeshFactory::LowPolyGrid(float x, float y, float z, float width, float length, uint gridWidth, uint gridLength, float* heightMap, float height)
+  MeshData MeshFactory::LowPolyGrid(float x, float y, float z, float width, float length, uint gridWidth, uint gridLength, float* heightMap, float height)
   {
     if (gridWidth < 1 || gridLength < 1)
       return Quad(x, y, z, width, length);
@@ -448,13 +448,13 @@ namespace Greet {
     }
 
     std::vector<Vec3<float>> normals = CalculateNormals(vertices,indices);
-    MeshData* data = new MeshData(vertices, indices);
-    data->AddAttribute(AttributeData(ATTRIBUTE_NORMAL, normals));
+    MeshData data(vertices, indices);
+    data.AddAttribute(AttributeData(ATTRIBUTE_NORMAL, normals));
 
     return data;
   }
 
-  MeshData* MeshFactory::Sphere(const Vec3<float>& position, float radius, uint latitudes, uint longitudes)
+  MeshData MeshFactory::Sphere(const Vec3<float>& position, float radius, uint latitudes, uint longitudes)
   {
     if(latitudes < 1 || longitudes < 4)
     {
@@ -522,12 +522,11 @@ namespace Greet {
       }
     }
 
-    MeshData* data = new MeshData(vertices, indices);
+    MeshData data{vertices, indices};
     std::vector<Vec3<float>> normals = CalculateNormals(vertices, indices);
-    data->AddAttribute(AttributeData(ATTRIBUTE_NORMAL, normals));
+    data.AddAttribute(AttributeData(ATTRIBUTE_NORMAL, normals));
 
     return data;
-
   }
 
 }

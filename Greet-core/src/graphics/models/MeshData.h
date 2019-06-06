@@ -69,7 +69,7 @@ namespace Greet {
       MeshData* LowPolify();
 
       void WriteToFile(const std::string& filename) const;
-      static MeshData* ReadFromFile(const std::string& filename);
+      static MeshData ReadFromFile(const std::string& filename);
   };
 }
 

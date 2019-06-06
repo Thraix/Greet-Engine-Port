@@ -7,19 +7,19 @@ class Chunk
 {
   friend class World;
   private:
-    static uint CHUNK_WIDTH;
-    static uint CHUNK_HEIGHT;
+  static uint CHUNK_WIDTH;
+  static uint CHUNK_HEIGHT;
 
-    Greet::Mesh* mesh;
-    uint posX;
-    uint posY;
+  Greet::Mesh* mesh;
+  uint posX;
+  uint posY;
   private:
-    Chunk();
-    void Initialize(uint posX, uint posY);
+  Chunk();
+  void Initialize(uint posX, uint posY);
 
-    void RecalcPositions(Greet::Vec3<float>& vertex);
-    void CalcGridVertexOffset(Greet::MeshData* data);
-    void RecalcGrid(Greet::MeshData* data);
+  void RecalcPositions(Greet::Vec3<float>& vertex);
+  void CalcGridVertexOffset(Greet::MeshData* data);
+  void RecalcGrid(Greet::MeshData& data);
 
   public:
     virtual ~Chunk();

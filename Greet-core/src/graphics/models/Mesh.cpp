@@ -28,12 +28,12 @@ namespace Greet {
     ibo.Disable();
   }
 
-  Mesh::Mesh(MeshData* data)
-    : Mesh(data->GetVertices(), data->GetIndices())
+  Mesh::Mesh(const MeshData& data)
+    : Mesh(data.GetVertices(), data.GetIndices())
   {
-    for (uint i = 0;i < data->m_data.size();i++)
+    for (uint i = 0;i < data.m_data.size();i++)
     {
-      AddAttribute(data->m_data[i]);
+      AddAttribute(data.m_data[i]);
     }
   }
 

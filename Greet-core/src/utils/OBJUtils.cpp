@@ -4,19 +4,14 @@
 #include <utils/StringUtils.h>
 #include <graphics/models/MeshFactory.h>
 
-#define GOBJ_VECTOR3_SIZE sizeof(float) * 3 // 13
-#define GOBJ_VECTOR2_SIZE sizeof(float) * 2 // 9
-#define GOBJ_UINT_SIZE sizeof(uint)			// 5
-#define GOBJ_BUFFER_SIZE 1024
-
 namespace Greet {
 
-  MeshData* OBJUtils::ErrorModel()
+  MeshData OBJUtils::ErrorModel()
   {
     return MeshFactory::Cube(0,0,0,1,1,1);// TODO return cube
   }
 
-  MeshData* OBJUtils::LoadObj(const std::string& filename)
+  MeshData OBJUtils::LoadObj(const std::string& filename)
   {
     std::vector<std::string> dataLine;
 
@@ -103,12 +98,12 @@ namespace Greet {
 
     input.close();
 
-    MeshData* mesh = new MeshData(vertexPos, indices);
+    MeshData mesh{vertexPos, indices};
     if(vertexTexCoords.size() > 0)
-      mesh->AddAttribute(AttributeData(ATTRIBUTE_TEXCOORD, vertexTexCoords));
+      mesh.AddAttribute(AttributeData(ATTRIBUTE_TEXCOORD, vertexTexCoords));
 
     if(vertexNormals.size() > 0)
-      mesh->AddAttribute(AttributeData(ATTRIBUTE_NORMAL, vertexNormals));
+      mesh.AddAttribute(AttributeData(ATTRIBUTE_NORMAL, vertexNormals));
 
     return mesh;
   }

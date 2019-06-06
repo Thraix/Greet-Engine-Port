@@ -15,9 +15,7 @@ class Portal : public Greet::EntityModel
       : Greet::EntityModel{nullptr, new Greet::Material{Greet::Shader::FromFile("res/shaders/portal.shader"), Greet::TextureManager::Get2D("portal")}, position, {10,10,10}, {0,0,0}}
     {
       using namespace Greet;
-      MeshData* data = MeshFactory::Quad(0,0,0,2,2);
-      SetMesh(mesh = new Mesh(data));
-      delete data;
+      SetMesh(mesh = new Mesh(MeshFactory::Quad(0,0,0,2,2)));
     }
 
     virtual ~Portal()

@@ -15,10 +15,9 @@ void Chunk::Initialize(uint posX, uint posY)
   this->posX = posX;
   this->posY = posY;
   float* noise = Noise::GenNoise(CHUNK_WIDTH+1, CHUNK_HEIGHT+1,4,16, 16,0.75f, posX * CHUNK_WIDTH, posY * CHUNK_HEIGHT);
-  MeshData* data = MeshFactory::LowPolyGrid(0,0,0,CHUNK_WIDTH, CHUNK_HEIGHT,CHUNK_WIDTH, CHUNK_HEIGHT,noise, 1.0f);
+  MeshData data = MeshFactory::LowPolyGrid(0,0,0,CHUNK_WIDTH, CHUNK_HEIGHT,CHUNK_WIDTH, CHUNK_HEIGHT,noise, 1.0f);
   RecalcGrid(data);
   mesh = new Mesh(data);
-  delete data;
   delete[] noise;
 }
 
@@ -99,12 +98,12 @@ void Chunk::CalcGridVertexOffset(MeshData* data)
   data->AddAttribute(AttributeData(AttributeDefaults(4, 4, 4 * sizeof(byte), GL_BYTE,GL_FALSE), offsets));
 }
 
-void Chunk::RecalcGrid(MeshData* data)
+void Chunk::RecalcGrid(MeshData& data)
 {
-  std::vector<uint> colors = std::vector<uint>(data->GetVertexCount());
-  std::vector<Vec3<float>>& vertices = data->GetVertices();
-  std::vector<uint>& indices = data->GetIndices();
-  Vec3<float>* normals = (Vec3<float>*)data->GetAttribute(ATTRIBUTE_NORMAL)->data.data();
+  std::vector<uint> colors = std::vector<uint>(data.GetVertexCount());
+  std::vector<Vec3<float>>& vertices = data.GetVertices();
+  std::vector<uint>& indices = data.GetIndices();
+  Vec3<float>* normals = (Vec3<float>*)data.GetAttribute(ATTRIBUTE_NORMAL)->data.data();
 
   for (int i = 0;i < indices.size();i+=3)
   {
@@ -119,5 +118,5 @@ void Chunk::RecalcGrid(MeshData* data)
     normals[indices[i]] = MeshFactory::CalculateNormal(vertices[indices[i]], vertices[indices[i + 1]], vertices[indices[i + 2]]);
     RecalcColors(vertices[indices[i]], vertices[indices[i+1]], vertices[indices[i+2]], &colors[indices[i]]);
   }
-  data->AddAttribute(AttributeData(ATTRIBUTE_COLOR, colors));
+  data.AddAttribute(AttributeData(ATTRIBUTE_COLOR, colors));
 }

@@ -29,7 +29,7 @@ namespace Greet {
 
     public:
       Mesh(const std::vector<Vec3<float>>& vertices, const std::vector<uint>& indices);
-      Mesh(MeshData* data);
+      Mesh(const MeshData& data);
       Mesh(Mesh&&) = default;
       Mesh& operator=(Mesh&&) = default;
 

@@ -115,50 +115,46 @@ class Core : public App
         uint gridLength = 99;
 #if 1 
         float* noise = Noise::GenNoise(gridWidth+1, gridWidth + 1,5,8, 8,0.5f);
-        MeshData* gridMesh = MeshFactory::LowPolyGrid(0, 0, 0, gridWidth+1, gridLength+1, gridWidth, gridLength, noise,1);
+        MeshData gridMesh = MeshFactory::LowPolyGrid(0, 0, 0, gridWidth+1, gridLength+1, gridWidth, gridLength, noise,1);
         RecalcGrid(gridMesh, gridWidth, gridLength);
         terrain = new EntityModel(new Mesh(gridMesh), terrainMaterial, Vec3<float>(0, -15, 0), Vec3<float>(1.0f, 1.0f, 1.0f), Vec3<float>(0.0f, 0.0f, 0.0f));
-        gridMesh->RemoveAttribute(ATTRIBUTE_NORMAL);
-        gridMesh->RemoveAttribute(ATTRIBUTE_COLOR);
+        gridMesh.RemoveAttribute(ATTRIBUTE_NORMAL);
+        gridMesh.RemoveAttribute(ATTRIBUTE_COLOR);
         CalcGridVertexOffset(gridMesh);
 
         water = new EntityModel(new Mesh(gridMesh), waterMaterial, Vec3<float>(0, -15, 0), Vec3<float>(1.0f, 1.0f, 1.0f), Vec3<float>(0.0f, 0.0f, 0.0f));
-        delete gridMesh;
 #endif
       }
 
-      MeshData* polygonMesh = MeshFactory::Polygon(6, 10, MeshFactory::PolygonSizeFormat::SIDE_LENGTH);
+      MeshData polygonMesh = MeshFactory::Polygon(6, 10, MeshFactory::PolygonSizeFormat::SIDE_LENGTH);
       polygon = new EntityModel(new Mesh(polygonMesh), terrainMaterial, Vec3<float>(0,1,0), Vec3<float>(1,1,1), Vec3<float>(0,0,0));
 
 
-      MeshData* cubeMesh = MeshFactory::Cube(0,0,0,1,1,1);
+      MeshData cubeMesh = MeshFactory::Cube(0,0,0,1,1,1);
       cube = new EntityModel(new Mesh(cubeMesh), modelMaterial, Vec3<float>(1,0,0), Vec3<float>(1, 1, 1), Vec3<float>(0, 0, 0));
-      delete cubeMesh;
 
-      MeshData* sphereMeshData = MeshFactory::Sphere(Vec3<float>(0,0,0), 0.5f, 20, 20);
+      MeshData sphereMeshData = MeshFactory::Sphere(Vec3<float>(0,0,0), 0.5f, 20, 20);
       //sphereMeshData->LowPolify();
       Mesh* sphereMesh = new Mesh(sphereMeshData);
       //sphereMesh->SetEnableWireframe(true);
       sphere = new EntityModel(sphereMesh, modelMaterial, Vec3<float>(0,0,0), Vec3<float>(1, 1, 1), Vec3<float>(0, 0, 0));
-      delete sphereMeshData;
 
-      MeshData* tetrahedronMesh = MeshFactory::Tetrahedron(0,0,0,10);
+      MeshData tetrahedronMesh = MeshFactory::Tetrahedron(0,0,0,10);
       tetrahedron = new EntityModel(new Mesh(tetrahedronMesh), modelMaterial, Vec3<float>(30, 0, 10), Vec3<float>(1, 1, 1), Vec3<float>(0, 0, 0));
-      delete tetrahedronMesh;
 
-      MeshData* stallMeshData = OBJUtils::LoadObj("res/objs/stall.obj");
+      MeshData stallMeshData = OBJUtils::LoadObj("res/objs/stall.obj");
       //
       Mesh* stallMesh = new Mesh(stallMeshData);
       stallMaterial->SetSpecularStrength(0.1)->SetSpecularExponent(1);
       stall = new EntityModel(stallMesh, stallMaterial, Vec3<float>(0.0f, 0.0f, -25), Vec3(3.0f, 3.0f, 3.0f), Vec3(0.0f, 0.0f, 0.0f));
 
       // MEMORY LEAK WITH MESHDATA
-      MeshData* data = OBJUtils::LoadObj("res/objs/dragon.obj");
-      std::vector<Vec3<float>> normals = std::vector<Vec3<float>>(data->GetVertexCount());
-      MeshFactory::CalculateNormals(data->GetVertices(), data->GetIndices(), normals);
-      data->AddAttribute(AttributeData(ATTRIBUTE_NORMAL, normals));
-      data->LowPolify();
-      data->WriteToFile("res/objs/dragon.gobj");
+      MeshData data = OBJUtils::LoadObj("res/objs/dragon.obj");
+      std::vector<Vec3<float>> normals = std::vector<Vec3<float>>(data.GetVertexCount());
+      MeshFactory::CalculateNormals(data.GetVertices(), data.GetIndices(), normals);
+      data.AddAttribute(AttributeData(ATTRIBUTE_NORMAL, normals));
+      data.LowPolify();
+      data.WriteToFile("res/objs/dragon.gobj");
       Mesh* dragonMesh = new Mesh(data);
       dragon = new EntityModel(dragonMesh, flatMaterial, Vec3<float>(20.0f, 0.0f, -25), Vec3(1.0f, 1.0f, 1.0f), Vec3(0.0f, 0.0f, 0.0f));
 
@@ -268,12 +264,12 @@ class Core : public App
       }
     }
 
-    void CalcGridVertexOffset(MeshData* data)
+    void CalcGridVertexOffset(MeshData& data)
     {
-      std::vector<Vec3<float>>& vertices = data->GetVertices();
-      uint vertexCount = data->GetVertexCount();
-      uint indexCount = data->GetIndexCount();
-      std::vector<uint>& indices = data->GetIndices();
+      std::vector<Vec3<float>>& vertices = data.GetVertices();
+      uint vertexCount = data.GetVertexCount();
+      uint indexCount = data.GetIndexCount();
+      std::vector<uint>& indices = data.GetIndices();
 
       std::vector<byte> offsets = std::vector<byte>(4 * vertexCount);
       for (int i = 0;i < indexCount;i+=3)
@@ -285,16 +281,16 @@ class Core : public App
         offsets[indices[i]*4 + 2] = round(v2.x);
         offsets[indices[i]*4 + 3] = round(v2.z);
       }
-      data->AddAttribute(AttributeData(AttributeDefaults(4, 4, 4 * sizeof(byte), GL_BYTE,GL_FALSE), offsets));
+      data.AddAttribute(AttributeData(AttributeDefaults(4, 4, 4 * sizeof(byte), GL_BYTE,GL_FALSE), offsets));
     }
 
-    void RecalcGrid(MeshData* data, uint gridWidth, uint gridLength)
+    void RecalcGrid(MeshData& data, uint gridWidth, uint gridLength)
     {
-      std::vector<uint> colors = std::vector<uint>(data->GetVertexCount());
-      std::vector<Vec3<float>>& vertices = data->GetVertices();
-      uint indexCount = data->GetIndexCount();
-      std::vector<uint>& indices = data->GetIndices();
-      Vec3<float>* normals = (Vec3<float>*)data->GetAttribute(ATTRIBUTE_NORMAL)->data.data();
+      std::vector<uint> colors = std::vector<uint>(data.GetVertexCount());
+      std::vector<Vec3<float>>& vertices = data.GetVertices();
+      uint indexCount = data.GetIndexCount();
+      std::vector<uint>& indices = data.GetIndices();
+      Vec3<float>* normals = (Vec3<float>*)data.GetAttribute(ATTRIBUTE_NORMAL)->data.data();
       for (int i = 0;i < indexCount;i+=3)
       {
         RecalcPositions(vertices[indices[i]]);
@@ -308,7 +304,7 @@ class Core : public App
         normals[indices[i]] = MeshFactory::CalculateNormal(vertices[indices[i]], vertices[indices[i + 1]], vertices[indices[i + 2]]);
         RecalcColors(vertices[indices[i]], vertices[indices[i+1]], vertices[indices[i+2]], &colors[indices[i]]);
       }
-      data->AddAttribute(AttributeData(ATTRIBUTE_COLOR, colors));
+      data.AddAttribute(AttributeData(ATTRIBUTE_COLOR, colors));
     }
 
     float Random()

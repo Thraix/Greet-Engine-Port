@@ -191,7 +191,7 @@ namespace Greet {
     fout.close();
   }
 
-  MeshData* MeshData::ReadFromFile(const std::string& filename)
+  MeshData MeshData::ReadFromFile(const std::string& filename)
   {
     // Small buffer for initial stuffs
     char buffer[1024];
@@ -302,14 +302,14 @@ namespace Greet {
     std::vector<uint> indices = std::vector<uint>(indexCount);
     fin.read((char*)indices.data(),indexCount*sizeof(uint));
 
-    MeshData* meshData = new MeshData(vertices,indices);
+    MeshData meshData{vertices,indices};
 
     // Read attribute data
     for(auto it = attributeParameters.begin();it!=attributeParameters.end();++it)
     {
       std::vector<char> data = std::vector<char>(it->memoryValueSize * vertexCount);
       fin.read(data.data(),it->memoryValueSize * vertexCount);
-      meshData->AddAttribute(AttributeData(*it, data));
+      meshData.AddAttribute(AttributeData(*it, data));
     }
 
     fin.close();
