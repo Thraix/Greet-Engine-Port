@@ -21,9 +21,9 @@ namespace Greet {
       // This Cube generator works better for voxel rendering since the normals work better.
       static MeshData Cube2(float x, float y, float z, float width, float height, float length);
       static MeshData Tetrahedron(float x, float y, float z, float size);
-      static MeshData Grid(float x, float y, float z, float width, float length, uint gridWidth, uint gridLength, float* heightMap, float height);
+      static MeshData Grid(float x, float y, float z, float width, float length, uint gridWidth, uint gridLength, const std::vector<float>& heightMap, float height);
       static uint IndexGrid(uint x, uint z, uint gridWidth, uint gridLength);
-      static MeshData LowPolyGrid(float x, float y, float z, float width, float length, uint gridWidth, uint gridLength, float* heightMap, float height);
+      static MeshData LowPolyGrid(float x, float y, float z, float width, float length, uint gridWidth, uint gridLength, const std::vector<float>& heightMap, float height);
       static MeshData Grid(float x, float y, float z, float width, float length, uint gridWidth, uint gridLength);
       static MeshData Sphere(const Vec3<float>& position, float radius, uint latitudes, uint longitudes);
   };

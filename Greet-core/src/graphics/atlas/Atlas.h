@@ -27,7 +27,7 @@ namespace Greet{
 
       bool AddTexture(const std::string& name, const std::string& filePath);
       void RemoveTexture(const std::string& textureName);
-      bool AddTexture(BYTE* bits, const std::string& name);
+      bool AddTexture(const std::vector<BYTE>& bits, const std::string& name);
       Sprite GetSprite(const std::string& name) const;
       Sprite GetSpriteFromSheet(const std::string& sheetName, Vec2 texPos, Vec2 texSize) const;
     private:

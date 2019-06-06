@@ -32,7 +32,7 @@ namespace Greet
       uint height;
       uint fontSize;
       std::map<char, Glyph> glyphs;
-      char* m_pixels;
+      std::vector<BYTE> m_pixels;
 
       uint yPos;
       uint xPos;

@@ -17,11 +17,10 @@ namespace Greet {
     hotswap = HotSwapping::AddHotswapResource(this, filename);
   }
 
-  Texture2D::Texture2D(BYTE* bits, uint width, uint height, TextureParams params)
+  Texture2D::Texture2D(const std::vector<BYTE>& bits, uint width, uint height, TextureParams params)
     : Texture(GL_TEXTURE_2D,true), m_width(width), m_height(height), m_params(params)
   {
     GenTexture(bits);
-    delete[] bits;
   }
 
   Texture2D::Texture2D(TextureParams params)
@@ -62,20 +61,18 @@ namespace Greet {
 
   void Texture2D::LoadTexture(const std::string& filename)
   {
-      BYTE* bits;
-      ImageUtils::LoadImage(filename.c_str(),bits, &m_width,&m_height);
-      GenTexture(bits);
-      delete[] bits;
+      auto res = ImageUtils::LoadImage(filename.c_str(), &m_width,&m_height);
+      GenTexture(res.second);
   }
 
   void Texture2D::GenTexture(uint width, uint height)
   {
     m_width = width;
     m_height = height;
-    GenTexture(NULL);
+    GenTexture({});
   }
 
-  void Texture2D::GenTexture(BYTE* bits)
+  void Texture2D::GenTexture(const std::vector<BYTE>& bits)
   {
     Enable();
     if(m_params.filter != TextureFilter::NONE)
@@ -83,14 +80,14 @@ namespace Greet {
       GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,  (uint)m_params.filter));
       GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, (uint)m_params.filter));
     }
-    GLCall(glTexImage2D(GL_TEXTURE_2D, 0, (uint)m_params.internalFormat, m_width, m_height, 0, (uint)m_params.internalFormat, GL_UNSIGNED_BYTE, bits));
+    GLCall(glTexImage2D(GL_TEXTURE_2D, 0, (uint)m_params.internalFormat, m_width, m_height, 0, (uint)m_params.internalFormat, GL_UNSIGNED_BYTE, bits.data()));
     Disable();
   }
 
-  void Texture2D::SetPixels(const void* pixels) const
+  void Texture2D::SetPixels(const std::vector<BYTE>& pixels) const
   {
     Enable();
-    GLCall(glTexImage2D(GL_TEXTURE_2D, 0, (uint)m_params.internalFormat, m_width, m_height, 0, (uint)m_params.internalFormat, GL_UNSIGNED_BYTE, pixels));
+    GLCall(glTexImage2D(GL_TEXTURE_2D, 0, (uint)m_params.internalFormat, m_width, m_height, 0, (uint)m_params.internalFormat, GL_UNSIGNED_BYTE, pixels.data()));
   }
 
   void Texture2D::ReloadResource(const std::string& filename)

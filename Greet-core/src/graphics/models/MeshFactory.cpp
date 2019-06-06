@@ -273,10 +273,10 @@ namespace Greet {
 
   MeshData MeshFactory::Grid(float x, float y, float z, float width, float length, uint gridWidth, uint gridLength)
   {
-    return Grid(x,y,z,width,length,gridWidth,gridLength,NULL,0);
+    return Grid(x,y,z,width,length,gridWidth,gridLength,{},0);
   }
 
-  MeshData MeshFactory::Grid(float x, float y, float z, float width, float length, uint gridWidth, uint gridLength, float* heightMap, float height)
+  MeshData MeshFactory::Grid(float x, float y, float z, float width, float length, uint gridWidth, uint gridLength, const std::vector<float>& heightMap, float height)
   {
     if (gridWidth < 1 || gridLength < 1)
       return Quad(x, y, z, width, length);
@@ -297,7 +297,7 @@ namespace Greet {
     {
       for (uint ix = 0; ix <= gridWidth; ix++)
       {
-        float heightM = heightMap == NULL ? 0 : heightMap[ix + iz*(gridWidth + 1)];
+        float heightM = heightMap.size() == 0 ? 0 : heightMap[ix + iz*(gridWidth + 1)];
         vertices[ix + iz*(gridWidth + 1)] = Vec3<float>(x + ix*tileWidth, y + heightM*height, z + iz*tileLength);
       }
     }
@@ -360,7 +360,7 @@ namespace Greet {
     return 0;
   }
 
-  MeshData MeshFactory::LowPolyGrid(float x, float y, float z, float width, float length, uint gridWidth, uint gridLength, float* heightMap, float height)
+  MeshData MeshFactory::LowPolyGrid(float x, float y, float z, float width, float length, uint gridWidth, uint gridLength, const std::vector<float>& heightMap, float height)
   {
     if (gridWidth < 1 || gridLength < 1)
       return Quad(x, y, z, width, length);
@@ -380,7 +380,7 @@ namespace Greet {
     {
       for (uint ix = 0; ix <= gridWidth; ix++)
       {
-        float heightM = heightMap == NULL ? 0 : heightMap[ix + iz*(gridWidth + 1)];
+        float heightM = heightMap.size() == 0 ? 0 : heightMap[ix + iz*(gridWidth + 1)];
         Vec3<float> vec = Vec3<float>(x + ix*tileWidth, y + heightM*height, z + iz*tileLength);
         uint index = IndexGrid(ix,iz,gridWidth, gridLength);
         vertices[index] = vec;

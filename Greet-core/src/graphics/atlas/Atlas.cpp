@@ -49,21 +49,18 @@ namespace Greet {
   {
     uint width;
     uint height;
-    BYTE* bits;
-    ImageUtils::LoadImage(filePath.c_str(), bits, &width, &height);
+    auto res = ImageUtils::LoadImage(filePath.c_str(), &width, &height);
     if (width != m_textureSize || height != m_textureSize)
     {
       Log::Error("The given textures size is not valid: ",name.c_str()," (",width,",",height,")");
       return false;
     }
-    bool success = AddTexture(bits,name);
-
-    delete[] bits;
+    bool success = AddTexture(res.second,name);
 
     return success;
   }
 
-  bool Atlas::AddTexture(BYTE* bits, const std::string& name)
+  bool Atlas::AddTexture(const std::vector<BYTE>& bits, const std::string& name)
   {
     uint textures = m_width / m_textureSize;
     if (textureMap.size() >= textures*textures)
@@ -83,7 +80,14 @@ namespace Greet {
         x = i % m_texturesSide;
         y = (i - x) / m_texturesSide;
         GLCall(glBindTexture(GL_TEXTURE_2D, *texId));
-        GLCall(glTexSubImage2D(GL_TEXTURE_2D, 0, x*m_textureSize,m_textureSize*m_texturesSide -m_textureSize - y*m_textureSize,m_textureSize,m_textureSize,GL_RGBA, GL_UNSIGNED_BYTE, bits));
+        if(bits.size() == 0)
+        {
+          GLCall(glTexSubImage2D(GL_TEXTURE_2D, 0, x*m_textureSize,m_textureSize*m_texturesSide -m_textureSize - y*m_textureSize,m_textureSize,m_textureSize,GL_RGBA, GL_UNSIGNED_BYTE, nullptr));
+        }
+        else
+        {
+          GLCall(glTexSubImage2D(GL_TEXTURE_2D, 0, x*m_textureSize,m_textureSize*m_texturesSide -m_textureSize - y*m_textureSize,m_textureSize,m_textureSize,GL_RGBA, GL_UNSIGNED_BYTE, bits.data()));
+        }
         GLCall(glBindTexture(GL_TEXTURE_2D, 0));
         return true;
       }

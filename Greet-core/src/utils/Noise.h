@@ -34,7 +34,7 @@ namespace Greet {
        * stepX = number of pixels in the first iteration in the x axis
        * stepY = number of pixels in the first iteration in the y axis
        */
-      static float* GenNoise(uint width, uint height, uint octave, uint stepX, uint stepY, float persistance, int offsetX=0, int offsetY=0);
+      static std::vector<float> GenNoise(uint width, uint height, uint octave, uint stepX, uint stepY, float persistance, int offsetX=0, int offsetY=0);
 
       // 3D
       static std::vector<float> GenNoise(uint width, uint height, uint length, uint octave, uint stepX, uint stepY, uint stepZ, float persistance, int offsetX, int offsetY, int offsetZ);

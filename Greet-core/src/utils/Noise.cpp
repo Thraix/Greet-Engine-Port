@@ -172,9 +172,9 @@ namespace Greet {
     return result;
   }
 
-  float* Noise::GenNoise(uint width, uint height, uint octave, uint stepX, uint stepY, float persistance, int offsetX, int offsetY)
+  std::vector<float> Noise::GenNoise(uint width, uint height, uint octave, uint stepX, uint stepY, float persistance, int offsetX, int offsetY)
   {
-    float* result = new float[width * height];
+    std::vector<float> result = std::vector<float>(width * height);
 
     // Calculate the noise for each "pixel"
     // Could be improved by not computing the same noise values multiple timers

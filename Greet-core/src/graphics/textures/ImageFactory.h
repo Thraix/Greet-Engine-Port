@@ -1,13 +1,14 @@
 #pragma once
 
+#include <vector>
 #include <FreeImage.h>
 #include <internal/GreetTypes.h>
 
 namespace Greet { namespace ImageFactory {
-  BYTE* GetBadFormatImage(uint* width, uint* height);
-  BYTE* GetBadBPPImage(uint* width, uint* height);
-  BYTE* GetCantReadImage(uint* width, uint* height);
-  BYTE* GetCropErrorImage(uint* width, uint* height);
-  BYTE* GetErrorImage(uint* width, uint* height, uint lightColor, uint darkColor);
-  BYTE* GetFrameImage(uint* width, uint* height);
+  std::vector<BYTE> GetBadFormatImage(uint* width, uint* height);
+  std::vector<BYTE> GetBadBPPImage(uint* width, uint* height);
+  std::vector<BYTE> GetCantReadImage(uint* width, uint* height);
+  std::vector<BYTE> GetCropErrorImage(uint* width, uint* height);
+  std::vector<BYTE> GetErrorImage(uint* width, uint* height, uint lightColor, uint darkColor);
+  std::vector<BYTE> GetFrameImage(uint* width, uint* height);
 }}

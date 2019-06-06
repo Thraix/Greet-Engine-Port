@@ -14,11 +14,10 @@ void Chunk::Initialize(uint posX, uint posY)
 {
   this->posX = posX;
   this->posY = posY;
-  float* noise = Noise::GenNoise(CHUNK_WIDTH+1, CHUNK_HEIGHT+1,4,16, 16,0.75f, posX * CHUNK_WIDTH, posY * CHUNK_HEIGHT);
+  std::vector<float> noise = Noise::GenNoise(CHUNK_WIDTH+1, CHUNK_HEIGHT+1,4,16, 16,0.75f, posX * CHUNK_WIDTH, posY * CHUNK_HEIGHT);
   MeshData data = MeshFactory::LowPolyGrid(0,0,0,CHUNK_WIDTH, CHUNK_HEIGHT,CHUNK_WIDTH, CHUNK_HEIGHT,noise, 1.0f);
   RecalcGrid(data);
   mesh = new Mesh(data);
-  delete[] noise;
 }
 
 Chunk::~Chunk()

@@ -77,8 +77,8 @@ class Core : public App
     void Init() override
     {
       uint noiseS = 100;
-      float* noise = Noise::GenNoise(noiseS, noiseS, 4, 16, 16, 0.8f);
-      BYTE* image = ImageUtils::CreateHeightmapImage(noise, noiseS, noiseS);
+      std::vector<float> noise = Noise::GenNoise(noiseS, noiseS, 4, 16, 16, 0.8f);
+      std::vector<BYTE> image = ImageUtils::CreateHeightmapImage(noise, noiseS, noiseS);
 
       Loaders::LoadTextures("res/loaders/textures.json");
       TextureManager::Add("noise",Texture2D(image, noiseS, noiseS, TextureParams(TextureFilter::NEAREST, TextureWrap::CLAMP_TO_EDGE, TextureInternalFormat::RGBA)));
@@ -114,7 +114,7 @@ class Core : public App
         uint gridWidth = 99;
         uint gridLength = 99;
 #if 1 
-        float* noise = Noise::GenNoise(gridWidth+1, gridWidth + 1,5,8, 8,0.5f);
+        std::vector<float> noise = Noise::GenNoise(gridWidth+1, gridWidth + 1,5,8, 8,0.5f);
         MeshData gridMesh = MeshFactory::LowPolyGrid(0, 0, 0, gridWidth+1, gridLength+1, gridWidth, gridLength, noise,1);
         RecalcGrid(gridMesh, gridWidth, gridLength);
         terrain = new EntityModel(new Mesh(gridMesh), terrainMaterial, Vec3<float>(0, -15, 0), Vec3<float>(1.0f, 1.0f, 1.0f), Vec3<float>(0.0f, 0.0f, 0.0f));

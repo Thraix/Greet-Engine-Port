@@ -54,35 +54,33 @@ namespace Greet {
 
     uint width;
     uint height;
-    BYTE* bits;
-    bool succeed = ImageUtils::LoadImage(image.c_str(), bits, &width, &height);
+    auto res = ImageUtils::LoadImage(image.c_str(), &width, &height);
     if(width % 4 != 0 || height % 3 != 0)
     {
       // If we didn't succeed there is no reason to show more errors
-      if(succeed)
+      if(res.first)
         Log::Error("Invalid cube map texture size: ", width, "x", height, " (need to be divisible 4x3)");
-      LoadImage(bits,width,height,GL_TEXTURE_CUBE_MAP_POSITIVE_X,false,false);
-      LoadImage(bits,width,height,GL_TEXTURE_CUBE_MAP_NEGATIVE_X,false,false);
-      LoadImage(bits,width,height,GL_TEXTURE_CUBE_MAP_POSITIVE_Y,false,false);
-      LoadImage(bits,width,height,GL_TEXTURE_CUBE_MAP_NEGATIVE_Y,false,false);
-      LoadImage(bits,width,height,GL_TEXTURE_CUBE_MAP_POSITIVE_Z,false,false);
-      LoadImage(bits,width,height,GL_TEXTURE_CUBE_MAP_NEGATIVE_Z,false,false);
+      LoadImage(res.second,width,height,GL_TEXTURE_CUBE_MAP_POSITIVE_X,false);
+      LoadImage(res.second,width,height,GL_TEXTURE_CUBE_MAP_NEGATIVE_X,false);
+      LoadImage(res.second,width,height,GL_TEXTURE_CUBE_MAP_POSITIVE_Y,false);
+      LoadImage(res.second,width,height,GL_TEXTURE_CUBE_MAP_NEGATIVE_Y,false);
+      LoadImage(res.second,width,height,GL_TEXTURE_CUBE_MAP_POSITIVE_Z,false);
+      LoadImage(res.second,width,height,GL_TEXTURE_CUBE_MAP_NEGATIVE_Z,false);
     }
     else
     {
       uint w = width / 4;
       uint h = height / 3;
-      LoadImage(ImageUtils::CropImage(bits,width,height,0,h,w,h),w,h,GL_TEXTURE_CUBE_MAP_POSITIVE_X,true,true);
-      LoadImage(ImageUtils::CropImage(bits,width,height,w*2,h,w,h),w,h,GL_TEXTURE_CUBE_MAP_NEGATIVE_X,true,true);
+      LoadImage(ImageUtils::CropImage(res.second,width,height,0,h,w,h),w,h,GL_TEXTURE_CUBE_MAP_POSITIVE_X,true);
+      LoadImage(ImageUtils::CropImage(res.second,width,height,w*2,h,w,h),w,h,GL_TEXTURE_CUBE_MAP_NEGATIVE_X,true);
 
-      LoadImage(ImageUtils::CropImage(bits,width,height,w,0,w,h),w,h,GL_TEXTURE_CUBE_MAP_POSITIVE_Y,true,true);
-      LoadImage(ImageUtils::CropImage(bits,width,height,w,h*2,w,h),w,h,GL_TEXTURE_CUBE_MAP_NEGATIVE_Y,true,true);
+      LoadImage(ImageUtils::CropImage(res.second,width,height,w,0,w,h),w,h,GL_TEXTURE_CUBE_MAP_POSITIVE_Y,true);
+      LoadImage(ImageUtils::CropImage(res.second,width,height,w,h*2,w,h),w,h,GL_TEXTURE_CUBE_MAP_NEGATIVE_Y,true);
 
-      LoadImage(ImageUtils::CropImage(bits,width,height,w,h,w,h),w,h,GL_TEXTURE_CUBE_MAP_POSITIVE_Z,true,true);
-      LoadImage(ImageUtils::CropImage(bits,width,height,w*3,h,w,h),w,h,GL_TEXTURE_CUBE_MAP_NEGATIVE_Z,true,true);
+      LoadImage(ImageUtils::CropImage(res.second,width,height,w,h,w,h),w,h,GL_TEXTURE_CUBE_MAP_POSITIVE_Z,true);
+      LoadImage(ImageUtils::CropImage(res.second,width,height,w*3,h,w,h),w,h,GL_TEXTURE_CUBE_MAP_NEGATIVE_Z,true);
     }
     LoadParameters();
-    delete[] bits;
 
     Disable();
   }
@@ -117,20 +115,19 @@ namespace Greet {
   {
     uint width;
     uint height;
-    BYTE* bits;
-    ImageUtils::LoadImage(image.c_str(), bits, &width, &height);
-    LoadImage(bits,width,height,mapLocation,true,true);
+    auto res = ImageUtils::LoadImage(image.c_str(), &width, &height);
+    LoadImage(res.second,width,height,mapLocation,true);
   }
 
-  void CubeMap::LoadImage(BYTE* bits, uint width, uint height, uint mapLocation, bool freeMem, bool flip)
+  void CubeMap::LoadImage(const std::vector<BYTE>& bits, uint width, uint height, uint mapLocation, bool flip)
   {
-    BYTE* flippedBits = bits;
     if(flip)
-      flippedBits = ImageUtils::FlipImage(bits,width,height);
-    GLCall(glTexImage2D(mapLocation, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, flippedBits));
-    if(flip)
-      delete[] flippedBits;
-    if(freeMem)
-      delete[] bits;
+    {
+      GLCall(glTexImage2D(mapLocation, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, ImageUtils::FlipImage(bits,width,height).data()));
+    }
+    else
+    {
+      GLCall(glTexImage2D(mapLocation, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, bits.data()));
+    }
   }
 }
