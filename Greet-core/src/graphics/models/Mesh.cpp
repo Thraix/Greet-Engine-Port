@@ -6,19 +6,19 @@
 
 namespace Greet {
 
-  Mesh::Mesh(const Vec3<float>* vertices, uint vertexCount, const uint* indices, uint indexCount)
-    : vao{}, ibo{(uint)(indexCount*sizeof(uint)), BufferType::INDEX, BufferDrawType::STATIC}
+  Mesh::Mesh(const std::vector<Vec3<float>>& vertices, const std::vector<uint>& indices)
+    : vao{}, ibo{(uint)(indices.size()*sizeof(uint)), BufferType::INDEX, BufferDrawType::STATIC}
   {
     m_drawMode = GL_TRIANGLES;
-    m_vertexCount = vertexCount;
-    m_indexCount = indexCount;
+    m_vertexCount = vertices.size();
+    m_indexCount = indices.size();
 
     vao.Enable();
     ibo.Enable();
-    ibo.UpdateData((void*)indices);
+    ibo.UpdateData((void*)indices.data());
 
     // Attributes 
-    AddAttribute(MESH_VERTICES_LOCATION, vertices); // vertices
+    AddAttribute(MESH_VERTICES_LOCATION, vertices.data()); // vertices
 
     // Set default color to white
     GLCall(glVertexAttrib4f(MESH_COLORS_LOCATION,1.0f,1.0f,1.0f,1.0f));
@@ -29,7 +29,7 @@ namespace Greet {
   }
 
   Mesh::Mesh(MeshData* data)
-    : Mesh(data->GetVertices(), data->GetVertexCount(), data->GetIndices(), data->GetIndexCount())
+    : Mesh(data->GetVertices(), data->GetIndices())
   {
     for (uint i = 0;i < data->m_data.size();i++)
     {
@@ -105,9 +105,9 @@ namespace Greet {
     AddAttribute(location, (void*)data, sizeof(byte), attributeSize, GL_UNSIGNED_BYTE, true);
   }
 
-  void Mesh::AddAttribute(AttributeDataBase* data)
+  void Mesh::AddAttribute(AttributeData* attr)
   {
-    AddAttribute(data->location, data->data, data->memoryValueSize, data->vertexValueSize, data->glType, data->normalized);
+    AddAttribute(attr->location, attr->data.data(), attr->memoryValueSize, attr->vertexValueSize, attr->glType, attr->normalized);
   }
 
   void Mesh::AddAttribute(uint location, void* data, uint typeSize, uint typeCount, uint glType, bool normalized)

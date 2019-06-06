@@ -102,25 +102,13 @@ namespace Greet {
     }
 
     input.close();
-    Vec3<float>* positionsArray = new Vec3<float>[vertexPos.size()];
-    Vec3<float>* normalsArray = new Vec3<float>[vertexNormals.size()];
-    Vec2* texCoordsArray = new Vec2[vertexTexCoords.size()];
-    uint* indicesArray = new uint[indices.size()];
-    memcpy(positionsArray, vertexPos.data(), vertexPos.size() * sizeof(Vec3<float>));
-    memcpy(texCoordsArray, vertexTexCoords.data(), vertexTexCoords.size() * sizeof(Vec2));
-    memcpy(normalsArray, vertexNormals.data(), vertexNormals.size() * sizeof(Vec3<float>));
-    memcpy(indicesArray, indices.data(), indices.size() * sizeof(uint));
 
-    MeshData* mesh = new MeshData(positionsArray, vertexPos.size(), indicesArray, indices.size());
+    MeshData* mesh = new MeshData(vertexPos, indices);
     if(vertexTexCoords.size() > 0)
-      mesh->AddAttribute(new AttributeData<Vec2>(ATTRIBUTE_TEXCOORD, texCoordsArray));
-    else
-      delete[] texCoordsArray;
+      mesh->AddAttribute(new AttributeData(ATTRIBUTE_TEXCOORD, vertexTexCoords));
 
     if(vertexNormals.size() > 0)
-      mesh->AddAttribute(new AttributeData<Vec3<float>>(ATTRIBUTE_NORMAL, normalsArray));
-    else
-      delete[] normalsArray;
+      mesh->AddAttribute(new AttributeData(ATTRIBUTE_NORMAL, vertexNormals));
 
     return mesh;
   }

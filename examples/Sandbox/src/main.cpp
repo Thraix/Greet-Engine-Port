@@ -154,9 +154,9 @@ class Core : public App
 
       // MEMORY LEAK WITH MESHDATA
       MeshData* data = OBJUtils::LoadObj("res/objs/dragon.obj");
-      Vec3<float>* normals = new Vec3<float>[data->GetVertexCount()];
-      MeshFactory::CalculateNormals(data->GetVertices(), data->GetVertexCount(), data->GetIndices(), data->GetIndexCount(), normals);
-      data->AddAttribute(new AttributeData<Vec3<float>>(ATTRIBUTE_NORMAL, normals));
+      std::vector<Vec3<float>> normals = std::vector<Vec3<float>>(data->GetVertexCount());
+      MeshFactory::CalculateNormals(data->GetVertices(), data->GetIndices(), normals);
+      data->AddAttribute(new AttributeData(ATTRIBUTE_NORMAL, normals));
       data->LowPolify();
       data->WriteToFile("res/objs/dragon.gobj");
       Mesh* dragonMesh = new Mesh(data);
@@ -214,9 +214,9 @@ class Core : public App
       //RenderEngine::Add3DScene(new World(camera, 10, 10), "WorldTerrain");
     }
 
-    void RecalcPositions(Vec3<float>* vertex)
+    void RecalcPositions(Vec3<float>& vertex)
     {
-      float y = vertex->y;
+      float y = vertex.y;
       if (y < 0.45)
       {
         //y = 0.45f + Noise::PRNG(vertex->x, vertex->z)*0.01f;// + 0.03f*(rand() / (float)RAND_MAX - 0.5f);
@@ -237,7 +237,7 @@ class Core : public App
       {
         y = (pow(y - 0.58, 0.6) + 0.58);
       }
-      vertex->y = y * 20.0;
+      vertex.y = y * 20.0;
     }
 
     void RecalcColors(const Vec3<float>& v1, const Vec3<float>& v2, const Vec3<float>& v3, uint* color)
@@ -270,12 +270,12 @@ class Core : public App
 
     void CalcGridVertexOffset(MeshData* data)
     {
-      Vec3<float>* vertices = data->GetVertices();
+      std::vector<Vec3<float>>& vertices = data->GetVertices();
       uint vertexCount = data->GetVertexCount();
       uint indexCount = data->GetIndexCount();
-      uint* indices = data->GetIndices();
+      std::vector<uint>& indices = data->GetIndices();
 
-      byte* offsets = new byte[4 * vertexCount];
+      std::vector<byte> offsets = std::vector<byte>(4 * vertexCount);
       for (int i = 0;i < indexCount;i+=3)
       {
         Vec3<float> v1 = vertices[indices[i+1]] - vertices[indices[i]];
@@ -285,30 +285,30 @@ class Core : public App
         offsets[indices[i]*4 + 2] = round(v2.x);
         offsets[indices[i]*4 + 3] = round(v2.z);
       }
-      data->AddAttribute(new AttributeData<byte>(AttributeDefaults(4, 4, 4 * sizeof(byte), GL_BYTE,GL_FALSE), offsets));
+      data->AddAttribute(new AttributeData(AttributeDefaults(4, 4, 4 * sizeof(byte), GL_BYTE,GL_FALSE), offsets));
     }
 
     void RecalcGrid(MeshData* data, uint gridWidth, uint gridLength)
     {
-      uint* colors = new uint[data->GetVertexCount()];
-      Vec3<float>* vertices = data->GetVertices();
+      std::vector<uint> colors = std::vector<uint>(data->GetVertexCount());
+      std::vector<Vec3<float>>& vertices = data->GetVertices();
       uint indexCount = data->GetIndexCount();
-      uint* indices = data->GetIndices();
-      Vec3<float>* normals = (Vec3<float>*)data->GetAttribute(ATTRIBUTE_NORMAL)->data;
+      std::vector<uint>& indices = data->GetIndices();
+      Vec3<float>* normals = (Vec3<float>*)data->GetAttribute(ATTRIBUTE_NORMAL)->data.data();
       for (int i = 0;i < indexCount;i+=3)
       {
-        RecalcPositions(&vertices[indices[i]]);
+        RecalcPositions(vertices[indices[i]]);
       }
       uint index = MeshFactory::IndexGrid(gridWidth, gridLength - 1, gridWidth, gridLength);
-      RecalcPositions(&vertices[MeshFactory::IndexGrid(gridWidth,gridLength-1,gridWidth,gridLength)]);
+      RecalcPositions(vertices[MeshFactory::IndexGrid(gridWidth,gridLength-1,gridWidth,gridLength)]);
       index = MeshFactory::IndexGrid(0, gridLength, gridWidth, gridLength);
-      RecalcPositions(&vertices[index]);
+      RecalcPositions(vertices[index]);
       for (int i = 0;i < indexCount;i += 3)
       {
         normals[indices[i]] = MeshFactory::CalculateNormal(vertices[indices[i]], vertices[indices[i + 1]], vertices[indices[i + 2]]);
         RecalcColors(vertices[indices[i]], vertices[indices[i+1]], vertices[indices[i+2]], &colors[indices[i]]);
       }
-      data->AddAttribute(new AttributeData<uint>(ATTRIBUTE_COLOR, colors));
+      data->AddAttribute(new AttributeData(ATTRIBUTE_COLOR, colors));
     }
 
     float Random()

@@ -17,7 +17,7 @@ class Chunk
     Chunk();
     void Initialize(uint posX, uint posY);
 
-    void RecalcPositions(Greet::Vec3<float>* vertex);
+    void RecalcPositions(Greet::Vec3<float>& vertex);
     void CalcGridVertexOffset(Greet::MeshData* data);
     void RecalcGrid(Greet::MeshData* data);
 

@@ -28,7 +28,7 @@ namespace Greet {
       bool wireframe = false;
 
     public:
-      Mesh(const Vec3<float>* vertices, uint vertexCount, const uint* indices, uint indexCount);
+      Mesh(const std::vector<Vec3<float>>& vertices, const std::vector<uint>& indices);
       Mesh(MeshData* data);
       Mesh(Mesh&&) = default;
       Mesh& operator=(Mesh&&) = default;
@@ -52,7 +52,7 @@ namespace Greet {
       void AddAttribute(uint location, const Vec2* data);
       //void addAttribute(uint location, uint attributeSize, const float* data);
       void AddAttribute(uint location, uint attributeSize, const uint* data);
-      void AddAttribute(AttributeDataBase* data);
+      void AddAttribute(AttributeData* attr);
       void AddAttribute(uint location, void* data, uint dataSize, uint typeCount, uint glType, bool normalized);
 
       void SetDefaultAttribute4f(uint location, const Vec4& data);

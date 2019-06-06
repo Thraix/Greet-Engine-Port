@@ -13,8 +13,8 @@ namespace Greet {
       };
 
       static Vec3<float> CalculateNormal(const Vec3<float>& p1, const Vec3<float>& p2, const Vec3<float>& p3);
-      static void CalculateNormals(Vec3<float>* vertices, uint vertexCount, uint* indices, uint indexCount, Vec3<float>* normals);
-      static Vec3<float>* CalculateNormals(Vec3<float>* vertices, uint vertexCount, uint* indices, uint indexCount);
+      static void CalculateNormals(const std::vector<Vec3<float>>& vertices, const std::vector<uint>& indices, std::vector<Vec3<float>>& normals);
+      static std::vector<Vec3<float>> CalculateNormals(const std::vector<Vec3<float>> vertices, const std::vector<uint>& indices);
       static MeshData* Polygon(uint count, float size, PolygonSizeFormat format);
       static MeshData* Quad(float x, float y, float z, float width, float length);
       static MeshData* Cube(float x, float y, float z, float width, float height, float length);

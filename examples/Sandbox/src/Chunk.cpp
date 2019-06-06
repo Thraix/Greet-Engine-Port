@@ -27,9 +27,9 @@ Chunk::~Chunk()
   delete mesh;
 }
 
-void Chunk::RecalcPositions(Vec3<float>* vertex)
+void Chunk::RecalcPositions(Vec3<float>& vertex)
 {
-  float y = vertex->y;
+  float y = vertex.y;
   if (y < 0.45)
   {
     //y = 0.45f + Noise::PRNG(vertex->x, vertex->z)*0.01f;// + 0.03f*(rand() / (float)RAND_MAX - 0.5f);
@@ -50,7 +50,7 @@ void Chunk::RecalcPositions(Vec3<float>* vertex)
   {
     y = (pow(y - 0.58, 0.6) + 0.58);
   }
-  vertex->y = y * 20.0;
+  vertex.y = y * 20.0;
 }
 
 void RecalcColors(const Vec3<float>& v1, const Vec3<float>& v2, const Vec3<float>& v3, uint* color)
@@ -83,13 +83,11 @@ void RecalcColors(const Vec3<float>& v1, const Vec3<float>& v2, const Vec3<float
 
 void Chunk::CalcGridVertexOffset(MeshData* data)
 {
-  Vec3<float>* vertices = data->GetVertices();
-  uint vertexCount = data->GetVertexCount();
-  uint indexCount = data->GetIndexCount();
-  uint* indices = data->GetIndices();
+  const std::vector<Vec3<float>>& vertices = data->GetVertices();
+  const std::vector<uint>& indices = data->GetIndices();
 
-  byte* offsets = new byte[4 * vertexCount];
-  for (int i = 0;i < indexCount;i+=3)
+  std::vector<byte> offsets = std::vector<byte>(4 * vertices.size());
+  for (int i = 0;i < indices.size();i+=3)
   {
     Vec3<float> v1 = vertices[indices[i+1]] - vertices[indices[i]];
     Vec3<float> v2 = vertices[indices[i+2]] - vertices[indices[i]];
@@ -98,28 +96,28 @@ void Chunk::CalcGridVertexOffset(MeshData* data)
     offsets[indices[i]*4 + 2] = round(v2.x);
     offsets[indices[i]*4 + 3] = round(v2.z);
   }
-  data->AddAttribute(new AttributeData<byte>(AttributeDefaults(4, 4, 4 * sizeof(byte), GL_BYTE,GL_FALSE), offsets));
+  data->AddAttribute(new AttributeData(AttributeDefaults(4, 4, 4 * sizeof(byte), GL_BYTE,GL_FALSE), offsets));
 }
 
 void Chunk::RecalcGrid(MeshData* data)
 {
-  uint* colors = new uint[data->GetVertexCount()];
-  Vec3<float>* vertices = data->GetVertices();
-  uint indexCount = data->GetIndexCount();
-  uint* indices = data->GetIndices();
-  Vec3<float>* normals = (Vec3<float>*)data->GetAttribute(ATTRIBUTE_NORMAL)->data;
-  for (int i = 0;i < indexCount;i+=3)
+  std::vector<uint> colors = std::vector<uint>(data->GetVertexCount());
+  std::vector<Vec3<float>>& vertices = data->GetVertices();
+  std::vector<uint>& indices = data->GetIndices();
+  Vec3<float>* normals = (Vec3<float>*)data->GetAttribute(ATTRIBUTE_NORMAL)->data.data();
+
+  for (int i = 0;i < indices.size();i+=3)
   {
-    RecalcPositions(&vertices[indices[i]]);
+    RecalcPositions(vertices[indices[i]]);
   }
   uint index = MeshFactory::IndexGrid(CHUNK_WIDTH, CHUNK_HEIGHT - 1, CHUNK_WIDTH, CHUNK_HEIGHT);
-  RecalcPositions(&vertices[MeshFactory::IndexGrid(CHUNK_WIDTH,CHUNK_HEIGHT-1,CHUNK_WIDTH,CHUNK_HEIGHT)]);
+  RecalcPositions(vertices[MeshFactory::IndexGrid(CHUNK_WIDTH,CHUNK_HEIGHT-1,CHUNK_WIDTH,CHUNK_HEIGHT)]);
   index = MeshFactory::IndexGrid(0, CHUNK_HEIGHT, CHUNK_WIDTH, CHUNK_HEIGHT);
-  RecalcPositions(&vertices[index]);
-  for (int i = 0;i < indexCount;i += 3)
+  RecalcPositions(vertices[index]);
+  for (int i = 0;i < indices.size();i += 3)
   {
     normals[indices[i]] = MeshFactory::CalculateNormal(vertices[indices[i]], vertices[indices[i + 1]], vertices[indices[i + 2]]);
     RecalcColors(vertices[indices[i]], vertices[indices[i+1]], vertices[indices[i+2]], &colors[indices[i]]);
   }
-  data->AddAttribute(new AttributeData<uint>(ATTRIBUTE_COLOR, colors));
+  data->AddAttribute(new AttributeData(ATTRIBUTE_COLOR, colors));
 }

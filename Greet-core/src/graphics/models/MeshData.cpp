@@ -7,44 +7,50 @@
 
 namespace Greet {
 
-  MeshData::MeshData(Vec3<float>* vertices, uint vertexCount, uint* indices, uint indexCount)
-    : m_vertices(vertices), m_indices(indices), m_vertexCount(vertexCount), m_indexCount(indexCount)
+  MeshData::MeshData(const std::vector<Vec3<float>>& vertices, const std::vector<uint>& indices)
+    : m_vertices(vertices), m_indices(indices)
   {
+  }
 
+  MeshData::MeshData(std::vector<Vec3<float>>&& vertices, std::vector<uint>&& indices)
+    : m_vertices{std::move(vertices)},m_indices{std::move(indices)}
+  {
   }
 
   MeshData::~MeshData()
   {
-    for (uint i = 0;i < m_data.size();i++)
-    {
-      delete m_data[i];
-    }
-    delete m_vertices;
-    delete m_indices;
   }
 
-  void MeshData::AddAttribute(AttributeDataBase* data)
+  void MeshData::AddAttribute(AttributeData* data)
   {
-    m_data.push_back(data);
+    if(data->data.size() / data->memoryValueSize != m_vertices.size())
+    {
+      Log::Error("Attribute length doesn't match vertices length");
+      Log::Error("Attribute Length: ", data->data.size() / data->memoryValueSize);
+      Log::Error("Vertices Length:  ", m_vertices.size());
+      ASSERT(false, "");
+    }
+    else
+      m_data.push_back(data);
   }
 
-  AttributeDataBase* MeshData::GetAttribute(AttributeDefaults defaults) const
+  AttributeData* MeshData::GetAttribute(AttributeDefaults defaults) const
   {
     for (auto it = m_data.begin(); it != m_data.end(); it++)
     {
-      if (((AttributeDataBase*)*it)->location == defaults.location)
+      if ((*it)->location == defaults.location)
       {
         return *it;
       }
     }
-    return NULL;
+    return {};
   }
 
-  AttributeDataBase* MeshData::RemoveAttribute(AttributeDefaults defaults)
+  AttributeData* MeshData::RemoveAttribute(AttributeDefaults defaults)
   {
     for (auto it = m_data.begin(); it != m_data.end(); it++)
     {
-      if (((AttributeDataBase*)*it)->location == defaults.location)
+      if (((AttributeData*)*it)->location == defaults.location)
       {
         m_data.erase(it);
         return *it;
@@ -61,7 +67,7 @@ namespace Greet {
     std::vector<uint> newIndices;
 
     // Loop through all triangles
-    for(uint i = 0;i<m_indexCount;i+=3)
+    for(uint i = 0;i<GetIndexCount();i+=3)
     {
       bool foundProvoking = true;
       uint provokingOffset = 0;
@@ -139,17 +145,7 @@ namespace Greet {
       }
     }
 
-    uint* indices = new uint[newIndices.size()];
-    for(uint i = 0;i<newIndices.size();i++)
-    {
-      indices[i] = newIndices[i];
-    }
-    Vec3<float>* vertices = new Vec3<float>[newVertices.size()];
-    for(uint i = 0;i<newVertices.size();i++)
-    {
-      vertices[i] = newVertices[i];
-    }
-    return new MeshData(vertices, newVertices.size(), indices, newIndices.size());
+    return new MeshData(newVertices, newIndices);
   }
 
   void MeshData::WriteToFile(const std::string& filename) const
@@ -159,12 +155,14 @@ namespace Greet {
     // Write signature
     fout.write("MESH",4*sizeof(char));
 
+    uint vertexCount = GetVertexCount();
+    uint indexCount = GetIndexCount();
     size_t dataCount = m_data.size();
 
     // Write how many vertices we have 
-    fout.write((char*)&m_vertexCount,sizeof(uint));
+    fout.write((char*)&vertexCount,sizeof(uint));
     // Write how many indices we have 
-    fout.write((char*)&m_indexCount,sizeof(uint));
+    fout.write((char*)&indexCount,sizeof(uint));
     // Write how many attributes we have
     fout.write((char*)&dataCount,sizeof(size_t));
 
@@ -179,16 +177,16 @@ namespace Greet {
     }
 
     // Write all vertex data.
-    fout.write((char*)m_vertices, m_vertexCount * sizeof(Vec3<float>));
+    fout.write((char*)m_vertices.data(), vertexCount * sizeof(Vec3<float>));
 
     // Write index data.
-    fout.write((char*)m_indices, m_indexCount * sizeof(uint)); 
+    fout.write((char*)m_indices.data(), indexCount * sizeof(uint)); 
 
 
     // Write all attribute data
     for(auto it = m_data.begin();it != m_data.end(); ++it)
     {
-      fout.write((char*)(*it)->data, (*it)->memoryValueSize * m_vertexCount);
+      fout.write((char*)(*it)->data.data(), (*it)->memoryValueSize * vertexCount);
     }
     fout.close();
   }
@@ -297,21 +295,21 @@ namespace Greet {
       Log::Warning("MESH file is larger than expected. Something might be wrong...");
 
     // Read vertices
-    Vec3<float>* vertices = new Vec3<float>[vertexCount];
-    fin.read((char*)vertices,vertexCount*sizeof(Vec3<float>));
+    std::vector<Vec3<float>> vertices = std::vector<Vec3<float>>(vertexCount);
+    fin.read((char*)vertices.data(),vertexCount*sizeof(Vec3<float>));
 
     // Read indices 
-    uint* indices = new uint[indexCount];
-    fin.read((char*)indices,indexCount*sizeof(uint));
+    std::vector<uint> indices = std::vector<uint>(indexCount);
+    fin.read((char*)indices.data(),indexCount*sizeof(uint));
 
-    MeshData* meshData = new MeshData(vertices, vertexCount,indices,indexCount);
+    MeshData* meshData = new MeshData(vertices,indices);
 
     // Read attribute data
     for(auto it = attributeParameters.begin();it!=attributeParameters.end();++it)
     {
-      char* data = new char[it->memoryValueSize * vertexCount];
-      fin.read(data,it->memoryValueSize * vertexCount);
-      meshData->AddAttribute(new AttributeData<char>(*it, data));
+      std::vector<char> data = std::vector<char>(it->memoryValueSize * vertexCount);
+      fin.read(data.data(),it->memoryValueSize * vertexCount);
+      meshData->AddAttribute(new AttributeData(*it, data));
     }
 
     fin.close();

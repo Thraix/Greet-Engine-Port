@@ -22,7 +22,7 @@ namespace Greet {
 
   };
 
-  struct AttributeDataBase
+  struct AttributeData
   {
     public:
       const uint location;
@@ -30,52 +30,41 @@ namespace Greet {
       const uint memoryValueSize;
       const uint glType;
       const bool normalized;
-      void* data;
-    protected:
-      AttributeDataBase(AttributeDefaults defaults, void* data) : location(defaults.location), vertexValueSize(defaults.vertexValueSize), memoryValueSize(defaults.memoryValueSize), glType(defaults.glType), normalized(defaults.normalized), data(data){}
-
+      std::vector<char> data;
+    public:
+      template <typename T>
+      AttributeData(AttributeDefaults defaults, const std::vector<T>& data) 
+      : location(defaults.location), vertexValueSize(defaults.vertexValueSize), 
+      memoryValueSize(defaults.memoryValueSize), glType(defaults.glType), 
+      normalized(defaults.normalized), data{(char*)data.data(), (char*)data.data() + data.size() * sizeof(T)}
+    {
+    }
 
     public:
-      virtual ~AttributeDataBase() {}
+      virtual ~AttributeData() {}
   };
-
-
-  // Implementation of AttributeDataBase (mainly destructor)
-  template <typename T>
-  struct AttributeData : public AttributeDataBase
-  {
-    AttributeData(AttributeDefaults defaults, T* data) 
-      : AttributeDataBase(defaults,data) 
-    {}
-
-    virtual ~AttributeData()
-    {
-      delete[] (T*)data;
-    }
-  };
-
-
 
   class MeshData
   {
     friend class Mesh;
     private:
-      std::vector<AttributeDataBase*> m_data;
-      Vec3<float>* m_vertices;
-      uint* m_indices;
-      uint m_vertexCount;
-      uint m_indexCount;
+      std::vector<Vec3<float>> m_vertices;
+      std::vector<uint> m_indices;
+      std::vector<AttributeData*> m_data;
     public:
-      MeshData(Vec3<float>* vertices, uint vertexCount, uint* indices, uint indexCount);
+      MeshData(const std::vector<Vec3<float>>& vertices, const std::vector<uint>& indices);
+      MeshData(std::vector<Vec3<float>>&& vertices, std::vector<uint>&& indices);
       virtual ~MeshData();
-      void AddAttribute(AttributeDataBase* data);
-      AttributeDataBase* GetAttribute(AttributeDefaults defaults) const;
-      AttributeDataBase* RemoveAttribute(AttributeDefaults defaults);
+      void AddAttribute(AttributeData* data);
+      AttributeData* GetAttribute(AttributeDefaults defaults) const;
+      AttributeData* RemoveAttribute(AttributeDefaults defaults);
 
-      Vec3<float>* GetVertices() const { return m_vertices; }
-      uint* GetIndices() const { return m_indices; }
-      uint GetVertexCount() const { return m_vertexCount; }
-      uint GetIndexCount() const { return m_indexCount; }
+      const std::vector<Vec3<float>>& GetVertices() const { return m_vertices; }
+      const std::vector<uint>& GetIndices() const { return m_indices; }
+      std::vector<Vec3<float>>& GetVertices() { return m_vertices; }
+      std::vector<uint>& GetIndices() { return m_indices; }
+      uint GetVertexCount() const { return m_vertices.size(); }
+      uint GetIndexCount() const { return m_indices.size(); }
 
       MeshData* LowPolify();
 
