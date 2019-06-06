@@ -103,7 +103,7 @@ namespace Greet {
 
     std::vector<UniformData> newUniforms = GetListOfUniforms(program);
     GLint numActiveUniforms = 0;
-    glGetProgramiv(program, GL_ACTIVE_UNIFORMS, &numActiveUniforms);
+    GLCall(glGetProgramiv(program, GL_ACTIVE_UNIFORMS, &numActiveUniforms));
     std::vector<GLchar> nameData(256);
     Enable();
     for(auto it = newUniforms.begin(); it != newUniforms.end();++it)
@@ -114,7 +114,7 @@ namespace Greet {
         GLint arraySize = 0;
         GLenum type = 0;
         GLsizei actualLength = 0;
-        glGetActiveUniform(oldProgram, found->second, nameData.size(), &actualLength, &arraySize, &type, &nameData[0]);
+        GLCall(glGetActiveUniform(oldProgram, found->second, nameData.size(), &actualLength, &arraySize, &type, &nameData[0]));
 
         // Type has changed
         if(it->type != type || it->arraySize != arraySize)
@@ -124,53 +124,67 @@ namespace Greet {
           if(it->arraySize == 1)
           {
             float f;
-            glGetUniformfv(oldProgram, found->second, &f);
+            GLCall(glGetUniformfv(oldProgram, found->second, &f));
             SetUniform1f(it->name, f);      
           }
           else
           {
-            float f[it->arraySize];
-            glGetnUniformfv(oldProgram, found->second, sizeof(f), f);
-            SetUniform1fv(it->name, it->arraySize, f);      
+            float values[it->arraySize];
+            // For some reason GetnUniforms doesn't work
+            // So you have to query each element individually...
+            for(int i = 0;i<it->arraySize;i++)
+            {
+              GLCall(int location = glGetUniformLocation(program,
+                  std::string(found->first + "["+std::to_string(i)+"]").c_str()));
+              GLCall(glGetUniformfv(oldProgram, location, &values[i]));
+            }
+            SetUniform1fv(it->name, it->arraySize, values);
           }
         }
         else if(it->type == GL_FLOAT_VEC2)
         {
           Vec2 f;
-          glGetnUniformfv(oldProgram, found->second, sizeof(Vec2), (float*)&f);
+          GLCall(glGetnUniformfv(oldProgram, found->second, sizeof(Vec2), (float*)&f));
           SetUniform2f(it->name, f);      
         }
         else if(it->type == GL_FLOAT_VEC3)
         {
           Vec3<float> f;
-          glGetnUniformfv(oldProgram, found->second, sizeof(Vec3<float>), (float*)&f);
+          GLCall(glGetnUniformfv(oldProgram, found->second, sizeof(Vec3<float>), (float*)&f));
           SetUniform3f(it->name, f);      
         }
         else if(it->type == GL_FLOAT_VEC4)
         {
           Vec4 f;
-          glGetnUniformfv(oldProgram, found->second, sizeof(Vec4), (float*)&f);
+          GLCall(glGetnUniformfv(oldProgram, found->second, sizeof(Vec4), (float*)&f));
           SetUniform4f(it->name, f);      
         }
         else if(it->type == GL_FLOAT)
         {
           Vec4 f;
-          glGetnUniformfv(oldProgram, found->second, sizeof(Vec4), (float*)&f);
+          GLCall(glGetnUniformfv(oldProgram, found->second, sizeof(Vec4), (float*)&f));
           SetUniform4f(it->name, f);      
         }
-        else if(it->type == GL_INT)
+        else if(it->type == GL_INT || it->type == GL_SAMPLER_2D)
         {
           if(it->arraySize == 1)
           {
             int i;
-            glGetUniformiv(oldProgram, found->second, &i);
+            GLCall(glGetUniformiv(oldProgram, found->second, &i));
             SetUniform1i(it->name, i);      
           }
           else
           {
-            int i[it->arraySize];
-            glGetnUniformiv(oldProgram, found->second, sizeof(i), i);
-            SetUniform1iv(it->name, it->arraySize, i);      
+            int values[it->arraySize];
+            // For some reason GetnUniforms doesn't work
+            // So you have to query each element individually...
+            for(int i = 0;i<it->arraySize;i++)
+            {
+              GLCall(int location = glGetUniformLocation(program,
+                  std::string(found->first + "["+std::to_string(i)+"]").c_str()));
+              GLCall(glGetUniformiv(oldProgram, location, &values[i]));
+            }
+            SetUniform1iv(it->name, it->arraySize, values);
           }
         }
         else if(it->type == GL_UNSIGNED_INT)
@@ -178,26 +192,33 @@ namespace Greet {
           if(it->arraySize == 1)
           {
             uint i;
-            glGetUniformuiv(oldProgram, found->second, &i);
+            GLCall(glGetUniformuiv(oldProgram, found->second, &i));
             SetUniform1ui(it->name, i);      
           }
           else
           {
-            uint i[it->arraySize];
-            glGetnUniformuiv(oldProgram, found->second, sizeof(i), i);
-            SetUniform1uiv(it->name, it->arraySize, i);      
+            uint values[it->arraySize];
+            // For some reason GetnUniforms doesn't work
+            // So you have to query each element individually...
+            for(int i = 0;i<it->arraySize;i++)
+            {
+              GLCall(int location = glGetUniformLocation(program,
+                  std::string(found->first + "["+std::to_string(i)+"]").c_str()));
+              GLCall(glGetUniformuiv(oldProgram, location, &values[i]));
+            }
+            SetUniform1uiv(it->name, it->arraySize, values);
           }
         }
-        else if(it->type == GL_FLOAT)
+        else if(it->type == GL_FLOAT_MAT3)
         {
           Mat3 mat;
-          glGetnUniformfv(oldProgram, found->second, sizeof(Mat3), mat.elements);
+          GLCall(glGetnUniformfv(oldProgram, found->second, sizeof(Mat3), mat.elements));
           SetUniformMat3(it->name, mat);      
         }
-        else if(it->type == GL_FLOAT)
+        else if(it->type == GL_FLOAT_MAT4)
         {
           Mat4 mat;
-          glGetnUniformfv(oldProgram, found->second, sizeof(Mat4), mat.elements);
+          GLCall(glGetnUniformfv(oldProgram, found->second, sizeof(Mat4), mat.elements));
           SetUniformMat4(it->name, mat);      
         }
       }
@@ -270,14 +291,14 @@ namespace Greet {
   {
     std::map<std::string, int> uniforms;
     GLint numActiveUniforms = 0;
-    glGetProgramiv(program, GL_ACTIVE_UNIFORMS, &numActiveUniforms);
+    GLCall(glGetProgramiv(program, GL_ACTIVE_UNIFORMS, &numActiveUniforms));
     std::vector<GLchar> nameData(256);
     for(int i= 0; i< numActiveUniforms; ++i)
     {
       GLint arraySize = 0;
       GLenum type = 0;
       GLsizei actualLength = 0;
-      glGetActiveUniform(program, i, nameData.size(), &actualLength, &arraySize, &type, &nameData[0]);
+      GLCall(glGetActiveUniform(program, i, nameData.size(), &actualLength, &arraySize, &type, &nameData[0]));
 
       // For some reason arrays return 'arrayName[0]'
       for(int i = 0;i<actualLength;i++)
@@ -298,14 +319,14 @@ namespace Greet {
   {
     std::vector<UniformData> uniforms;
     GLint numActiveUniforms = 0;
-    glGetProgramiv(program, GL_ACTIVE_UNIFORMS, &numActiveUniforms);
+    GLCall(glGetProgramiv(program, GL_ACTIVE_UNIFORMS, &numActiveUniforms));
     std::vector<GLchar> nameData(256);
     for(int i= 0; i< numActiveUniforms; ++i)
     {
       GLint arraySize = 0;
       GLenum type = 0;
       GLsizei actualLength = 0;
-      glGetActiveUniform(program, i, nameData.size(), &actualLength, &arraySize, &type, &nameData[0]);
+      GLCall(glGetActiveUniform(program, i, nameData.size(), &actualLength, &arraySize, &type, &nameData[0]));
 
       // For some reason arrays return 'arrayName[0]'
       for(int i = 0;i<actualLength;i++)

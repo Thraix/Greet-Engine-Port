@@ -21,7 +21,9 @@ namespace Greet {
       *texId = id;
     }
     else 
+    {
       *texId = 0;
+    }
   }
 
   Texture::Texture(uint texId, uint textureType)
@@ -47,6 +49,6 @@ namespace Greet {
 
   uint Texture::GetTexId() const
   {
-    return *texId; 
+    return *texId.get(); 
   }
 }

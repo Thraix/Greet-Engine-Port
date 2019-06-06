@@ -7,8 +7,8 @@ namespace vmc
   GridRenderer3D::GridRenderer3D()
     : Renderer3D(), lineShader(Shader::FromFile("res/shaders/simple.shader")), vao(), vbo(2 * sizeof(Vec3<float>), BufferType::ARRAY, BufferDrawType::DYNAMIC), ibo(2 * sizeof(uint), BufferType::INDEX, BufferDrawType::STATIC)
   {
-    meshdata = MeshFactory::Cube2(0.5f, 0.5f, 0.5f, 1, 1, 1);
-    Vec2* texCoords = new Vec2[6 * 4];
+    MeshData meshdata = MeshFactory::Cube2(0.5f, 0.5f, 0.5f, 1, 1, 1);
+    std::vector<Vec2> texCoords(6 * 4);
     for (int i = 0;i < 6;i++)
     {
       texCoords[i * 4 + 0] = Vec2(0, 0);
@@ -17,7 +17,7 @@ namespace vmc
       texCoords[i * 4 + 3] = Vec2(0, 1);
     }
 
-    meshdata->AddAttribute(new AttributeData<Vec2>(ATTRIBUTE_TEXCOORD, texCoords));
+    meshdata.AddAttribute(AttributeData(ATTRIBUTE_TEXCOORD, texCoords));
     mesh = new Mesh(meshdata);
     material = new Material(Shader::FromFile("res/shaders/voxel.shader"));
     //material->AddUniform<uint>(Uniform1ui("color"));

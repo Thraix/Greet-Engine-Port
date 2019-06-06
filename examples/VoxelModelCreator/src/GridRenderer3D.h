@@ -1,5 +1,4 @@
 #pragma once
-
 #include <Greet.h>
 #include "Cube.h"
 
@@ -14,7 +13,6 @@ namespace vmc
 		Greet::EntityModel* emodel;
 		Greet::Material* material;
 		Greet::Mesh* mesh;
-		Greet::MeshData* meshdata;
 
 
 		Greet::Shader lineShader;

@@ -4,7 +4,8 @@
 namespace Greet
 {
   FontAtlas::FontAtlas(const std::string& filename, uint width, uint height, uint fontSize)
-    : yPos(0), xPos(0), nextYPos(0), width(width), height(height), fontSize(fontSize)
+    : yPos(0), xPos(0), nextYPos(0), width(width), height(height), fontSize(fontSize), 
+    atlas{width, height,TextureParams(TextureFilter::LINEAR,TextureWrap::CLAMP_TO_EDGE,TextureInternalFormat::RGBA)}
   {
     if(FT_Init_FreeType(&library))
     {
@@ -17,7 +18,6 @@ namespace Greet
 
     FT_Set_Pixel_Sizes(face, 0, fontSize);
 
-    atlas = Texture2D(width,height,TextureParams(TextureFilter::LINEAR,TextureWrap::NONE,TextureInternalFormat::RGBA)); 
     m_pixels = new char[width*height*4];
     memset(m_pixels, 0, width*height*4);
   }
