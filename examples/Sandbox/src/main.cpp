@@ -201,7 +201,7 @@ class Core : public App
       rotation = new KeyboardControl(GLFW_KEY_DOWN,GLFW_KEY_UP,GLFW_KEY_RIGHT,GLFW_KEY_LEFT,2);
       //Tree t(renderer3d,0,0,0);
       uint pos = 0;
-      //		Log::info(JSONLoader::isNumber("0.1234s",pos));
+      //		Log::Info(JSONLoader::isNumber("0.1234s",pos));
       RenderEngine::Add2DScene(uilayer, "uilayer");
       layer3d = new Layer3D(camera, skybox);
       layer3d->AddRenderer(renderer3d);
@@ -456,22 +456,18 @@ class TestApp : public App
 #include <fstream>
 int main()
 {
-  /*
-     uint pos = 0;
-     uint lastPos = pos;
-     JSONObject obj = JSONLoader::loadJSON("test.txt");
-     Log::info("object1",obj.hasKey("object1") ? "true" : "false");
-     Log::info("object1.string1", obj.getObject("object1").getValue("string1"));
-     Log::info("object1.float", obj.getObject("object1").getValueAsFloat("float"));
-     Log::info("object1.null", obj.getObject("object1").isNull("null") ? "true" : "false");
-     Log::info("object1.true", obj.getObject("object1").getValueAsBool("true") ? "true" : "false");
-     Log::info("object1.false", obj.getObject("object1").getValueAsBool("false") ? "true" : "false");
-     Log::info("string2", obj.getValueAsFloat("string2"));
+     JSONObject obj = JSONLoader::LoadJSON("test.json");
+     Log::Info("object1",obj.HasKey("object1") ? "true" : "false");
+     Log::Info("object1.string1", obj.GetObject("object1").GetValue("string1"));
+     Log::Info("object1.float", obj.GetObject("object1").GetValueAsFloat("float"));
+     Log::Info("object1.null", obj.GetObject("object1").IsNull("null") ? "true" : "false");
+     Log::Info("object1.true", obj.GetObject("object1").GetValueAsBool("true") ? "true" : "false");
+     Log::Info("object1.false", obj.GetObject("object1").GetValueAsBool("false") ? "true" : "false");
+     Log::Info("string2", obj.GetValueAsFloat("string2"));
      std::ofstream file("save.txt");
-     file << obj;
+     std::cout << obj << std::endl;
      file.close();
      system("pause");
-     */
 
   Core game;
   game.Start();

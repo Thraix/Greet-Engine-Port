@@ -2,6 +2,5 @@
 
 namespace Greet {
 
-  char* JSON::m_indent;
-  uint JSON::ostream_indent;
+  std::string JSON::m_indent;
 }
