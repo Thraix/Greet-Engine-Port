@@ -456,6 +456,7 @@ class TestApp : public App
 #include <fstream>
 int main()
 {
+#if 0
      JSONObject obj = JSONLoader::LoadJSON("test.json");
      Log::Info("object1",obj.HasKey("object1") ? "true" : "false");
      Log::Info("object1.string1", obj.GetObject("object1").GetValue("string1"));
@@ -468,6 +469,7 @@ int main()
      std::cout << obj << std::endl;
      file.close();
      system("pause");
+#endif
 
   Core game;
   game.Start();
