@@ -1,10 +1,8 @@
 #include "XML.h"
 
 #include <fstream>
-#include <cstring>
 #include <algorithm>
 #include <utils/xml/XMLException.h>
-#include <iostream>
 
 namespace Greet
 {
