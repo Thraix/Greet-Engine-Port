@@ -9,7 +9,7 @@ namespace Greet
   {
     vertical = GUIUtils::GetBooleanFromXML(xmlObject,"vertical", false);
 
-    if(!xmlObject.HasProperty("width"))
+    if(!xmlObject.HasAttribute("width"))
     {
       sizeType.w = 1;
       size.w = 1;
@@ -18,7 +18,7 @@ namespace Greet
       else
         widthSizeType = SizeType::NONE;
     }
-    if(!xmlObject.HasProperty("height"))
+    if(!xmlObject.HasAttribute("height"))
     {
       sizeType.h = 1;
       size.h = 1;

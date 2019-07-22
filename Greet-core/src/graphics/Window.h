@@ -25,7 +25,6 @@ namespace Greet {
   typedef void(*JOYSTICK_STATE)(uint joystick, unsigned char state);
   typedef void(*WINDOW_FOCUS)(int state); 
 
-
   class Window
   {
     private:

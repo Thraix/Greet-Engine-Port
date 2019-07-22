@@ -6,41 +6,41 @@ namespace Greet
 {
   bool GUIUtils::GetBooleanFromXML(const XMLObject& object, const std::string& key, bool defaultValue)
   {
-    if(object.HasProperty(key))
-      return GetBoolean(object.GetProperty(key));
+    if(object.HasAttribute(key))
+      return GetBoolean(object.GetAttribute(key));
     return defaultValue;
   }
 
   Vec4 GUIUtils::GetColorFromXML(const XMLObject& object, const std::string& key, const Vec4& defaultValue)
   {
-    if(object.HasProperty(key))
-      return GetColor(object.GetProperty(key));
+    if(object.HasAttribute(key))
+      return GetColor(object.GetAttribute(key));
     return defaultValue;
   }
 
   float GUIUtils::GetSizeFromXML(const XMLObject& object, const std::string& key, float defaultValue, float parentSize)
   {
-    if(object.HasProperty(key))
-      return GetSize(object.GetProperty(key), parentSize);
+    if(object.HasAttribute(key))
+      return GetSize(object.GetAttribute(key), parentSize);
     return defaultValue;
   }
   std::string GUIUtils::GetStringFromXML(const XMLObject& object, const std::string& key, const std::string& defaultValue)
   {
-    if(object.HasProperty(key))
-      return object.GetProperty(key);
+    if(object.HasAttribute(key))
+      return object.GetAttribute(key);
     return defaultValue;
   }
   int GUIUtils::GetIntFromXML(const XMLObject& object, const std::string& key, int defaultValue)
   {
-    if(object.HasProperty(key))
-      return atoi(object.GetProperty(key).c_str());
+    if(object.HasAttribute(key))
+      return atoi(object.GetAttribute(key).c_str());
     return defaultValue;
   }
 
   float GUIUtils::GetFloatFromXML(const XMLObject& object, const std::string& key, float defaultValue)
   {
-    if(object.HasProperty(key))
-      return atof(object.GetProperty(key).c_str());
+    if(object.HasAttribute(key))
+      return atof(object.GetAttribute(key).c_str());
     return defaultValue;
   }
 

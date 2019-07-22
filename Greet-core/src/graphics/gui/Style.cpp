@@ -15,9 +15,9 @@ namespace Greet
     borderRadius = GUIUtils::GetFloatFromXML(object, prefix+"borderRadius",radius);
     roundedPrecision = GUIUtils::GetIntFromXML(object, prefix+"roundedPrecision", 3);
 
-    if(object.HasProperty(prefix+"backgroundColor"))
+    if(object.HasAttribute(prefix+"backgroundColor"))
       hasBackgroundColor = true;
-    if(object.HasProperty(prefix+"borderColor"))
+    if(object.HasAttribute(prefix+"borderColor"))
       hasBorderColor = true;
 
     backgroundColor = GUIUtils::GetColorFromXML(object, prefix+"backgroundColor",Vec4(0,0,0,1));

@@ -21,9 +21,9 @@ namespace Greet
 
       void Load(const std::string& prefix, const XMLObject& object)
       {
-        if (object.HasProperty(prefix))
+        if (object.HasAttribute(prefix))
         {
-          std::vector<std::string> strings = StringUtils::split_string(object.GetProperty(prefix)," ");
+          std::vector<std::string> strings = StringUtils::split_string(object.GetAttribute(prefix)," ");
           if(strings.size() == 4)
           {
             top = atof(strings.at(0).c_str());

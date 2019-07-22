@@ -7,8 +7,8 @@
   backgroundColor="#263238" 
   >
   <Label 
-    fontSize="18px" font="roboto" color="#90a4ae">Frame header</Label>
 
+    fontSize="18px" font="roboto" color="#90a4ae">Frame header</Label>
   <Divider name="divider" backgroundColor="#90a4ae"/>
   <Label color="#90a4ae" font="roboto" fontSize="20">Do you like Popcorn?</Label>
 

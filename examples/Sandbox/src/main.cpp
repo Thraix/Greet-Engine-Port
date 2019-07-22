@@ -350,6 +350,7 @@ class Core : public App
       else if(EVENT_IS_TYPE(event, EventType::KEY_RELEASE))
       {
         KeyReleaseEvent& e = (KeyReleaseEvent&)event;
+        Log::Info(e.GetButton());
         movement->onInput(e.GetButton(),false);
         rotation->onInput(e.GetButton(),false);
         if (e.GetButton() == GLFW_KEY_LEFT_SHIFT)
@@ -472,7 +473,6 @@ int main()
      file.close();
      system("pause");
      */
-
   Core game;
   game.Start();
 }

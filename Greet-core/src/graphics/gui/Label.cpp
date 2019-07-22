@@ -22,7 +22,7 @@ namespace Greet
     fontSize = GUIUtils::GetFloatFromXML(object, "fontSize", 20);
     font = FontManager::Get(GUIUtils::GetStringFromXML(object,"font",""),fontSize);
 
-    std::string grav = object.GetProperty("gravity", "center");
+    std::string grav = object.GetAttribute("gravity", "center");
     if(grav == "top")
       gravity = Gravity::TOP;
     else if(grav == "bottom")

@@ -23,8 +23,8 @@ namespace Greet
   Component::Component(const XMLObject& xmlObject, Component* parent)
     : Component{GUIUtils::GetStringFromXML(xmlObject,"name", xmlObject.GetName() + "#" + LogUtils::DecToHex(UUID::GetInstance().GetUUID(),8)), parent}
   {
-    std::string width = xmlObject.GetProperty("width", "wrap_content");
-    std::string height = xmlObject.GetProperty("height", "wrap_content");
+    std::string width = xmlObject.GetAttribute("width", "wrap_content");
+    std::string height = xmlObject.GetAttribute("height", "wrap_content");
 
     size.w = atof(width.c_str());
     size.h = atof(height.c_str());

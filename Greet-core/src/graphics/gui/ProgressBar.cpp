@@ -10,10 +10,10 @@ namespace Greet
     : Component(object,parent), min(0), max(1), value(0), valueReference(nullptr), vertical(false), reverse(false)
   {
     m_isFocusable = true;
-    if(object.HasProperty("minValue"))
-      min = atof(object.GetProperty("minValue").c_str()); 
-    if(object.HasProperty("maxValue"))
-      max = atof(object.GetProperty("maxValue").c_str()); 
+    if(object.HasAttribute("minValue"))
+      min = atof(object.GetAttribute("minValue").c_str()); 
+    if(object.HasAttribute("maxValue"))
+      max = atof(object.GetAttribute("maxValue").c_str()); 
 
     vertical = GUIUtils::GetBooleanFromXML(object,"vertical", false); 
     reverse = GUIUtils::GetBooleanFromXML(object,"reverseProgress", false); 

@@ -1,4 +1,4 @@
-# This Makefile was generated using MakeGen v1.1.1 made by Tim Håkansson
+# This Makefile was generated using MakeGen v1.1.3 made by Tim Håkansson
 # and is licensed under MIT. Full source of the project can be found at
 # https://github.com/Thraix/MakeGen
 CC=@g++
@@ -13,8 +13,9 @@ LIBDIR=-L./../../Greet-core/bin/
 LDFLAGS=-Wl,-rpath=../../Greet-core/bin/ 
 LIBS=$(LIBDIR) -lgreet -lGL -lGLEW -lglfw -lfreeimage -lfreetype 
 OUTPUT=$(BIN)Sandbox.a
-.PHONY: all directories rebuild clean
-all: directories $(OUTPUT)
+.PHONY: all directories rebuild clean dependencies
+all: dependencies directories $(OUTPUT)
+dependencies:
 directories: $(BIN) $(OBJPATH)
 $(BIN):
 	$(info Creating output directories)

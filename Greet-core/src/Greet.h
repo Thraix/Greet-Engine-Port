@@ -1,5 +1,6 @@
 #pragma once
 
+#include <Greet.h>
 #include <audio/AudioChannel.h>
 #include <audio/AudioChannelManager.h>
 #include <audio/Sound.h>

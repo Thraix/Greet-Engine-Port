@@ -1,13 +1,24 @@
 #include "XML.h"
 
 #include <fstream>
+#include <cstring>
+#include <algorithm>
 #include <utils/xml/XMLException.h>
+#include <iostream>
 
 namespace Greet
 {
   XMLObject XML::FromString(const std::string& string)
   {
-    return XMLObject(string);
+    int startLine = 0;
+    int startPos = 0;
+    // Remove version tag.
+    if(string.find("<?") != std::string::npos)
+    {
+      startPos = string.find("?>") + 3;
+      startLine = std::count(string.begin(), string.begin()+startPos, '\n') + 1;
+    }
+    return XMLObject(string, &startPos, &startLine);
   }
 
   XMLObject XML::FromFile(const std::string& fileName)
