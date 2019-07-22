@@ -57,9 +57,9 @@ namespace Greet {
       return TimeModified{attrib.st_mtim};
     }
 
-    inline std::string read_file(const char* filepath)
+    inline std::string read_file(const std::string& filepath)
     {
-      FILE *file = fopen(filepath, "rt");
+      FILE *file = fopen(filepath.c_str(), "rt");
       if (!file)
       {
         Log::Error("File could not be read: ", filepath);
@@ -77,17 +77,17 @@ namespace Greet {
       return result;
     }
 
-    inline void write_file(const char* filepath, const std::string& write)
+    inline void write_file(const std::string& filepath, const std::string& write)
     {
-      FILE *file = fopen(filepath,"wt");
+      FILE *file = fopen(filepath.c_str(),"wt");
       fseek(file, 0, SEEK_END);
       fputs(write.c_str(),file);
       fclose(file);
     }
 
-    inline bool file_exists(const char* filepath)
+    inline bool file_exists(const std::string& filepath)
     {
-      if (FILE *file = fopen(filepath, "r"))
+      if (FILE *file = fopen(filepath.c_str(), "r"))
       {
         fclose(file);
         return true;
