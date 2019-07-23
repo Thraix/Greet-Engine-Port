@@ -8,7 +8,7 @@ namespace Greet {
 
   MeshData OBJUtils::ErrorModel()
   {
-    return MeshFactory::Cube(0,0,0,1,1,1);// TODO return cube
+    return MeshFactory::Cube(0,0,0,1,1,1);
   }
 
   MeshData OBJUtils::LoadObj(const std::string& filename)
