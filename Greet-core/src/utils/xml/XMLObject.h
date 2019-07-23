@@ -5,6 +5,7 @@
 #include <vector>
 namespace Greet
 {
+  // TODO: XMLExceptions should print which file the error is in as well.
   class XMLObject
   {
     private:
@@ -46,7 +47,7 @@ namespace Greet
       void ReadBodyTail(const std::string& string, int* posPointer, int* linePointer);
       void ReadText(const std::string& string, int* posPointer, int* linePointer);
       void ReadWhiteSpace(const std::string& string, int* posPointer, int* linePointer);
-      void ReplacePredefinedEntities(std::string& string);
+      void ReplacePredefinedEntities(std::string& string, int* linePointer);
       std::string ReadXMLName(const std::string& string, int* posPointer, int* linePointer); 
   };
 }

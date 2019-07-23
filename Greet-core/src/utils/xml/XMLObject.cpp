@@ -205,7 +205,7 @@ namespace Greet
     int valueStart = *posPointer;
     while (string[*posPointer] != '\"') (*posPointer)++;
     std::string value = string.substr(valueStart, (*posPointer) - valueStart);
-    ReplacePredefinedEntities(value);
+    ReplacePredefinedEntities(value, linePointer);
     (*posPointer)++;
     attributes.emplace(property, value);
     ReadWhiteSpace(string, posPointer, linePointer);
@@ -239,7 +239,7 @@ namespace Greet
     int startPos = *posPointer;
     while (string[*posPointer] != '<') (*posPointer)++;
     text = string.substr(startPos, (*posPointer) - startPos);
-    ReplacePredefinedEntities(text);
+    ReplacePredefinedEntities(text, linePointer);
   }
 
   void XMLObject::ReadWhiteSpace(const std::string& string, int* posPointer, int* linePointer)
@@ -281,7 +281,7 @@ namespace Greet
     return string.substr(startPos, (*posPointer) - startPos);
   }
 
-  void XMLObject::ReplacePredefinedEntities(std::string& string)
+  void XMLObject::ReplacePredefinedEntities(std::string& string, int* linePointer)
   {
     std::vector<std::pair<std::string, std::string>> entities
     {
@@ -294,13 +294,17 @@ namespace Greet
     size_t pos = string.find('&');
     while(pos != std::string::npos)
     {
+      bool found = false;
       for(auto entity : entities)
       {
         if(strncmp(&string[pos], entity.first.c_str(), entity.first.length()) == 0)
         {
           string.replace(pos, entity.first.length(), entity.second);
+          found = true;
         }
       }
+      if(!found)
+        Log::Warning("Ampersand found in xml but isn't a predefined entity at line " + std::to_string(*linePointer));
       pos = string.find('&', pos+1);
     }
   }

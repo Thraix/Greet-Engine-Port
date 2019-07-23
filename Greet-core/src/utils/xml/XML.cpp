@@ -8,7 +8,7 @@ namespace Greet
 {
   XMLObject XML::FromString(const std::string& string)
   {
-    int startLine = 0;
+    int startLine = 1;
     int startPos = 0;
     // Remove version tag.
     if(string.find("<?") != std::string::npos)
