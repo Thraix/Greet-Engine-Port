@@ -1,5 +1,6 @@
 #include "XMLObject.h"
 
+#include <cstring>
 #include <utils/xml/XMLException.h>
 #include <utils/StringUtils.h>
 #include <logging/Log.h>
@@ -282,12 +283,26 @@ namespace Greet
 
   void XMLObject::ReplacePredefinedEntities(std::string& string)
   {
-    // TODO: Speed this up by finding & and replacing the value iterativly
-    StringUtils::replace_all(string, "&quot;", "\"");
-    StringUtils::replace_all(string, "&apos;", "\'");
-    StringUtils::replace_all(string, "&lt;", "<");
-    StringUtils::replace_all(string, "&gt;", ">");
-    StringUtils::replace_all(string, "&amp;", "&");
+    std::vector<std::pair<std::string, std::string>> entities
+    {
+      {"&quot;","\""},
+      {"&apos;", "\'"},
+      {"&lt;", "<"},
+      {"&gt;",">"},
+      {"&amp;", "&"}
+    };
+    size_t pos = string.find('&');
+    while(pos != std::string::npos)
+    {
+      for(auto entity : entities)
+      {
+        if(strncmp(&string[pos], entity.first.c_str(), entity.first.length()) == 0)
+        {
+          string.replace(pos, entity.first.length(), entity.second);
+        }
+      }
+      pos = string.find('&', pos+1);
+    }
   }
 
   std::string XMLObject::ReadXMLName(const std::string& string, int* posPointer, int* linePointer)
