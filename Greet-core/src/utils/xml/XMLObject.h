@@ -6,7 +6,6 @@
 
 namespace Greet
 {
-  // TODO: XMLExceptions should print which file the error is in as well.
   class XMLObject
   {
     public:
