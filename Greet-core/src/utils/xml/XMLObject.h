@@ -3,11 +3,20 @@
 #include <string>
 #include <map>
 #include <vector>
+
 namespace Greet
 {
   // TODO: XMLExceptions should print which file the error is in as well.
   class XMLObject
   {
+    public:
+      friend class XMLexception;
+      struct XMLLoadData
+      {
+        int pos; 
+        int line; 
+        const std::string& file;
+      };
     private:
       std::string name;
       std::string text;
@@ -18,7 +27,8 @@ namespace Greet
     public:
       XMLObject() {}
       XMLObject(const std::string& string);
-      XMLObject(const std::string& string, int* pos, int* line);
+      XMLObject(const std::string& string, int pos, int line, const std::string& file);
+      XMLObject(const std::string& string, XMLLoadData& data);
       XMLObject(const std::string& name, const std::map<std::string, std::string>& properties, const std::string& text);
       XMLObject(const std::string& name, const std::map<std::string, std::string>& properties, const std::vector<XMLObject>& objects);
 
@@ -38,16 +48,16 @@ namespace Greet
       void AddAttribute(const std::string& property, const std::string& value);
 
     private:
-      std::string GetClosingTag(const std::string& string, int* posPointer, int* linePointer);
+      std::string GetClosingTag(const std::string& string, XMLLoadData& data);
       // Returns true if the head contained closing tag.
-      bool ReadHead(const std::string& string, int* posPointer, int* linePointer);
-      void ReadName(const std::string& string, int* posPointer, int* linePointer);
-      void ReadAttribute(const std::string& string, int* posPointer, int* linePointer);
-      void ReadAttributes(const std::string& string, int* posPointer, int* linePointer);
-      void ReadBodyTail(const std::string& string, int* posPointer, int* linePointer);
-      void ReadText(const std::string& string, int* posPointer, int* linePointer);
-      void ReadWhiteSpace(const std::string& string, int* posPointer, int* linePointer);
-      void ReplacePredefinedEntities(std::string& string, int* linePointer);
-      std::string ReadXMLName(const std::string& string, int* posPointer, int* linePointer); 
+      bool ReadHead(const std::string& string, XMLLoadData& data);
+      void ReadName(const std::string& string, XMLLoadData& data);
+      void ReadAttribute(const std::string& string, XMLLoadData& data);
+      void ReadAttributes(const std::string& string, XMLLoadData& data);
+      void ReadBodyTail(const std::string& string, XMLLoadData& data);
+      void ReadText(const std::string& string, XMLLoadData& data);
+      void ReadWhiteSpace(const std::string& string, XMLLoadData& data);
+      void ReplacePredefinedEntities(std::string& string, XMLLoadData& data);
+      std::string ReadXMLName(const std::string& string, XMLLoadData& data); 
   };
 }

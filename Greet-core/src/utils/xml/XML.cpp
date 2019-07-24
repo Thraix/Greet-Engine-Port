@@ -6,7 +6,7 @@
 
 namespace Greet
 {
-  XMLObject XML::FromString(const std::string& string)
+  XMLObject XML::FromString(const std::string& string, const std::string& filename="")
   {
     int startLine = 1;
     int startPos = 0;
@@ -16,14 +16,14 @@ namespace Greet
       startPos = string.find("?>") + 3;
       startLine = std::count(string.begin(), string.begin()+startPos, '\n') + 1;
     }
-    return XMLObject(string, &startPos, &startLine);
+    return XMLObject(string, startPos, startLine,filename);
   }
 
-  XMLObject XML::FromFile(const std::string& fileName)
+  XMLObject XML::FromFile(const std::string& filename)
   {
-    std::ifstream file(fileName, std::ios::binary | std::ios::ate);
+    std::ifstream file(filename, std::ios::binary | std::ios::ate);
     if(!file)
-      throw XMLException("Could not read file \""+fileName+"\"");
+      throw XMLException("Could not read file \""+filename+"\"");
     std::streamsize size = file.tellg();
     file.seekg(0, std::ios::beg);
     std::string buffer;
@@ -32,6 +32,6 @@ namespace Greet
     {
       buffer += file.get();
     }
-    return FromString(buffer);
+    return FromString(buffer, filename);
   }
 }
