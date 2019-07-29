@@ -79,8 +79,7 @@ namespace vmc
     renderer->Update(timeElapsed);
 
     Vec3<float> near, direction;
-    GetWorldCoordination(Window::GetMousePos(), &near, &direction);
-
+    camera->GetScreenToWorldCoordinate(Window::GetMousePos(), &near, &direction);
 
     m_ray = Ray::GetCubeRay(near,direction, GRID_SIZE);
     auto lastIt = m_ray.begin();

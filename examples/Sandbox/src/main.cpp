@@ -409,7 +409,9 @@ class Core : public App
         }
         if (e.GetButton() == GLFW_KEY_X)
         {
-          Vec3<float> p = layer3d->GetScreenCoordination(Vec3<float>(0,0,0),Window::GetWidth(),Window::GetHeight());
+          Vec2 p = camera->GetWorldToScreenCoordinate(Vec3<float>(0, 0, 0));
+          Window::TransformScreenToWindowPos(p);
+          Log::Info(p);
         }
         movement->onInput(e.GetButton(),true);
         rotation->onInput(e.GetButton(),true);
@@ -458,18 +460,18 @@ class TestApp : public App
 int main()
 {
 #if 0
-     JSONObject obj = JSONLoader::LoadJSON("test.json");
-     Log::Info("object1",obj.HasKey("object1") ? "true" : "false");
-     Log::Info("object1.string1", obj.GetObject("object1").GetValue("string1"));
-     Log::Info("object1.float", obj.GetObject("object1").GetValueAsFloat("float"));
-     Log::Info("object1.null", obj.GetObject("object1").IsNull("null") ? "true" : "false");
-     Log::Info("object1.true", obj.GetObject("object1").GetValueAsBool("true") ? "true" : "false");
-     Log::Info("object1.false", obj.GetObject("object1").GetValueAsBool("false") ? "true" : "false");
-     Log::Info("string2", obj.GetValueAsFloat("string2"));
-     std::ofstream file("save.txt");
-     std::cout << obj << std::endl;
-     file.close();
-     system("pause");
+  JSONObject obj = JSONLoader::LoadJSON("test.json");
+  Log::Info("object1",obj.HasKey("object1") ? "true" : "false");
+  Log::Info("object1.string1", obj.GetObject("object1").GetValue("string1"));
+  Log::Info("object1.float", obj.GetObject("object1").GetValueAsFloat("float"));
+  Log::Info("object1.null", obj.GetObject("object1").IsNull("null") ? "true" : "false");
+  Log::Info("object1.true", obj.GetObject("object1").GetValueAsBool("true") ? "true" : "false");
+  Log::Info("object1.false", obj.GetObject("object1").GetValueAsBool("false") ? "true" : "false");
+  Log::Info("string2", obj.GetValueAsFloat("string2"));
+  std::ofstream file("save.txt");
+  std::cout << obj << std::endl;
+  file.close();
+  system("pause");
 #endif
 
   Core game;

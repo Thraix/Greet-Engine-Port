@@ -35,8 +35,6 @@ namespace Greet {
       float m_heightWanted;
       float m_rotationWanted;
 
-      // Calculated information
-      Mat4 m_viewMatrix;
     private:
       void CalculateViewMatrix();
       void CalculateInformation();
@@ -47,7 +45,6 @@ namespace Greet {
       TPCamera(const Mat4& projectionMatrix, const Vec3<float>& position, float distance, float height, float rotation, float distanceMin, float distanceMax, float heightMin, float heightMax, float rotationSpeed, float heightSpeed, float distanceSpeed);
       virtual ~TPCamera();
 
-      const Mat4& GetViewMatrix() const override;
       void Update(float timeElapsed) override;
 
       const Vec3<float>& GetPosition() const { return m_position; }

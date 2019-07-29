@@ -143,10 +143,17 @@ namespace Greet {
     else
       glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL); 
   }
-  void Window::TransformMousePosToScreen(Vec2& pos)
+
+  void Window::TransformScreenToWindowPos(Vec2& pos)
   {
     pos.x = (pos.x + 1.0f) * 0.5f * Greet::Window::GetWidth();
     pos.y = (1.0f - (pos.y + 1.0f) * 0.5f) * Greet::Window::GetHeight();
+  }
+
+  void Window::TransformWindowToScreenPos(Vec2& pos)
+  {
+    pos.x = pos.x / (GetWidth() * 0.5) - 1.0f;
+    pos.y = -pos.y / GetHeight() * 2 + 1;
   }
 
   void Window::window_resize(GLFWwindow *window, int width, int height)

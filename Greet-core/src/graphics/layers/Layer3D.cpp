@@ -70,31 +70,13 @@ namespace Greet {
     Log::Warning("Could not remove the renderer");
   }
 
-  Vec3<float> Layer3D::GetScreenCoordination(const Vec3<float>& coordinate, uint screenWidth, uint screenHeight) const
+  Vec3<float> Layer3D::GetWorldToScreenCoordinate(const Vec3<float>& coordinate) const
   {
-    Vec4 point = (camera->GetProjectionMatrix() * camera->GetViewMatrix()) * coordinate;
-    Vec3<float> p = Vec3<float>(point.x, point.y, point.z) / (fabs(point.z) * 2.0f) + 0.5f;
-    p.x *= screenWidth;
-    p.y = screenHeight - p.y * screenHeight;
-    return p;
+    return camera->GetWorldToScreenCoordinate(coordinate);
   }
 
-  void Layer3D::GetWorldCoordination(const Vec2& mousePos, Vec3<float>* near, Vec3<float>* direction) const
+  void Layer3D::GetScreenToWorldCoordinate(const Vec2& screenPos, Vec3<float>* near, Vec3<float>* direction) const
   {
-    if (near == NULL)
-    {
-      Log::Error("Near vector is NULL");
-      return;
-    }
-    if (direction == NULL)
-    {
-      Log::Error("Direction vector is NULL");
-      return;
-    }
-    Mat4 view = camera->GetViewMatrix();
-    Vec4 nearRes = ~view * ~camera->GetProjectionMatrix() * Vec3<float>(mousePos.x, mousePos.y, -1.0);
-    *near = Vec3<float>(nearRes) / nearRes.w;
-    Vec4 farRes = ~view * ~camera->GetProjectionMatrix() * Vec3<float>(mousePos.x, mousePos.y, 1.0);
-    *direction = ((Vec3<float>(farRes) / farRes.w) - *near).Normalize();
+    camera->GetScreenToWorldCoordinate(screenPos, near, direction);
   }
 }

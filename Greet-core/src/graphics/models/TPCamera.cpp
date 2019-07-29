@@ -12,7 +12,7 @@ namespace Greet {
   }
 
   TPCamera::TPCamera(const Mat4& projectionMatrix, const Vec3<float>& position, float distance, float height, float rotation)
-    :TPCamera(projectionMatrix, position, distance, height, rotation, 1, 100, -1,1)
+    : TPCamera(projectionMatrix, position, distance, height, rotation, 1, 100, -1,1)
   {
 
   }
@@ -47,11 +47,6 @@ namespace Greet {
     m_distance += (m_distanceWanted - m_distance) * factor1;
     m_height += (m_heightWanted - m_height) * factor2;
     CalculateInformation();
-  }
-
-  const Mat4& TPCamera::GetViewMatrix() const
-  { 
-    return m_viewMatrix;
   }
 
   void TPCamera::SetPosition(const Vec3<float>& pos)
@@ -131,7 +126,7 @@ namespace Greet {
 
   void TPCamera::CalculateViewMatrix()
   {
-    m_viewMatrix = Mat4::TPCamera(m_position, m_distance, m_height, m_rotation);
+    viewMatrix = Mat4::TPCamera(m_position, m_distance, m_height, m_rotation);
   }
 
   void TPCamera::CalculateInformation()
