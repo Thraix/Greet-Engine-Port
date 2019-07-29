@@ -1,13 +1,14 @@
 #include "RenderEngine.h"
 
 #include <logging/Log.h>
-#include <graphics/shaders/Shader.h>
 #include <utils/HotSwapping.h>
 
 namespace Greet {
 
-  std::map<std::string, Scene*> RenderEngine::m_scenes2d;
-  std::map<std::string, Scene*> RenderEngine::m_scenes3d;
+
+  std::vector<RenderEngine::SceneElement> RenderEngine::m_scenes2d;
+  std::vector<RenderEngine::SceneElement> RenderEngine::m_scenes3d;
+
   Scene* RenderEngine::focusedScene = nullptr;
 
   void RenderEngine::Add2DScene(Scene* scene, const std::string& name)
@@ -17,7 +18,7 @@ namespace Greet {
       Log::Error("Trying to add Scene to RenderEngine but it is NULL.");
       return;
     }
-    m_scenes2d.emplace(name, scene);
+    m_scenes2d.push_back({name, scene});
   }
 
   void RenderEngine::Add3DScene(Scene* scene, const std::string& name)
@@ -27,32 +28,36 @@ namespace Greet {
       Log::Error("Trying to add Renderer3D to RenderEngine but it is NULL.");
       return;
     }
-    m_scenes3d.emplace(name, scene);
+    m_scenes3d.push_back({name, scene});
   }
 
   Scene* RenderEngine::Remove2DScene(const std::string& name)
   {
-    auto it = m_scenes2d.find(name);
+    auto it = std::find_if(m_scenes2d.begin(), m_scenes2d.end(), 
+        [name] (const SceneElement& scene) { return scene.first == name; });
     m_scenes2d.erase(it);
     return it->second;
   }
 
   Scene* RenderEngine::Remove3DScene(const std::string& name)
   {
-    auto it = m_scenes3d.find(name);
+    auto it = std::find_if(m_scenes3d.begin(), m_scenes3d.end(), 
+        [name] (const SceneElement& scene) { return scene.first == name; });
     m_scenes3d.erase(it);
     return it->second;
   }
 
   Scene* RenderEngine::Get2DScene(const std::string& name)
   {
-    auto it = m_scenes2d.find(name);
+    auto it = std::find_if(m_scenes2d.begin(), m_scenes2d.end(), 
+        [name] (const SceneElement& scene) { return scene.first == name; });
     return it->second;
   }
 
   Scene* RenderEngine::Get3DScene(const std::string& name)
   {
-    auto it = m_scenes3d.find(name);
+    auto it = std::find_if(m_scenes3d.begin(), m_scenes3d.end(), 
+        [name] (const SceneElement& scene) { return scene.first == name; });
     return it->second;
   }
 
