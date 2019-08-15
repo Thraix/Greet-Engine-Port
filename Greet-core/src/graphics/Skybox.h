@@ -1,7 +1,7 @@
 #pragma once
 
 #include <graphics/textures/CubeMap.h>
-#include <graphics/models/Camera.h>
+#include <graphics/cameras/Camera.h>
 #include <graphics/shaders/Shader.h>
 #include <graphics/models/Mesh.h>
 

@@ -5,7 +5,7 @@
 #include <graphics/shaders/ShaderFactory.h>
 #include <graphics/textures/Texture2D.h>
 #include <utils/ColorUtils.h>
-#include <graphics/models/Camera.h>
+#include <graphics/cameras/Camera.h>
 
 namespace Greet {
 

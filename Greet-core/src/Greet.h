@@ -36,6 +36,9 @@
 #include <graphics/buffers/BatchIndexBuffer.h>
 #include <graphics/buffers/Buffer.h>
 #include <graphics/buffers/VertexArray.h>
+#include <graphics/cameras/Camera.h>
+#include <graphics/cameras/FPCamera.h>
+#include <graphics/cameras/TPCamera.h>
 #include <graphics/fonts/Font.h>
 #include <graphics/fonts/FontAtlas.h>
 #include <graphics/fonts/FontContainer.h>
@@ -66,14 +69,11 @@
 #include <graphics/layers/Layer.h>
 #include <graphics/layers/Layer3D.h>
 #include <graphics/layers/Scene.h>
-#include <graphics/models/Camera.h>
 #include <graphics/models/EntityModel.h>
-#include <graphics/models/FPCamera.h>
 #include <graphics/models/Material.h>
 #include <graphics/models/Mesh.h>
 #include <graphics/models/MeshData.h>
 #include <graphics/models/MeshFactory.h>
-#include <graphics/models/TPCamera.h>
 #include <graphics/renderers/BatchRenderer.h>
 #include <graphics/renderers/BatchRenderer3D.h>
 #include <graphics/renderers/GUIRenderer.h>

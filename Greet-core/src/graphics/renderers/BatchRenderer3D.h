@@ -3,7 +3,7 @@
 #include <map>
 #include <vector>
 #include <graphics/models/EntityModel.h>
-#include <graphics/models/Camera.h>
+#include <graphics/cameras/Camera.h>
 #include <utils/OBJUtils.h>
 #include <utils/Utils.h>
 #include <graphics/textures/TextureManager.h>

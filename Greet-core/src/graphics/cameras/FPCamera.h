@@ -1,4 +1,6 @@
-#include "Camera.h"
+#pragma once
+
+#include <graphics/cameras/Camera.h>
 
 namespace Greet {
 
