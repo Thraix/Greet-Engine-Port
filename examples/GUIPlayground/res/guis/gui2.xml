@@ -1,0 +1,9 @@
+<Frame
+  name="TopComponent"
+  width="fill_parent" height="200px" minHeight="100px" spacing="10px"
+  resizeTop="false" resizeLeft="false" resizeBottom="true" resizeRight="false"
+  padding="10px" border="1px"
+  borderColor="#37474f" 
+  backgroundColor="#263238" 
+  >
+</Frame>

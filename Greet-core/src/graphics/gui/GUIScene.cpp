@@ -55,7 +55,8 @@ namespace Greet {
       if((*it)->IsMouseInside(pos))
       {
         (*it)->OnMousePressed(transformedEvent, pos - (*it)->GetPosition());
-        event.AddFlag( EVENT_FOCUSED  | EVENT_HANDLED);
+        event.AddFlag(EVENT_FOCUSED  | EVENT_HANDLED);
+        frames.splice(frames.end(),frames,std::next(it).base());
         return;
       }
     }

@@ -29,8 +29,9 @@ class Core : public App
       guiScene = new GUIScene(new GUIRenderer(), Shader::FromFile("res/shaders/gui.shader"));
 
       guiScene->AddFrame(FrameFactory::GetFrame("res/guis/gui.xml"));
+      guiScene->AddFrame(FrameFactory::GetFrame("res/guis/gui2.xml"));
 
-      Frame* frame = guiScene->GetFrame("TopComponent");
+      Frame* frame = guiScene->GetFrame("LeftComponent");
       if(frame != nullptr)
       {
         using namespace std::placeholders;

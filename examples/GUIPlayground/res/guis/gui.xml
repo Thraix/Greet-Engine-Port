@@ -1,5 +1,5 @@
 <Frame
-  name="TopComponent"
+  name="LeftComponent"
   width="400px" height="fill_parent" minWidth="100px" spacing="10px"
   resizeTop="false" resizeLeft="false" resizeBottom="false" resizeRight="true"
   padding="10px" border="1px"

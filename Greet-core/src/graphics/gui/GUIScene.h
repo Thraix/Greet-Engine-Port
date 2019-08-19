@@ -7,7 +7,7 @@
 #include <event/KeyEvent.h>
 #include <event/MouseEvent.h>
 #include <string>
-#include <map>
+#include <list>
 
 namespace Greet {
 
@@ -18,7 +18,7 @@ namespace Greet {
   {
     private:
       Mat3 projectionMatrix;
-      std::vector<Frame*> frames;
+      std::list<Frame*> frames;
       Component* m_focused;
       GUIRenderer* m_renderer;
       Shader m_shader;
