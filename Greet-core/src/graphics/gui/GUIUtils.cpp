@@ -6,8 +6,15 @@ namespace Greet
 {
   bool GUIUtils::GetBooleanFromXML(const XMLObject& object, const std::string& key, bool defaultValue)
   {
-    if(object.HasAttribute(key))
-      return GetBoolean(object.GetAttribute(key));
+    if(object.HasAttribute(key)) 
+    {
+      const std::string& str = object.GetAttribute(key);
+      if (str == "true")
+        return true;
+      else if (str == "false")
+        return false;
+      Log::Warning("Invalid string in boolean property \"",key,"\"=\"", str, "\"");
+    }
     return defaultValue;
   }
 
@@ -18,11 +25,14 @@ namespace Greet
     return defaultValue;
   }
 
-  float GUIUtils::GetSizeFromXML(const XMLObject& object, const std::string& key, float defaultValue, float parentSize)
+  ComponentSize GUIUtils::GetComponentSizeFromXML(const XMLObject& object, const std::string& widthKey, const std::string& heightKey, ComponentSize defaultValue)
   {
-    if(object.HasAttribute(key))
-      return GetSize(object.GetAttribute(key), parentSize);
-    return defaultValue;
+    ComponentSize ret = defaultValue;
+    if(object.HasAttribute(widthKey))
+      GetComponentSize(object.GetAttribute(widthKey), &ret.value.w, &ret.widthType);
+    if(object.HasAttribute(heightKey))
+      GetComponentSize(object.GetAttribute(heightKey), &ret.value.h, &ret.heightType);
+    return ret;
   }
   std::string GUIUtils::GetStringFromXML(const XMLObject& object, const std::string& key, const std::string& defaultValue)
   {
@@ -33,14 +43,28 @@ namespace Greet
   int GUIUtils::GetIntFromXML(const XMLObject& object, const std::string& key, int defaultValue)
   {
     if(object.HasAttribute(key))
-      return atoi(object.GetAttribute(key).c_str());
+    {
+      const std::string& str = object.GetAttribute(key);
+      char* endPos;
+      int value = std::strtol(str.c_str(), &endPos, 10);
+      if(endPos == &*str.end())
+        return value;
+      Log::Warning("Invalid string in int property \"",key,"\"=\"", str, "\"");
+    }
     return defaultValue;
   }
 
   float GUIUtils::GetFloatFromXML(const XMLObject& object, const std::string& key, float defaultValue)
   {
     if(object.HasAttribute(key))
-      return atof(object.GetAttribute(key).c_str());
+    {
+      const std::string& str = object.GetAttribute(key);
+      char* endPos;
+      float value = std::strtol(str.c_str(), &endPos, 10);
+      if(endPos == &*str.end())
+        return value;
+      Log::Warning("Invalid string in int property \"",key,"\"=\"", str, "\"");
+    }
     return defaultValue;
   }
 
@@ -49,9 +73,10 @@ namespace Greet
   {
     if (str == "true")
       return true;
+    else if (str != "false")
+      Log::Warning("Invalid string in boolean property \"", str, "\"");
     return false;
   }
-
 
   Vec4 GUIUtils::GetColor(const std::string& str)
   {
@@ -72,26 +97,24 @@ namespace Greet
     return Vec4(1, 0, 1, 1); // Invalid color pink since its very visible
   }
 
-  bool GUIUtils::IsPercentageSize(const std::string& size)
+  void GUIUtils::GetComponentSize(const std::string& size, float* retValue, ComponentSize::Type* retType)
   {
-    return StringUtils::ends_with(size, "%");
-  }
-
-  bool GUIUtils::IsStaticSize(const std::string& size)
-  {
-    return !StringUtils::ends_with(size, "%") || StringUtils::ends_with(size, "s%");
-  }
-
-  float GUIUtils::GetSize(const std::string& size, float parentSize)
-  {
-    float sizeF = atof(size.c_str());
-    if (StringUtils::ends_with(size, "%"))
+    char* endPos;
+    *retValue = std::strtof(size.c_str(), &endPos);
+    if(size == "fill_parent")
     {
-      return sizeF * parentSize * 0.01f; // Convert 100 -> 1
+      *retType = ComponentSize::Type::WEIGHT;
+      *retValue = 1;
     }
-    else // if (StringUtils::ends_with(size, "px")) // if there is no ending it counts as pixels.
+    else if(size == "wrap_content")
+      *retType = ComponentSize::Type::WRAP;
+    else if(*endPos == 'w')
+      *retType = ComponentSize::Type::WEIGHT;
+    else 
     {
-      return sizeF;
+      if(endPos != &*size.end()) 
+        Log::Warning("Invalid string in size property \"", size, "\"");
+      *retType = ComponentSize::Type::PIXELS;
     }
   }
 }

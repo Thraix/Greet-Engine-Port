@@ -14,11 +14,11 @@ namespace Greet
     text = new Label("Label", this, "", "roboto", 20);
 
     text->SetColor(Vec4(0,0,0,1))
-      .SetSize(1,1,SizeType::WEIGHT, SizeType::WEIGHT);
+      .SetSize(1,1,ComponentSize::Type::WEIGHT, ComponentSize::Type::WEIGHT);
 
     hintText = new Label("HintLabel", this, "", "roboto",20);
     hintText->SetColor(Vec4(0,0,0,1))
-      .SetSize(1,1,SizeType::WEIGHT, SizeType::WEIGHT);
+      .SetSize(1,1,ComponentSize::Type::WEIGHT, ComponentSize::Type::WEIGHT);
   }
 
   TextBox::TextBox(const XMLObject& object, Component* parent)
@@ -32,7 +32,7 @@ namespace Greet
         GUIUtils::GetFloatFromXML(object,"fontSize",20));
 
     text->SetColor(GUIUtils::GetColorFromXML(object, "color", Vec4(0,0,0,1)))
-      .SetSize(1,1,SizeType::WEIGHT, SizeType::WEIGHT);
+      .SetSize(1,1,ComponentSize::Type::WEIGHT, ComponentSize::Type::WEIGHT);
 
     hintText = new Label("HintLabel", this,
         GUIUtils::GetStringFromXML(object, "hintText", ""),
@@ -40,7 +40,7 @@ namespace Greet
         GUIUtils::GetFloatFromXML(object,"fontSize",text->GetFontSize()));
 
     hintText->SetColor(GUIUtils::GetColorFromXML(object, "hintColor", text->GetColor()))
-      .SetSize(1,1,SizeType::WEIGHT, SizeType::WEIGHT);
+      .SetSize(1,1,ComponentSize::Type::WEIGHT, ComponentSize::Type::WEIGHT);
 
     password = GUIUtils::GetBooleanFromXML(object, "password", false);
   }

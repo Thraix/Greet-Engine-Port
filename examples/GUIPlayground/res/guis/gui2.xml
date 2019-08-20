@@ -1,8 +1,8 @@
 <Frame
   name="TopComponent"
-  width="fill_parent" height="200px" minHeight="100px" spacing="10px"
+  width="fill_parent" height="200" minHeight="100" spacing="10"
   resizeTop="false" resizeLeft="false" resizeBottom="true" resizeRight="false"
-  padding="10px" border="1px"
+  padding="10" border="1"
   borderColor="#37474f" 
   backgroundColor="#263238" 
   >

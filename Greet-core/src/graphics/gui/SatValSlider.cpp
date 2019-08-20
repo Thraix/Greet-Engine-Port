@@ -13,7 +13,7 @@ namespace Greet
       .SetBorderColor(Vec4(0,0,0,1))
       .SetBorder(TLBR(2,2,2,2));
     Component* component = new Component{"SatValSliderComponent", this};
-    component->SetSize(7,7,SizeType::NONE, SizeType::NONE, false)
+    component->SetSize(7,7,ComponentSize::Type::PIXELS, ComponentSize::Type::PIXELS, false)
       .SetNormalStyle(normal);
     sliderComponent = component;
   }
@@ -29,7 +29,7 @@ namespace Greet
       Style normal{};
       normal.SetBackgroundColor(Vec4(1,1,1,1)).SetBorderColor(Vec4(0,0,0,1));
       Component* component = new Component{"SatValSliderComponent", this};
-      component->SetSize(7,7,SizeType::NONE, SizeType::NONE, false).SetNormalStyle(normal);
+      component->SetSize(7,7,ComponentSize::Type::PIXELS, ComponentSize::Type::PIXELS, false).SetNormalStyle(normal);
       sliderComponent = component;
     }
   }
@@ -54,7 +54,7 @@ namespace Greet
   void SatValSlider::PreRender(GUIRenderer* renderer, const Vec2& translation) const
   {
     renderer->PushMatrix(Mat3::Translate(translation));
-    renderer->SubmitRect(pos, size, Vec4(hue,0,0,1), Vec4(hue,1,0,1), Vec4(hue,0,1,1), Vec4(hue,1,1,1),true);
+    renderer->SubmitRect(pos, size.size, Vec4(hue,0,0,1), Vec4(hue,1,0,1), Vec4(hue,0,1,1), Vec4(hue,1,1,1),true);
   }
 
   void SatValSlider::Render(GUIRenderer* renderer) const

@@ -29,8 +29,8 @@ namespace Greet {
     minSize = Vec2(100, 100);
     m_isFocusable = true;
 
-    minSize.x = GUIUtils::GetSizeFromXML(object,"minWidth", 100, Window::GetWidth());
-    minSize.y = GUIUtils::GetSizeFromXML(object,"minHeight", 100, Window::GetHeight());
+    minSize.w = GUIUtils::GetFloatFromXML(object,"minWidth", 100);
+    minSize.h = GUIUtils::GetFloatFromXML(object,"minHeight", 100);
 
     // This can still look better
     if(!GUIUtils::GetBooleanFromXML(object,"resizeLeft", false))
@@ -54,7 +54,7 @@ namespace Greet {
     {
       m_resizingFlags |= RESIZING_LEFT;
     }
-    else if ((m_resizableFlags & RESIZING_RIGHT) != 0 && mousePos.x >= pos.x + size.x - RESIZING_MARGIN && mousePos.x < pos.x + size.x + RESIZING_MARGIN)
+    else if ((m_resizableFlags & RESIZING_RIGHT) != 0 && mousePos.x >= pos.x + size.size.w - RESIZING_MARGIN && mousePos.x < pos.x + size.size.w + RESIZING_MARGIN)
     {
       m_resizingFlags |= RESIZING_RIGHT;
     }
@@ -62,7 +62,7 @@ namespace Greet {
     {
       m_resizingFlags |= RESIZING_TOP;
     }
-    else if ((m_resizableFlags & RESIZING_BOTTOM) != 0 && mousePos.y >= pos.y + size.y - RESIZING_MARGIN && mousePos.y < pos.y + size.y + RESIZING_MARGIN)
+    else if ((m_resizableFlags & RESIZING_BOTTOM) != 0 && mousePos.y >= pos.y + size.size.h - RESIZING_MARGIN && mousePos.y < pos.y + size.size.h + RESIZING_MARGIN)
     {
       m_resizingFlags |= RESIZING_BOTTOM;
     }
@@ -72,42 +72,42 @@ namespace Greet {
 
   void Frame::Resize(const Vec2& mousePos)
   {
-    Vec2 oldSize = sizeType;
+    Vec2 oldSize = size.value;
     Vec2 diff = m_posOrigin - (m_clickPos - mousePos);
     if (m_resizingFlags & RESIZING_LEFT)
     {
       pos.x = m_posOrigin.x - (m_clickPos.x - mousePos.x);
-      sizeType.x = m_sizeOrigin.x + (m_clickPos.x - mousePos.x);
-      if (sizeType.x < minSize.x)
+      size.value.w = m_sizeOrigin.x + (m_clickPos.x - mousePos.x);
+      if (size.value.w < minSize.w)
       {
-        pos.x = m_posOrigin.x + (m_sizeOrigin.x - minSize.x);
-        sizeType.x = minSize.x;
+        pos.x = m_posOrigin.x + (m_sizeOrigin.x - minSize.w);
+        size.value.w = minSize.w;
       }
     }
     else if (m_resizingFlags & RESIZING_RIGHT)
     {
-      sizeType.x = m_sizeOrigin.x - (m_clickPos.x - mousePos.x);
-      if (sizeType.x < minSize.x)
-        sizeType.x = minSize.x;
+      size.value.w = m_sizeOrigin.x - (m_clickPos.x - mousePos.x);
+      if (size.value.w < minSize.w)
+        size.value.w = minSize.w;
     }
     if (m_resizingFlags & RESIZING_TOP)
     {
       pos.y = m_posOrigin.y - (m_clickPos.y - mousePos.y);
-      sizeType.y = m_sizeOrigin.y + (m_clickPos.y - mousePos.y);
-      if (sizeType.y < minSize.y)
+      size.value.h = m_sizeOrigin.y + (m_clickPos.y - mousePos.y);
+      if (size.value.h < minSize.h)
       {
-        pos.y = m_posOrigin.y + (m_sizeOrigin.y - minSize.y);
-        sizeType.y = minSize.y;
+        pos.y = m_posOrigin.y + (m_sizeOrigin.y - minSize.h);
+        size.value.h = minSize.h;
       }
     }
     else if (m_resizingFlags & RESIZING_BOTTOM)
     {
-      sizeType.y = m_sizeOrigin.y - (m_clickPos.y - mousePos.y);
-      if (sizeType.y < minSize.y)
-        sizeType.y = minSize.y;
+      size.value.h = m_sizeOrigin.y - (m_clickPos.y - mousePos.y);
+      if (size.value.h < minSize.h)
+        size.value.h = minSize.h;
     }
     ResizeScreenClamp();
-    if(oldSize != sizeType)
+    if(oldSize != size.value)
     {
       Remeasure();
     }
@@ -120,19 +120,19 @@ namespace Greet {
       if (pos.x < 0)
       {
         pos.x = 0;
-        size.x = m_posOrigin.x + m_sizeOrigin.x;
+        size.size.w = m_posOrigin.x + m_sizeOrigin.x;
       }
-      else if (pos.x > guiScene->GetWidth() - size.x)
+      else if (pos.x > guiScene->GetWidth() - size.size.w)
       {
-        size.x = guiScene->GetWidth() - m_posOrigin.x;
+        size.size.w = guiScene->GetWidth() - m_posOrigin.x;
       }
       if (pos.y < 0)
       {
         pos.y = 0;
-        size.y = m_posOrigin.y + m_sizeOrigin.y;
+        size.size.h = m_posOrigin.y + m_sizeOrigin.y;
       }
-      else if (pos.y > Window::GetHeight() - size.y)
-        size.y = Window::GetHeight() - m_posOrigin.y;
+      else if (pos.y > Window::GetHeight() - size.size.h)
+        size.size.h = Window::GetHeight() - m_posOrigin.y;
     }
   }
 
@@ -152,7 +152,7 @@ namespace Greet {
     if (event.GetButton() == GLFW_MOUSE_BUTTON_1)
     {
       m_posOrigin = pos;
-      m_sizeOrigin = size;
+      m_sizeOrigin = size.size;
       m_clickPos = event.GetPosition();
       CheckResize(event.GetPosition());
     }
@@ -186,13 +186,13 @@ namespace Greet {
     if(m_stayInsideWindow)
     {
       Vec2 p = pos;
-      if(p.x + size.w > guiScene->GetWidth())
+      if(p.x + size.size.w > guiScene->GetWidth())
       {
-        p.x = guiScene->GetWidth() - size.w;
+        p.x = guiScene->GetWidth() - size.size.w;
       }
-      if(p.y + size.h > guiScene->GetHeight())
+      if(p.y + size.size.h > guiScene->GetHeight())
       {
-        p.y = guiScene->GetHeight() - size.h;
+        p.y = guiScene->GetHeight() - size.size.h;
       }
       Component::SetPosition(p);
       return;

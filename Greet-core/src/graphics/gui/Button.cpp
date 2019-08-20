@@ -12,9 +12,9 @@ namespace Greet {
     m_isFocusable = true;
     label = new Label("Label", this,object.GetText(),GUIUtils::GetStringFromXML(object, "font",""),GUIUtils::GetFloatFromXML(object,"fontSize",20) );
     label->SetColor(GUIUtils::GetColorFromXML(object, "color", Vec4(0,0,0,1)))
-      .SetSize(1,1,SizeType::WRAP, SizeType::WEIGHT);
+      .SetSize(1,1, ComponentSize::Type::WRAP, ComponentSize::Type::WEIGHT);
 
-    fontSize = GUIUtils::GetSizeFromXML(object, "fontSize", 20, GetHeight());
+    fontSize = GUIUtils::GetFloatFromXML(object, "fontSize", 20);
   }
 
   Button::~Button()

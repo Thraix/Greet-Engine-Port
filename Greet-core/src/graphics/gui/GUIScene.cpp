@@ -56,7 +56,7 @@ namespace Greet {
       {
         (*it)->OnMousePressed(transformedEvent, pos - (*it)->GetPosition());
         event.AddFlag(EVENT_FOCUSED  | EVENT_HANDLED);
-        frames.splice(frames.end(),frames,std::next(it).base());
+        frames.splice(frames.end(), frames, std::next(it).base());
         return;
       }
     }

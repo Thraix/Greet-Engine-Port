@@ -7,8 +7,20 @@
 
 namespace Greet {
 
-  class Frame;
-  class Component;
+  struct ComponentSize
+  {
+    enum class Type
+    {
+      WRAP, WEIGHT, PIXELS
+    };
+
+    // Can become dirty if below values changes
+    Vec2 size;
+
+    Vec2 value = {1,1};
+    Type heightType = Type::WRAP;
+    Type widthType = Type::WRAP;
+  };
 
   class GUIUtils
   {
@@ -16,15 +28,14 @@ namespace Greet {
 
       static bool GetBooleanFromXML(const XMLObject& object, const std::string& key, bool defaultValue);
       static Vec4 GetColorFromXML(const XMLObject& object, const std::string& key, const Vec4& defaultValue);
-      static float GetSizeFromXML(const XMLObject& object, const std::string& key, float defaultValue, float parentSize);
+      static ComponentSize GetComponentSizeFromXML(const XMLObject& object, const std::string& widthKey, const std::string& heightKey, ComponentSize defaultValue);
       static std::string GetStringFromXML(const XMLObject& object, const std::string& key, const std::string& defaultValue);
       static int GetIntFromXML(const XMLObject& object, const std::string& key, int defaultValue);
       static float GetFloatFromXML(const XMLObject& object, const std::string& key, float defaultValue);
 
+    private:
       static bool GetBoolean(const std::string& str);
       static Vec4 GetColor(const std::string& str);
-      static float GetSize(const std::string& size, float parentSize);
-      static bool IsPercentageSize(const std::string& size);
-      static bool IsStaticSize(const std::string& size);
+      static void GetComponentSize(const std::string& size, float* retValue, ComponentSize::Type* retType);
   };
 }

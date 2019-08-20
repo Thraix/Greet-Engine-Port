@@ -17,10 +17,7 @@ namespace Greet
     private:
       REGISTER_COMPONENT_DECLARATION(Component);
     public:
-      enum class SizeType
-      {
-        WRAP, WEIGHT, NONE 
-      };
+
       // Typedef callbacks
       typedef std::function<void(Component*)> OnClickCallback;
       typedef std::function<void(Component*)> OnPressCallback;
@@ -38,15 +35,11 @@ namespace Greet
       GUIScene* guiScene;
       Component* parent;
 
-      // Might get dirty?
+      // Calculated variables from ComponentSize::Type
       Vec2 pos;
-      Vec2 size;
 
-      Vec2 sizeType;
 
-      SizeType widthSizeType;
-      SizeType heightSizeType;
-
+      ComponentSize size;
 
       bool m_isFocusable;
       bool isFocused;
@@ -113,20 +106,20 @@ namespace Greet
       // Will return the stored value
       virtual float GetWidth() const;
       virtual float GetHeight() const;
-      SizeType GetWidthSizeType() const;
-      SizeType GetHeightSizeType() const;
+      ComponentSize::Type GetWidthSizeType() const;
+      ComponentSize::Type GetHeightSizeType() const;
 
-      // Size of the sizeType, 1w will return 1 and not the size of the component
-      const Vec2& GetSizeType() const;
+      // Value of the sizeType, 1w will return 1 and not the size of the component
+      const Vec2& GetSizeValue() const;
 
       // Sets the sizeType size and not the actuall component size.
       Component& SetWidth(float width);
       Component& SetHeight(float height);
-      Component& SetWidthSizeType(SizeType width);
-      Component& SetHeightSizeType(SizeType height);
+      Component& SetWidthSizeType(ComponentSize::Type width);
+      Component& SetHeightSizeType(ComponentSize::Type height);
 
       // Faster to use since it sets all values and does a single remeasure.
-      Component& SetSize(float width, float height, SizeType widthType, SizeType heightType, bool remeasure = true);
+      Component& SetSize(float width, float height, ComponentSize::Type widthType, ComponentSize::Type heightType, bool remeasure = true);
 
       const Style& GetNormalStyle() const; 
       const Style& GetHoverStyle() const; 

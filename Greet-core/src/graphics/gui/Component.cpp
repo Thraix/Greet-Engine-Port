@@ -13,8 +13,7 @@ namespace Greet
   REGISTER_COMPONENT_DEFINITION(Component);
 
   Component::Component(const std::string& name, Component* parent)
-    : parent{parent}, sizeType{1,1}, 
-    widthSizeType{SizeType::WRAP},heightSizeType{SizeType::WRAP},
+    : parent{parent}, size{},
     m_isFocusable{false},isFocused{false},isHovered{false},isChildFocused{false}, childChangedFocus{false}, pos{0,0}, pressed{false}, name{name}
   {
     currentStyle = &normalStyle;
@@ -23,38 +22,7 @@ namespace Greet
   Component::Component(const XMLObject& xmlObject, Component* parent)
     : Component{GUIUtils::GetStringFromXML(xmlObject,"name", xmlObject.GetName() + "#" + LogUtils::DecToHex(UUID::GetInstance().GetUUID(),8)), parent}
   {
-    std::string width = xmlObject.GetAttribute("width", "wrap_content");
-    std::string height = xmlObject.GetAttribute("height", "wrap_content");
-
-    size.w = atof(width.c_str());
-    size.h = atof(height.c_str());
-    sizeType = size;
-
-    if(width == "fill_parent")
-    {
-      widthSizeType = SizeType::WEIGHT;
-      sizeType.w = 1;
-    }
-    else if(width[width.length()-1] == 'w')
-      widthSizeType = SizeType::WEIGHT;
-    else if(width == "wrap_content")
-      widthSizeType = SizeType::WRAP;
-    else
-      widthSizeType = SizeType::NONE;
-
-
-    if(height == "fill_parent")
-    {
-      heightSizeType = SizeType::WEIGHT;
-      sizeType.h = 1;
-    }
-    else if(height[height.length()-1] == 'w')
-      heightSizeType = SizeType::WEIGHT;
-    else if(height == "wrap_content")
-      heightSizeType = SizeType::WRAP;
-    else
-      heightSizeType = SizeType::NONE;
-
+    size = GUIUtils::GetComponentSizeFromXML(xmlObject, "width", "height", {});
     normalStyle.Load("",xmlObject);
     hoverStyle.Load("hover",xmlObject,&normalStyle);
     pressStyle.Load("press",xmlObject,&normalStyle);
@@ -63,20 +31,20 @@ namespace Greet
   void Component::Measure()
   {
     Container* container = dynamic_cast<Container*>(parent);
-    if(widthSizeType != SizeType::WEIGHT || (container && container->IsVertical() ))
+    if(size.widthType != ComponentSize::Type::WEIGHT || (container && container->IsVertical() ))
     {
-      if(widthSizeType == SizeType::WRAP)
-        size.w = GetWrapSize().w;
+      if(size.widthType == ComponentSize::Type::WRAP)
+        size.size.w = GetWrapSize().w;
       else
-        size.w = sizeType.w;
+        size.size.w = size.value.w;
     } 
 
-    if(heightSizeType != SizeType::WEIGHT || (container && container->IsVertical() ))
+    if(size.heightType != ComponentSize::Type::WEIGHT || (container && container->IsVertical() ))
     {
-      if(heightSizeType == SizeType::WRAP)
-        size.h = GetWrapSize().h;
+      if(size.heightType == ComponentSize::Type::WRAP)
+        size.size.h = GetWrapSize().h;
       else
-        size.h = sizeType.h;
+        size.size.h = size.value.h;
     } 
   }
 
@@ -88,23 +56,23 @@ namespace Greet
   void Component::MeasureFill(float parentEmptyWidth, float parentEmptyHeight, float parentTotalWeight, bool vertical)
   {
     // Width
-    if(widthSizeType == SizeType::WEIGHT)
+    if(size.widthType == ComponentSize::Type::WEIGHT)
     {
       if(vertical)
-        size.w = parentEmptyWidth;
+        size.size.w = parentEmptyWidth;
       else
-        size.w = parentEmptyWidth * sizeType.w / parentTotalWeight;
+        size.size.w = parentEmptyWidth * size.value.w / parentTotalWeight;
     }
     // else we have already set the size in Measure
 
 
     // Height
-    if(heightSizeType == SizeType::WEIGHT)
+    if(size.heightType == ComponentSize::Type::WEIGHT)
     {
       if(!vertical)
-        size.h = parentEmptyHeight;
+        size.size.h = parentEmptyHeight;
       else
-        size.h = parentEmptyHeight * sizeType.h / parentTotalWeight;
+        size.size.h = parentEmptyHeight * size.value.h / parentTotalWeight;
     }
     // else we have already set the size in Measure
 
@@ -142,11 +110,11 @@ namespace Greet
     // Border around Component 
     if (currentStyle->hasBorderColor)
       //renderer->SubmitRect(pos + Vec2(0,0), size, currentStyle->borderColor, false);
-      renderer->SubmitRoundedRect(pos+Vec2(0,0),size, currentStyle->borderColor, currentStyle->borderRadius, currentStyle->roundedPrecision, false);
+      renderer->SubmitRoundedRect(pos+Vec2(0,0),size.size, currentStyle->borderColor, currentStyle->borderRadius, currentStyle->roundedPrecision, false);
 
     // Component background
     if (currentStyle->hasBackgroundColor)
-      renderer->SubmitRoundedRect(pos + currentStyle->border.LeftTop(), size-GetBorder().LeftTop()-GetBorder().RightBottom(), currentStyle->backgroundColor, currentStyle->radius,currentStyle->roundedPrecision,false);
+      renderer->SubmitRoundedRect(pos + currentStyle->border.LeftTop(), size.size-GetBorder().LeftTop()-GetBorder().RightBottom(), currentStyle->backgroundColor, currentStyle->radius,currentStyle->roundedPrecision,false);
   }
 
   // Render component
@@ -164,7 +132,7 @@ namespace Greet
 
   void Component::UpdateHandle(float timeElapsed)
   {
-    size = Vec2(GetWidth(), GetHeight());
+    size.size = Vec2(GetWidth(), GetHeight());
     Update(timeElapsed);
   }
 
@@ -300,63 +268,63 @@ namespace Greet
 
   Vec2 Component::GetSize() const
   {
-    return size;
+    return size.size;
   }
 
   float Component::GetWidth() const 
   {
-    return size.w;
+    return size.size.w;
   }
 
   float Component::GetHeight() const 
   {
-    return size.h;
+    return size.size.h;
   }
 
-  Component::SizeType Component::GetWidthSizeType() const
+  ComponentSize::Type Component::GetWidthSizeType() const
   {
-    return widthSizeType;
+    return size.widthType;
   }
 
-  Component::SizeType Component::GetHeightSizeType() const
+  ComponentSize::Type Component::GetHeightSizeType() const
   {
-    return heightSizeType;
+    return size.heightType;
   }
 
   Component& Component::SetWidth(float width)
   {
-    sizeType.w = width;
+    size.value.w = width;
     Remeasure();
     return *this;
   }
 
   Component& Component::SetHeight(float height)
   {
-    sizeType.h = height;
+    size.value.h = height;
     Remeasure();
     return *this;
   }
 
-  Component& Component::SetWidthSizeType(SizeType width)
+  Component& Component::SetWidthSizeType(ComponentSize::Type width)
   {
-    widthSizeType = width;
+    size.widthType = width;
     Remeasure();
     return *this;
   }
 
-  Component& Component::SetHeightSizeType(SizeType height)
+  Component& Component::SetHeightSizeType(ComponentSize::Type height)
   {
-    heightSizeType = height;
+    size.heightType = height;
     Remeasure();
     return *this;
   }
 
-  Component& Component::SetSize(float width, float height, SizeType widthType, SizeType heightType, bool remeasure)
+  Component& Component::SetSize(float width, float height, ComponentSize::Type widthType, ComponentSize::Type heightType, bool remeasure)
   {
-    sizeType.w = width;
-    sizeType.h = height;
-    widthSizeType = widthType;
-    heightSizeType = heightType;
+    size.value.w = width;
+    size.value.h = height;
+    size.widthType = widthType;
+    size.heightType = heightType;
     if(remeasure)
       Remeasure();
     return *this;
@@ -405,9 +373,9 @@ namespace Greet
     return *this;
   }
 
-  const Vec2& Component::GetSizeType() const
+  const Vec2& Component::GetSizeValue() const
   {
-    return sizeType;
+    return size.value;
   }
 
   Component* Component::GetComponentByNameNoCast(const std::string& name)
@@ -419,7 +387,7 @@ namespace Greet
 
   bool Component::IsMouseInside(const Vec2& parentMouse) const
   {
-    return AABBUtils::PointInsideBox(parentMouse, pos, size);
+    return AABBUtils::PointInsideBox(parentMouse, pos, size.size);
   }
 
   Component* Component::GetRootNode()
@@ -449,7 +417,7 @@ namespace Greet
 
   Vec2 Component::GetContentSize() const
   {
-    return size - GetPadding().GetSize() - GetBorder().GetSize();
+    return size.size - GetPadding().GetSize() - GetBorder().GetSize();
   }
 
   const std::string& Component::GetName() const

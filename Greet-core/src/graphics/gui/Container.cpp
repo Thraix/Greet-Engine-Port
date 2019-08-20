@@ -100,9 +100,9 @@ namespace Greet
       else 
         usedSpace += comp->GetMargin().GetWidth() + spacing;
 
-      if(this->vertical && comp->GetHeightSizeType() != SizeType::WEIGHT)
+      if(this->vertical && comp->GetHeightSizeType() != ComponentSize::Type::WEIGHT)
         usedSpace += comp->GetSize().h;
-      else if(!this->vertical && comp->GetWidthSizeType() != SizeType::WEIGHT)
+      else if(!this->vertical && comp->GetWidthSizeType() != ComponentSize::Type::WEIGHT)
         usedSpace += comp->GetSize().w;
     }
     if(usedSpace > 0)
@@ -118,10 +118,10 @@ namespace Greet
     float totalWeight = 0;
     for(auto&& comp : m_components)
     {
-      if(vertical && comp->GetHeightSizeType() == SizeType::WEIGHT)
-        totalWeight += comp->GetSizeType().h;
-      else if(!vertical && comp->GetWidthSizeType() == SizeType::WEIGHT)
-        totalWeight += comp->GetSizeType().w;
+      if(vertical && comp->GetHeightSizeType() == ComponentSize::Type::WEIGHT)
+        totalWeight += comp->GetSizeValue().h;
+      else if(!vertical && comp->GetWidthSizeType() == ComponentSize::Type::WEIGHT)
+        totalWeight += comp->GetSizeValue().w;
     }
     return totalWeight;
   }

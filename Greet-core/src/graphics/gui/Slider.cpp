@@ -19,7 +19,7 @@ namespace Greet
       .SetBorderColor(Vec4(0,0,0,1))
       .SetBorder(TLBR(2,2,2,2));
     sliderComponent = new Component(name+"#SliderComponent", this);
-    sliderComponent->SetSize(7,1,SizeType::NONE, SizeType::WEIGHT)
+    sliderComponent->SetSize(7,1,ComponentSize::Type::PIXELS, ComponentSize::Type::WEIGHT)
       .SetNormalStyle(normal);
 
     minValue = 0;
@@ -96,12 +96,12 @@ namespace Greet
     if(flags & SLIDER_FLAG_FORCE_INSIDE)
     {
       minPos = sliderComponent->GetSize()[vi]/2;
-      maxPos = size[vi]-GetBorder().GetSize()[vi]-minPos;
+      maxPos = size.size[vi]-GetBorder().GetSize()[vi]-minPos;
     }
     else
     {
       minPos = 0;
-      maxPos = size[vi];
+      maxPos = size.size[vi];
     }
 
     SetValue(value);
