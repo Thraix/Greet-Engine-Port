@@ -81,7 +81,7 @@ namespace Greet {
     bpp >>= 3;
     if (bpp != 3 && bpp != 4)
     {
-      Log::Error("Bits per pixel is not valid (24 or 32): ", filepath);
+      Log::Error("Bits per pixel is not valid (24 or 32): ", filepath, " ", bpp * 8, " bpp");
       ErrorHandle::SetErrorCode(GREET_ERROR_IMAGE_BPP);
       FreeImage_Unload(dib);
       return {false,ImageFactory::GetBadBPPImage(width,height)};
