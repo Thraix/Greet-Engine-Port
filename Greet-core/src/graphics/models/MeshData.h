@@ -66,6 +66,7 @@ namespace Greet {
       uint GetVertexCount() const { return m_vertices.size(); }
       uint GetIndexCount() const { return m_indices.size(); }
 
+      void GenerateNormals();
       MeshData* LowPolify();
 
       void WriteToFile(const std::string& filename) const;

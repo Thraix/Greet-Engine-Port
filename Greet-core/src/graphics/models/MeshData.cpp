@@ -59,6 +59,13 @@ namespace Greet {
     return nullptr;
   }
 
+  void MeshData::GenerateNormals()
+  {
+    std::vector<Vec3<float>> normals(m_vertices.size());
+    MeshFactory::CalculateNormals(m_vertices, m_indices, normals);
+    AddAttribute(AttributeData(ATTRIBUTE_NORMAL, normals));
+  }
+
   MeshData* MeshData::LowPolify()
   {
     std::set<uint> usedProvokingVertices; 
