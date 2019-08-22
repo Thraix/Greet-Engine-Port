@@ -108,9 +108,19 @@ namespace Greet
     if(usedSpace > 0)
       usedSpace -= spacing; // Remove the spacing after the last one
     if(vertical)
-      return Vec2(GetContentSize().w, GetContentSize().h - usedSpace);
+    {
+      float height = GetContentSize().h - usedSpace;
+      if(height < 1)
+        height = 1;
+      return Vec2(GetContentSize().w, height);
+    }
     else
-      return Vec2(GetContentSize().w-usedSpace, GetContentSize().h);
+    {
+      float width = GetContentSize().w - usedSpace;
+      if(width < 1)
+        width = 1;
+      return Vec2(width, GetContentSize().h);
+    }
   }
 
   float Container::GetMeasureTotalWeight()
