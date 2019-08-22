@@ -18,6 +18,13 @@ namespace Greet {
     //memset(normals.data(), 0, sizeof(float) * 3 * vertices.size());
     for (uint i = 0; i < indices.size(); i += 3)
     {
+      if(indices[i] >= vertices.size() || 
+          indices[i+1] >= vertices.size() || 
+          indices[i+2] >= vertices.size())
+      {
+        Log::Error("Index out of bound in CalculateNormals");
+        continue;
+      }
       p1 = vertices[indices[i]];
       p2 = vertices[indices[i + 1]];
       p3 = vertices[indices[i + 2]];

@@ -10,11 +10,27 @@ namespace Greet {
   MeshData::MeshData(const std::vector<Vec3<float>>& vertices, const std::vector<uint>& indices)
     : m_vertices(vertices), m_indices(indices)
   {
+    for(auto it = m_indices.begin(); it != m_indices.end(); ++it)
+    {
+      if(*it >= m_vertices.size())
+      {
+        Log::Error("Index out of bound in MeshData creation");
+        *it = 0;
+      }
+    }
   }
 
   MeshData::MeshData(std::vector<Vec3<float>>&& vertices, std::vector<uint>&& indices)
     : m_vertices{std::move(vertices)},m_indices{std::move(indices)}
   {
+    for(auto it = m_indices.begin(); it != m_indices.end(); ++it)
+    {
+      if(*it >= m_vertices.size())
+      {
+        Log::Error("Index out of bound in MeshData creation");
+        *it = 0;
+      }
+    }
   }
 
   MeshData::~MeshData()
