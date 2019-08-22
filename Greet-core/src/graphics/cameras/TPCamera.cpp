@@ -6,24 +6,24 @@
 
 namespace Greet {
 
-  TPCamera::TPCamera(const Mat4& projectionMatrix)
-    : TPCamera(projectionMatrix, Vec3<float>(0,0,0), 1, 0, 0)
+  TPCamera::TPCamera(float fov, float near, float far)
+    : TPCamera(fov, near, far, Vec3<float>(0,0,0), 1, 0, 0)
   {
   }
 
-  TPCamera::TPCamera(const Mat4& projectionMatrix, const Vec3<float>& position, float distance, float height, float rotation)
-    : TPCamera(projectionMatrix, position, distance, height, rotation, 1, 100, -1,1)
+  TPCamera::TPCamera(float fov, float near, float far, const Vec3<float>& position, float distance, float height, float rotation)
+    : TPCamera(fov, near, far, position, distance, height, rotation, 1, 100, -1,1)
   {
 
   }
 
-  TPCamera::TPCamera(const Mat4& projectionMatrix, const Vec3<float>& position, float distance, float height, float rotation, float distanceMin, float distanceMax, float heightMin, float heightMax)
-    : TPCamera(projectionMatrix, position, distance, height, rotation, distanceMin, distanceMax, heightMin, heightMax, 1000, 10, 10)
+  TPCamera::TPCamera(float fov, float near, float far, const Vec3<float>& position, float distance, float height, float rotation, float distanceMin, float distanceMax, float heightMin, float heightMax)
+    : TPCamera(fov, near, far, position, distance, height, rotation, distanceMin, distanceMax, heightMin, heightMax, 1000, 10, 10)
   {
   }
 
-  TPCamera::TPCamera(const Mat4& projectionMatrix, const Vec3<float>& position, float distance, float height, float rotation, float distanceMin, float distanceMax, float heightMin, float heightMax, float rotationSpeed, float heightSpeed, float distanceSpeed) 
-    : Camera(projectionMatrix), m_position(position), m_distance(distance), m_height(height), m_rotation(rotation), m_rotationSpeed(rotationSpeed), m_heightSpeed(heightSpeed), m_distanceSpeed(distanceSpeed)
+  TPCamera::TPCamera(float fov, float near, float far, const Vec3<float>& position, float distance, float height, float rotation, float distanceMin, float distanceMax, float heightMin, float heightMax, float rotationSpeed, float heightSpeed, float distanceSpeed) 
+    : Camera(fov, near, far), m_position(position), m_distance(distance), m_height(height), m_rotation(rotation), m_rotationSpeed(rotationSpeed), m_heightSpeed(heightSpeed), m_distanceSpeed(distanceSpeed)
   {
     m_rotationWanted = m_rotation;
     m_distanceWanted = m_distance;
@@ -166,6 +166,7 @@ namespace Greet {
 
   void TPCamera::OnEvent(Event& event)
   {
+    Camera::OnEvent(event);
     if(EVENT_IS_TYPE(event, EventType::MOUSE_PRESS))
     {
       MousePressEvent mEvent = (MousePressEvent&)event;

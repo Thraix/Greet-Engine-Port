@@ -13,8 +13,8 @@ namespace Greet {
       float roll;
       Mat4 viewMatrix;
 
-      FPCamera(const Mat4& projectionMatrix, const Vec3<float>& position, const Vec3<float>& rotation)
-        : Camera(projectionMatrix), position(position), yaw(rotation.x), pitch(rotation.y), roll(rotation.z),
+      FPCamera(float fov, float near, float far, const Vec3<float>& position, const Vec3<float>& rotation)
+        : Camera(fov, near, far), position(position), yaw(rotation.x), pitch(rotation.y), roll(rotation.z),
         viewMatrix(Mat4::ViewMatrix(position, Vec3<float>(yaw,pitch, roll)))
       {
       

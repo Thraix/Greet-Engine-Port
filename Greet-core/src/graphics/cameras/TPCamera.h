@@ -39,10 +39,10 @@ namespace Greet {
       void CalculateViewMatrix();
       void CalculateInformation();
     public:
-      TPCamera(const Mat4& projectionMatrix);
-      TPCamera(const Mat4& projectionMatrix, const Vec3<float>& position, float distance, float height, float rotation);
-      TPCamera(const Mat4& projectionMatrix, const Vec3<float>& position, float distance, float height, float rotation, float distanceMin, float distanceMax, float heightMin, float heightMax);
-      TPCamera(const Mat4& projectionMatrix, const Vec3<float>& position, float distance, float height, float rotation, float distanceMin, float distanceMax, float heightMin, float heightMax, float rotationSpeed, float heightSpeed, float distanceSpeed);
+      TPCamera(float fov, float near, float far);
+      TPCamera(float fov, float near, float far, const Vec3<float>& position, float distance, float height, float rotation);
+      TPCamera(float fov, float near, float far, const Vec3<float>& position, float distance, float height, float rotation, float distanceMin, float distanceMax, float heightMin, float heightMax);
+      TPCamera(float fov, float near, float far, const Vec3<float>& position, float distance, float height, float rotation, float distanceMin, float distanceMax, float heightMin, float heightMax, float rotationSpeed, float heightSpeed, float distanceSpeed);
       virtual ~TPCamera();
 
       void Update(float timeElapsed) override;
@@ -74,7 +74,6 @@ namespace Greet {
       void Rotate(const Vec2& delta);
       void Zoom(float delta);
       void OnEvent(Event& event) override;
-
   };
 
 }

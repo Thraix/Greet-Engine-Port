@@ -88,7 +88,7 @@ class Core : public App
 
       fbo = new FrameBufferObject(960,540);
       //camera = new TPCamera(vec3(-3.5, -7.8, 5.5), 18, 0.66, 38.5, 15, 80, 0, 0.8f); // Profile shot
-      camera = new TPCamera(Mat4::ProjectionMatrix(Window::GetWidth()/ (float)Window::GetHeight(), 90, 0.1f,1000.0f), Vec3<float>(0, 0, 0), 15, 0, 0, 0, 80, -0.8f, 0.8f);
+      camera = new TPCamera(90, 0.01f,1000.0f, Vec3<float>(0, 0, 0), 15, 0, 0, 0, 80, -0.8f, 0.8f);
       Skybox* skybox = new Skybox(TextureManager::Get3D("skybox"));
       renderer3d = new BatchRenderer3D();
       waterRenderer = new BatchRenderer3D();

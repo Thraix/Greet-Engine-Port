@@ -69,10 +69,5 @@ namespace vmc {
 		void SaveModel(const std::string& filename);
 		void LoadModel(const std::string& filename);
 		void ExportModel(const std::string& filename);
-
-    void WindowResize(Greet::WindowResizeEvent& event) override;
-
-
-
 	};
 }

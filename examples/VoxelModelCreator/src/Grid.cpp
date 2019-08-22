@@ -7,7 +7,7 @@ namespace vmc
   const uint Grid::GRID_SIZE = 100;
 
   Grid::Grid()
-    : Layer3D(new TPCamera(Mat4::ProjectionMatrix(Window::GetWidth()/(float)Window::GetHeight(), 90, 0.1f, 1000.0f),Vec3<float>(GRID_SIZE / 2+0.5f, GRID_SIZE / 2 + 0.5f, GRID_SIZE / 2 + 0.5f), 15, 0, 0, 1, 80, -0.8, 0.8f), new Skybox(TextureManager::Get3D("skybox"))), toolBox(this)
+    : Layer3D(new TPCamera(90, 0.1f, 1000.0f,Vec3<float>(GRID_SIZE / 2+0.5f, GRID_SIZE / 2 + 0.5f, GRID_SIZE / 2 + 0.5f), 15, 0, 0, 1, 80, -0.8, 0.8f), new Skybox(TextureManager::Get3D("skybox"))), toolBox(this)
       //m_colorPicker(colorPicker)
   {
     renderer = new GridRenderer3D();
@@ -261,10 +261,5 @@ namespace vmc
   void Grid::ExportModel(const std::string& filename)
   {
     ModelExport::GetAllSquares(m_grid);
-  }
-
-  void Grid::WindowResize(Greet::WindowResizeEvent& event)
-  {
-    camera->SetProjectionMatrix(Mat4::ProjectionMatrix(event.GetWidth()/(float)event.GetHeight(), 90, 0.1f,1000.0f));
   }
 }
