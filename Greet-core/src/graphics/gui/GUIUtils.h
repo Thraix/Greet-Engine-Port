@@ -35,7 +35,8 @@ namespace Greet {
 
     private:
       static bool GetBoolean(const std::string& str);
-      static Vec4 GetColor(const std::string& str);
       static void GetComponentSize(const std::string& size, float* retValue, ComponentSize::Type* retType);
+    public:
+      static Vec4 GetColor(const std::string& str);
   };
 }
