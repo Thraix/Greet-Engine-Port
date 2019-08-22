@@ -10,7 +10,13 @@ using namespace Greet;
 void Loaders::LoadTextures(const std::string& loader)
 {
   JSONObject object = JSONLoader::LoadJSON(loader);
-  std::string basePath = object.GetValue("basePath");
+  if(!object.HasArrayKey("textures"))
+  {
+    Log::Error("Texture loader doesn't contain any textures");
+    return;
+  }
+
+  std::string basePath = object.GetValue("basePath", "res/textures/");
   const JSONArray& array = object.GetArray("textures");
   for(int i = 0;i<array.Size();i++)
   {

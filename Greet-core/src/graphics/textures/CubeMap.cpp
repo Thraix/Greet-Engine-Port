@@ -30,6 +30,11 @@ namespace Greet {
     if(hotswap)
       hotswap.value()->second.MoveResource(this);
   }
+  
+  CubeMap::CubeMap()
+    : Texture(GL_TEXTURE_CUBE_MAP)
+  {
+  }
 
   CubeMap& CubeMap::operator=(CubeMap&& cubemap)
   {

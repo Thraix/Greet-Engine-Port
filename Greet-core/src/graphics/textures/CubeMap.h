@@ -19,7 +19,7 @@ namespace Greet {
       CubeMap(const std::string& top, const std::string& bottom, const std::string& left, const std::string& right, const std::string& front, const std::string& back);
       CubeMap(const std::string& map);
       CubeMap(uint texId);
-      CubeMap() = default;
+      CubeMap();
       CubeMap(CubeMap&&);
       CubeMap& operator=(CubeMap&&);
       void ReloadResource(const std::string& filename);

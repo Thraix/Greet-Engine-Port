@@ -24,7 +24,7 @@ namespace Greet {
   }
 
   Texture2D::Texture2D(TextureParams params)
-    : Texture(GL_TEXTURE_2D,false), m_params(params)
+    : Texture(GL_TEXTURE_2D,true), m_params(params)
   {
 
   }
