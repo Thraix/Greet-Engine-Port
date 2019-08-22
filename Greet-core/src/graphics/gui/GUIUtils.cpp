@@ -7,14 +7,7 @@ namespace Greet
   bool GUIUtils::GetBooleanFromXML(const XMLObject& object, const std::string& key, bool defaultValue)
   {
     if(object.HasAttribute(key)) 
-    {
-      const std::string& str = object.GetAttribute(key);
-      if (str == "true")
-        return true;
-      else if (str == "false")
-        return false;
-      Log::Warning("Invalid string in boolean property \"",key,"\"=\"", str, "\"");
-    }
+      return GetBoolean(object.GetAttribute(key));
     return defaultValue;
   }
 
@@ -34,12 +27,14 @@ namespace Greet
       GetComponentSize(object.GetAttribute(heightKey), &ret.value.h, &ret.heightType);
     return ret;
   }
+
   std::string GUIUtils::GetStringFromXML(const XMLObject& object, const std::string& key, const std::string& defaultValue)
   {
     if(object.HasAttribute(key))
       return object.GetAttribute(key);
     return defaultValue;
   }
+
   int GUIUtils::GetIntFromXML(const XMLObject& object, const std::string& key, int defaultValue)
   {
     if(object.HasAttribute(key))
@@ -47,9 +42,9 @@ namespace Greet
       const std::string& str = object.GetAttribute(key);
       char* endPos;
       int value = std::strtol(str.c_str(), &endPos, 10);
-      if(endPos == &*str.end())
-        return value;
-      Log::Warning("Invalid string in int property \"",key,"\"=\"", str, "\"");
+      if(endPos != &*str.end())
+        Log::Warning("Invalid string in int property \"",key,"\"=\"", str, "\"");
+      return value;
     }
     return defaultValue;
   }
@@ -61,9 +56,9 @@ namespace Greet
       const std::string& str = object.GetAttribute(key);
       char* endPos;
       float value = std::strtol(str.c_str(), &endPos, 10);
-      if(endPos == &*str.end())
-        return value;
-      Log::Warning("Invalid string in int property \"",key,"\"=\"", str, "\"");
+      if(endPos != &*str.end())
+        Log::Warning("Invalid string in float property \"",key,"\"=\"", str, "\"");
+      return value;
     }
     return defaultValue;
   }
@@ -93,7 +88,7 @@ namespace Greet
       uint colori = LogUtils::HexToDec(color);
       return ColorUtils::ColorHexToVec4(colori);
     }
-    Log::Error("Invalid starting character for  color: ", str);
+    Log::Error("Invalid starting character for color: ", str);
     return Vec4(1, 0, 1, 1); // Invalid color pink since its very visible
   }
 

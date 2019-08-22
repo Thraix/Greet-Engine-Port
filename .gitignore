@@ -9,4 +9,4 @@ deps/libs/*
 *Makefile.backup
 installation/glfw*
 core
-
+.ycm_extra_conf.py
