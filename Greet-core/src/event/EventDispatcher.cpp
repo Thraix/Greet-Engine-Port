@@ -3,7 +3,7 @@
 #include <functional>
 #include <utils/Utils.h>
 #include <logging/Logger.h>
-#include <graphics/RenderEngine.h>
+#include <graphics/GlobalSceneManager.h>
 
 namespace Greet {
 
@@ -11,7 +11,7 @@ namespace Greet {
 
   void EventDispatcher::OnEvent(Event&& event)
   {
-    RenderEngine::OnEvent(event);
+    GlobalSceneManager::GetSceneManager().OnEvent(event);
     for(auto&& receivers : globalEventReceivers)
       receivers.second(event);
   }

@@ -63,7 +63,7 @@ class Core : public App
         frame->GetComponentByName<Button>("button")
           ->SetOnClickCallback(std::bind(&Core::OnButtonPressCallback, std::ref(*this), _1));
         }
-      RenderEngine::Add2DScene(guiScene, "GUIScene");
+      GlobalSceneManager::GetSceneManager().Add2DScene(guiScene, "GUIScene");
     }
 
     void OnRadioChangeCallback(RadioButton* button)

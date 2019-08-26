@@ -1,7 +1,5 @@
 #include <Greet.h>
 
-#include <graphics/renderers/GUIRenderer.h>
-#include <utils/ImageUtils.h>
 #include "keyboardcontrol.h"
 #include "tree.h"
 #include "Portal.h"
@@ -202,12 +200,12 @@ class Core : public App
       //Tree t(renderer3d,0,0,0);
       uint pos = 0;
       //		Log::Info(JSONLoader::isNumber("0.1234s",pos));
-      RenderEngine::Add2DScene(uilayer, "uilayer");
+      GlobalSceneManager::GetSceneManager().Add2DScene(uilayer, "uilayer");
       layer3d = new Layer3D(camera, skybox);
       layer3d->AddRenderer(renderer3d);
       layer3d->AddRenderer(waterRenderer);
-      RenderEngine::Add3DScene(layer3d, "World");
-      //RenderEngine::Add3DScene(new World(camera, 10, 10), "WorldTerrain");
+      GlobalSceneManager::GetSceneManager().Add3DScene(layer3d, "World");
+      //GlobalSceneManager::GetSceneManager().Add3DScene(new World(camera, 10, 10), "WorldTerrain");
     }
 
     void RecalcPositions(Vec3<float>& vertex)

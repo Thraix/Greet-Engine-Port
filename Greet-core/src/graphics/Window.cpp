@@ -5,7 +5,6 @@
 #include <graphics/atlas/AtlasManager.h>
 #include <internal/GreetGL.h>
 #include <event/EventDispatcher.h>
-#include <graphics/RenderEngine.h>
 #include <graphics/gui/ComponentFactory.h>
 #include <event/WindowEvent.h>
 #include <event/KeyEvent.h>

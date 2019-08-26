@@ -3,7 +3,7 @@
 #include <chrono>
 #include <thread>
 #include <logging/Log.h>
-#include <graphics/RenderEngine.h>
+#include <graphics/GlobalSceneManager.h>
 #include <utility>
 #include <functional>
 #include <event/EventDispatcher.h>
@@ -50,7 +50,7 @@ namespace Greet {
       {
         DriverDispatcher::Update(updateTick);
         Window::Update();
-        RenderEngine::Update(elapsed - updateTimer);
+        GlobalSceneManager::GetSceneManager().Update(elapsed - updateTimer);
         Update(elapsed - updateTimer);
         updates++;
         updateTimer = elapsed;
@@ -59,7 +59,7 @@ namespace Greet {
       if (elapsed - renderTimer >= frameCap)
       {
         Window::Clear();
-        RenderEngine::Render();
+        GlobalSceneManager::GetSceneManager().Render();
         Render();
         Window::Render();
         frames++;

@@ -56,9 +56,9 @@ namespace vmc
 			uilayer->Add(cursor);
 
 			grid = new Grid();
-			//RenderEngine::Add2DScene(uilayer, "uilayer");
-			RenderEngine::Add2DScene(guiScene, "GUIScene");
-			RenderEngine::Add3DScene(grid, "gridLayer");
+			//GlobalSceneManager::GetSceneManager().Add2DScene(uilayer, "uilayer");
+			GlobalSceneManager::GetSceneManager().Add2DScene(guiScene, "GUIScene");
+			GlobalSceneManager::GetSceneManager().Add3DScene(grid, "gridLayer");
 		}
 
 		void Tick() override

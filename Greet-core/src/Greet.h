@@ -22,12 +22,13 @@
 #include <event/WindowEvent.h>
 #include <graphics/Animation.h>
 #include <graphics/FrameBufferObject.h>
+#include <graphics/GlobalSceneManager.h>
 #include <graphics/Light.h>
 #include <graphics/ParticlePool.h>
-#include <graphics/RenderEngine.h>
 #include <graphics/Renderable.h>
 #include <graphics/Renderable2D.h>
 #include <graphics/RenderablePoly.h>
+#include <graphics/SceneManager.h>
 #include <graphics/Skybox.h>
 #include <graphics/Sprite.h>
 #include <graphics/Window.h>

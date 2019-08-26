@@ -1,37 +1,37 @@
-#include "RenderEngine.h"
+#include "SceneManager.h"
 
 #include <logging/Log.h>
 #include <utils/HotSwapping.h>
 
 namespace Greet {
 
+  SceneManager::SceneManager()
+    : focusedScene{nullptr}
+  {
+  
+  }
 
-  std::vector<RenderEngine::SceneElement> RenderEngine::m_scenes2d;
-  std::vector<RenderEngine::SceneElement> RenderEngine::m_scenes3d;
-
-  Scene* RenderEngine::focusedScene = nullptr;
-
-  void RenderEngine::Add2DScene(Scene* scene, const std::string& name)
+  void SceneManager::Add2DScene(Scene* scene, const std::string& name)
   {
     if (scene == NULL)
     {
-      Log::Error("Trying to add Scene to RenderEngine but it is NULL.");
+      Log::Error("Trying to add Scene to SceneManager but it is NULL.");
       return;
     }
     m_scenes2d.push_back({name, scene});
   }
 
-  void RenderEngine::Add3DScene(Scene* scene, const std::string& name)
+  void SceneManager::Add3DScene(Scene* scene, const std::string& name)
   {
     if (scene == NULL)
     {
-      Log::Error("Trying to add Renderer3D to RenderEngine but it is NULL.");
+      Log::Error("Trying to add Renderer3D to SceneManager but it is NULL.");
       return;
     }
     m_scenes3d.push_back({name, scene});
   }
 
-  Scene* RenderEngine::Remove2DScene(const std::string& name)
+  Scene* SceneManager::Remove2DScene(const std::string& name)
   {
     auto it = std::find_if(m_scenes2d.begin(), m_scenes2d.end(), 
         [name] (const SceneElement& scene) { return scene.first == name; });
@@ -39,7 +39,7 @@ namespace Greet {
     return it->second;
   }
 
-  Scene* RenderEngine::Remove3DScene(const std::string& name)
+  Scene* SceneManager::Remove3DScene(const std::string& name)
   {
     auto it = std::find_if(m_scenes3d.begin(), m_scenes3d.end(), 
         [name] (const SceneElement& scene) { return scene.first == name; });
@@ -47,21 +47,21 @@ namespace Greet {
     return it->second;
   }
 
-  Scene* RenderEngine::Get2DScene(const std::string& name)
+  Scene* SceneManager::Get2DScene(const std::string& name)
   {
     auto it = std::find_if(m_scenes2d.begin(), m_scenes2d.end(), 
         [name] (const SceneElement& scene) { return scene.first == name; });
     return it->second;
   }
 
-  Scene* RenderEngine::Get3DScene(const std::string& name)
+  Scene* SceneManager::Get3DScene(const std::string& name)
   {
     auto it = std::find_if(m_scenes3d.begin(), m_scenes3d.end(), 
         [name] (const SceneElement& scene) { return scene.first == name; });
     return it->second;
   }
 
-  void RenderEngine::Render()
+  void SceneManager::Render()
   {
     for (auto it = m_scenes3d.begin(); it != m_scenes3d.end(); it++)
     {
@@ -78,7 +78,7 @@ namespace Greet {
     }
   }
 
-  void RenderEngine::Update(float timeElapsed)
+  void SceneManager::Update(float timeElapsed)
   {
     static float time = 0.0f;
     time+=timeElapsed;
@@ -102,7 +102,7 @@ namespace Greet {
     }
   }
 
-  void RenderEngine::OnEvent(Event& event)
+  void SceneManager::OnEvent(Event& event)
   {
     if(focusedScene)
     {
