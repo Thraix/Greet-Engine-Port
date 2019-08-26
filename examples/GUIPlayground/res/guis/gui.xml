@@ -157,4 +157,7 @@
       borderRadius="4"
       />
   </Container>
+  <Container width="fill_parent" verticalAlign="false">
+    <Label width="wrap_content" height="fill_parent" fontSize="16" font="roboto" color="#90a4ae">Background Color: </Label>
+  </Container>
 </Frame>

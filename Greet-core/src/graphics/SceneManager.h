@@ -19,9 +19,9 @@ namespace Greet {
 
       Scene* Remove2DScene(const std::string& name);
       Scene* Remove3DScene(const std::string& name);
-      Scene* Get2DScene(const std::string& name);
-      Scene* Get3DScene(const std::string& name);
-      void Render();
+      Scene* Get2DScene(const std::string& name) const;
+      Scene* Get3DScene(const std::string& name) const;
+      void Render() const;
       void Update(float timeElapsed);
       void OnEvent(Event& event);
   };

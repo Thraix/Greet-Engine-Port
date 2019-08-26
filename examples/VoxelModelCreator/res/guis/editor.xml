@@ -1,60 +1,66 @@
 <Frame
-  name="TopComponent"
-  width="150" height="fill_parent" minWidth="100" spacing="10"
-  resizeTop="false" resizeLeft="false" resizeBottom="false" resizeRight="true"
+  name="Frame"
+  width="fill_parent" height="fill_parent" minWidth="100" spacing="10"
+  resizeTop="false" resizeLeft="false" resizeBottom="false" resizeRight="false"
   padding="10" border="1"
   borderColor="#37474f" 
   backgroundColor="#263238" 
+  verticalAlign="false"
   >
-  <Label 
-    fontSize="16" font="roboto" color="#90a4ae">Settings</Label>
-  <Divider name="divider" backgroundColor="#90a4ae"/>
-  <TextBox
-    width="fill_parent" height="20"
-    backgroundColor="#37474f" borderColor="#455a64" 
-    border="1" font="roboto" fontSize="12" color="#90a4ae"
-    hintColor="#263238" hintText="Filename"
-    radius="6" borderRadius="7"
-    padding="0 5"></TextBox>
+  <Container width="150">
+    <Label 
+      fontSize="16" font="roboto" color="#90a4ae">Settings</Label>
+    <Divider name="divider" backgroundColor="#90a4ae"/>
+    <TextBox
+      width="fill_parent" height="20"
+      backgroundColor="#37474f" borderColor="#455a64" 
+      border="1" font="roboto" fontSize="12" color="#90a4ae"
+      hintColor="#263238" hintText="Filename"
+      radius="6" borderRadius="7"
+      padding="0 5"></TextBox>
 
-  <Button width="fill_parent" height="20" name="button"
-    backgroundColor="#37474f" borderColor="#455a64" 
-    hoverbackgroundColor="#37474f" hoverborderColor="#455a64" 
-    color="#90a4ae" fontSize="12" font="roboto"
-    hoverborder="1"
-    radius="2" borderRadius="3"
-    hoverradius="2" hoverborderRadius="3"
-    border="1 1 1 1">Save Model</Button>
+    <Button width="fill_parent" height="20" name="button"
+      backgroundColor="#37474f" borderColor="#455a64" 
+      hoverbackgroundColor="#37474f" hoverborderColor="#455a64" 
+      color="#90a4ae" fontSize="12" font="roboto"
+      hoverborder="1"
+      radius="2" borderRadius="3"
+      hoverradius="2" hoverborderRadius="3"
+      border="1 1 1 1">Save Model</Button>
 
-  <Button width="fill_parent" height="20" name="button"
-    backgroundColor="#37474f" borderColor="#455a64" 
-    hoverbackgroundColor="#37474f" hoverborderColor="#455a64" 
-    color="#90a4ae" fontSize="12" font="roboto"
-    hoverborder="1"
-    radius="2" borderRadius="3"
-    hoverradius="2" hoverborderRadius="3"
-    border="1 1 1 1">Load Model</Button>
+    <Button width="fill_parent" height="20" name="button"
+      backgroundColor="#37474f" borderColor="#455a64" 
+      hoverbackgroundColor="#37474f" hoverborderColor="#455a64" 
+      color="#90a4ae" fontSize="12" font="roboto"
+      hoverborder="1"
+      radius="2" borderRadius="3"
+      hoverradius="2" hoverborderRadius="3"
+      border="1 1 1 1">Load Model</Button>
 
-  <Button width="fill_parent" height="20" name="button"
-    backgroundColor="#37474f" borderColor="#455a64" 
-    hoverbackgroundColor="#37474f" hoverborderColor="#455a64" 
-    color="#90a4ae" fontSize="12" font="roboto"
-    hoverborder="1"
-    radius="2" borderRadius="3"
-    hoverradius="2" hoverborderRadius="3"
-    border="1 1 1 1">Export Model</Button>
+    <Button width="fill_parent" height="20" name="button"
+      backgroundColor="#37474f" borderColor="#455a64" 
+      hoverbackgroundColor="#37474f" hoverborderColor="#455a64" 
+      color="#90a4ae" fontSize="12" font="roboto"
+      hoverborder="1"
+      radius="2" borderRadius="3"
+      hoverradius="2" hoverborderRadius="3"
+      border="1 1 1 1">Export Model</Button>
 
 
-  <Container width="fill_parent" verticalAlign="false">
-    <Label width="wrap_content" height="fill_parent" fontSize="12" font="roboto" color="#90a4ae">Cube Color: </Label>
+    <Container width="fill_parent" verticalAlign="false">
+      <Label width="wrap_content" height="fill_parent" fontSize="12" font="roboto" color="#90a4ae">Cube Color: </Label>
 
-    <ColorPicker
-      width="60" height="20" name="backgroundChanger"
-      backgroundColor="#ffffff"
-      borderColor="#455a64" 
-      border="1"
-      radius="1"
-      borderRadius="4"
-      />
+      <ColorPicker
+        width="60" height="20" name="backgroundChanger"
+        backgroundColor="#ffffff"
+        borderColor="#455a64" 
+        border="1"
+        radius="1"
+        borderRadius="4"
+        />
+    </Container>
+  </Container>
+  <Container width="fill_parent" height="fill_parent">
+    <Viewport name="viewport" width="fill_parent" height="fill_parent"/>
   </Container>
 </Frame>

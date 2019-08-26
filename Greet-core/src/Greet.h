@@ -66,6 +66,7 @@
 #include <graphics/gui/Style.h>
 #include <graphics/gui/TLBR.h>
 #include <graphics/gui/TextBox.h>
+#include <graphics/gui/Viewport.h>
 #include <graphics/layers/Group.h>
 #include <graphics/layers/Layer.h>
 #include <graphics/layers/Layer3D.h>

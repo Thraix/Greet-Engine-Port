@@ -47,21 +47,21 @@ namespace Greet {
     return it->second;
   }
 
-  Scene* SceneManager::Get2DScene(const std::string& name)
+  Scene* SceneManager::Get2DScene(const std::string& name) const
   {
     auto it = std::find_if(m_scenes2d.begin(), m_scenes2d.end(), 
         [name] (const SceneElement& scene) { return scene.first == name; });
     return it->second;
   }
 
-  Scene* SceneManager::Get3DScene(const std::string& name)
+  Scene* SceneManager::Get3DScene(const std::string& name) const
   {
     auto it = std::find_if(m_scenes3d.begin(), m_scenes3d.end(), 
         [name] (const SceneElement& scene) { return scene.first == name; });
     return it->second;
   }
 
-  void SceneManager::Render()
+  void SceneManager::Render() const
   {
     for (auto it = m_scenes3d.begin(); it != m_scenes3d.end(); it++)
     {
