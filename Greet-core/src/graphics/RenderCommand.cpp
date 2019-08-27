@@ -42,9 +42,32 @@ namespace Greet
     glViewport(vp.x, vp.y, vp.z, vp.w);
   }
 
-  const Vec4& RenderCommand::TopViewportStack()
+  Vec4 RenderCommand::TopViewportStack()
   {
+    if(viewportStack.empty())
+      return Vec4{0,0, (float)Window::GetWidth(), (float)Window::GetHeight()};
     return viewportStack.top();
+  }
+
+  float RenderCommand::GetViewportWidth()
+  {
+    if(viewportStack.empty())
+      return Window::GetWidth();
+    return viewportStack.top().z;
+  }
+
+  float RenderCommand::GetViewportHeight()
+  {
+    if(viewportStack.empty())
+      return Window::GetHeight();
+    return viewportStack.top().w;
+  }
+
+  float RenderCommand::GetViewportAspect()
+  {
+    if(viewportStack.empty())
+      return Window::GetWidth() / (float)Window::GetHeight();
+    return viewportStack.top().z / viewportStack.top().w;
   }
 }
 

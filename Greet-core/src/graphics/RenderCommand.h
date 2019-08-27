@@ -19,7 +19,11 @@ namespace Greet
       static void PushViewportStack(const Vec4& viewport);
 
       static void PopViewportStack();
-      static const Vec4& TopViewportStack();
+      static Vec4 TopViewportStack();
+
+      static float GetViewportWidth();
+      static float GetViewportHeight();
+      static float GetViewportAspect();
   };
 } 
 
