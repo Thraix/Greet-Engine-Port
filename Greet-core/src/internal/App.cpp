@@ -7,6 +7,7 @@
 #include <utility>
 #include <functional>
 #include <event/EventDispatcher.h>
+#include <input/Input.h>
 
 namespace Greet {
 
@@ -54,6 +55,7 @@ namespace Greet {
         Update(elapsed - updateTimer);
         updates++;
         updateTimer = elapsed;
+        Input::Update();
       }
 
       if (elapsed - renderTimer >= frameCap)

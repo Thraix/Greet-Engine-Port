@@ -1,6 +1,7 @@
 #include "Viewport.h"
 
 #include <graphics/RenderCommand.h>
+#include <input/Input.h>
 
 namespace Greet
 {
@@ -15,21 +16,23 @@ namespace Greet
 
   void Viewport::Update(float timeElapsed)
   {
+    Vec2 translatedPos = GetRealPosition();
+    RenderCommand::PushViewportStack(translatedPos.x, translatedPos.y, size.size.w, size.size.h);
+
     sceneManager.Update(timeElapsed);
+
+    RenderCommand::PopViewportStack();
   }
 
   void Viewport::Render(GUIRenderer* renderer) const
   {
     guiScene->PostRender();
-
     Vec2 translatedPos = renderer->GetMatrix() * pos;
-
     RenderCommand::PushViewportStack(translatedPos.x, translatedPos.y, size.size.w, size.size.h);
 
     sceneManager.Render();
 
     RenderCommand::PopViewportStack();
-
     guiScene->PreRender();
   }
 

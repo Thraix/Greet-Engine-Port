@@ -10,6 +10,7 @@
 #include <event/KeyEvent.h>
 #include <event/MouseEvent.h>
 #include <event/JoystickEvent.h>
+#include <input/Input.h>
 
 namespace Greet {
 
@@ -165,6 +166,7 @@ namespace Greet {
 
   void Window::key_callback(GLFWwindow *window, int key, int scancode, int action, int mods)
   {
+    Input::SetKeyButton(key, action != GLFW_RELEASE);
     if (action == GLFW_RELEASE)
       EventDispatcher::OnEvent(KeyReleaseEvent(key));
     else if(action == GLFW_PRESS)
@@ -176,6 +178,7 @@ namespace Greet {
   void Window::mouse_button_callback(GLFWwindow *window, int button, int action, int mods)
   {
     mouseButtonDown[button] = action == GLFW_PRESS;
+    Input::SetMouseButton(button, action == GLFW_PRESS);
     if (action == GLFW_RELEASE)
       EventDispatcher::OnEvent(MouseReleaseEvent(mousePos.x,mousePos.y,button));
     else if (action == GLFW_PRESS)
@@ -197,6 +200,7 @@ namespace Greet {
   {
     Vec2 mousePosDelta = mousePos;
     mousePos = Vec2(xpos / width, 1.0f - (ypos / height))*2.0f - 1.0f;
+    Input::SetMousePos(mousePos);
     mousePosDelta = mousePos - mousePosDelta;
     EventDispatcher::OnEvent(MouseMoveEvent{mousePos.x, mousePos.y, mousePosDelta.x, mousePosDelta.y});
     mousePosPixel = Vec2(xpos, ypos);
@@ -204,6 +208,7 @@ namespace Greet {
 
   void Window::mouse_scroll_callback(GLFWwindow* window, double scrollX, double scrollY)
   {
+    Input::AddMouseScroll(scrollX, scrollY);
     EventDispatcher::OnEvent(MouseScrollEvent{(float)scrollX, (float)scrollY});
   }
 

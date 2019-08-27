@@ -83,14 +83,6 @@ namespace Greet {
       inline static float GetAspect() { return width / (float) height; }
       inline static void SetTitle(const std::string& title) { glfwSetWindowTitle(window,title.c_str()); }
 
-      //Mouse Positions
-      inline static Vec2 GetMousePos() { return mousePos; }
-      inline static float GetMouseX() { return mousePos.x; }
-      inline static float GetMouseY() { return mousePos.y; }
-
-      inline static Vec2 GetMousePosPixel() { return mousePosPixel; }
-      inline static float GetMouseXPixel() { return mousePosPixel.x; }
-      inline static float GetMouseYPixel() { return mousePosPixel.y; }
       inline static Joystick* GetJoystick(uint joystick){ ASSERT(joystick < GLFW_JOYSTICKS, "WINDOW","Invalid Joystick. Ranges from 0-3: ", joystick); return (joysticks[joystick]).get(); }
       inline static bool IsJoystickConnected(uint joystick){ ASSERT(joystick < GLFW_JOYSTICKS, "WINDOW", "Invalid Joystick. Ranges from 0-3: ", joystick); return joysticks[joystick]->m_connected; }
 

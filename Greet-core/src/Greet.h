@@ -91,6 +91,7 @@
 #include <graphics/textures/Texture.h>
 #include <graphics/textures/Texture2D.h>
 #include <graphics/textures/TextureManager.h>
+#include <input/Input.h>
 #include <input/Joystick.h>
 #include <internal/App.h>
 #include <internal/GreetGL.h>
