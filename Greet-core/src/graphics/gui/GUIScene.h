@@ -35,7 +35,9 @@ namespace Greet {
       void OnTyped(KeyTypeEvent& event);
       void WindowResize(WindowResizeEvent& event);
 
+      void PreRender() const;
       void Render() const;
+      void PostRender() const;
       void Update(float timeElapsed);
 
       bool RequestFocus(Component* component);

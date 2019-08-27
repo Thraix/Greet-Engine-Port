@@ -137,17 +137,24 @@ namespace Greet {
     }
   }
 
-  void GUIScene::Render() const
+  void GUIScene::PreRender() const
   {
     m_shader.Enable();
     m_renderer->Begin();
+  }
+
+  void GUIScene::Render() const
+  {
     for (auto it = frames.begin(); it != frames.end(); ++it)
     {
       (*it)->PreRender(m_renderer, Vec2(0,0));
       (*it)->RenderHandle(m_renderer);
       (*it)->PostRender(m_renderer);
     }
+  }
 
+  void GUIScene::PostRender() const
+  {
     m_renderer->End();
     m_renderer->Draw();
     m_shader.Disable();

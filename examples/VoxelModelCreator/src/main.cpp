@@ -72,7 +72,7 @@ namespace vmc
           GlobalSceneManager::GetSceneManager().Add3DScene(grid, "gridLayer");
           return;
         }
-        viewport->GetSceneManager().Add3DScene(grid,"gridLayer");
+        viewport->GetSceneManager().Add3DScene(grid, "gridLayer");
       }
 
       void Tick() override
