@@ -25,6 +25,7 @@
 #include <graphics/GlobalSceneManager.h>
 #include <graphics/Light.h>
 #include <graphics/ParticlePool.h>
+#include <graphics/RenderCommand.h>
 #include <graphics/Renderable.h>
 #include <graphics/Renderable2D.h>
 #include <graphics/RenderablePoly.h>

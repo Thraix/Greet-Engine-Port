@@ -1,5 +1,7 @@
 #include "Viewport.h"
 
+#include <graphics/RenderCommand.h>
+
 namespace Greet
 {
 
@@ -21,11 +23,12 @@ namespace Greet
     guiScene->PostRender();
 
     Vec2 translatedPos = renderer->GetMatrix() * pos;
-    glViewport(translatedPos.x, Window::GetHeight() - (translatedPos.y+size.size.y), size.size.x, size.size.y);
+
+    RenderCommand::PushViewportStack(translatedPos.x, translatedPos.y, size.size.w, size.size.h);
 
     sceneManager.Render();
 
-    glViewport(0, 0, Window::GetWidth(), Window::GetHeight());
+    RenderCommand::PopViewportStack();
 
     guiScene->PreRender();
   }
