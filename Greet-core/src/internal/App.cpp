@@ -8,6 +8,7 @@
 #include <functional>
 #include <event/EventDispatcher.h>
 #include <input/Input.h>
+#include <graphics/RenderCommand.h>
 
 namespace Greet {
 
@@ -60,7 +61,7 @@ namespace Greet {
 
       if (elapsed - renderTimer >= frameCap)
       {
-        Window::Clear();
+        RenderCommand::Clear();
         GlobalSceneManager::GetSceneManager().Render();
         Render();
         Window::Render();

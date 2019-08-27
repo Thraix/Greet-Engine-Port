@@ -33,7 +33,6 @@ namespace Greet {
       static std::string title;
       static uint width, height;
       static GLFWwindow *window;
-      static Vec4 bgColor;
 
       static std::vector<std::unique_ptr<Joystick>> joysticks;
 
@@ -63,13 +62,11 @@ namespace Greet {
       static void DestroyWindow();
 
       static bool Closed();
-      static void Clear();
 
       static void Render();
       static void Update();
       static void Tick();
 
-      static void SetBackgroundColor(Vec4 color);
       static void GrabMouse(bool grab);
 
       // Screen: (-1, 1)
@@ -77,7 +74,6 @@ namespace Greet {
       static void TransformScreenToWindowPos(Vec2& pos);
       static void TransformWindowToScreenPos(Vec2& pos);
 
-      inline static Vec4 GetBackgroundColor() { return bgColor; }
       inline static int GetWidth() { return width; };
       inline static int GetHeight() { return height; };
       inline static float GetAspect() { return width / (float) height; }

@@ -6,6 +6,7 @@
 namespace Greet
 {
   std::stack<Vec4> RenderCommand::viewportStack;
+  Vec4 RenderCommand::clearColor{0,0,0,1};
 
   void RenderCommand::PushViewportStack(float x, float y, float width, float height)
   {
@@ -21,7 +22,7 @@ namespace Greet
     Vec4 vp{viewport};
     vp.x += lastViewport.x;
     vp.y = lastViewport.y + lastViewport.w - viewport.y - viewport.w;
-    glViewport(vp.x, vp.y, vp.z, vp.w);
+    GLCall(glViewport(vp.x, vp.y, vp.z, vp.w));
     viewportStack.push(vp);
   }
 
@@ -39,7 +40,7 @@ namespace Greet
       ? Vec4(0, 0, Window::GetWidth(), Window::GetHeight()) 
       : viewportStack.top();
 
-    glViewport(vp.x, vp.y, vp.z, vp.w);
+    GLCall(glViewport(vp.x, vp.y, vp.z, vp.w));
   }
 
   Vec4 RenderCommand::TopViewportStack()
@@ -68,6 +69,22 @@ namespace Greet
     if(viewportStack.empty())
       return Window::GetWidth() / (float)Window::GetHeight();
     return viewportStack.top().z / viewportStack.top().w;
+  }
+
+  void RenderCommand::SetClearColor(const Vec4& clearColor)
+  {
+    RenderCommand::clearColor = clearColor;
+    GLCall(glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a));
+  }
+
+  const Vec4& RenderCommand::GetClearColor()
+  {
+    return clearColor;
+  }
+
+  void RenderCommand::Clear()
+  {
+    GLCall(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
   }
 }
 

@@ -22,14 +22,12 @@ namespace Greet {
   uint Window::height;
   std::string Window::title;
   GLFWwindow *Window::window;
-  Vec4 Window::bgColor;
   bool Window::mouseButtonDown[MAX_MOUSEBUTTONS];
   bool Window::isMouseButtonDown;
 
 
   void Window::CreateWindow(std::string title, uint width, uint height)
   {
-    bgColor = Vec4(0.0f, 0.0f, 0.0f, 0.0f);
     focus = true;
     Window::title = title;
     Window::width = width;
@@ -104,11 +102,6 @@ namespace Greet {
     return glfwWindowShouldClose(window) == 1;
   }
 
-  void Window::Clear()
-  {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  }
-
   void Window::Tick()
   {
 
@@ -128,12 +121,6 @@ namespace Greet {
   {
     glfwSwapBuffers(window);
     glfwPollEvents();
-  }
-
-  void Window::SetBackgroundColor(Vec4 color)
-  {
-    bgColor = color;
-    GLCall(glClearColor(color.x, color.y, color.z, color.w));
   }
 
   void Window::GrabMouse(bool grab)

@@ -83,7 +83,7 @@ class Core : public App
 
     void OnColorChangeCallback(Component* component, const Vec3<float>& oldValue, const Vec3<float>& current)
     {
-      Window::SetBackgroundColor(Vec4(current.r,current.g,current.b,1));
+      RenderCommand::SetClearColor(Vec4(current.r,current.g,current.b,1));
     }
 
     void OnClickCallback(Component* component)
