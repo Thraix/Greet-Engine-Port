@@ -55,7 +55,7 @@ namespace Greet
     {
       const std::string& str = object.GetAttribute(key);
       char* endPos;
-      float value = std::strtol(str.c_str(), &endPos, 10);
+      float value = std::strtof(str.c_str(), &endPos);
       if(endPos != &*str.end())
         Log::Warning("Invalid string in float property \"",key,"\"=\"", str, "\"");
       return value;
