@@ -1,0 +1,56 @@
+{
+  "textures": "res/loaders/textures.json",
+  "fonts": "res/loaders/fonts.json",
+  "scenes":
+  [
+    {
+      "type": "gui",
+      "name": "gui",
+      "shader": "res/shaders/gui.shader",
+      "frames": [
+        {
+          "src": "res/guis/gui.xml"
+        },
+        {
+          "src": "res/guis/colorpicker.xml"
+        }
+      ]
+    },
+    {
+      "type": "3d",
+      "name": "3dscene",
+      "camera": {
+        "type": "tpcamera",
+        "fov": 90,
+        "near": 0.001,
+        "far": 1000,
+        "position": { "x": 0, "y": 0, "z": 0}
+      },
+      "skybox": "skybox",
+      "Entities":
+      [
+        {
+          "mesh": "res/objs/stall.obj",
+          "material": { "shader": "res/shaders/3dshader.shader", "texture": "stall"},
+          "position": { "x": 0, "y": 0, "z": 0},
+          "scale": { "x": 1, "y": 1, "z": 1},
+          "rotation": { "x": 0, "y": 0, "z": 0}
+        },
+        {
+          "mesh": {
+            "type": "cube",
+            "position":{ "x": 0, "y": 0, "z": 0}, 
+            "size":{ "x": 1, "y": 1, "z": 1}
+          },
+          "material": { "shader": "res/shaders/3dshader.shader"},
+          "position": { "x": 0, "y": 0, "z": 0},
+          "scale": { "x": 1, "y": 1, "z": 1},
+          "rotation": { "x": 0, "y": 0, "z": 0}
+        },
+        {
+          "loader": "res/loaders/stallModel.json"
+        }
+      ]
+    }
+  ]
+}
