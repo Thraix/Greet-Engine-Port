@@ -24,104 +24,69 @@ namespace Greet {
 
   void GUIScene::OnEvent(Event& event)
   {
+    Scene::OnEvent(event);
     if(EVENT_IS_CATEGORY(event, INPUT_EVENT))
     {
-      if(EVENT_IS_TYPE(event, EventType::KEY_PRESS))
-        OnPressed((KeyPressEvent&)event);
-      else if(EVENT_IS_TYPE(event, EventType::KEY_RELEASE))
-        OnReleased((KeyReleaseEvent&)event);
-      else if(EVENT_IS_TYPE(event, EventType::KEY_TYPE))
-        OnTyped((KeyTypeEvent&)event);
+      if(EVENT_IS_TYPE(event, EventType::MOUSE_PRESS))
+        OnMousePressEventHandler((MousePressEvent&)event);
       else if(EVENT_IS_TYPE(event, EventType::MOUSE_MOVE))
-        OnMoved((MouseMoveEvent&)event);
-      else if(EVENT_IS_TYPE(event, EventType::MOUSE_PRESS))
-        OnPressed((MousePressEvent&)event);
+        OnMouseMoveEventHandler((MouseMoveEvent&)event);
       else if(EVENT_IS_TYPE(event, EventType::MOUSE_RELEASE))
-        OnReleased((MouseReleaseEvent&)event);
-      else
-        Scene::OnEvent(event);
+        OnMouseReleaseEventHandler((MouseReleaseEvent&)event);
+      else if(m_focused)
+      {
+        m_focused->OnEventHandler(event, m_focused->GetPosition());
+        event.AddFlag(EVENT_HANDLED);
+      }
     }
-    else
-      Scene::OnEvent(event);
   }
 
-  void GUIScene::OnPressed(MousePressEvent& event)
+  void GUIScene::OnMousePressEventHandler(MousePressEvent& event)
   {
-    Vec2 pos = ~projectionMatrix * event.GetPosition();
-    MousePressEvent transformedEvent{pos.x,pos.y,event.GetButton()};
+    Vec2 mousePos = ~projectionMatrix * event.GetPosition();
+    MousePressEvent transformedEvent{mousePos, event.GetButton()};
+
     for (auto it = frames.rbegin(); it != frames.rend(); ++it)
     {
-      Vec2 pos = transformedEvent.GetPosition() - (*it)->GetMargin().LeftTop();
-      if((*it)->IsMouseInside(pos))
+      if((*it)->IsMouseInside(transformedEvent.GetPosition() - (*it)->GetMargin().LeftTop() - (*it)->GetPosition()))
       {
-        (*it)->OnMousePressed(transformedEvent, pos - (*it)->GetPosition());
-        event.AddFlag(EVENT_FOCUSED  | EVENT_HANDLED);
+        (*it)->OnEventHandler(transformedEvent, (*it)->GetPosition());
         frames.splice(frames.end(), frames, std::next(it).base());
+        event.AddFlag(EVENT_HANDLED | transformedEvent.GetFlags());
         return;
       }
     }
-    event.AddFlag( transformedEvent.GetFlags());
     RequestFocus(nullptr);
     event.AddFlag(EVENT_UNFOCUSED);
   }
 
-  void GUIScene::OnReleased(MouseReleaseEvent& event)
+  void GUIScene::OnMouseMoveEventHandler(MouseMoveEvent& event)
   {
-    if (m_focused != nullptr)
-    {
-      Vec2 pos = ~projectionMatrix * event.GetPosition();
-      MouseReleaseEvent transformedEvent{pos.x,pos.y,event.GetButton()};
-      m_focused->MouseReleased(transformedEvent, transformedEvent.GetPosition() - m_focused->GetRealPosition());
-      event.AddFlag(EVENT_HANDLED);
-    }
-  }
+    Vec2 mousePos = ~projectionMatrix * event.GetPosition();
+    Vec2 mouseDelta  = ~projectionMatrix * (event.GetPosition() + event.GetDeltaPosition()) - mousePos;
+    MouseMoveEvent transformedEvent{mousePos, mouseDelta};
 
-  void GUIScene::OnMoved(MouseMoveEvent& event)
-  {
-    Mat3 projectionInv = ~projectionMatrix;
-    Vec2 pos = projectionInv * event.GetPosition();
-    Vec2 delta = projectionInv * event.GetDeltaPosition();
-    MouseMoveEvent transformedEvent{pos.x,pos.y, delta.x, delta.y};
-
-    if (m_focused != nullptr)
+    if (m_focused && m_focused->UsingMouse())
     {
-      m_focused->MouseMoved(transformedEvent, transformedEvent.GetPosition() - m_focused->GetRealPosition());
-      if(m_focused->UsingMouse())
-      {
-        event.AddFlag(EVENT_HANDLED);
-        return;
-      }
+      m_focused->OnEventHandler(transformedEvent, m_focused->GetRealPosition());
+      event.AddFlag(EVENT_HANDLED | transformedEvent.GetFlags());
+      return;
     }
 
     for (auto it = frames.rbegin(); it != frames.rend(); ++it)
     {
-      (*it)->OnMouseMoved(transformedEvent, transformedEvent.GetPosition() - (*it)->GetPosition() - (*it)->GetMargin().LeftTop());
+      (*it)->OnEventHandler(transformedEvent, (*it)->GetPosition());
     }
   }
 
-  void GUIScene::OnPressed(KeyPressEvent& event)
+  void GUIScene::OnMouseReleaseEventHandler(MouseReleaseEvent& event)
   {
-    if (m_focused != nullptr)
+    Vec2 mousePos = ~projectionMatrix * event.GetPosition();
+    MouseReleaseEvent transformedEvent{mousePos, event.GetButton()};
+    if (m_focused)
     {
-      m_focused->KeyPressed(event);
-      event.AddFlag(EVENT_HANDLED);
-    }
-  }
-
-  void GUIScene::OnReleased(KeyReleaseEvent& event)
-  {
-    if (m_focused != nullptr)
-    {
-      m_focused->KeyReleased(event);
-      event.AddFlag(EVENT_HANDLED);
-    }
-  }
-  void GUIScene::OnTyped(KeyTypeEvent& event)
-  {
-    if (m_focused != nullptr)
-    {
-      m_focused->KeyTyped(event);
-      event.AddFlag(EVENT_HANDLED);
+      m_focused->OnEventHandler(transformedEvent, m_focused->GetRealPosition());
+      event.AddFlag(EVENT_HANDLED | transformedEvent.GetFlags());
     }
   }
 

@@ -42,8 +42,8 @@ namespace Greet {
 
       virtual Vec2 GetWrapSize() const override;
 
-      virtual void OnMousePressed(MousePressEvent& event, const Vec2& translatedPos) override;
-      virtual void OnMouseMoved(MouseMoveEvent& event, const Vec2& translatedPos) override;
+      void OnMousePressEventHandler(MousePressEvent& event, const Vec2& componentPos) override;
+      void OnMouseMoveEventHandler(MouseMoveEvent& event, const Vec2& componentPos) override;
 
       virtual void SetGUIScene(GUIScene* scene) override;
 

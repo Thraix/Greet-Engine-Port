@@ -118,41 +118,46 @@ namespace Greet
     sliderComponent->PostRender(renderer);
   }
 
-  void Slider::MousePressed(MousePressEvent& event, const Vec2& translatedPos)
+  void Slider::OnEvent(Event& event, const Vec2& translatedPos)
   {
-    Component::MousePressed(event,translatedPos);
-    if(event.GetButton() == GLFW_MOUSE_BUTTON_1 && pressed)
+    if(EVENT_IS_TYPE(event, EventType::MOUSE_PRESS))
     {
-      float oldValue = GetSliderValueFromPos(sliderPos);
-      if(flags & SLIDER_FLAG_VERTICAL)
-        SetValue(GetSliderValueFromPos(translatedPos.y));
-      else
-        SetValue(GetSliderValueFromPos(translatedPos.x));
-      float newValue = GetSliderValueFromPos(sliderPos);
-      if(oldValue != newValue)
-        CallOnValueChangeCallback(oldValue, newValue);
+      MousePressEvent& e = static_cast<MousePressEvent&>(event);
+      if(e.GetButton() == GLFW_MOUSE_BUTTON_1 && pressed)
+      {
+        float oldValue = GetSliderValueFromPos(sliderPos);
+        if(flags & SLIDER_FLAG_VERTICAL)
+          SetValue(GetSliderValueFromPos(translatedPos.y));
+        else
+          SetValue(GetSliderValueFromPos(translatedPos.x));
+        float newValue = GetSliderValueFromPos(sliderPos);
+        if(oldValue != newValue)
+          CallOnValueChangeCallback(oldValue, newValue);
+      }
     }
-  }
+    else if(EVENT_IS_TYPE(event, EventType::MOUSE_MOVE))
+    {
+      MouseMoveEvent& e = static_cast<MouseMoveEvent&>(event);
+      if(pressed)
+      {
+        float oldValue = GetSliderValueFromPos(sliderPos);
+        if(flags & SLIDER_FLAG_VERTICAL)
+          SetValue(GetSliderValueFromPos(translatedPos.y));
+        else
+          SetValue(GetSliderValueFromPos(translatedPos.x));
+        float newValue = GetSliderValueFromPos(sliderPos);
+        if(oldValue != newValue)
+          CallOnValueChangeCallback(oldValue, newValue);
+      }
+    }
 
-  void Slider::MouseMoved(MouseMoveEvent& event, const Vec2& translatedPos)
-  {
-    if(pressed)
-    {
-      float oldValue = GetSliderValueFromPos(sliderPos);
-      if(flags & SLIDER_FLAG_VERTICAL)
-        SetValue(GetSliderValueFromPos(translatedPos.y));
-      else
-        SetValue(GetSliderValueFromPos(translatedPos.x));
-      float newValue = GetSliderValueFromPos(sliderPos);
-      if(oldValue != newValue)
-        CallOnValueChangeCallback(oldValue, newValue);
-    }
   }
 
   void Slider::SetOnValueChangeCallback(OnValueChangeCallback callback)
   {
     onValueChangeCallback = callback;
   }
+
   void Slider::CallOnValueChangeCallback(float oldValue, float newValue)
   {
     if(onValueChangeCallback)

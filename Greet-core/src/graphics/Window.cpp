@@ -187,8 +187,8 @@ namespace Greet {
   {
     Vec2 mousePosDelta = mousePos;
     mousePos = Vec2(xpos / width, 1.0f - (ypos / height))*2.0f - 1.0f;
-    Input::SetMousePos(mousePos);
     mousePosDelta = mousePos - mousePosDelta;
+    Input::SetMousePos(mousePos);
     EventDispatcher::OnEvent(MouseMoveEvent{mousePos.x, mousePos.y, mousePosDelta.x, mousePosDelta.y});
     mousePosPixel = Vec2(xpos, ypos);
   }

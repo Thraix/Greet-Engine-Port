@@ -66,36 +66,38 @@ namespace Greet
     sliderComponent->PostRender(renderer);
   }
 
-  void SatValSlider::MousePressed(MousePressEvent& event, const Vec2& translatedPos)
+  void SatValSlider::OnEvent(Event& event, const Vec2& translatedPos)
   {
-    Component::MousePressed(event,translatedPos);
-    if(event.GetButton() == GLFW_MOUSE_BUTTON_1 && pressed)
+    if(EVENT_IS_TYPE(event, EventType::MOUSE_PRESS))
     {
-      float oldSat = sat;
-      float oldVal = val;
+      MousePressEvent& e = static_cast<MousePressEvent&>(event);
+      if(e.GetButton() == GLFW_MOUSE_BUTTON_1 && pressed)
+      {
+        float oldSat = sat;
+        float oldVal = val;
 
-      SetSat(GetSliderSatFromPos(translatedPos.x));
-      SetVal(GetSliderValFromPos(translatedPos.y));
+        SetSat(GetSliderSatFromPos(translatedPos.x));
+        SetVal(GetSliderValFromPos(translatedPos.y));
 
-      //if(oldSat != newSat || oldVal != newVal)
-      //CallOnValueChangeCallback(oldSat, newSat, oldVal, newVal);
+        //if(oldSat != newSat || oldVal != newVal)
+        //CallOnValueChangeCallback(oldSat, newSat, oldVal, newVal);
+      }
     }
-  }
-
-  void SatValSlider::MouseMoved(MouseMoveEvent& event, const Vec2& translatedPos)
-  {
-    if(pressed)
+    else if(EVENT_IS_TYPE(event, EventType::MOUSE_MOVE))
     {
-      float oldSat = GetSliderSatFromPos(sat);
-      float oldVal = GetSliderValFromPos(val);
+      if(pressed)
+      {
+        float oldSat = GetSliderSatFromPos(sat);
+        float oldVal = GetSliderValFromPos(val);
 
-      SetSat(GetSliderSatFromPos(translatedPos.x));
-      SetVal(GetSliderValFromPos(translatedPos.y));
+        SetSat(GetSliderSatFromPos(translatedPos.x));
+        SetVal(GetSliderValFromPos(translatedPos.y));
 
-      if(oldSat != sat)
-        CallOnSatChangeCallback(oldSat, sat);
-      if(oldVal != val)
-        CallOnValChangeCallback(oldVal, val);
+        if(oldSat != sat)
+          CallOnSatChangeCallback(oldSat, sat);
+        if(oldVal != val)
+          CallOnValChangeCallback(oldVal, val);
+      }
     }
   }
 

@@ -20,11 +20,16 @@ namespace Greet
     delete picker;
   }
 
-  void ColorPicker::MousePressed(MousePressEvent& e, const Vec2& translatedPos)
+  void ColorPicker::OnEvent(Event& event, const Vec2& translatedPos)
   {
-    guiScene->AddFrame(picker);
-    picker->SetPosition(e.GetPosition());
-    guiScene->RequestFocus(picker);
+
+    if(EVENT_IS_TYPE(event, EventType::MOUSE_PRESS))
+    {
+      MousePressEvent& e = static_cast<MousePressEvent&>(event);
+      guiScene->AddFrame(picker);
+      picker->SetPosition(e.GetPosition());
+      guiScene->RequestFocus(picker);
+    }
   }
 
   void ColorPicker::OnColorChanged(const Vec3<float>& previous, const Vec3<float>& current)

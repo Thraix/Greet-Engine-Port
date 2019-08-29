@@ -53,6 +53,8 @@ namespace Greet {
       // Clamp the container inside window after resizing it.
       void ResizeScreenClamp();
 
+      void OnEvent(Event& event, const Vec2& translatedPos) override;
+
       // Getters and setters
       virtual Vec2 GetComponentPosition() const { return Vec2(currentStyle->margin.left + currentStyle->border.left, currentStyle->margin.top + currentStyle->border.top); };
       virtual Vec2 GetComponentSize() const { return size.size - GetComponentPosition() - Vec2(currentStyle->margin.right + currentStyle->border.right, currentStyle->margin.bottom + currentStyle->border.bottom); }
@@ -62,10 +64,6 @@ namespace Greet {
 
       // Listeners
       virtual void OnWindowResize(int width, int height);
-
-      virtual void MousePressed(MousePressEvent& event, const Vec2& translatedPos) override;
-      virtual void MouseReleased(MouseReleaseEvent& event, const Vec2& translatedPos) override;
-      virtual void MouseMoved(MouseMoveEvent& event, const Vec2& translatedPos) override;
 
       virtual void ChildChangedFocus(bool focused) override;
 

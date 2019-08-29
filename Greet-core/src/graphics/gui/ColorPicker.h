@@ -19,7 +19,7 @@ namespace Greet
       ColorPicker(const XMLObject& object, Component* parent);
       virtual ~ColorPicker();
 
-      void MousePressed(MousePressEvent& e, const Vec2& translatedPos) override;
+      void OnEvent(Event& event, const Vec2& translatedPos) override;
       void OnColorChanged(const Vec3<float>& previous, const Vec3<float>& current);
 
       void SetOnColorChangeCallback(OnColorChangeCallback callback);

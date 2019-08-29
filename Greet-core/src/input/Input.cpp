@@ -6,6 +6,7 @@
 namespace Greet
 {
   Vec2 Input::mousePos;
+  Vec2 Input::mouseLastPos;
   std::vector<bool> Input::mouseButtonsDown(16);
   std::vector<bool> Input::keyButtonsDown(256);
   float Input::mouseScrollX;
@@ -13,6 +14,7 @@ namespace Greet
 
   void Input::SetMousePos(const Vec2& pos)
   {
+    mouseLastPos = mousePos;
     mousePos = pos;
   }
 
@@ -54,7 +56,18 @@ namespace Greet
   {
     if(ignoreViewport)
       return mousePos;
+    return ConvertMousePosToViewport(mousePos);
+  }
 
+  Vec2 Input::GetMousePosDelta(bool ignoreViewport)
+  {
+    if(ignoreViewport)
+      return mousePos - mouseLastPos;
+    return ConvertMousePosToViewport(mousePos) - ConvertMousePosToViewport(mouseLastPos);
+  }
+
+  Vec2 Input::ConvertMousePosToViewport(const Vec2& pos)
+  {
     const Vec4& viewport = RenderCommand::TopViewportStack();
     // Transform viewport to screen pos
     Vec2 pos1 {
@@ -65,8 +78,8 @@ namespace Greet
         2 * (viewport.y + viewport.w) / Window::GetHeight() - 1.0f};
 
     return {
-      (mousePos.x - pos1.x) * 2 / (pos2.x - pos1.x) - 1,
-        (mousePos.y - pos1.y) * 2 / (pos2.y - pos1.y) - 1
+      (pos.x - pos1.x) * 2 / (pos2.x - pos1.x) - 1,
+        (pos.y - pos1.y) * 2 / (pos2.y - pos1.y) - 1
     };
   }
 

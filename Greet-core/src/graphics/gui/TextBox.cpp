@@ -93,42 +93,55 @@ namespace Greet
       cursorBlinkTimer -= 1;
   }
 
-  void TextBox::MousePressed(MousePressEvent& event, const Vec2& translatedPos)
+  void TextBox::OnEvent(Event& event, const Vec2& translatedPos)
   {
-    Component::MousePressed(event,translatedPos);
-    if(event.GetButton() == GLFW_MOUSE_BUTTON_1)
+    if(EVENT_IS_TYPE(event, EventType::MOUSE_PRESS))
     {
-      // TODO: In the future we probably want to do some smart, average character length
-      // to determain around where the cursor should be.
-      std::vector<float> widths{text->GetFont()->GetPartialWidths(str)};
-      auto it{widths.begin()};
-      float w = -textOffset + GetTotalPadding().w;
-      uint index = 0;
-      while(it != widths.end() && w+*it <= translatedPos.x)
+      MousePressEvent& e = static_cast<MousePressEvent&>(event);
+      if(e.GetButton() == GLFW_MOUSE_BUTTON_1)
       {
-        ++it; 
-        index++;
+        // TODO: In the future we probably want to do some smart, average character length
+        // to determain around where the cursor should be.
+        std::vector<float> widths{text->GetFont()->GetPartialWidths(str)};
+        auto it{widths.begin()};
+        float w = -textOffset + GetTotalPadding().w;
+        uint index = 0;
+        while(it != widths.end() && w+*it <= translatedPos.x)
+        {
+          ++it; 
+          index++;
+        }
+        // The cursor should be at the cursor behind
+        // Maybe change to the nearest cursor?
+        index--;
+        MoveCursor(index - cursorPos);
+        cursorBlinkTimer = 0;
       }
-      // The cursor should be at the cursor behind
-      // Maybe change to the nearest cursor?
-      index--;
-      MoveCursor(index - cursorPos);
-      cursorBlinkTimer = 0;
+    }
+    else if(EVENT_IS_TYPE(event, EventType::KEY_PRESS))
+    {
+      KeyPress(static_cast<KeyPressEvent&>(event));
+    }
+    else if(EVENT_IS_TYPE(event, EventType::KEY_RELEASE))
+    {
+      KeyReleaseEvent& e = static_cast<KeyReleaseEvent&>(event);
+      if(e.GetButton() == GLFW_KEY_LEFT_CONTROL)
+        ctrlDown = false;
+    }
+    else if(EVENT_IS_TYPE(event, EventType::KEY_TYPE))
+    {
+      KeyTypeEvent& e = static_cast<KeyTypeEvent&>(event);
+      std::string before = str;
+      auto it = str.begin();
+      std::advance(it, cursorPos);
+      str.insert(it, (char)e.GetButton());
+      SetText(str);
+      MoveCursor(1);
+      CallOnTextChangedCallback(before,str);
     }
   }
 
-  void TextBox::KeyTyped(KeyTypeEvent& event)
-  {
-    std::string before = str;
-    auto it = str.begin();
-    std::advance(it, cursorPos);
-    str.insert(it, (char)event.GetButton());
-    SetText(str);
-    MoveCursor(1);
-    CallOnTextChangedCallback(before,str);
-  }  
-
-  void TextBox::KeyPressed(KeyPressEvent& event)
+  void TextBox::KeyPress(KeyPressEvent& event)
   {
     // Easier to type if the blinker is turned on while typing
     cursorBlinkTimer = 0;
@@ -206,14 +219,6 @@ namespace Greet
     {
       // TODO: When multiline is implemented move to bottom of page
       MoveCursor(text->GetText().length()-cursorPos);
-    }
-  }
-
-  void TextBox::KeyReleased(KeyReleaseEvent& event)
-  {
-    if(event.GetButton() == GLFW_KEY_LEFT_CONTROL)
-    {
-      ctrlDown = false;
     }
   }
 

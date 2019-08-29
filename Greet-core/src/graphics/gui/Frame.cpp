@@ -136,6 +136,32 @@ namespace Greet {
     }
   }
 
+  void Frame::OnEvent(Event& event, const Vec2& translatedPos)
+  {
+    if(EVENT_IS_TYPE(event, EventType::MOUSE_PRESS))
+    {
+      MousePressEvent& e = static_cast<MousePressEvent&>(event);
+      if (e.GetButton() == GLFW_MOUSE_BUTTON_1)
+      {
+        m_posOrigin = pos;
+        m_sizeOrigin = size.size;
+        m_clickPos = translatedPos;
+        CheckResize(translatedPos);
+      }
+    }
+    else if(EVENT_IS_TYPE(event, EventType::MOUSE_RELEASE))
+    {
+      MouseReleaseEvent& e = static_cast<MouseReleaseEvent&>(event);
+      if (e.GetButton() == GLFW_MOUSE_BUTTON_1)
+        m_resizing = false;
+    }
+    else if(EVENT_IS_TYPE(event, EventType::MOUSE_MOVE))
+    {
+      if (m_resizing)
+        Resize(translatedPos);
+    }
+  }
+
   void Frame::SetGUIMouseListener(GUIMouseListener* listener)
   {
     m_mouseListener = listener;
@@ -146,39 +172,10 @@ namespace Greet {
     Remeasure();
   }
 
-  void Frame::MousePressed(MousePressEvent& event, const Vec2& translatedPos)
-  {
-    Component::MousePressed(event,translatedPos);
-    if (event.GetButton() == GLFW_MOUSE_BUTTON_1)
-    {
-      m_posOrigin = pos;
-      m_sizeOrigin = size.size;
-      m_clickPos = event.GetPosition();
-      CheckResize(event.GetPosition());
-    }
-  }
-
-  void Frame::MouseReleased(MouseReleaseEvent& event, const Vec2& translatedPos)
-  {
-    Component::MouseReleased(event,translatedPos);
-    if (event.GetButton() == GLFW_MOUSE_BUTTON_1)
-    {
-      m_resizing = false;
-    }
-  }
-
-  void Frame::MouseMoved(MouseMoveEvent& event, const Vec2& translatedPos)
-  {
-    if (m_resizing)
-    {
-      Resize(event.GetPosition());
-    }
-  }
-
   bool Frame::IsMouseInside(const Vec2& mousePos) const
   {
     Vec2 resizeMargin = Vec2(RESIZING_MARGIN, RESIZING_MARGIN);
-    return AABBUtils::PointInsideBox(mousePos, pos-resizeMargin, GetSize() + resizeMargin*2);
+    return AABBUtils::PointInsideBox(mousePos, -resizeMargin, GetSize() + resizeMargin*2);
   }
 
   void Frame::SetPosition(const Vec2& pos) 

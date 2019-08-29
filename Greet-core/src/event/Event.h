@@ -43,6 +43,5 @@ namespace Greet {
       virtual uint GetCategory() const = 0;
       uint GetFlags() const { return flags; }
       void AddFlag(uint flag) { flags |= flag;}
-
   };
 }

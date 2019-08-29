@@ -40,8 +40,7 @@ namespace Greet
 
       virtual void Render(GUIRenderer* renderer) const override;
 
-      virtual void MousePressed(MousePressEvent& event, const Vec2& translatedPos) override;
-      virtual void MouseMoved(MouseMoveEvent& event, const Vec2& translatedPos) override;
+      virtual void OnEvent(Event& event, const Vec2& translatedPos) override;
 
       // Callbacks
       virtual void SetOnValueChangeCallback(OnValueChangeCallback callback);

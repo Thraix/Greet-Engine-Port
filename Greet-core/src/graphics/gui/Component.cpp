@@ -136,30 +136,51 @@ namespace Greet
     Update(timeElapsed);
   }
 
-  void Component::OnMousePressed(MousePressEvent& event, const Vec2& translatedPos)
+  void Component::OnEventHandler(Event& event, const Vec2& componentPos)
+  {
+    if(EVENT_IS_TYPE(event, EventType::MOUSE_PRESS))
+      OnMousePressEventHandler(static_cast<MousePressEvent&>(event), componentPos);
+    else if(EVENT_IS_TYPE(event, EventType::MOUSE_MOVE))
+      OnMouseMoveEventHandler(static_cast<MouseMoveEvent&>(event), componentPos);
+    else if(EVENT_IS_TYPE(event, EventType::MOUSE_RELEASE))
+      OnMouseReleaseEventHandler(static_cast<MouseReleaseEvent&>(event), componentPos);
+    else if(EVENT_IS_TYPE(event, EventType::KEY_PRESS))
+      OnEvent(event, -componentPos);
+    else if(EVENT_IS_TYPE(event, EventType::KEY_RELEASE))
+      OnEvent(event, -componentPos);
+    else if(EVENT_IS_TYPE(event, EventType::KEY_TYPE))
+      OnEvent(event, -componentPos);
+    else
+      OnEvent(event, -componentPos);
+  }
+
+  void Component::OnMousePressEventHandler(MousePressEvent& event, const Vec2& componentPos)
   {
     if(m_isFocusable)
     {
       if(!isFocused)
-      {
         guiScene->RequestFocus(this);
+      if(event.GetButton() == GLFW_MOUSE_BUTTON_1)
+      {
+        pressed = true;
+        CallOnPressCallback();
       }
-      MousePressed(event,translatedPos);
+      OnEvent(event, event.GetPosition() - componentPos);
     }
   }
 
-  void Component::OnMouseMoved(MouseMoveEvent& event, const Vec2& translatedPos)
+  void Component::OnMouseMoveEventHandler(MouseMoveEvent& event, const Vec2& componentPos)
   {
     if(m_isFocusable)
     {
-      if(IsMouseInside(pos+translatedPos))
+      if(IsMouseInside(event.GetPosition() - componentPos) || UsingMouse())
       {
         if(!isHovered)
         {
           isHovered = true;
           MouseEntered();
         }
-        MouseMoved(event,translatedPos);
+        OnEvent(event, event.GetPosition() - componentPos);
       }
       else if(isHovered)
       {
@@ -168,6 +189,22 @@ namespace Greet
       }
     }
   }
+
+  void Component::OnMouseReleaseEventHandler(MouseReleaseEvent& event, const Vec2& componentPos)
+  {
+    if(event.GetButton() == GLFW_MOUSE_BUTTON_1)
+    {
+      if(pressed)
+      {
+        if(IsMouseInside(event.GetPosition() - componentPos))
+          CallOnClickCallback();
+        CallOnReleaseCallback();
+        OnEvent(event, event.GetPosition() - componentPos);
+        pressed = false;
+      }
+    }
+  }
+
   void Component::SetOnClickCallback(OnClickCallback callback)
   {
     onClickCallback = callback;
@@ -199,29 +236,6 @@ namespace Greet
   {
     if(onReleaseCallback)
       onReleaseCallback(this);
-  }
-
-  void Component::MousePressed(MousePressEvent& event, const Vec2& translatedPos)
-  {
-    if(event.GetButton() == GLFW_MOUSE_BUTTON_1)
-    {
-      pressed = true;
-      CallOnPressCallback();
-    }
-  }
-
-  void Component::MouseReleased(MouseReleaseEvent& event, const Vec2& translatedPos)
-  {
-    if(event.GetButton() == GLFW_MOUSE_BUTTON_1)
-    {
-      if(pressed)
-      {
-        if(IsMouseInside(translatedPos+pos))
-          CallOnClickCallback();
-        CallOnReleaseCallback();
-      }
-      pressed = false;
-    }
   }
 
   void Component::OnFocused()
@@ -385,9 +399,9 @@ namespace Greet
     return nullptr;
   }
 
-  bool Component::IsMouseInside(const Vec2& parentMouse) const
+  bool Component::IsMouseInside(const Vec2& translatedPos) const
   {
-    return AABBUtils::PointInsideBox(parentMouse, pos, size.size);
+    return AABBUtils::PointInsideBox(translatedPos, Vec2{0,0}, size.size);
   }
 
   Component* Component::GetRootNode()

@@ -13,6 +13,11 @@ namespace Greet
     PushViewportStack({x,y,width,height});
   }
 
+  void RenderCommand::PushViewportStack(const Vec2& pos, const Vec2& size)
+  {
+    PushViewportStack({pos.x,pos.y,size.w,size.h});
+  }
+
   void RenderCommand::PushViewportStack(const Vec4& viewport)
   {
     const Vec4& lastViewport = viewportStack.empty() 

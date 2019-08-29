@@ -9,7 +9,6 @@
 
 namespace Greet
 {
-
   class Component
   {
     public:
@@ -19,9 +18,9 @@ namespace Greet
     public:
 
       // Typedef callbacks
-      typedef std::function<void(Component*)> OnClickCallback;
-      typedef std::function<void(Component*)> OnPressCallback;
-      typedef std::function<void(Component*)> OnReleaseCallback;
+      typedef std::function<void(Component* c)> OnClickCallback;
+      typedef std::function<void(Component* c)> OnPressCallback;
+      typedef std::function<void(Component* c)> OnReleaseCallback;
 
     protected:
       Style* currentStyle;
@@ -86,10 +85,15 @@ namespace Greet
       virtual void UpdateHandle(float timeElapsed);
       virtual void Update(float timeElapsed){}
 
-      // Returns the focused content
-      virtual void OnMousePressed(MousePressEvent& event, const Vec2& translatedPos);
-      // Returns the hovered content
-      virtual void OnMouseMoved(MouseMoveEvent& event, const Vec2& translatedPos);
+      // These methods generally handle internal stuff and shouldn't be overriden if
+      // not necessary use their non EventHandler counterparts instead.
+      virtual void OnEventHandler(Event& event, const Vec2& componentPos);
+      virtual void OnMousePressEventHandler(MousePressEvent& event, const Vec2& componentPos);
+      virtual void OnMouseMoveEventHandler(MouseMoveEvent& event, const Vec2& componentPos);
+      virtual void OnMouseReleaseEventHandler(MouseReleaseEvent& event, const Vec2& componentPos);
+
+      virtual void OnEvent(Event& event, const Vec2& translatedMousePos) {}
+
 
       // Callbacks
       void SetOnClickCallback(OnClickCallback callback);
@@ -147,14 +151,6 @@ namespace Greet
 
       virtual bool UsingMouse();
 
-      // These functions will only be called if the component is focused
-      virtual void MousePressed(MousePressEvent& event, const Vec2& translatedPos);
-      virtual void MouseReleased(MouseReleaseEvent& event, const Vec2& translatedPos);
-      virtual void MouseMoved(MouseMoveEvent& event, const Vec2& translatedPos){}
-      virtual void KeyPressed(KeyPressEvent& event){}
-      virtual void KeyReleased(KeyReleaseEvent& event){}
-      virtual void KeyTyped(KeyTypeEvent& event){}
-
       Component* GetRootNode();
       Vec2 GetTotalPadding() const;
       const TLBR& GetMargin() const;
@@ -175,6 +171,11 @@ namespace Greet
       }
 
       virtual Component* GetComponentByNameNoCast(const std::string& name);
+
+      friend std::ostream& operator<<(std::ostream& stream, const Component& component)
+      {
+        return stream << component.GetName();
+      }
 
     protected:
       virtual void CallOnClickCallback();

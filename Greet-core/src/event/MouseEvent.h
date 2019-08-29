@@ -15,6 +15,9 @@ namespace Greet {
       MouseButtonEvent(float x, float y, uint button)
         : Event(),position(x,y),button(button)
       {}
+      MouseButtonEvent(const Vec2& pos, uint button)
+        : Event(),position(pos),button(button)
+      {}
     public:
       float GetX() const { return position.x; }
       float GetY() const { return position.y; }
@@ -31,6 +34,9 @@ namespace Greet {
         : MouseButtonEvent(x, y, button) 
       {}
 
+      MousePressEvent(const Vec2& pos, uint button)
+        : MouseButtonEvent(pos, button) 
+      {}
       EventType GetType() const {return EventType::MOUSE_PRESS;}
   };
 
@@ -39,6 +45,9 @@ namespace Greet {
     public:
       MouseReleaseEvent(float x, float y, uint button)
         : MouseButtonEvent(x, y, button) 
+      {}
+      MouseReleaseEvent(const Vec2& pos, uint button)
+        : MouseButtonEvent(pos, button) 
       {}
 
       EventType GetType() const {return EventType::MOUSE_RELEASE;}
@@ -53,6 +62,10 @@ namespace Greet {
     public:
       MouseMoveEvent(float x, float y, float dx, float dy)
         : position(Vec2(x,y)), deltaPosition(Vec2(dx,dy))
+      {}
+      
+      MouseMoveEvent(const Vec2& pos, const Vec2& delta)
+        : position(pos), deltaPosition(delta)
       {}
 
       float GetX() const { return position.x; }

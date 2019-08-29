@@ -279,26 +279,29 @@ namespace Greet
     guiScene = scene;
   }
 
-  void Container::OnMousePressed(MousePressEvent& event, const Vec2& translatedPos)
+  void Container::OnMousePressEventHandler(MousePressEvent& event, const Vec2& componentPos)
   {
     for(auto it = m_components.rbegin(); it != m_components.rend();++it)
     {
       Component* c{*it};
-      if(c->IsMouseInside(translatedPos - GetTotalPadding() - c->GetMargin().LeftTop()))
+      if(c->IsMouseInside(event.GetPosition() - (componentPos + GetTotalPadding() + c->GetMargin().LeftTop() + c->GetPosition())))
       {
-        c->OnMousePressed(event, translatedPos - GetTotalPadding() - c->GetPosition() - c->GetMargin().LeftTop());
+        c->OnEventHandler(event, componentPos + GetTotalPadding() + c->GetMargin().LeftTop() + c->GetPosition());
         return;
       }
     }
-    Component::OnMousePressed(event,translatedPos);
+    Component::OnMousePressEventHandler(event, componentPos);
   }
 
-  void Container::OnMouseMoved(MouseMoveEvent& event, const Vec2& translatedPos)
+  void Container::OnMouseMoveEventHandler(MouseMoveEvent& event, const Vec2& componentPos)
   {
-    Component::OnMouseMoved(event,translatedPos);
-    for(auto it = m_components.rbegin(); it != m_components.rend();++it)
+    Component::OnMouseMoveEventHandler(event, componentPos);
+    if(!UsingMouse())
     {
-      (*it)->OnMouseMoved(event, translatedPos - GetTotalPadding() - (*it)->GetPosition() - (*it)->GetMargin().LeftTop());
+      for(auto it = m_components.rbegin(); it != m_components.rend();++it)
+      {
+        (*it)->OnEventHandler(event, componentPos + GetTotalPadding() + (*it)->GetMargin().LeftTop() + (*it)->GetPosition());
+      }
     }
   }
 }
