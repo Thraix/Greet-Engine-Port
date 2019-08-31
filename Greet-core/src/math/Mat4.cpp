@@ -412,22 +412,13 @@ namespace Greet {
     return *this;
   }
 
-  Vec4 Mat4::Multiply(const Vec2 &other) const
-  {
-    float x = columns[0].x * other.x + columns[1].x * other.y + columns[2].x + columns[3].x;
-    float y = columns[0].y * other.x + columns[1].y * other.y + columns[2].y + columns[3].y;
-    float z = columns[0].z * other.x + columns[1].z * other.y + columns[2].z + columns[3].z;
-    float w = columns[0].w * other.x + columns[1].w * other.y + columns[2].w + columns[3].w;
-    return Vec4(x, y, z, w);
-  }
-
-  Vec4 Mat4::Multiply(const Vec3<float> &other) const
+  Vec3<float> Mat4::Multiply(const Vec3<float> &other) const
   {
     float x = columns[0].x * other.x + columns[1].x * other.y + columns[2].x * other.z + columns[3].x;
     float y = columns[0].y * other.x + columns[1].y * other.y + columns[2].y * other.z + columns[3].y;
     float z = columns[0].z * other.x + columns[1].z * other.y + columns[2].z * other.z + columns[3].z;
     float w = columns[0].w * other.x + columns[1].w * other.y + columns[2].w * other.z + columns[3].w;
-    return Vec4(x, y, z, w);
+    return Vec3(x/w, y/w, z/w);
   }
 
   Vec4 Mat4::Multiply(const Vec4 &other) const
@@ -448,12 +439,7 @@ namespace Greet {
     return Multiply(other);
   }
 
-  Vec4 operator*(const Mat4 &first, const Vec2 &second)
-  {
-    return first.Multiply(second);
-  }
-
-  Vec4 operator*(const Mat4 &first, const Vec3<float> &second)
+  Vec3<float> operator*(const Mat4 &first, const Vec3<float> &second)
   {
     return first.Multiply(second);
   }

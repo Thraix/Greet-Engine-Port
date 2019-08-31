@@ -37,9 +37,7 @@ namespace Greet {
 
       Vec3<float> GetWorldToScreenCoordinate(const Vec3<float>& coordinate) const
       {
-        Vec4 point = (projectionMatrix * viewMatrix) * coordinate;
-        Vec3<float> p = Vec3<float>(point.x, point.y, point.z) / fabs(point.w);
-        return p;
+        return projectionMatrix * (viewMatrix * coordinate);
       }
 
       void GetScreenToWorldCoordinate(const Vec2& screenPos, Vec3<float>* near, Vec3<float>* direction) const
@@ -50,11 +48,9 @@ namespace Greet {
           return Log::Error("Direction vector is NULL");
 
         Mat4 pvInv = ~(projectionMatrix * viewMatrix);
-        Vec4 nearRes = pvInv * Vec3<float>(screenPos.x, screenPos.y, -1.0);
-        Vec4 farRes = pvInv * Vec3<float>(screenPos.x, screenPos.y, 1.0);
-
-        *near = Vec3<float>(nearRes) / nearRes.w;
-        *direction = ((Vec3<float>(farRes) / farRes.w) - * near).Normalize();
+        *near = pvInv * Vec3<float>(screenPos.x, screenPos.y, -1.0);
+        Vec3<float> far = pvInv * Vec3<float>(screenPos.x, screenPos.y, 1.0);
+        *direction = (far - *near).Normalize();
       }
   };
 }

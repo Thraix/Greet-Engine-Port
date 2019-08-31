@@ -63,15 +63,13 @@ namespace Greet {
     Mat4 Cpy();
 
     Mat4& Multiply(const Mat4& other);
-    Vec4 Multiply(const Vec2& other) const;
-    Vec4 Multiply(const Vec3<float>& other) const;
+    Vec3<float> Multiply(const Vec3<float>& other) const;
     Vec4 Multiply(const Vec4& other) const;
 
     friend Mat4 operator*(Mat4 first, const Mat4 &second);
     Mat4& operator*=(const Mat4 &other);
 
-    friend Vec4 operator*(const Mat4& first, const Vec2& second);
-    friend Vec4 operator*(const Mat4& first, const Vec3<float>& second);
+    friend Vec3<float> operator*(const Mat4& first, const Vec3<float>& second);
     friend Vec4 operator*(const Mat4& first, const Vec4& second);
     friend Mat4 operator~(const Mat4& first);
 

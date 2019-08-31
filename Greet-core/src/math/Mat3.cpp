@@ -239,7 +239,8 @@ namespace Greet{
   {
     float x = columns[0].x * other.x + columns[1].x * other.y + columns[2].x;
     float y = columns[0].y * other.x + columns[1].y * other.y + columns[2].y;
-    return Vec2(x, y);
+    float z = columns[0].z * other.x + columns[1].z * other.y + columns[2].z;
+    return Vec2(x/z, y/z);
   }
 
   Vec3<float> Mat3::Multiply(const Vec3<float> &other) const
