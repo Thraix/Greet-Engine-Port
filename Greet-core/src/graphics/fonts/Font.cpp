@@ -44,11 +44,11 @@ namespace Greet{
     for (uint i = startPos;i < endPos;i++)
     {
       const Glyph& glyph = m_atlas->GetGlyph(text[i]);
-      // If it is the last char do not include the advancment
+      // If it is the last char do not include the advancement
       if(i == endPos - 1 && text[i] != ' ')
         width += glyph.width;
       else
-        width += glyph.advanceX - glyph.kerning;
+        width += glyph.advanceX;
     }
     return width*scale;
   }
@@ -72,7 +72,7 @@ namespace Greet{
       if(i == text.size()- 1 && text[i] != ' ')
         width += glyph.width;
       else
-        width += glyph.advanceX - glyph.kerning;
+        width += glyph.advanceX;
     }
     widths.push_back(text.size());
     return widths;

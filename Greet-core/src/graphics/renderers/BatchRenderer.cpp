@@ -108,8 +108,8 @@ namespace Greet {
     for (uint i = 0;i < text.length();i++)
     {
       const Glyph& glyph = atlas->GetGlyph(text[i]);
-      pos.x = x;
-      pos.y = roundPos.y - glyph.ascending * scale.y;
+      pos.x = x + glyph.bearingX * scale.x;
+      pos.y = roundPos.y - glyph.bearingY * scale.y;
       size.x = glyph.width * scale.x;
       size.y = glyph.height * scale.y;
 
@@ -128,7 +128,7 @@ namespace Greet {
 
 
 
-      x += (glyph.advanceX - glyph.kerning )* scale.x;
+      x += glyph.advanceX* scale.x;
     }
   }
 

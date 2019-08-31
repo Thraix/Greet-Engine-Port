@@ -35,7 +35,7 @@ namespace vmc
       void Init() override
       {
         using namespace std::placeholders;
-        FontManager::Add(new FontContainer("/usr/share/fonts/truetype/ubuntu/Ubuntu-C.ttf","roboto"));
+        FontManager::Add(new FontContainer("res/fonts/NotoSansUI-Regular.ttf", "roboto"));
         SetFrameCap(144);
 
         guiScene = new GUIScene(new GUIRenderer(), Shader::FromFile("res/shaders/gui.shader"));

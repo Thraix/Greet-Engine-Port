@@ -173,8 +173,8 @@ namespace Greet
     for (uint i = 0;i < text.length();i++)
     {
       const Glyph& glyph = atlas->GetGlyph(text[i]);
-      pos.x = x;
-      pos.y = roundPos.y - glyph.ascending * scale.y;
+      pos.x = x + glyph.bearingX * scale.x;
+      pos.y = (roundPos.y - glyph.bearingY * scale.y);
       size.x = glyph.width * scale.x;
       size.y = glyph.height * scale.y;
 
@@ -185,7 +185,7 @@ namespace Greet
 
       AppendQuad(pos, size, uv0, uv1, ts, color, isHsv);
 
-      x += (glyph.advanceX - glyph.kerning )* scale.x;
+      x += glyph.advanceX* scale.x;
     }
   }
 
@@ -424,7 +424,11 @@ namespace Greet
 
   void GUIRenderer::AppendVertexBuffer(const Vec2& position, const Vec2& texCoord, float texId, const Vec4& color, const Vec4& viewport, bool isHsv)
   {
-    m_buffer->pos = GetMatrix() * position;
+    // TODO: FIX THIS
+    // Before the renderer rendered text weirdly
+    // * scale.x because of matrix multiplication error.
+    Vec2 translate = GetMatrix() * Vec2{0,0};
+    m_buffer->pos = Vec2(round(translate.x), round(translate.y)) + position;
     m_buffer->texCoord = texCoord;
     m_buffer->texId = texId;
     m_buffer->color = color;

@@ -39,10 +39,11 @@ namespace Greet
   {
     if(FT_Load_Char(face,character,FT_LOAD_RENDER))
     {
-      Log::Info("Could not load character: ", character);
+      Log::Error("Could not load character: ", character);
       // Lets just hope that there is a character in the map. Maybe add a dummy character later
       return glyphs.begin()->second;
     }
+
     uint pixelWidth = face->glyph->bitmap.width;
     uint pixelHeight = face->glyph->bitmap.rows;
     if(xPos + pixelWidth >= width)
@@ -66,11 +67,11 @@ namespace Greet
     }
     Glyph g;
     g.width = face->glyph->metrics.width / 64.0;
-    g.kerning = face->glyph->metrics.horiBearingX / 64.0;
+    g.bearingX = face->glyph->metrics.horiBearingX / 64.0;
     g.advanceX = face->glyph->metrics.horiAdvance / 64.0;
     g.advanceY = face->glyph->metrics.vertAdvance / 64.0;
     g.height = face->glyph->metrics.height / 64.0;
-    g.ascending = (face->glyph->metrics.horiBearingY) / 64.0;
+    g.bearingY = (face->glyph->metrics.horiBearingY) / 64.0;
     g.descending = (g.height - face->glyph->metrics.horiBearingY) / 64.0;
     g.textureCoords = Vec4(yPos / (float)height, xPos / (float)width, (yPos+pixelHeight)/(float)height, (xPos+pixelWidth)/(float)width);
     xPos += pixelWidth + 1;

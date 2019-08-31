@@ -11,11 +11,11 @@ namespace Greet
   struct Glyph
   {
     float width;
-    float kerning;
+    float bearingX;
     float advanceX;
     float advanceY;
     float height;
-    float ascending;
+    float bearingY;
     float descending;
     Vec4 textureCoords;
   };
