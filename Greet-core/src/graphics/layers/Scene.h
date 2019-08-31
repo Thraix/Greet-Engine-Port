@@ -1,7 +1,7 @@
 #pragma once
 
 #include <event/Event.h>
-#include <event/WindowEvent.h>
+#include <event/ViewportEvent.h>
 
 namespace Greet
 {
@@ -16,11 +16,11 @@ namespace Greet
       virtual void PostUpdate(float timeElapsed) {}
       virtual void OnEvent(Event& event)
       {
-        if(EVENT_IS_TYPE(event, EventType::WINDOW_RESIZE))
+        if(EVENT_IS_TYPE(event, EventType::VIEWPORT_RESIZE))
         {
-          WindowResize((WindowResizeEvent&) event);
+          ViewportResize((ViewportResizeEvent&) event);
         }
       }
-      virtual void WindowResize(WindowResizeEvent& event) {}
+      virtual void ViewportResize(ViewportResizeEvent& event) {}
   };
 }

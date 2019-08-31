@@ -7,6 +7,7 @@
 #include <event/EventDispatcher.h>
 #include <graphics/gui/ComponentFactory.h>
 #include <event/WindowEvent.h>
+#include <event/ViewportEvent.h>
 #include <event/KeyEvent.h>
 #include <event/MouseEvent.h>
 #include <event/JoystickEvent.h>
@@ -149,6 +150,7 @@ namespace Greet {
     Window::width = width;
     Window::height = height;
     EventDispatcher::OnEvent(WindowResizeEvent{width,height});
+    EventDispatcher::OnEvent(ViewportResizeEvent{0, 0, (float)width, (float)height});
   }
 
   void Window::key_callback(GLFWwindow *window, int key, int scancode, int action, int mods)

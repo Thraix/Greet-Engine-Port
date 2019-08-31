@@ -2,6 +2,7 @@
 
 #include <graphics/RenderCommand.h>
 #include <input/Input.h>
+#include <event/ViewportEvent.h>
 
 namespace Greet
 {
@@ -17,7 +18,7 @@ namespace Greet
   void Viewport::Update(float timeElapsed)
   {
     Vec2 translatedPos = GetRealPosition();
-    RenderCommand::PushViewportStack(translatedPos.x, translatedPos.y, size.size.w, size.size.h);
+    RenderCommand::PushViewportStack(GetRealPosition(), size.size);
 
     sceneManager.Update(timeElapsed);
 
@@ -57,6 +58,15 @@ namespace Greet
     }
     else
       sceneManager.OnEvent(event);
+    RenderCommand::PopViewportStack();
+  }
+
+  void Viewport::OnMeasured()
+  {
+    Vec2 realPos = GetRealPosition();
+    RenderCommand::PushViewportStack(realPos, size.size);
+    ViewportResizeEvent event{realPos, size.size};
+    sceneManager.OnEvent(event);
     RenderCommand::PopViewportStack();
   }
 

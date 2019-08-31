@@ -30,7 +30,7 @@ namespace Greet {
       void OnMousePressEventHandler(MousePressEvent& event);
       void OnMouseMoveEventHandler(MouseMoveEvent& event);
       void OnMouseReleaseEventHandler(MouseReleaseEvent& event);
-      void WindowResize(WindowResizeEvent& event);
+      void ViewportResize(ViewportResizeEvent& event);
 
       void PreRender() const;
       void Render() const;

@@ -19,6 +19,7 @@
 #include <event/JoystickEvent.h>
 #include <event/KeyEvent.h>
 #include <event/MouseEvent.h>
+#include <event/ViewportEvent.h>
 #include <event/WindowEvent.h>
 #include <graphics/Animation.h>
 #include <graphics/FrameBufferObject.h>

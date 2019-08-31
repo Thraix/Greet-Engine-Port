@@ -63,7 +63,7 @@ namespace Greet {
       void SetGUIMouseListener(GUIMouseListener* listener);
 
       // Listeners
-      virtual void OnWindowResize(int width, int height);
+      virtual void OnViewportResize(int width, int height);
 
       virtual void ChildChangedFocus(bool focused) override;
 

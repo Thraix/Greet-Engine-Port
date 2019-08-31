@@ -26,6 +26,7 @@ namespace Greet{
 
     static Mat3 Identity();
     static Mat3 Orthographic(float left, float right, float top, float bottom);
+    static Mat3 OrthographicViewport();
     static Mat3 Quad(float x, float y, float width, float height);
     static Mat3 Quad(const Vec2& pos, const Vec2& size);
 

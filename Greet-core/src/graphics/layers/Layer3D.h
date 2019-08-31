@@ -20,6 +20,7 @@ namespace Greet {
       virtual void PostRender() const override;
       virtual void Update(float timeElapsed) override;
       virtual void OnEvent(Event& event) override;
+      virtual void ViewportResize(ViewportResizeEvent& event) override;
 
       void AddRenderer(Renderer3D* renderer);
       void RemoveRenderer(Renderer3D* renderer);

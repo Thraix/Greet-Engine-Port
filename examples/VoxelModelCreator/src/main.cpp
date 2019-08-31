@@ -52,7 +52,7 @@ namespace vmc
         FontManager::Add(new FontContainer("Anonymous Pro.ttf", "anonymous"));
 
         cursor = new Renderable2D(Vec2(0, 0), Vec2(32, 32), 0xffffffff, Sprite(TextureManager::Get2D("cursor")), Sprite(TextureManager::Get2D("mask")));
-        uilayer = new Layer(new BatchRenderer(), ShaderFactory::DefaultShader(), Mat3::Orthographic(0.0f, (float)Window::GetWidth(), 0.0f, (float)Window::GetHeight()));
+        uilayer = new Layer(new BatchRenderer(), ShaderFactory::DefaultShader(), Mat3::OrthographicViewport());
         uilayer->Add(cursor);
 
         grid = new Grid();
@@ -104,9 +104,10 @@ namespace vmc
 
       void OnEvent(Event& event) override
       {
-        if(EVENT_IS_TYPE(event, EventType::WINDOW_RESIZE))
+        if(EVENT_IS_TYPE(event, EventType::VIEWPORT_RESIZE))
         {
-          uilayer->SetProjectionMatrix(Mat3::Orthographic(0,Window::GetWidth(), 0, Window::GetHeight()));
+          ViewportResizeEvent& e = static_cast<ViewportResizeEvent&>(event);
+          uilayer->SetProjectionMatrix(Mat3::OrthographicViewport());
         }
         if(EVENT_IS_TYPE(event, EventType::MOUSE_MOVE))
         {

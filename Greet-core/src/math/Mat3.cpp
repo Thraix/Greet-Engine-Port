@@ -1,6 +1,7 @@
 #include "Mat3.h"
 
 #include <math/MathFunc.h>
+#include <graphics/RenderCommand.h>
 #include <cstring>
 
 #define _0_0 0 
@@ -52,6 +53,19 @@ namespace Greet{
     result.elements[7] = -(top + bottom) / (top - bottom);
 
     return result;
+  }
+
+  Mat3 OrthographicViewport()
+  {
+    Mat3 result(1.0f);
+
+    result.elements[0] = 2.0f / (RenderCommand::GetViewportWidth());
+    result.elements[4] = 2.0f / (-RenderCommand::GetViewportHeight());
+    result.elements[6] = -1;
+    result.elements[7] = 1;
+
+    return result;
+
   }
 
   Mat3 Mat3::Quad(float x, float y, float width, float height)

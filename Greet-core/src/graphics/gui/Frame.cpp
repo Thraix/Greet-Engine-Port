@@ -131,8 +131,8 @@ namespace Greet {
         pos.y = 0;
         size.size.h = m_posOrigin.y + m_sizeOrigin.y;
       }
-      else if (pos.y > Window::GetHeight() - size.size.h)
-        size.size.h = Window::GetHeight() - m_posOrigin.y;
+      else if (pos.y > guiScene->GetHeight() - size.size.h)
+        size.size.h = guiScene->GetHeight() - m_posOrigin.y;
     }
   }
 
@@ -167,7 +167,7 @@ namespace Greet {
     m_mouseListener = listener;
   }
 
-  void Frame::OnWindowResize(int width, int height)
+  void Frame::OnViewportResize(int width, int height)
   {
     Remeasure();
   }

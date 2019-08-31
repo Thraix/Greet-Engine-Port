@@ -145,7 +145,7 @@ namespace Greet {
     else if (m_mouse1)
     {
       Vec2 deltaR = Vec2(delta).Rotate(-m_rotation);
-      m_positionWanted.x -= deltaR.y * m_distanceSpeed * m_distance * (Window::GetHeight()/(float)Window::GetWidth());
+      m_positionWanted.x -= deltaR.y * m_distanceSpeed * m_distance /RenderCommand::GetViewportAspect();
       m_positionWanted.z -= deltaR.x * m_distanceSpeed * m_distance;
     }
   }
@@ -166,7 +166,6 @@ namespace Greet {
 
   void TPCamera::OnEvent(Event& event)
   {
-    Camera::OnEvent(event);
     if(EVENT_IS_TYPE(event, EventType::MOUSE_PRESS))
     {
       MousePressEvent mEvent = (MousePressEvent&)event;

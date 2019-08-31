@@ -3,11 +3,12 @@
 #include <graphics/gui/GUIUtils.h>
 #include <event/EventDispatcher.h>
 #include <graphics/gui/Frame.h>
+#include <graphics/RenderCommand.h>
 
 namespace Greet {
 
   GUIScene::GUIScene(GUIRenderer* renderer, Shader&& shader)
-    : m_renderer(renderer), m_shader(std::move(shader)), projectionMatrix(Mat3::Orthographic(0, Window::GetWidth(), 0, Window::GetHeight()))
+    : m_renderer(renderer), m_shader(std::move(shader)), projectionMatrix(Mat3::OrthographicViewport())
   {
     m_focused = nullptr;
 
@@ -90,15 +91,15 @@ namespace Greet {
     }
   }
 
-  void GUIScene::WindowResize(WindowResizeEvent& event)
+  void GUIScene::ViewportResize(ViewportResizeEvent& event)
   {
-    projectionMatrix = Mat3::Orthographic(0, Window::GetWidth(), 0, Window::GetHeight());
+    projectionMatrix = Mat3::OrthographicViewport();
     m_shader.Enable();
     m_shader.SetUniformMat3("pr_matrix", projectionMatrix);
     m_shader.Disable();
     for (auto it = frames.begin(); it != frames.end(); ++it)
     {
-      (*it)->OnWindowResize(event.GetWidth(), event.GetHeight());
+      (*it)->OnViewportResize(event.GetWidth(), event.GetHeight());
     }
   }
 
@@ -234,10 +235,10 @@ namespace Greet {
   }
   float GUIScene::GetWidth()
   {
-    return Window::GetWidth();
+    return RenderCommand::GetViewportWidth();
   }
   float GUIScene::GetHeight()
   {
-    return Window::GetHeight();
+    return RenderCommand::GetViewportHeight();
   }
 }

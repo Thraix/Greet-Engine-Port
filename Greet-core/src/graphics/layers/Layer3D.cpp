@@ -10,7 +10,7 @@ namespace Greet {
   Layer3D::Layer3D(Camera* camera)
     :camera{camera}, skybox{nullptr}
   {
-  
+
   }
 
   Layer3D::~Layer3D()
@@ -50,6 +50,12 @@ namespace Greet {
   {
     camera->OnEvent(event);
     Scene::OnEvent(event);
+  }
+
+  void Layer3D::ViewportResize(ViewportResizeEvent& event)
+  {
+    if(EVENT_IS_TYPE(event, EventType::VIEWPORT_RESIZE))
+      camera->ViewportResize(event);
   }
 
   void Layer3D::AddRenderer(Renderer3D* renderer)

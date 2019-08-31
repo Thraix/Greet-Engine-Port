@@ -4,6 +4,8 @@
 #include <graphics/Window.h>
 #include <event/WindowEvent.h>
 #include <event/Event.h>
+#include <event/ViewportEvent.h>
+#include <graphics/RenderCommand.h>
 
 namespace Greet {
   class Camera {
@@ -17,7 +19,7 @@ namespace Greet {
 
     public:
       Camera(float fov, float near, float far) : 
-        projectionMatrix{Mat4::ProjectionMatrix(Window::GetAspect(), fov, near, far)}, 
+        projectionMatrix{Mat4::ProjectionMatrix(RenderCommand::GetViewportAspect(), fov, near, far)}, 
         fov{fov}, near{near}, far{far} 
       {}
       virtual const Mat4& GetViewMatrix() const { return viewMatrix;}
@@ -27,15 +29,11 @@ namespace Greet {
         Camera::projectionMatrix = projectionMatrix;
       }
       virtual void Update(float timeElapsed) {};
-      virtual void OnEvent(Event& event)
+      virtual void ViewportResize(ViewportResizeEvent& event)
       {
-        if(EVENT_IS_TYPE(event, EventType::WINDOW_RESIZE))
-        {
-          WindowResizeEvent& e = (WindowResizeEvent&)event;
-          projectionMatrix = Mat4::ProjectionMatrix(e.GetWidth() / (float) e.GetHeight(), fov, near, far);
-          e.AddFlag(EVENT_HANDLED);
-        }
+        projectionMatrix = Mat4::ProjectionMatrix(event.GetWidth() / event.GetHeight(), fov, near, far);
       }
+      virtual void OnEvent(Event& event) {};
 
       Vec3<float> GetWorldToScreenCoordinate(const Vec3<float>& coordinate) const
       {
