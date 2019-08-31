@@ -55,7 +55,7 @@ namespace Greet{
     return result;
   }
 
-  Mat3 OrthographicViewport()
+  Mat3 Mat3::OrthographicViewport()
   {
     Mat3 result(1.0f);
 

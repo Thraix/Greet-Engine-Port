@@ -245,7 +245,7 @@ $(OBJPATH)/LogStream.o : src/logging/LogStream.cpp src/logging/Log.h src/logging
 $(OBJPATH)/Logger.o : src/logging/Logger.cpp src/logging/Log.h src/logging/LogLevel.h src/logging/Logger.h  src/logging/LogStream.h  
 	$(info -[80%]- $<)
 	$(CC) $(CFLAGS) -o $@ $<
-$(OBJPATH)/Mat3.o : src/math/Mat3.cpp src/math/Mat3.h src/math/Vec2.h src/math/Vec3.h src/math/MathFunc.h src/internal/GreetTypes.h src/math/Quaternion.h src/math/Vec4.h   
+$(OBJPATH)/Mat3.o : src/math/Mat3.cpp src/graphics/RenderCommand.h src/math/Vec2.h src/math/Vec3.h src/math/MathFunc.h src/internal/GreetTypes.h src/math/Quaternion.h src/math/Vec4.h   src/math/Mat3.h   
 	$(info -[81%]- $<)
 	$(CC) $(CFLAGS) -o $@ $<
 $(OBJPATH)/Mat4.o : src/math/Mat4.cpp src/math/Mat4.h src/math/Vec2.h src/math/Vec3.h src/math/MathFunc.h src/internal/GreetTypes.h src/math/Quaternion.h src/math/Vec4.h    
