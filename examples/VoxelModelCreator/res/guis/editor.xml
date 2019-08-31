@@ -61,6 +61,6 @@
     </Container>
   </Container>
   <Container width="fill_parent" height="fill_parent">
-    <Viewport name="viewport" width="fill_parent" height="fill_parent" backgroundColor="#ff00ff"/>
+    <SceneView name="viewport" width="fill_parent" height="fill_parent" backgroundColor="#ff00ff"/>
   </Container>
 </Frame>

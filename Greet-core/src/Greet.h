@@ -64,11 +64,11 @@
 #include <graphics/gui/RadioButton.h>
 #include <graphics/gui/RadioGroup.h>
 #include <graphics/gui/SatValSlider.h>
+#include <graphics/gui/SceneView.h>
 #include <graphics/gui/Slider.h>
 #include <graphics/gui/Style.h>
 #include <graphics/gui/TLBR.h>
 #include <graphics/gui/TextBox.h>
-#include <graphics/gui/Viewport.h>
 #include <graphics/layers/Group.h>
 #include <graphics/layers/Layer.h>
 #include <graphics/layers/Layer3D.h>

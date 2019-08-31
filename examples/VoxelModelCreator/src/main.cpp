@@ -65,14 +65,14 @@ namespace vmc
           GlobalSceneManager::GetSceneManager().Add3DScene(grid, "gridLayer");
           return;
         }
-        Viewport* viewport = frame->GetComponentByName<Viewport>("viewport");
-        if(!viewport)
+        SceneView* sceneView= frame->GetComponentByName<SceneView>("viewport");
+        if(!sceneView)
         {
           Log::Error("No viewport called \"viewport\" in GUI");
           GlobalSceneManager::GetSceneManager().Add3DScene(grid, "gridLayer");
           return;
         }
-        viewport->GetSceneManager().Add3DScene(grid, "gridLayer");
+        sceneView->GetSceneManager().Add3DScene(grid, "gridLayer");
         ColorPicker* colorPicker = frame->GetComponentByName<ColorPicker>("cubeColor");
         if(!colorPicker)
         {

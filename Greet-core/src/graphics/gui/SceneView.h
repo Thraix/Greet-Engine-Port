@@ -5,14 +5,14 @@
 
 namespace Greet
 {
-  class Viewport : public Component
+  class SceneView : public Component
   {
     private:
-      REGISTER_COMPONENT_DECLARATION(Viewport);
+      REGISTER_COMPONENT_DECLARATION(SceneView);
 
       SceneManager sceneManager;
     public:
-      Viewport(const XMLObject& xmlObject, Component* parent);
+      SceneView(const XMLObject& xmlObject, Component* parent);
 
       void Update(float timeElapsed) override;
       void Render(GUIRenderer* renderer) const override;

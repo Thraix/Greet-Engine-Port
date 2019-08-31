@@ -1,4 +1,4 @@
-#include "Viewport.h"
+#include "SceneView.h"
 
 #include <graphics/RenderCommand.h>
 #include <input/Input.h>
@@ -7,15 +7,15 @@
 namespace Greet
 {
 
-  REGISTER_COMPONENT_DEFINITION(Viewport);
+  REGISTER_COMPONENT_DEFINITION(SceneView);
 
-  Viewport::Viewport(const XMLObject& xmlObject, Component* parent)
+  SceneView::SceneView(const XMLObject& xmlObject, Component* parent)
     : Component(xmlObject, parent)
   {
     m_isFocusable = true;
   }
 
-  void Viewport::Update(float timeElapsed)
+  void SceneView::Update(float timeElapsed)
   {
     Vec2 translatedPos = GetRealPosition();
     RenderCommand::PushViewportStack(GetRealPosition(), size.size);
@@ -25,7 +25,7 @@ namespace Greet
     RenderCommand::PopViewportStack();
   }
 
-  void Viewport::Render(GUIRenderer* renderer) const
+  void SceneView::Render(GUIRenderer* renderer) const
   {
     guiScene->PostRender();
     Vec2 translatedPos = renderer->GetMatrix() * pos;
@@ -37,7 +37,7 @@ namespace Greet
     guiScene->PreRender();
   }
 
-  void Viewport::OnEventHandler(Event& event, const Vec2& componentPos)
+  void SceneView::OnEventHandler(Event& event, const Vec2& componentPos)
   {
     RenderCommand::PushViewportStack(componentPos, size.size);
     if(EVENT_IS_TYPE(event, EventType::MOUSE_PRESS))
@@ -61,7 +61,7 @@ namespace Greet
     RenderCommand::PopViewportStack();
   }
 
-  void Viewport::OnMeasured()
+  void SceneView::OnMeasured()
   {
     Vec2 realPos = GetRealPosition();
     RenderCommand::PushViewportStack(realPos, size.size);
@@ -70,7 +70,7 @@ namespace Greet
     RenderCommand::PopViewportStack();
   }
 
-  SceneManager& Viewport::GetSceneManager()
+  SceneManager& SceneView::GetSceneManager()
   {
     return sceneManager;
   }
