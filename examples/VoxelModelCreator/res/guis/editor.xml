@@ -51,7 +51,7 @@
       <Label width="wrap_content" height="fill_parent" fontSize="12" font="roboto" color="#90a4ae">Cube Color: </Label>
 
       <ColorPicker
-        width="60" height="20" name="backgroundChanger"
+        width="60" height="20" name="cubeColor"
         backgroundColor="#ffffff"
         borderColor="#455a64" 
         border="1"

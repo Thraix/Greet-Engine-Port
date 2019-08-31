@@ -41,10 +41,6 @@ namespace vmc
     ibo.Disable();
 
   }
-  void GridRenderer3D::UpdateShader()
-  {
-    material->SetShader(Shader::FromFile("res/shaders/voxel.shader"));
-  }
 
   void GridRenderer3D::Begin(Camera* camera)
   {

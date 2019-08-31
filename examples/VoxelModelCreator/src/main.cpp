@@ -73,6 +73,17 @@ namespace vmc
           return;
         }
         viewport->GetSceneManager().Add3DScene(grid, "gridLayer");
+        ColorPicker* colorPicker = frame->GetComponentByName<ColorPicker>("cubeColor");
+        if(!colorPicker)
+        {
+          Log::Error("No ColorPicker called \"cubeColor\" in GUI");
+          return;
+        }
+        colorPicker->SetOnColorChangeCallback(
+            [=](Component*, const Vec3<float>& prev, const Vec3<float>& cur) -> void
+            {
+            grid->SetColor(ColorUtils::Vec3ToColorHex(cur));
+            });
       }
 
       void Tick() override

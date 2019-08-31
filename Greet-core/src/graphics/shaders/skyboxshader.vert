@@ -9,8 +9,8 @@ uniform mat4 viewMatrix;
 
 void main()
 {
-  vec4 worldPos = vec4(viewMatrix *  vec4(position,0.0f));
-	gl_Position = projectionMatrix * vec4(worldPos.xyz, 1.0);
+  vec3 worldPos = mat3(viewMatrix) * position;
+	gl_Position = projectionMatrix * vec4(worldPos, 1.0);
 	vert_texCoord = position;
 }
 )skyboxshader"

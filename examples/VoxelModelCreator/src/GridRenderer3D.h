@@ -24,7 +24,6 @@ namespace vmc
 
 		GridRenderer3D();
 
-		void UpdateShader();
 		void Begin(Greet::Camera* camera) override;
 		void DrawCube(Greet::Camera* camera, const Greet::Vec3<float>& pos, const Greet::Vec3<float>& size, uint color, bool culling);
 		virtual void Submit(Greet::Camera* camera, const Cube& cube);

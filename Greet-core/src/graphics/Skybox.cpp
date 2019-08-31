@@ -6,7 +6,13 @@
 
 namespace Greet {
 
-  Skybox::Skybox(const CubeMap& cubemap) : m_map(cubemap), m_shader(ShaderFactory::SkyboxShader())
+  Skybox::Skybox(const CubeMap& cubemap) 
+    : Skybox{cubemap, ShaderFactory::SkyboxShader()}
+  {
+  }
+
+  Skybox::Skybox(const CubeMap& map, Shader&& shader)
+    : m_map(map), m_shader(std::move(shader))
   {
     MeshData data{MeshFactory::Cube(0,0,0, 1,1,1)};
     m_mesh = new Mesh(data);

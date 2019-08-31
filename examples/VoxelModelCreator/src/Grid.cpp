@@ -7,8 +7,10 @@ namespace vmc
   const uint Grid::GRID_SIZE = 100;
 
   Grid::Grid()
-    : Layer3D(new TPCamera(90, 0.1f, 1000.0f,Vec3<float>(GRID_SIZE / 2+0.5f, GRID_SIZE / 2 + 0.5f, GRID_SIZE / 2 + 0.5f), 15, 0, 0, 1, 80, -0.8, 0.8f), new Skybox(TextureManager::Get3D("skybox"))), toolBox(this)
-      //m_colorPicker(colorPicker)
+    : Layer3D(
+        new TPCamera(90, 0.01f, 1000.0f,Vec3<float>(GRID_SIZE / 2+0.5f, GRID_SIZE / 2 + 0.5f, GRID_SIZE / 2 + 0.5f), 15, 0, 0, 1, 80, -0.8, 0.8f), 
+        new Skybox(TextureManager::Get3D("skybox"), Shader::FromFile("res/shaders/skybox.shader"))),
+    toolBox(this), m_color{0xffffffff}
   {
     renderer = new GridRenderer3D();
     uint middle = GRID_SIZE / 2;
@@ -39,8 +41,6 @@ namespace vmc
 
   void Grid::OnPressed(KeyPressEvent& e)
   {
-    if (e.GetButton() == GLFW_KEY_F5)
-      renderer->UpdateShader();
     if (e.GetButton() == GLFW_KEY_L)
       toolBox.NextTool();
     if (e.GetButton() == GLFW_KEY_H)
@@ -177,8 +177,8 @@ namespace vmc
       Greet::Log::Error("Cube already exists");
       return;
     }
-    //if(setColor)
-    //	cube.color = ColorUtils::Vec4ToColorHex(ColorUtils::HSVtoRGB(m_colorPicker->GetColor()));
+    if(setColor)
+      cube.color = m_color;
     m_grid.emplace(cube);
     m_gridVisible.emplace(cube);
 

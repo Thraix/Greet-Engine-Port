@@ -15,6 +15,7 @@ namespace Greet {
       Mesh* m_mesh;
     public:
       Skybox(const CubeMap& map);
+      Skybox(const CubeMap& map, Shader&& shader);
       const CubeMap& GetCubeMap() const { return m_map; };
       virtual ~Skybox();
       void Render(const Camera& camera) const;
