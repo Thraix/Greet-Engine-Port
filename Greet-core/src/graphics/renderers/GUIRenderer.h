@@ -26,6 +26,7 @@ namespace Greet
 
     private:
       std::stack<Vec4> m_viewports;
+      std::stack<Vec2> translationStack;
       uint m_bufferSize;
       uint m_iboSize;
       uint m_vertices;
@@ -43,6 +44,7 @@ namespace Greet
       uint* m_textures;
       byte m_textureCount;
 
+
     public:
       GUIRenderer();
       void Begin();
@@ -59,6 +61,9 @@ namespace Greet
 
       void PushViewport(const Vec2& pos, const Vec2& size, bool overwrite=false);
       void PopViewport();
+
+      void PushTranslation(const Vec2& translation, bool override = false);
+      void PopTranslation();
     private:
       float GetTextureSlot(uint Id);
       bool NeedFlush(uint indices, uint vertices);

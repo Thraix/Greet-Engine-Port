@@ -138,7 +138,7 @@ namespace Greet
 
   void Container::RenderHandle(GUIRenderer* renderer) const
   {
-    renderer->PushMatrix(Mat3::Translate(pos));
+    renderer->PushTranslation(pos);
     // Render rest of component
     Render(renderer);
 
@@ -148,7 +148,7 @@ namespace Greet
       (*it)->RenderHandle(renderer);
       (*it)->PostRender(renderer);
     }
-    renderer->PopMatrix();
+    renderer->PopTranslation();
   }
 
   void Container::UpdateHandle(float timeElapsed)
