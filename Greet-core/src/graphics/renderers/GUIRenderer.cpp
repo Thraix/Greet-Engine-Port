@@ -126,9 +126,9 @@ namespace Greet
   void GUIRenderer::PushTranslation(const Vec2& translation, bool override)
   {
     if (override)
-      translationStack.push(translation);
+      translationStack.push({round(translation.x), round(translation.y)});
     else
-      translationStack.push(translationStack.top() + translation);
+      translationStack.push(translationStack.top() + Vec2{round(translation.x), round(translation.y)});
   }
 
   void GUIRenderer::PopTranslation()
