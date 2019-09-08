@@ -10,6 +10,7 @@ namespace Greet
 
   GUIRenderer::GUIRenderer()
   {
+    translationStack.push({0, 0});
     GLCall(glGenVertexArrays(1, &m_vao));
     GLCall(glGenBuffers(1, &m_vbo));
 
@@ -99,8 +100,8 @@ namespace Greet
 
   void GUIRenderer::PushViewport(const Vec2& pos, const Vec2& size, bool overwrite)
   {
-    Vec2 p1 = GetMatrix() * pos;
-    Vec2 p2 = GetMatrix() * (pos + size);
+    Vec2 p1 = GetMatrix() * (translationStack.top() + pos);
+    Vec2 p2 = GetMatrix() * (translationStack.top() + pos + size);
     if (!m_viewports.empty() && !overwrite)
     {
       Vec4 top = m_viewports.top();
@@ -120,6 +121,22 @@ namespace Greet
       return;
     }
     m_viewports.pop();
+  }
+
+  void GUIRenderer::PushTranslation(const Vec2& translation, bool override)
+  {
+    if (override)
+      translationStack.push({round(translation.x), round(translation.y)});
+    else
+      translationStack.push(translationStack.top() + Vec2{round(translation.x), round(translation.y)});
+  }
+
+  void GUIRenderer::PopTranslation()
+  {
+    if (translationStack.size() > 1)
+      translationStack.pop();
+    else
+      Log::Warning("Trying to pop the last translation.");
   }
 
   void GUIRenderer::Submit(const Renderable2D& renderable)
@@ -222,10 +239,10 @@ namespace Greet
     {
       //Log::Warning("No viewport");
       Vec4 viewport;;
-      Vec2 temp = GetMatrix() * Vec2(pos1.x, pos1.y);
+      Vec2 temp = GetMatrix() * (translationStack.top() + Vec2(pos1.x, pos1.y));
       viewport.x = temp.x;
       viewport.y = temp.y;
-      temp = GetMatrix() * Vec2(pos2.x, pos2.y);
+      temp = GetMatrix() * (translationStack.top() + Vec2(pos2.x, pos2.y));
       viewport.z = temp.x;
       viewport.w = temp.y;
       return viewport;
@@ -424,11 +441,7 @@ namespace Greet
 
   void GUIRenderer::AppendVertexBuffer(const Vec2& position, const Vec2& texCoord, float texId, const Vec4& color, const Vec4& viewport, bool isHsv)
   {
-    // TODO: FIX THIS
-    // Before the renderer rendered text weirdly
-    // * scale.x because of matrix multiplication error.
-    Vec2 translate = GetMatrix() * Vec2{0,0};
-    m_buffer->pos = Vec2(round(translate.x), round(translate.y)) + position;
+    m_buffer->pos = GetMatrix() * (translationStack.top() + position);
     m_buffer->texCoord = texCoord;
     m_buffer->texId = texId;
     m_buffer->color = color;

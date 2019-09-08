@@ -34,19 +34,13 @@ namespace Greet
       GUIScene* guiScene;
       Component* parent;
 
-      // Calculated variables from ComponentSize::Type
       Vec2 pos;
-
-
       ComponentSize size;
 
       bool m_isFocusable;
       bool isFocused;
       bool isHovered;
       bool pressed;
-
-      bool isChildFocused;
-      bool childChangedFocus;
 
       // Callbacks
       OnClickCallback onClickCallback;

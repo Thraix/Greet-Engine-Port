@@ -28,8 +28,7 @@ namespace Greet
   void SceneView::Render(GUIRenderer* renderer) const
   {
     guiScene->PostRender();
-    Vec2 translatedPos = renderer->GetMatrix() * pos;
-    RenderCommand::PushViewportStack(translatedPos, size.size);
+    RenderCommand::PushViewportStack(GetRealPosition(), size.size);
 
     sceneManager.Render();
 

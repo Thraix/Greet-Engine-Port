@@ -65,18 +65,18 @@ namespace Greet
     if(text->GetText().length() == 0)
     {
       Vec2 p = pos + GetTotalPadding() +  Vec2(-textOffset, 0);
-      renderer->PushMatrix(Mat3::Translate(p));
+      renderer->PushTranslation(p);
       hintText->Render(renderer);
     }
     else
     {
       Vec2 p = pos + GetTotalPadding() +  Vec2(-textOffset, 0);
-      renderer->PushMatrix(Mat3::Translate(p));
+      renderer->PushTranslation(p);
       text->Render(renderer);
     }
 
     renderer->PopViewport();
-    renderer->PopMatrix();
+    renderer->PopTranslation();
 
     if(isFocused && cursorBlinkTimer < 0.5)
     {

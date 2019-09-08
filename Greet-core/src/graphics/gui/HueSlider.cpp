@@ -25,7 +25,7 @@ namespace Greet
   //void SubmitRect(const Vec2& pos, const Vec2& size, const Vec4& color1, const Vec4& color2, const Vec4& color3, const Vec4& color4, bool isHsv = true);
   void HueSlider::PreRender(GUIRenderer* renderer, const Vec2& translation) const
   {
-    renderer->PushMatrix(Mat3::Translate(translation));
+    renderer->PushTranslation(translation);
     renderer->SubmitRect(pos, size.size, Vec4(0,1,1,1), Vec4(0,1,1,1), Vec4(1,1,1,1), Vec4(1,1,1,1),true);
   }
 }

@@ -14,7 +14,7 @@ namespace Greet
 
   Component::Component(const std::string& name, Component* parent)
     : parent{parent}, size{},
-    m_isFocusable{false},isFocused{false},isHovered{false},isChildFocused{false}, childChangedFocus{false}, pos{0,0}, pressed{false}, name{name}
+    m_isFocusable{false},isFocused{false},isHovered{false}, pos{0,0}, pressed{false}, name{name}
   {
     currentStyle = &normalStyle;
   }
@@ -105,7 +105,7 @@ namespace Greet
   // Push translation to renderer
   void Component::PreRender(GUIRenderer* renderer, const Vec2& translation) const
   {
-    renderer->PushMatrix(Mat3::Translate(translation));
+    renderer->PushTranslation(translation);
 
     // Border around Component 
     if (currentStyle->hasBorderColor)
@@ -127,7 +127,7 @@ namespace Greet
   // Pop translation from renderer
   void Component::PostRender(GUIRenderer* renderer) const
   {
-    renderer->PopMatrix();
+    renderer->PopTranslation();
   }
 
   void Component::UpdateHandle(float timeElapsed)
