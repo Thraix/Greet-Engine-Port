@@ -11,12 +11,12 @@ namespace Greet
   {
     m_isFocusable = true;
 
-    text = new Label("Label", this, "", "roboto", 20);
+    text = new Label("Label", this, "", "noto", 20);
 
     text->SetColor(Vec4(0,0,0,1))
       .SetSize(1,1,ComponentSize::Type::WEIGHT, ComponentSize::Type::WEIGHT);
 
-    hintText = new Label("HintLabel", this, "", "roboto",20);
+    hintText = new Label("HintLabel", this, "", "noto",20);
     hintText->SetColor(Vec4(0,0,0,1))
       .SetSize(1,1,ComponentSize::Type::WEIGHT, ComponentSize::Type::WEIGHT);
   }

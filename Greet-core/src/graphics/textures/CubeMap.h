@@ -11,18 +11,16 @@
 
 namespace Greet {
 
-  class CubeMap : public Texture
+  class CubeMap : public Texture, public Resource
   {
-    private:
-      std::optional<std::map<uint, HotswapResource>::iterator> hotswap;
     public:
       CubeMap(const std::string& top, const std::string& bottom, const std::string& left, const std::string& right, const std::string& front, const std::string& back);
       CubeMap(const std::string& map);
       CubeMap(uint texId);
       CubeMap();
-      CubeMap(CubeMap&&);
-      CubeMap& operator=(CubeMap&&);
-      void ReloadResource(const std::string& filename);
+      CubeMap(CubeMap&&) = default;
+      CubeMap& operator=(CubeMap&&) = default;
+      void ReloadResource() override;
     private:
       void LoadCubeMap(const std::string& image);
       void LoadCubeMap(const std::string& top, const std::string& bottom, const std::string& left, const std::string& right, const std::string& front, const std::string& back);

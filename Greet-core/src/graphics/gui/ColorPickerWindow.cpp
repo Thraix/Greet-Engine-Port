@@ -60,13 +60,13 @@ namespace Greet
         rgbhsvContainer->AddComponent(rgbContainer);
 
         {
-          Label* text = new Label("ColorPickerWindow#RLabel",this, "R", "roboto",16);
+          Label* text = new Label("ColorPickerWindow#RLabel",this, "R", "noto",16);
           text->SetSize(1,1,ComponentSize::Type::WRAP, ComponentSize::Type::WEIGHT);
           rgbContainer->AddComponent(text);
 
           rTextBox = new TextBox("ColorPickerWindow#RTextBox",this);
 
-          rTextBox->SetFont("roboto")
+          rTextBox->SetFont("noto")
             .SetFontSize(16)
             .SetSize(1,20, ComponentSize::Type::WEIGHT, ComponentSize::Type::PIXELS)
             .SetNormalStyle(textBoxStyle);
@@ -79,13 +79,13 @@ namespace Greet
         hsvContainer->SetSpacing(5).SetVertical(false).SetSize(1,1,ComponentSize::Type::WEIGHT, ComponentSize::Type::WRAP);
         rgbhsvContainer->AddComponent(hsvContainer);
         {
-          Label* text = new Label("ColorPickerWindow#HLabel",this, "H", "roboto",16);
+          Label* text = new Label("ColorPickerWindow#HLabel",this, "H", "noto",16);
           text->SetSize(1,1,ComponentSize::Type::WRAP, ComponentSize::Type::WEIGHT);
           hsvContainer->AddComponent(text);
 
           hTextBox = new TextBox("ColorPickerWindow#HTextBox",this);
 
-          hTextBox->SetFont("roboto")
+          hTextBox->SetFont("noto")
             .SetFontSize(16)
             .SetSize(1,20, ComponentSize::Type::WEIGHT, ComponentSize::Type::PIXELS)
             .SetNormalStyle(textBoxStyle);
@@ -105,13 +105,13 @@ namespace Greet
         rgbhsvContainer->AddComponent(rgbContainer);
 
         {
-          Label* text = new Label("ColorPickerWindow#GLabel",this, "G", "roboto",16);
+          Label* text = new Label("ColorPickerWindow#GLabel",this, "G", "noto",16);
           text->SetSize(1,1,ComponentSize::Type::WRAP, ComponentSize::Type::WEIGHT);
           rgbContainer->AddComponent(text);
 
           gTextBox = new TextBox("ColorPickerWindow#GTextBox",this);
 
-          gTextBox->SetFont("roboto")
+          gTextBox->SetFont("noto")
             .SetFontSize(16)
             .SetSize(1,20, ComponentSize::Type::WEIGHT, ComponentSize::Type::PIXELS)
             .SetNormalStyle(textBoxStyle);
@@ -125,13 +125,13 @@ namespace Greet
       hsvContainer->SetSpacing(5).SetVertical(false).SetSize(1,1,ComponentSize::Type::WEIGHT, ComponentSize::Type::WRAP);
       rgbhsvContainer->AddComponent(hsvContainer);
       {
-        Label* text = new Label("ColorPickerWindow#SLabel",this, "S", "roboto",16);
+        Label* text = new Label("ColorPickerWindow#SLabel",this, "S", "noto",16);
         text->SetSize(1,1,ComponentSize::Type::WRAP, ComponentSize::Type::WEIGHT);
         hsvContainer->AddComponent(text);
 
         sTextBox = new TextBox("ColorPickerWindow#STextBox",this);
 
-        sTextBox->SetFont("roboto")
+        sTextBox->SetFont("noto")
           .SetFontSize(16)
           .SetSize(1,20, ComponentSize::Type::WEIGHT, ComponentSize::Type::PIXELS)
           .SetNormalStyle(textBoxStyle);
@@ -150,13 +150,13 @@ namespace Greet
         rgbhsvContainer->AddComponent(rgbContainer);
 
         {
-        Label* text = new Label("ColorPickerWindow#BLabel",this, "B", "roboto",16);
+        Label* text = new Label("ColorPickerWindow#BLabel",this, "B", "noto",16);
         text->SetSize(1,1,ComponentSize::Type::WRAP, ComponentSize::Type::WEIGHT);
           rgbContainer->AddComponent(text);
 
           bTextBox = new TextBox("ColorPickerWindow#BTextBox",this);
 
-          bTextBox->SetFont("roboto")
+          bTextBox->SetFont("noto")
             .SetFontSize(16)
             .SetSize(1,20, ComponentSize::Type::WEIGHT, ComponentSize::Type::PIXELS)
             .SetNormalStyle(textBoxStyle);
@@ -170,13 +170,13 @@ namespace Greet
       hsvContainer->SetSpacing(5).SetVertical(false).SetSize(1,1,ComponentSize::Type::WEIGHT, ComponentSize::Type::WRAP);
       rgbhsvContainer->AddComponent(hsvContainer);
       {
-        Label* text = new Label("ColorPickerWindow#VLabel",this, "V", "roboto",16);
+        Label* text = new Label("ColorPickerWindow#VLabel",this, "V", "noto",16);
         text->SetSize(1,1,ComponentSize::Type::WRAP, ComponentSize::Type::WEIGHT);
         hsvContainer->AddComponent(text);
 
         vTextBox = new TextBox("ColorPickerWindow#VTextBox",this);
 
-        vTextBox->SetFont("roboto")
+        vTextBox->SetFont("noto")
           .SetFontSize(16)
           .SetSize(1,20, ComponentSize::Type::WEIGHT, ComponentSize::Type::PIXELS)
           .SetNormalStyle(textBoxStyle);
@@ -189,13 +189,13 @@ namespace Greet
     hexContainer->SetSpacing(5).SetVertical(false).SetSize(1,1,ComponentSize::Type::WEIGHT, ComponentSize::Type::WRAP);
     textBoxContainer->AddComponent(hexContainer);
     {
-      Label* text = new Label("ColorPickerWindow#HexLabel",this, "#", "roboto",16);
+      Label* text = new Label("ColorPickerWindow#HexLabel",this, "#", "noto",16);
       text->SetSize(1,1,ComponentSize::Type::WRAP, ComponentSize::Type::WEIGHT);
       hexContainer->AddComponent(text);
 
       hexTextBox = new TextBox("ColorPickerWindow#HexTextBox",this);
 
-      hexTextBox->SetFont("roboto")
+      hexTextBox->SetFont("noto")
         .SetFontSize(16)
         .SetSize(1,20, ComponentSize::Type::WEIGHT, ComponentSize::Type::PIXELS)
         .SetNormalStyle(textBoxStyle);

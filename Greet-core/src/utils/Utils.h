@@ -11,7 +11,7 @@ namespace Greet { namespace Utils {
 
   template<class T> struct ptr_less 
   {
-    bool operator()(T* lhs, T* rhs) 
+    bool operator()(const T* lhs, const T* rhs) const
     {
       return *lhs < *rhs; 
     }

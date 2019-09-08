@@ -241,7 +241,7 @@ namespace Greet
       {
         if(wrapSize.h < comp->GetSize().h)
           wrapSize.h = comp->GetSize().h;
-        wrapSize.w += comp->GetSize().w + comp->GetMargin().left + spacing;
+        wrapSize.w += comp->GetSize().w + comp->GetMargin().left + spacing + GetPadding().GetWidth();
       }
     }
     if(vertical && wrapSize.h > 0)

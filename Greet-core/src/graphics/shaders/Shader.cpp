@@ -15,9 +15,8 @@ namespace Greet {
   }
 
   Shader::Shader(const std::string& filename)
-    : m_shaderID{new uint{Load(filename)}}, uniforms{GetUniforms(*m_shaderID.get())}
+    : Resource(filename), m_shaderID{new uint{Load(filename)}}, uniforms{GetUniforms(*m_shaderID.get())}
   {
-    hotswap = HotSwapping::AddHotswapResource(this, filename);
   }
 
   Shader::Shader(const std::string& vertSrc, const std::string& fragSrc, const std::string& geomSrc)
@@ -32,38 +31,15 @@ namespace Greet {
 
   }
 
-  Shader::Shader(Shader&& shader)
-    : m_shaderID{std::move(shader.m_shaderID)}, hotswap{std::move(shader.hotswap)}, uniforms{std::move(shader.uniforms)}
-  {
-    if(hotswap.has_value())
-    {
-      (*hotswap)->second.MoveResource(this);
-    }
-  }
-
-  Shader& Shader::operator=(Shader&& shader)
-  {
-    m_shaderID = std::move(shader.m_shaderID);
-    uniforms = std::move(shader.uniforms);
-    hotswap = std::move(shader.hotswap);
-
-    if(hotswap.has_value())
-    {
-      (*hotswap)->second.MoveResource(this);
-    }
-
-    return *this;
-  }
-
   Shader::~Shader()
   {
   }
 
-  void Shader::ReloadResource(const std::string& filename)
+  void Shader::ReloadResource()
   {
     if(m_shaderID)
     {
-      std::array<std::stringstream,3> ss = ReadFile(filename);
+      std::array<std::stringstream,3> ss = ReadFile(filePath);
       if(!ss[0].str().empty())
       {
         uint vertShader = CompileShader(*m_shaderID.get(), ss[0].str(), GL_VERTEX_SHADER, false);

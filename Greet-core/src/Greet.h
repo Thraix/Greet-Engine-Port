@@ -120,6 +120,7 @@
 #include <utils/LogUtils.h>
 #include <utils/Noise.h>
 #include <utils/OBJUtils.h>
+#include <utils/Resource.h>
 #include <utils/StringUtils.h>
 #include <utils/Timer.h>
 #include <utils/UUID.h>

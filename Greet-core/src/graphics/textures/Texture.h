@@ -66,6 +66,7 @@ namespace Greet {
 
       Texture(Texture&& texture) = default;
       Texture& operator=(Texture&& texture) = default;
+
       virtual void Enable() const;
       virtual void Disable() const;
 

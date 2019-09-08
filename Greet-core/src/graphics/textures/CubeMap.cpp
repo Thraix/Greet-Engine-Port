@@ -12,10 +12,9 @@ namespace Greet {
   }
 
   CubeMap::CubeMap(const std::string& map)
-    : Texture(GL_TEXTURE_CUBE_MAP)
+    : Resource(map), Texture(GL_TEXTURE_CUBE_MAP)
   {
     LoadCubeMap(map);
-    hotswap = HotSwapping::AddHotswapResource(this, map);
   }
 
   CubeMap::CubeMap(uint texId)
@@ -23,32 +22,17 @@ namespace Greet {
   {
 
   }
-
-  CubeMap::CubeMap(CubeMap&& cubemap)
-    : Texture(std::move(cubemap)), hotswap{std::move(cubemap.hotswap)}
-  {
-    if(hotswap)
-      hotswap.value()->second.MoveResource(this);
-  }
   
   CubeMap::CubeMap()
     : Texture(GL_TEXTURE_CUBE_MAP)
   {
   }
 
-  CubeMap& CubeMap::operator=(CubeMap&& cubemap)
-  {
-    hotswap = std::move(cubemap.hotswap);
-    if(hotswap)
-      hotswap.value()->second.MoveResource(this);
-    return *this;
-  }
-
-  void CubeMap::ReloadResource(const std::string& filename)
+  void CubeMap::ReloadResource()
   {
     if(texId)
     {
-      LoadCubeMap(filename);
+      LoadCubeMap(filePath);
     }
   }
 

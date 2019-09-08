@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include <set>
+#include <map>
 #include <math/Maths.h>
 #include <memory>
 #include <functional>
@@ -26,12 +26,11 @@ namespace Greet {
     void operator()(uint* id);
   };
 
-  class Shader final
+  class Shader final : public Resource
   {
     private:
       std::unique_ptr<uint, ShaderDeleter> m_shaderID;
       std::map<std::string, int> uniforms;
-      std::optional<std::map<uint, HotswapResource>::iterator> hotswap;
 
     private:
       Shader(const std::string& filename);
@@ -51,13 +50,16 @@ namespace Greet {
       void MoveUniforms(uint program, uint oldProgram);
 
     public:
-      Shader(Shader&&);
-      Shader& operator=(Shader&&);
       ~Shader();
 
-      void ReloadResource(const std::string& filename);
+      Shader(Shader&&) = default;
+      Shader& operator=(Shader&&) = default;
+
+      void ReloadResource() override;
       void Enable() const;
       static void Disable();
+      uint GetProgram() const { return *m_shaderID; }
+
       void BindAttributeOutput(uint attachmentId, const std::string& name) const;
 
       void SetUniformBoolean(const std::string& name, bool value) const;

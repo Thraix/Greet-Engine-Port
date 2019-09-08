@@ -24,7 +24,7 @@ class Core : public App
     void Init() override
     {
       progressBarValue = 0;
-      FontManager::Add(new FontContainer("/usr/share/fonts/truetype/ubuntu/Ubuntu-C.ttf","roboto"));
+      FontManager::Add(new FontContainer("res/fonts/NotoSansUI-Regular.ttf","noto"));
 
       guiScene = new GUIScene(new GUIRenderer(), Shader::FromFile("res/shaders/gui.shader"));
 

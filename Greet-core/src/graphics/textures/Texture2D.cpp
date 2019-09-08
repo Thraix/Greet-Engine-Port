@@ -11,10 +11,9 @@ namespace Greet {
   }
 
   Texture2D::Texture2D(const std::string& filename, TextureParams params)
-    :Texture(GL_TEXTURE_2D,true), m_params(params)
+    : Resource(filename), Texture(GL_TEXTURE_2D,true), m_params(params)
   {
     LoadTexture(filename);
-    hotswap = HotSwapping::AddHotswapResource(this, filename);
   }
 
   Texture2D::Texture2D(const std::vector<BYTE>& bits, uint width, uint height, TextureParams params)
@@ -24,7 +23,7 @@ namespace Greet {
   }
 
   Texture2D::Texture2D(TextureParams params)
-    : Texture(GL_TEXTURE_2D,true), m_params(params)
+    : Texture(GL_TEXTURE_2D,false), m_params(params)
   {
 
   }
@@ -40,29 +39,10 @@ namespace Greet {
 
   }
 
-  Texture2D::Texture2D(Texture2D&& texture)
-    : Texture{std::move(texture)}, m_width{std::move(texture.m_width)}, m_height{std::move(texture.m_height)}, 
-    m_params{std::move(texture.m_params)}, hotswap{std::move(texture.hotswap)}
-  {
-    if(hotswap)
-      hotswap.value()->second.MoveResource(this);
-  }
-
-  Texture2D& Texture2D::operator=(Texture2D&& texture)
-  {
-    m_width = std::move(texture.m_width);
-    m_height = std::move(texture.m_height);
-    m_params = std::move(texture.m_params);
-    hotswap = std::move(texture.hotswap);
-    if(hotswap)
-      hotswap.value()->second.MoveResource(this);
-    return *this;
-  }
-
   void Texture2D::LoadTexture(const std::string& filename)
   {
-      auto res = ImageUtils::LoadImage(filename.c_str(), &m_width,&m_height);
-      GenTexture(res.second);
+    auto res = ImageUtils::LoadImage(filename.c_str(), &m_width,&m_height);
+    GenTexture(res.second);
   }
 
   void Texture2D::GenTexture(uint width, uint height)
@@ -90,9 +70,9 @@ namespace Greet {
     GLCall(glTexImage2D(GL_TEXTURE_2D, 0, (uint)m_params.internalFormat, m_width, m_height, 0, (uint)m_params.internalFormat, GL_UNSIGNED_BYTE, pixels.data()));
   }
 
-  void Texture2D::ReloadResource(const std::string& filename)
+  void Texture2D::ReloadResource()
   {
     if(texId)
-      LoadTexture(filename);
+      LoadTexture(filePath);
   }
 }

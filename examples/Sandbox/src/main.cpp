@@ -83,6 +83,7 @@ class Core : public App
 
       FontManager::Add(new FontContainer("res/fonts/Anonymous Pro.ttf", "anonymous"));
       FontManager::Add(new FontContainer("res/fonts/Roboto-Thin.ttf", "roboto"));
+      FontManager::Add(new FontContainer("res/fonts/NotoSansUI-Regular.ttf","noto"));
 
       fbo = new FrameBufferObject(960,540);
       //camera = new TPCamera(vec3(-3.5, -7.8, 5.5), 18, 0.66, 38.5, 15, 80, 0, 0.8f); // Profile shot

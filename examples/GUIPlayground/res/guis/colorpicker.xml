@@ -25,53 +25,53 @@
   <Container width="150" height="fill_parent">
     <Container verticalAlign="false" width="fill_parent">
       <Container spacing="5"  width="1w" verticalAlign="false">
-        <Label gravity="center" height="1w" font="roboto" fontSize="20">R</Label>
+        <Label gravity="center" height="1w" font="noto" fontSize="20">R</Label>
         <TextBox padding="0 5" radius="5" borderRadius="7" 
-          border="2" height="30" width="1w" font="roboto"
+          border="2" height="30" width="1w" font="noto"
           backgroundColor="#37474f" borderColor="#455a64" />
       </Container>
       <Container spacing="5"  width="1w" verticalAlign="false">
-        <Label gravity="center" height="1w" font="roboto" fontSize="20">H</Label>
+        <Label gravity="center" height="1w" font="noto" fontSize="20">H</Label>
         <TextBox padding="0 5" radius="5" borderRadius="7" 
-          border="2" height="30" width="1w" font="roboto"
-          backgroundColor="#37474f" borderColor="#455a64" />
-      </Container>
-    </Container>
-
-    <Container verticalAlign="false" width="fill_parent">
-      <Container spacing="5"  width="1w" verticalAlign="false">
-        <Label gravity="center" height="1w" font="roboto" fontSize="20">G</Label>
-        <TextBox padding="0 5" radius="5" borderRadius="7" 
-          border="2" height="30" width="1w" font="roboto"
-          backgroundColor="#37474f" borderColor="#455a64" />
-      </Container>
-      <Container spacing="5"  width="1w" verticalAlign="false">
-        <Label gravity="center" height="1w" font="roboto" fontSize="20">S</Label>
-        <TextBox padding="0 5" radius="5" borderRadius="7" 
-          border="2" height="30" width="1w" font="roboto"
+          border="2" height="30" width="1w" font="noto"
           backgroundColor="#37474f" borderColor="#455a64" />
       </Container>
     </Container>
 
     <Container verticalAlign="false" width="fill_parent">
       <Container spacing="5"  width="1w" verticalAlign="false">
-        <Label gravity="center" height="1w" font="roboto" fontSize="20">B</Label>
+        <Label gravity="center" height="1w" font="noto" fontSize="20">G</Label>
         <TextBox padding="0 5" radius="5" borderRadius="7" 
-          border="2" height="30" width="1w" font="roboto"
+          border="2" height="30" width="1w" font="noto"
           backgroundColor="#37474f" borderColor="#455a64" />
       </Container>
       <Container spacing="5"  width="1w" verticalAlign="false">
-        <Label gravity="center" height="1w" font="roboto" fontSize="20">V</Label>
+        <Label gravity="center" height="1w" font="noto" fontSize="20">S</Label>
         <TextBox padding="0 5" radius="5" borderRadius="7" 
-          border="2" height="30" width="1w" font="roboto"
+          border="2" height="30" width="1w" font="noto"
+          backgroundColor="#37474f" borderColor="#455a64" />
+      </Container>
+    </Container>
+
+    <Container verticalAlign="false" width="fill_parent">
+      <Container spacing="5"  width="1w" verticalAlign="false">
+        <Label gravity="center" height="1w" font="noto" fontSize="20">B</Label>
+        <TextBox padding="0 5" radius="5" borderRadius="7" 
+          border="2" height="30" width="1w" font="noto"
+          backgroundColor="#37474f" borderColor="#455a64" />
+      </Container>
+      <Container spacing="5"  width="1w" verticalAlign="false">
+        <Label gravity="center" height="1w" font="noto" fontSize="20">V</Label>
+        <TextBox padding="0 5" radius="5" borderRadius="7" 
+          border="2" height="30" width="1w" font="noto"
           backgroundColor="#37474f" borderColor="#455a64" />
       </Container>
     </Container>
 
     <Container spacing="5" verticalAlign="false" width="fill_parent">
-      <Label gravity="center" height="1w" font="roboto" fontSize="20">#</Label>
+      <Label gravity="center" height="1w" font="noto" fontSize="20">#</Label>
       <TextBox padding="0 5" radius="5" borderRadius="7" 
-        border="2" height="30" width="1w" font="roboto"
+        border="2" height="30" width="1w" font="noto"
         backgroundColor="#37474f" borderColor="#455a64" />
     </Container>
 

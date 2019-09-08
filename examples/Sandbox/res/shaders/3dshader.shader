@@ -64,7 +64,7 @@ uniform float ambient = 0.3;
 
 void main()
 {
-	out_color = vert_color;
+	out_color = vec4(1,1,1,1);
 	if (hasTexture > 0.5)
 	{
 		out_color *= texture(textureSampler, vert_texCoord);

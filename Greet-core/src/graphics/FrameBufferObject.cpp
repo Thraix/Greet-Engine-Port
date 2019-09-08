@@ -58,7 +58,7 @@ namespace Greet {
   void FrameBufferObject::AttachDepthTexture()
   {
     GLCall(glBindFramebuffer(GL_FRAMEBUFFER, m_fbo));
-    m_depthTexture = std::move(Texture2D(m_width,m_height,TextureParams(TextureFilter::NEAREST,TextureWrap::NONE,TextureInternalFormat::DEPTH_COMPONENT)));
+    m_depthTexture = Texture2D(m_width,m_height,TextureParams(TextureFilter::NEAREST,TextureWrap::NONE,TextureInternalFormat::DEPTH_COMPONENT));
     GLCall(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_depthTexture.GetTexId(), 0));
     GLCall(glBindFramebuffer(GL_FRAMEBUFFER,0));
   }
