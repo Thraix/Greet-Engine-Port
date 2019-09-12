@@ -31,7 +31,7 @@ class Portal : public Greet::EntityModel
     void PreRender() const override
     {
       EntityModel::PreRender();
-      GetMaterial()->GetShader().SetUniform1f("time", delta);
+      GetMaterial()->GetShader()->SetUniform1f("time", delta);
     }
 
 };

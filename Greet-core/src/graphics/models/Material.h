@@ -12,7 +12,7 @@ namespace Greet {
   class Material
   {
     private:
-      Shader m_shader;
+      Ref<Shader> m_shader;
       uint uuid;
       const Texture2D& m_texture;
       float specularExponent = 10;
@@ -21,13 +21,13 @@ namespace Greet {
       Vec4 color;
 
     public:
-      Material(Shader&& shader, const Texture2D& texture);
-      Material(Shader&& shader);
+      Material(const Ref<Shader>& shader, const Texture2D& texture);
+      Material(const Ref<Shader>& shader);
       virtual ~Material();
 
       void Bind(const Camera* camera) const;
       void Unbind() const;
-      void SetShader(Shader&& shader);
+      void SetShader(const Ref<Shader>& shader);
       Material* SetSpecularExponent(float specularExponent) { this->specularExponent = specularExponent; return this; }
       Material* SetSpecularStrength(float specularStrength) { this->specularStrength = specularStrength; return this; }
       Material* SetDiffuseStrength(float diffuseStrength) {this->diffuseStrength = diffuseStrength; return this;}
@@ -37,7 +37,7 @@ namespace Greet {
       inline float GetSpecularStrength() const { return specularStrength; }
       inline float GetDiffuseStrength() const { return diffuseStrength; }
       inline const Vec4& GetColor() const { return color; }
-      inline const Shader& GetShader() const { return m_shader; }
+      inline const Ref<Shader>& GetShader() const { return m_shader; }
       inline const Texture& GetTexture() const { return m_texture; }
       inline uint GetTextureId() const { return m_texture.GetTexId(); }
       friend bool operator<(const Material& m1, const Material& m2) { return m1.uuid < m2.uuid;}

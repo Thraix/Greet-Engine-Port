@@ -21,10 +21,10 @@ namespace Greet {
       std::list<Frame*> frames;
       Component* m_focused;
       GUIRenderer* m_renderer;
-      Shader m_shader;
+      Ref<Shader> m_shader;
 
     public:
-      GUIScene(GUIRenderer* renderer, Shader&& shader);
+      GUIScene(GUIRenderer* renderer, const Ref<Shader>& shader);
 
       void OnEvent(Event& event);
       void OnMousePressEventHandler(MousePressEvent& event);

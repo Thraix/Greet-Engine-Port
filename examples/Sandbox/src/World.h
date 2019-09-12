@@ -1,9 +1,10 @@
 #pragma once
 
 #include "Chunk.h"
-#include <internal/GreetTypes.h>
+#include <common/Types.h>
 #include <graphics/layers/Scene.h>
 #include <graphics/models/EntityModel.h>
+
 class World : public Greet::Scene
 {
   Greet::Camera* camera;
@@ -34,7 +35,7 @@ class World : public Greet::Scene
       {
         for(int x = 0;x < width; x++)
         {
-          terrainMaterial.GetShader().SetUniformMat4("transformationMatrix", Greet::Mat4::Translate((x - width / 2.0f) * Chunk::CHUNK_WIDTH, -15, (z - length / 2.0f) * Chunk::CHUNK_HEIGHT));
+          terrainMaterial.GetShader()->SetUniformMat4("transformationMatrix", Greet::Mat4::Translate((x - width / 2.0f) * Chunk::CHUNK_WIDTH, -15, (z - length / 2.0f) * Chunk::CHUNK_HEIGHT));
           Greet::Mesh* mesh = chunks[x + z * width].mesh;
           mesh->Bind();
           mesh->Render();

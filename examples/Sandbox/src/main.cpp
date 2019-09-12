@@ -103,9 +103,9 @@ class Core : public App
         waterMaterial = new Material(Shader::FromFile("res/shaders/water.shader"));
         waterMaterial->SetSpecularExponent(50);
         waterMaterial->SetSpecularStrength(0.4);
-        waterMaterial->GetShader().Enable();
-        waterMaterial->GetShader().SetUniform1f("waterLevel",0.45f * 20.0f);
-        waterMaterial->GetShader().Disable();
+        waterMaterial->GetShader()->Enable();
+        waterMaterial->GetShader()->SetUniform1f("waterLevel",0.45f * 20.0f);
+        waterMaterial->GetShader()->Disable();
 
         terrainMaterial->SetSpecularStrength(0.5f);
         terrainMaterial->SetSpecularExponent(5.0f);
@@ -168,14 +168,14 @@ class Core : public App
       //}
 
       light = new Light(Vec3<float>(10, 20, 10), 0xffffffff);
-      const Shader& modelShader = modelMaterial->GetShader();
-      modelShader.Enable();
+      const Ref<Shader>& modelShader = modelMaterial->GetShader();
+      modelShader->Enable();
       light->SetToUniform(modelShader, "light");
-      modelShader.Disable();
-      const Shader& flatShader = flatMaterial->GetShader();
-      flatShader.Enable();
+      modelShader->Disable();
+      const Ref<Shader>& flatShader = flatMaterial->GetShader();
+      flatShader->Enable();
       light->SetToUniform(flatShader, "light");
-      flatShader.Disable();
+      flatShader->Disable();
 
       uilayer = new Layer(new BatchRenderer(), ShaderFactory::DefaultShader(), Mat3::OrthographicViewport());
       Vec4 colorPink = ColorUtils::GetMaterialColorAsHSV(300 /360.0f, 3);
@@ -326,9 +326,9 @@ class Core : public App
     void Update(float elapsedTime) override
     {
       waterTime += elapsedTime;
-      waterMaterial->GetShader().Enable();
-      waterMaterial->GetShader().SetUniform1f("time", waterTime);
-      waterMaterial->GetShader().Disable();
+      waterMaterial->GetShader()->Enable();
+      waterMaterial->GetShader()->SetUniform1f("time", waterTime);
+      waterMaterial->GetShader()->Disable();
 
       progressFloat++;
       if (progressFloat > 1000)
@@ -382,12 +382,12 @@ class Core : public App
           modelMaterial->SetShader(Shader::FromFile("res/shaders/3dshader.shader"));
           terrainMaterial->SetShader(Shader::FromFile("res/shaders/terrain.shader"));
           flatMaterial->SetShader(Shader::FromFile("res/shaders/flat3d.shader"));
-          modelMaterial->GetShader().Enable();
+          modelMaterial->GetShader()->Enable();
           light->SetToUniform(modelMaterial->GetShader(), "light");
-          modelMaterial->GetShader().Disable();
-          flatMaterial->GetShader().Enable();
+          modelMaterial->GetShader()->Disable();
+          flatMaterial->GetShader()->Enable();
           light->SetToUniform(flatMaterial->GetShader(), "light");
-          flatMaterial->GetShader().Disable();
+          flatMaterial->GetShader()->Disable();
           //terrainShader->enable();
           //l->setToUniform(terrainShader, "light");
           //terrainShader->disable();
@@ -437,24 +437,6 @@ class Core : public App
     }
 };
 #endif
-
-class TestApp : public App
-{
-  public:
-    TestApp()
-      :App{"Best Game Ever",540,360}{}
-    ~TestApp(){}
-    virtual void Init(){
-
-      Shader s1{Shader::FromFile("res/shaders/3dshader.shader")};
-      s1.Enable();
-      Shader s2{Shader::FromFile("res/shaders/flat3d.shader")};
-      Shader s3{Shader::FromFile("res/shaders/terrain.shader")};
-    };
-    virtual void Tick(){};
-    virtual void Update(float elapsedTime){};
-    virtual void Render(){};
-};
 
 #include <fstream>
 int main()

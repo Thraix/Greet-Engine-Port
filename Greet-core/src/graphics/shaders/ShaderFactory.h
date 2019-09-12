@@ -32,9 +32,9 @@ namespace Greet { namespace ShaderFactory {
 #include "skyboxshader.frag"
     ;
 
-  Shader LEDShader();
-  Shader DefaultShader();
-  Shader DebugShader();
-  Shader BasicLightShader();
-  Shader SkyboxShader();
+  Ref<Shader> LEDShader();
+  Ref<Shader> DefaultShader();
+  Ref<Shader> DebugShader();
+  Ref<Shader> BasicLightShader();
+  Ref<Shader> SkyboxShader();
 }}

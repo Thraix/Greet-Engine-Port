@@ -29,7 +29,7 @@ namespace Greet {
 
   void EntityModel::BindTransformation() const
   {
-    material->GetShader().SetUniformMat4("transformationMatrix", m_transformationMatrix);
+    material->GetShader()->SetUniformMat4("transformationMatrix", m_transformationMatrix);
   
   }
   void EntityModel::PreRender() const

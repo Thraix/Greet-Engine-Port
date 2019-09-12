@@ -1,7 +1,7 @@
 #pragma once
 
 #include <math/Maths.h>
-#include <internal/GreetTypes.h>
+#include <common/Types.h>
 
 namespace Greet {
 	class KeyboardControl

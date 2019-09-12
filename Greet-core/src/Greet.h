@@ -5,6 +5,7 @@
 #include <audio/AudioChannelManager.h>
 #include <audio/Sound.h>
 #include <audio/SoundManager.h>
+#include <common/Memory.h>
 #include <common/Types.h>
 #include <drivers/Driver.h>
 #include <drivers/Driver1.h>

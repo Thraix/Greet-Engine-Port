@@ -7,8 +7,8 @@
 
 namespace Greet {
 
-  GUIScene::GUIScene(GUIRenderer* renderer, Shader&& shader)
-    : m_renderer(renderer), m_shader(std::move(shader)), projectionMatrix(Mat3::OrthographicViewport())
+  GUIScene::GUIScene(GUIRenderer* renderer, const Ref<Shader>& shader)
+    : m_renderer(renderer), m_shader(shader), projectionMatrix(Mat3::OrthographicViewport())
   {
     m_focused = nullptr;
 
@@ -17,10 +17,10 @@ namespace Greet {
     {
       texIDs[i] = i;
     }
-    m_shader.Enable();
-    m_shader.SetUniformMat3("pr_matrix", projectionMatrix);
-    m_shader.SetUniform1iv("textures", 32, texIDs);
-    m_shader.Disable();
+    m_shader->Enable();
+    m_shader->SetUniformMat3("pr_matrix", projectionMatrix);
+    m_shader->SetUniform1iv("textures", 32, texIDs);
+    m_shader->Disable();
   }
 
   void GUIScene::OnEvent(Event& event)
@@ -94,9 +94,9 @@ namespace Greet {
   void GUIScene::ViewportResize(ViewportResizeEvent& event)
   {
     projectionMatrix = Mat3::OrthographicViewport();
-    m_shader.Enable();
-    m_shader.SetUniformMat3("pr_matrix", projectionMatrix);
-    m_shader.Disable();
+    m_shader->Enable();
+    m_shader->SetUniformMat3("pr_matrix", projectionMatrix);
+    m_shader->Disable();
     for (auto it = frames.begin(); it != frames.end(); ++it)
     {
       (*it)->OnViewportResize(event.GetWidth(), event.GetHeight());
@@ -105,7 +105,7 @@ namespace Greet {
 
   void GUIScene::PreRender() const
   {
-    m_shader.Enable();
+    m_shader->Enable();
     m_renderer->Begin();
   }
 
@@ -123,7 +123,7 @@ namespace Greet {
   {
     m_renderer->End();
     m_renderer->Draw();
-    m_shader.Disable();
+    m_shader->Disable();
   }
 
   void GUIScene::Update(float timeElapsed)

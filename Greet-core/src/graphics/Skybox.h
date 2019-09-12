@@ -11,11 +11,11 @@ namespace Greet {
   {
     private:
       const CubeMap& m_map;
-      Shader m_shader;
+      Ref<Shader> m_shader;
       Mesh* m_mesh;
     public:
       Skybox(const CubeMap& map);
-      Skybox(const CubeMap& map, Shader&& shader);
+      Skybox(const CubeMap& map, const Ref<Shader>& shader);
       const CubeMap& GetCubeMap() const { return m_map; };
       virtual ~Skybox();
       void Render(const Mat4& projectionMatrix, const Mat4& viewMatrix) const;

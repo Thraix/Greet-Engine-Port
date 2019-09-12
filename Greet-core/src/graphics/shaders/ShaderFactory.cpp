@@ -6,26 +6,26 @@
 namespace Greet { namespace ShaderFactory {
 
 
-  Shader LEDShader()
+  Ref<Shader> LEDShader()
   {
     return Shader::FromSource(default_shader_vert, led_shader_frag);
   }
 
-  Shader DefaultShader()
+  Ref<Shader> DefaultShader()
   {
     return Shader::FromSource(default_shader_vert, default_shader_frag);
   }
 
-  Shader BasicLightShader()
+  Ref<Shader> BasicLightShader()
   {
     return Shader::FromSource(default_shader_vert, basic_light_shader_frag);
   }
-  Shader DebugShader()
+  Ref<Shader> DebugShader()
   {
     return Shader::FromSource(default_shader_vert, debug_shader_frag);
   }
 
-  Shader SkyboxShader()
+  Ref<Shader> SkyboxShader()
   {
     return Shader::FromSource(skybox_shader_vert, skybox_shader_frag);
   }

@@ -23,7 +23,7 @@ namespace Greet{
       {}
 
       virtual void Update(float timeElapsed) {}
-      void BindMatrices(const Shader& shader, const Camera* camera, bool shouldBindShader = false) const;
+      void BindMatrices(const Ref<Shader>& shader, const Camera* camera, bool shouldBindShader = false) const;
 
       virtual void Begin(Camera* camera) {}
       virtual void Render(Camera* camera) const {}

@@ -28,7 +28,7 @@ namespace Greet {
       BindMatrices(entityModels.first->GetShader(),camera);
       for (auto&& entityModel : entityModels.second)
       {
-        entityModel->GetMaterial()->GetShader().SetUniformMat4("transformationMatrix", entityModel->GetTransformationMatrix());
+        entityModel->GetMaterial()->GetShader()->SetUniformMat4("transformationMatrix", entityModel->GetTransformationMatrix());
         entityModel->PreRender();
         entityModel->Render(this, camera);
         entityModel->PostRender();

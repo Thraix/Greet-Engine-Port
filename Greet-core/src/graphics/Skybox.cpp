@@ -11,8 +11,8 @@ namespace Greet {
   {
   }
 
-  Skybox::Skybox(const CubeMap& map, Shader&& shader)
-    : m_map(map), m_shader(std::move(shader))
+  Skybox::Skybox(const CubeMap& map, const Ref<Shader>& shader)
+    : m_map(map), m_shader(shader)
   {
     MeshData data{MeshFactory::Cube(0,0,0, 1,1,1)};
     m_mesh = new Mesh(data);
@@ -29,15 +29,15 @@ namespace Greet {
     GLCall(glActiveTexture(GL_TEXTURE0));
     GLCall(glDisable(GL_DEPTH_TEST));
     GLCall(glFrontFace(GL_CCW));
-    m_shader.Enable();
-    m_shader.SetUniformMat4("projectionMatrix", projectionMatrix);
-    m_shader.SetUniformMat4("viewMatrix", viewMatrix);
+    m_shader->Enable();
+    m_shader->SetUniformMat4("projectionMatrix", projectionMatrix);
+    m_shader->SetUniformMat4("viewMatrix", viewMatrix);
     m_map.Enable();
     m_mesh->Bind();
     m_mesh->Render();
     m_mesh->Unbind();
     m_map.Disable();
-    m_shader.Disable();
+    m_shader->Disable();
     GLCall(glEnable(GL_DEPTH_TEST));
 
   }

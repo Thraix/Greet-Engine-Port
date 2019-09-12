@@ -8,6 +8,7 @@
 #include <utils/Utils.h>
 #include <utils/FileUtils.h>
 #include <utils/HotSwapping.h>
+#include <common/Memory.h>
 
 namespace Greet {
 
@@ -29,7 +30,7 @@ namespace Greet {
   class Shader final : public Resource
   {
     private:
-      std::unique_ptr<uint, ShaderDeleter> m_shaderID;
+      uint m_shaderID;
       std::map<std::string, int> uniforms;
 
     private:
@@ -52,13 +53,10 @@ namespace Greet {
     public:
       ~Shader();
 
-      Shader(Shader&&) = default;
-      Shader& operator=(Shader&&) = default;
-
       void ReloadResource() override;
       void Enable() const;
       static void Disable();
-      uint GetProgram() const { return *m_shaderID; }
+      uint GetProgram() const { return m_shaderID; }
 
       void BindAttributeOutput(uint attachmentId, const std::string& name) const;
 
@@ -76,11 +74,11 @@ namespace Greet {
       void SetUniformMat4(const std::string& name, const Mat4 &value) const;
       bool operator<(const Shader& s);
     public:
-      static Shader FromFile(const std::string& shaderPath);
-      static Shader FromFile(const std::string& vertPath, const std::string& fragPath);
-      static Shader FromFile(const std::string& vertPath, const std::string& fragPath, const std::string& geomPath);
-      static Shader FromSource(const std::string& vertSrc, const std::string& fragSrc);
-      static Shader FromSource(const std::string& vertSrc, const std::string& fragSrc, const std::string& geomSrc);
+      static Ref<Shader> FromFile(const std::string& shaderPath);
+      static Ref<Shader> FromFile(const std::string& vertPath, const std::string& fragPath);
+      static Ref<Shader> FromFile(const std::string& vertPath, const std::string& fragPath, const std::string& geomPath);
+      static Ref<Shader> FromSource(const std::string& vertSrc, const std::string& fragSrc);
+      static Ref<Shader> FromSource(const std::string& vertSrc, const std::string& fragSrc, const std::string& geomSrc);
   };
 
 }

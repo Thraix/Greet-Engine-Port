@@ -8,14 +8,14 @@ namespace vmc
 	class GridRenderer3D : public Greet::Renderer3D
 	{
 	private:
-		Greet::Shader* simpleShader;
+    Greet::Ref<Greet::Shader> simpleShader;
 
 		Greet::EntityModel* emodel;
 		Greet::Material* material;
 		Greet::Mesh* mesh;
 
 
-		Greet::Shader lineShader;
+    Greet::Ref<Greet::Shader> lineShader;
     Greet::VertexArray vao;
     Greet::Buffer vbo;
     Greet::Buffer ibo;

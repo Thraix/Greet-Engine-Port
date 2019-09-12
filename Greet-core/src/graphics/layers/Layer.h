@@ -12,22 +12,22 @@ namespace Greet {
     protected:
       Renderer2D* m_renderer;
       std::vector<Renderable*> m_renderables;
-      Shader m_shader;
+      Ref<Shader> m_shader;
 
       Mat3 m_projectionMatrix;
     public:
-      Layer(Renderer2D* renderer, Shader&& shader, Mat3 projectionMatrix)
-        : m_renderer(renderer), m_shader(std::move(shader)), m_projectionMatrix(projectionMatrix)
+      Layer(Renderer2D* renderer, const Ref<Shader>& shader, Mat3 projectionMatrix)
+        : m_renderer(renderer), m_shader(shader), m_projectionMatrix(projectionMatrix)
       {
         GLint texIDs[32];
         for (int i = 0; i < 32; i++)
         {
           texIDs[i] = i;
         }
-        m_shader.Enable();
-        m_shader.SetUniformMat3("pr_matrix", m_projectionMatrix);
-        m_shader.SetUniform1iv("textures", 32, texIDs);
-        m_shader.Disable();
+        m_shader->Enable();
+        m_shader->SetUniformMat3("pr_matrix", m_projectionMatrix);
+        m_shader->SetUniform1iv("textures", 32, texIDs);
+        m_shader->Disable();
       }
 
       virtual ~Layer()
@@ -45,7 +45,7 @@ namespace Greet {
 
       virtual void PreRender() const override
       {
-        m_shader.Enable();
+        m_shader->Enable();
         setUniforms();
         m_renderer->Begin();
       }
@@ -65,7 +65,7 @@ namespace Greet {
       {
         m_renderer->End();
         m_renderer->Flush();
-        m_shader.Disable();
+        m_shader->Disable();
       }
 
       virtual void Update(float timeElapsed) override
@@ -78,15 +78,15 @@ namespace Greet {
       void SetProjectionMatrix(Mat3 projectionMatrix)
       {
         m_projectionMatrix = projectionMatrix;
-        m_shader.Enable();
-        m_shader.SetUniformMat3("pr_matrix", m_projectionMatrix);
-        m_shader.Disable();
+        m_shader->Enable();
+        m_shader->SetUniformMat3("pr_matrix", m_projectionMatrix);
+        m_shader->Disable();
       }
 
       virtual void ViewportResize(float x, float y, float width, float height) {}
       virtual void ViewportResize(ViewportResizeEvent& event) override {}
       Mat3 GetProjectionMatrix() const { return m_projectionMatrix; };
-      inline const Shader& GetShader() const { return m_shader; }
+      inline const Ref<Shader>& GetShader() const { return m_shader; }
       inline uint Size() const { return m_renderables.size(); }
 
 

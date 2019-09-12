@@ -75,10 +75,10 @@ namespace vmc
     BindMatrices(emodel->GetMaterial()->GetShader(), camera);
     emodel->GetMesh()->Bind();
 
-    emodel->GetMaterial()->GetShader().SetUniformMat4("transformationMatrix", emodel->GetTransformationMatrix());
+    emodel->GetMaterial()->GetShader()->SetUniformMat4("transformationMatrix", emodel->GetTransformationMatrix());
     emodel->GetMesh()->Render();
     emodel->GetMesh()->Unbind();
-    emodel->GetMaterial()->GetShader().Disable();
+    emodel->GetMaterial()->GetShader()->Disable();
     //emodel->PreRender(this, camera);
     //emodel->Render(this, camera);
     //emodel->PostRender(this, camera);
@@ -104,10 +104,10 @@ namespace vmc
 
   void GridRenderer3D::DrawLine(Camera* camera, const Vec3<float>& start, const Vec3<float>& end, const Vec4& color)
   {
-    lineShader.Enable();
-    lineShader.SetUniformMat4("projectionMatrix", camera->GetProjectionMatrix());
-    lineShader.SetUniformMat4("viewMatrix", camera->GetViewMatrix());
-    lineShader.SetUniform4f("mat_color", color);
+    lineShader->Enable();
+    lineShader->SetUniformMat4("projectionMatrix", camera->GetProjectionMatrix());
+    lineShader->SetUniformMat4("viewMatrix", camera->GetViewMatrix());
+    lineShader->SetUniform4f("mat_color", color);
 
     vbo.Enable();
     Vec3<float>* buffer = (Vec3<float>*)vbo.MapBuffer();
@@ -124,6 +124,6 @@ namespace vmc
     ibo.Disable();
     vao.Disable();
 
-    lineShader.Disable();
+    lineShader->Disable();
   }
 }
