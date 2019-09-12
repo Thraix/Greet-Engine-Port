@@ -1,7 +1,7 @@
 #pragma once
 
 #include <internal/GreetGL.h>
-#include <internal/GreetTypes.h>
+#include <common/Types.h>
 #include <string>
 #include <graphics/fonts/FontAtlas.h>
 

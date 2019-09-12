@@ -1,7 +1,7 @@
 #pragma once
 
 #include <utils/json/JSONArray.h>
-#include <internal/GreetTypes.h>
+#include <common/Types.h>
 #include <map>
 
 namespace Greet {

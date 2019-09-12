@@ -2,9 +2,17 @@
 
 #include <math/Maths.h>
 #include <internal/GreetGL.h>
-#include <internal/GreetTypes.h>
 #include <vector>
 #include <functional>
+
+#define MESH_VERTICES_LOCATION	0
+#define MESH_TEXCOORDS_LOCATION 1
+#define MESH_COLORS_LOCATION	2 
+#define MESH_NORMALS_LOCATION	3
+
+#define ATTRIBUTE_COLOR		Greet::AttributeDefaults(MESH_COLORS_LOCATION, 4, sizeof(unsigned int), GL_UNSIGNED_BYTE,GL_TRUE)
+#define ATTRIBUTE_NORMAL	Greet::AttributeDefaults(MESH_NORMALS_LOCATION,3, sizeof(Greet::Vec3<float>) ,GL_FLOAT,GL_FALSE)
+#define ATTRIBUTE_TEXCOORD	Greet::AttributeDefaults(MESH_TEXCOORDS_LOCATION,2, sizeof(Greet::Vec2),GL_FLOAT,GL_FALSE)
 
 namespace Greet {
 
@@ -73,7 +81,3 @@ namespace Greet {
       static MeshData ReadFromFile(const std::string& filename);
   };
 }
-
-#define ATTRIBUTE_COLOR		Greet::AttributeDefaults(MESH_COLORS_LOCATION, 4, sizeof(unsigned int), GL_UNSIGNED_BYTE,GL_TRUE)
-#define ATTRIBUTE_NORMAL	Greet::AttributeDefaults(MESH_NORMALS_LOCATION,3, sizeof(Greet::Vec3<float>) ,GL_FLOAT,GL_FALSE)
-#define ATTRIBUTE_TEXCOORD	Greet::AttributeDefaults(MESH_TEXCOORDS_LOCATION,2, sizeof(Greet::Vec2),GL_FLOAT,GL_FALSE)

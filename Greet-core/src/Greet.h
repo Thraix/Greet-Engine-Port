@@ -5,6 +5,7 @@
 #include <audio/AudioChannelManager.h>
 #include <audio/Sound.h>
 #include <audio/SoundManager.h>
+#include <common/Types.h>
 #include <drivers/Driver.h>
 #include <drivers/Driver1.h>
 #include <drivers/Driver2.h>
@@ -96,7 +97,6 @@
 #include <input/Joystick.h>
 #include <internal/App.h>
 #include <internal/GreetGL.h>
-#include <internal/GreetTypes.h>
 #include <logging/Log.h>
 #include <logging/LogLevel.h>
 #include <logging/LogStream.h>

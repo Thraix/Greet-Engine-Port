@@ -1,7 +1,7 @@
 #pragma once
 
 #include <graphics/renderers/Renderer2D.h>
-#include <internal/GreetTypes.h>
+#include <common/Types.h>
 
 #include <graphics/Renderable2D.h>
 #include <graphics/RenderablePoly.h>

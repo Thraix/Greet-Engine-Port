@@ -1,6 +1,6 @@
 #pragma once
 
-#include <internal/GreetTypes.h>
+#include <common/Types.h>
 #include <utils/Utils.h>
 
 #define GREET_ERROR_IMAGE_FORMAT	BIT(0)

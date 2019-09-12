@@ -1,6 +1,6 @@
 #pragma once
 
-#include <internal/GreetTypes.h>
+#include <common/Types.h>
 #include <math/Maths.h>
 #include <logging/Logger.h>
 

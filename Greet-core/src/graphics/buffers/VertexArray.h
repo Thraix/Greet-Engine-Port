@@ -1,7 +1,7 @@
 #pragma once
 
 #include <vector>
-#include <internal/GreetTypes.h>
+#include <common/Types.h>
 #include <memory>
 
 namespace Greet {

@@ -1,7 +1,7 @@
 #pragma once
 
 
-#include <internal/GreetTypes.h>
+#include <common/Types.h>
 #include <logging/Log.h>
 
 namespace Greet { namespace LogUtils {

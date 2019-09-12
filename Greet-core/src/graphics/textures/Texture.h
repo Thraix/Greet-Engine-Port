@@ -3,7 +3,7 @@
 #include <string>
 #include <internal/GreetGL.h>
 #include <memory>
-#include <internal/GreetTypes.h>
+#include <common/Types.h>
 
 namespace Greet {
 

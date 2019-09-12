@@ -1,7 +1,7 @@
 #pragma once
 
 #include <event/Event.h>
-#include <internal/GreetTypes.h>
+#include <common/Types.h>
 #include <math/Maths.h>
 
 namespace Greet {

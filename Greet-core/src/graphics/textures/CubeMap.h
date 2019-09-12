@@ -4,7 +4,7 @@
 #include <map>
 
 #include <string>
-#include <internal/GreetTypes.h>
+#include <common/Types.h>
 #include <graphics/textures/Texture.h>
 #include <utils/ImageUtils.h>
 #include <utils/HotSwapping.h>

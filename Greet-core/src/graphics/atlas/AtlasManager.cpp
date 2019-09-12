@@ -1,7 +1,7 @@
 #include "AtlasManager.h"	
 
 #include <logging/Log.h>
-#include <internal/GreetTypes.h>
+#include <common/Types.h>
 #include <utils/ErrorHandle.h>
 
 namespace Greet{

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <math.h>
-#include <internal/GreetTypes.h>
+#include <common/Types.h>
 #include <iostream>
 
 

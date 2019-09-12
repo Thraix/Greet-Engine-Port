@@ -1,7 +1,7 @@
 #pragma once
 
 #include <graphics/fonts/Font.h>
-#include <internal/GreetTypes.h>
+#include <common/Types.h>
 #include <string>
 #include <set>
 

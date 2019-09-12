@@ -2,7 +2,7 @@
 
 #include <math/Maths.h>
 #include <graphics/Renderable.h>
-#include <internal/GreetTypes.h>
+#include <common/Types.h>
 #include <graphics/Sprite.h>
 
 namespace Greet{

@@ -2,7 +2,7 @@
 
 #include <vector>
 #include <FreeImage.h>
-#include <internal/GreetTypes.h>
+#include <common/Types.h>
 
 namespace Greet { namespace ImageFactory {
   std::vector<BYTE> GetBadFormatImage(uint* width, uint* height);
