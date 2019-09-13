@@ -15,10 +15,10 @@ namespace Greet {
   {
     private:
       // Location, vbo
-      std::map<uint, Buffer> m_vbos;
+      std::map<uint, Ref<Buffer>> m_vbos;
 
-      VertexArray vao;
-      Buffer ibo;
+      Ref<VertexArray> vao;
+      Ref<Buffer> ibo;
 
       uint m_vertexCount;
       uint m_indexCount;
@@ -30,8 +30,6 @@ namespace Greet {
     public:
       Mesh(const std::vector<Vec3<float>>& vertices, const std::vector<uint>& indices);
       Mesh(const MeshData& data);
-      Mesh(Mesh&&) = default;
-      Mesh& operator=(Mesh&&) = default;
 
       void Render() const;
 
@@ -59,7 +57,5 @@ namespace Greet {
       void SetDefaultAttribute3f(uint location, const Vec3<float>& data);
     private:
       bool HasVBO(uint location) const;
-      void EnableAttributes() const;
-      void DisableAttributes() const;
   };
 }

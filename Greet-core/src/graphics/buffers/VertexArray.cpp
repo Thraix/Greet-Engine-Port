@@ -11,15 +11,19 @@ namespace Greet {
   }
 
   VertexArray::VertexArray()
-    : id{new uint{0}}
+    : id{0}
   {
-    GLCall(glGenVertexArrays(1, id.get()));
+    GLCall(glGenVertexArrays(1, &id));
     Enable();
+  }
+  VertexArray::~VertexArray()
+  {
+    glDeleteVertexArrays(1, &id);
   }
 
   void VertexArray::Enable() const
   {
-    GLCall(glBindVertexArray(*id));
+    GLCall(glBindVertexArray(id));
   }
 
   void VertexArray::Disable()
@@ -27,4 +31,8 @@ namespace Greet {
     GLCall(glBindVertexArray(0));
   }
 
+  Ref<VertexArray> VertexArray::CreateVertexArray()
+  {
+    return std::shared_ptr<VertexArray>(new VertexArray());
+  }
 }

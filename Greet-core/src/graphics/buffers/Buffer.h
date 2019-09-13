@@ -1,14 +1,9 @@
 #pragma once
 
-#include <memory>
+#include <common/Memory.h>
 #include <internal/GreetGL.h>
 
 namespace Greet {
-
-  struct BufferDeleter final
-  {
-    void operator()(uint* id);
-  };
 
   enum class BufferType
   {
@@ -25,17 +20,16 @@ namespace Greet {
   class Buffer final
   {
     private:
-      std::unique_ptr<uint> id;
+      uint id;
       uint dataSize;
       BufferType type;
       BufferDrawType drawType;
 
-    public:
+    private:
       Buffer(uint dataSize, BufferType type, BufferDrawType drawType);
 
-      Buffer(Buffer&&) = default;
-      Buffer& operator=(Buffer&&) = default;
-
+    public:
+      ~Buffer();
       void UpdateData(const void* data) const;
       void UpdateData(const void* data, uint dataSize);
       void* MapBuffer() const;
@@ -46,5 +40,7 @@ namespace Greet {
 
       inline uint GetDataSize() const { return dataSize; }
 
+    public:
+      static Ref<Buffer> CreateBuffer(uint dataSize, BufferType type, BufferDrawType drawType);
   };
 }

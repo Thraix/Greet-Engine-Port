@@ -8,12 +8,6 @@
 
 namespace Greet {
 
-  void ShaderDeleter::operator()(uint* id)
-  {
-    GLCall(glDeleteProgram(*id));
-    delete id;
-  }
-
   Shader::Shader(const std::string& filename)
     : Resource(filename), m_shaderID{Load(filename)}, uniforms{GetUniforms(m_shaderID)}
   {
@@ -33,6 +27,7 @@ namespace Greet {
 
   Shader::~Shader()
   {
+    GLCall(glDeleteProgram(m_shaderID));
   }
 
   void Shader::ReloadResource()

@@ -2,7 +2,7 @@
 
 #include <vector>
 #include <common/Types.h>
-#include <memory>
+#include <common/Memory.h>
 
 namespace Greet {
 
@@ -14,15 +14,20 @@ namespace Greet {
   class VertexArray final 
   {
     private:
-      std::unique_ptr<uint, VertexArrayDeleter> id;
-    public:
+      uint id;
+    private:
       VertexArray();
+    public:
+      ~VertexArray();
 
       VertexArray(VertexArray&&) = default;
       VertexArray& operator=(VertexArray&&) = default;
 
       void Enable() const;
+    public:
       static void Disable();
+
+      static Ref<VertexArray> CreateVertexArray();
   };
 
 }

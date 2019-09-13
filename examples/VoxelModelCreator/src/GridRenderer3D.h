@@ -16,9 +16,9 @@ namespace vmc
 
 
     Greet::Ref<Greet::Shader> lineShader;
-    Greet::VertexArray vao;
-    Greet::Buffer vbo;
-    Greet::Buffer ibo;
+    Greet::Ref<Greet::VertexArray> vao;
+    Greet::Ref<Greet::Buffer> vbo;
+    Greet::Ref<Greet::Buffer> ibo;
 		uint* m_indices;
 	public:
 

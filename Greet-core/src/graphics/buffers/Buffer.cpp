@@ -4,21 +4,20 @@
 
 namespace Greet {
 
-  void BufferDeleter::operator()(uint* id)
+  Buffer::Buffer(uint dataSize, BufferType type, BufferDrawType drawType)
+    : id{0}, dataSize{dataSize}, type{type}, drawType{drawType}
   {
-    glDeleteBuffers(1, id);
-    delete id;
+    GLCall(glGenBuffers(1, &id));
   }
 
-  Buffer::Buffer(uint dataSize, BufferType type, BufferDrawType drawType)
-    : id{new uint{0}}, dataSize{dataSize}, type{type}, drawType{drawType}
+  Buffer::~Buffer()
   {
-    GLCall(glGenBuffers(1, id.get()));
+    GLCall(glDeleteBuffers(1, &id));
   }
 
   void Buffer::Enable() const
   {
-    GLCall(glBindBuffer((uint)type, *id));
+    GLCall(glBindBuffer((uint)type, id));
   }
 
   void Buffer::UpdateData(const void* data) const
@@ -46,5 +45,10 @@ namespace Greet {
   void Buffer::Disable() const
   {
     GLCall(glBindBuffer((uint)type, 0));
+  }
+
+  Ref<Buffer> Buffer::CreateBuffer(uint dataSize, BufferType type, BufferDrawType drawType)
+  {
+    return std::shared_ptr<Buffer>(new Buffer(dataSize, type, drawType));
   }
 }

@@ -5,7 +5,7 @@ namespace vmc
   using namespace Greet;
 
   GridRenderer3D::GridRenderer3D()
-    : Renderer3D(), lineShader(Shader::FromFile("res/shaders/simple.shader")), vao(), vbo(2 * sizeof(Vec3<float>), BufferType::ARRAY, BufferDrawType::DYNAMIC), ibo(2 * sizeof(uint), BufferType::INDEX, BufferDrawType::STATIC)
+    : Renderer3D(), lineShader(Shader::FromFile("res/shaders/simple.shader"))
   {
     MeshData meshdata = MeshFactory::Cube2(0.5f, 0.5f, 0.5f, 1, 1, 1);
     std::vector<Vec2> texCoords(6 * 4);
@@ -25,21 +25,23 @@ namespace vmc
 
 
     // For drawing lines...
-    vao.Enable();
-    vbo.Enable();
-    vbo.UpdateData(nullptr);
+    vao = VertexArray::CreateVertexArray();
+    vbo = Buffer::CreateBuffer(2 * sizeof(Vec3<float>), BufferType::ARRAY, BufferDrawType::DYNAMIC);
+    vbo->Enable();
+    vbo->UpdateData(nullptr);
 
     GLCall(glEnableVertexAttribArray(0));
 
     GLCall(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vec3<float>), 0));
-    vbo.Disable();
-    vao.Disable();
 
     m_indices = new uint[2]{ 0,1 };
-    ibo.Enable();
-    ibo.UpdateData(m_indices);
-    ibo.Disable();
+    ibo = Buffer::CreateBuffer(2 * sizeof(uint), BufferType::INDEX, BufferDrawType::STATIC);
+    ibo->Enable();
+    ibo->UpdateData(m_indices);
+    ibo->Disable();
 
+    vbo->Disable();
+    vao->Disable();
   }
 
   void GridRenderer3D::Begin(Camera* camera)
@@ -109,20 +111,20 @@ namespace vmc
     lineShader->SetUniformMat4("viewMatrix", camera->GetViewMatrix());
     lineShader->SetUniform4f("mat_color", color);
 
-    vbo.Enable();
-    Vec3<float>* buffer = (Vec3<float>*)vbo.MapBuffer();
+    vbo->Enable();
+    Vec3<float>* buffer = (Vec3<float>*)vbo->MapBuffer();
 
     buffer[0] = start;
     buffer[1] = end;
 
-    vbo.UnmapBuffer();
-    vbo.Disable();
+    vbo->UnmapBuffer();
+    vbo->Disable();
 
-    vao.Enable();
-    ibo.Enable();
+    vao->Enable();
+    ibo->Enable();
     GLCall(glDrawElements(GL_LINES, 2, GL_UNSIGNED_INT, NULL));
-    ibo.Disable();
-    vao.Disable();
+    ibo->Disable();
+    vao->Disable();
 
     lineShader->Disable();
   }

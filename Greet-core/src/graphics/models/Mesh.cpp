@@ -7,15 +7,15 @@
 namespace Greet {
 
   Mesh::Mesh(const std::vector<Vec3<float>>& vertices, const std::vector<uint>& indices)
-    : vao{}, ibo{(uint)(indices.size()*sizeof(uint)), BufferType::INDEX, BufferDrawType::STATIC}
   {
     m_drawMode = GL_TRIANGLES;
     m_vertexCount = vertices.size();
     m_indexCount = indices.size();
 
-    vao.Enable();
-    ibo.Enable();
-    ibo.UpdateData((void*)indices.data());
+    vao = VertexArray::CreateVertexArray();
+    ibo = Buffer::CreateBuffer((uint)(indices.size()*sizeof(uint)), BufferType::INDEX, BufferDrawType::STATIC);
+    ibo->Enable();
+    ibo->UpdateData((void*)indices.data());
 
     // Attributes 
     AddAttribute(MESH_VERTICES_LOCATION, vertices.data()); // vertices
@@ -24,8 +24,8 @@ namespace Greet {
     GLCall(glVertexAttrib4f(MESH_COLORS_LOCATION,1.0f,1.0f,1.0f,1.0f));
 
     // Unbind
-    vao.Disable();
-    ibo.Disable();
+    vao->Disable();
+    ibo->Disable();
   }
 
   Mesh::Mesh(const MeshData& data)
@@ -59,35 +59,17 @@ namespace Greet {
       GLCall(glPolygonMode(GL_FRONT_AND_BACK, GL_LINE));
     }
 
-    vao.Enable();
-    EnableAttributes();
-    ibo.Enable();
+    vao->Enable();
+    ibo->Enable();
   }
 
   void Mesh::Unbind() const
   {
-    ibo.Disable();
-    DisableAttributes();
-    vao.Disable();
+    ibo->Disable();
+    vao->Disable();
     GLCall(glEnable(GL_CULL_FACE));
     GLCall(glPolygonMode(GL_FRONT_AND_BACK, GL_FILL));
     GLCall(glFrontFace(GL_CCW));
-  }
-
-  void Mesh::EnableAttributes() const
-  {
-    for (auto it = m_vbos.begin();it != m_vbos.end(); it++)
-    {
-      GLCall(glEnableVertexAttribArray(it->first));
-    }	
-  }
-
-  void Mesh::DisableAttributes() const
-  {
-    for (auto it = m_vbos.begin();it != m_vbos.end(); it++)
-    {
-      GLCall(glDisableVertexAttribArray(it->first));
-    }
   }
 
   void Mesh::AddAttribute(uint location, const Vec3<float>* data)
@@ -115,18 +97,19 @@ namespace Greet {
     if (HasVBO(location))
       return;
 
-    vao.Enable();
-    ibo.Enable();
+    vao->Enable();
+    ibo->Enable();
 
-    Buffer b{m_vertexCount * typeSize, BufferType::ARRAY, BufferDrawType::STATIC};
-    b.Enable();
-    b.UpdateData(data);
+    Ref<Buffer> b = Buffer::CreateBuffer(m_vertexCount * typeSize, BufferType::ARRAY, BufferDrawType::STATIC);
+    b->Enable();
+    b->UpdateData(data);
 
+    GLCall(glEnableVertexAttribArray(location));
     GLCall(glVertexAttribPointer(location, typeCount, glType, normalized, 0, 0));
-    b.Disable();
+    b->Disable();
     m_vbos.emplace(location, std::move(b));
-    ibo.Disable();
-    vao.Disable();
+    ibo->Disable();
+    vao->Disable();
   }
 
   bool Mesh::HasVBO(uint location) const
@@ -142,15 +125,15 @@ namespace Greet {
 
   void Mesh::SetDefaultAttribute4f(uint location, const Vec4& data)
   {
-    vao.Enable();
+    vao->Enable();
     GLCall(glVertexAttrib4f(location,data.x,data.y,data.z,data.w));
-    vao.Disable();
+    vao->Disable();
   }
 
   void Mesh::SetDefaultAttribute3f(uint location, const Vec3<float>& data)
   {
-    vao.Enable();
+    vao->Enable();
     GLCall(glVertexAttrib3f(location,data.x,data.y,data.z));
-    vao.Disable();
+    vao->Disable();
   }
 }
