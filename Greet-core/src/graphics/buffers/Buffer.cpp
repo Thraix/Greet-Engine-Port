@@ -47,7 +47,7 @@ namespace Greet {
     GLCall(glBindBuffer((uint)type, 0));
   }
 
-  Ref<Buffer> Buffer::CreateBuffer(uint dataSize, BufferType type, BufferDrawType drawType)
+  Ref<Buffer> Buffer::Create(uint dataSize, BufferType type, BufferDrawType drawType)
   {
     return std::shared_ptr<Buffer>(new Buffer(dataSize, type, drawType));
   }

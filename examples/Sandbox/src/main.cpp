@@ -456,6 +456,13 @@ int main()
   system("pause");
 #endif
 
+  /*
+  float f[] = {0.0f, 0.0f, 1.0f};
+  Ref<VertexBuffer> buffer = VertexBuffer::Create(f, sizeof(f));
+  buffer->SetStructure({{{0, BufferAttributeType::VEC2}, {1, BufferAttributeType::FLOAT}}});
+  Ref<VertexArray> vao = VertexArray::Create();
+  vao->AddVertexBuffer(buffer);
+  */
   Core game;
   game.Start();
 }

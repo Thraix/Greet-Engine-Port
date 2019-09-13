@@ -17,19 +17,19 @@ namespace Greet {
     DYNAMIC = GL_DYNAMIC_DRAW
   };
 
-  class Buffer final
+  class Buffer
   {
-    private:
+    protected:
       uint id;
       uint dataSize;
       BufferType type;
       BufferDrawType drawType;
 
-    private:
+    protected:
       Buffer(uint dataSize, BufferType type, BufferDrawType drawType);
 
     public:
-      ~Buffer();
+      virtual ~Buffer();
       void UpdateData(const void* data) const;
       void UpdateData(const void* data, uint dataSize);
       void* MapBuffer() const;
@@ -41,6 +41,6 @@ namespace Greet {
       inline uint GetDataSize() const { return dataSize; }
 
     public:
-      static Ref<Buffer> CreateBuffer(uint dataSize, BufferType type, BufferDrawType drawType);
+      static Ref<Buffer> Create(uint dataSize, BufferType type, BufferDrawType drawType);
   };
 }

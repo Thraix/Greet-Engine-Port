@@ -16,9 +16,28 @@ namespace Greet {
     GLCall(glGenVertexArrays(1, &id));
     Enable();
   }
+
   VertexArray::~VertexArray()
   {
     glDeleteVertexArrays(1, &id);
+  }
+
+  void VertexArray::AddVertexBuffer(const Ref<VertexBuffer>& buffer)
+  {
+    const BufferStructure& structure = buffer->GetStructure();
+    for(auto&& attribute : structure)
+    {
+      GLCall(glEnableVertexAttribArray(attribute.location));
+      GLCall(glVertexAttribPointer(
+            attribute.location,
+            BufferAttributeToCount(attribute.type),
+            BufferAttributeToGLPrimitive(attribute.type),
+            attribute.normalize ? GL_TRUE : GL_FALSE,
+            structure.GetVertexSize(),
+            (const void*)attribute.offset
+            ));
+    }
+    buffers.push_back(buffer);
   }
 
   void VertexArray::Enable() const
@@ -31,7 +50,7 @@ namespace Greet {
     GLCall(glBindVertexArray(0));
   }
 
-  Ref<VertexArray> VertexArray::CreateVertexArray()
+  Ref<VertexArray> VertexArray::Create()
   {
     return std::shared_ptr<VertexArray>(new VertexArray());
   }

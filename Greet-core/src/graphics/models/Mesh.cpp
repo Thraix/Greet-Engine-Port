@@ -12,8 +12,8 @@ namespace Greet {
     m_vertexCount = vertices.size();
     m_indexCount = indices.size();
 
-    vao = VertexArray::CreateVertexArray();
-    ibo = Buffer::CreateBuffer((uint)(indices.size()*sizeof(uint)), BufferType::INDEX, BufferDrawType::STATIC);
+    vao = VertexArray::Create();
+    ibo = Buffer::Create((uint)(indices.size()*sizeof(uint)), BufferType::INDEX, BufferDrawType::STATIC);
     ibo->Enable();
     ibo->UpdateData((void*)indices.data());
 
@@ -100,7 +100,7 @@ namespace Greet {
     vao->Enable();
     ibo->Enable();
 
-    Ref<Buffer> b = Buffer::CreateBuffer(m_vertexCount * typeSize, BufferType::ARRAY, BufferDrawType::STATIC);
+    Ref<Buffer> b = Buffer::Create(m_vertexCount * typeSize, BufferType::ARRAY, BufferDrawType::STATIC);
     b->Enable();
     b->UpdateData(data);
 

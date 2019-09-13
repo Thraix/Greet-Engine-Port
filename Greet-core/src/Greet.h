@@ -41,6 +41,7 @@
 #include <graphics/buffers/BatchIndexBuffer.h>
 #include <graphics/buffers/Buffer.h>
 #include <graphics/buffers/VertexArray.h>
+#include <graphics/buffers/VertexBuffer.h>
 #include <graphics/cameras/Camera.h>
 #include <graphics/cameras/FPCamera.h>
 #include <graphics/cameras/TPCamera.h>

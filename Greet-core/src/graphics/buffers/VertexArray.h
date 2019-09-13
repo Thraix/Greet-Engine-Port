@@ -3,6 +3,7 @@
 #include <vector>
 #include <common/Types.h>
 #include <common/Memory.h>
+#include <graphics/buffers/VertexBuffer.h>
 
 namespace Greet {
 
@@ -15,19 +16,18 @@ namespace Greet {
   {
     private:
       uint id;
+      std::vector<Ref<VertexBuffer>> buffers;
     private:
       VertexArray();
     public:
       ~VertexArray();
 
-      VertexArray(VertexArray&&) = default;
-      VertexArray& operator=(VertexArray&&) = default;
-
       void Enable() const;
+      void AddVertexBuffer(const Ref<VertexBuffer>& buffer);
     public:
       static void Disable();
 
-      static Ref<VertexArray> CreateVertexArray();
+      static Ref<VertexArray> Create();
   };
 
 }

@@ -25,17 +25,14 @@ namespace vmc
 
 
     // For drawing lines...
-    vao = VertexArray::CreateVertexArray();
-    vbo = Buffer::CreateBuffer(2 * sizeof(Vec3<float>), BufferType::ARRAY, BufferDrawType::DYNAMIC);
+    vao = VertexArray::Create();
+    vbo = VertexBuffer::CreateDynamic(nullptr, 2 * sizeof(Vec3<float>));
     vbo->Enable();
-    vbo->UpdateData(nullptr);
+    vbo->SetStructure({{{0, BufferAttributeType::VEC3}}});
+    vao->AddVertexBuffer(vbo);
 
-    GLCall(glEnableVertexAttribArray(0));
-
-    GLCall(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vec3<float>), 0));
-
-    m_indices = new uint[2]{ 0,1 };
-    ibo = Buffer::CreateBuffer(2 * sizeof(uint), BufferType::INDEX, BufferDrawType::STATIC);
+    m_indices = new uint[2]{ 0, 1 };
+    ibo = Buffer::Create(2 * sizeof(uint), BufferType::INDEX, BufferDrawType::STATIC);
     ibo->Enable();
     ibo->UpdateData(m_indices);
     ibo->Disable();
