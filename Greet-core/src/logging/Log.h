@@ -2,8 +2,10 @@
 
 #include <logging/Logger.h>
 #include <logging/LogLevel.h>
+#include <string.h>
 
-#define ASSERT(x,...) if(!(x)) { Greet::Log::Error(__VA_ARGS__);abort();}
+#define __FILENAME__ (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)
+#define ASSERT(x,...) if(!(x)) { Greet::Log::Error("[",__FILENAME__, ":", __LINE__, "] " __VA_ARGS__);abort();}
 
 namespace Greet {
   /*
