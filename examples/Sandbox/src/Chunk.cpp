@@ -81,11 +81,11 @@ void RecalcColors(const Vec3<float>& v1, const Vec3<float>& v2, const Vec3<float
 
 void Chunk::CalcGridVertexOffset(MeshData* data)
 {
-  const std::vector<Vec3<float>>& vertices = data->GetVertices();
-  const std::vector<uint>& indices = data->GetIndices();
+  const Pointer<Vec3<float>>& vertices = data->GetVertices();
+  const Pointer<uint>& indices = data->GetIndices();
 
-  std::vector<byte> offsets = std::vector<byte>(4 * vertices.size());
-  for (int i = 0;i < indices.size();i+=3)
+  Pointer<byte> offsets(4 * vertices.Size());
+  for (int i = 0;i < indices.Size();i+=3)
   {
     Vec3<float> v1 = vertices[indices[i+1]] - vertices[indices[i]];
     Vec3<float> v2 = vertices[indices[i+2]] - vertices[indices[i]];
@@ -94,17 +94,17 @@ void Chunk::CalcGridVertexOffset(MeshData* data)
     offsets[indices[i]*4 + 2] = round(v2.x);
     offsets[indices[i]*4 + 3] = round(v2.z);
   }
-  data->AddAttribute(AttributeData(AttributeDefaults(4, 4, 4 * sizeof(byte), GL_BYTE,GL_FALSE), offsets));
+  data->AddAttribute({4, BufferAttributeType::BYTE4}, offsets);
 }
 
 void Chunk::RecalcGrid(MeshData& data)
 {
-  std::vector<uint> colors = std::vector<uint>(data.GetVertexCount());
-  std::vector<Vec3<float>>& vertices = data.GetVertices();
-  std::vector<uint>& indices = data.GetIndices();
-  Vec3<float>* normals = (Vec3<float>*)data.GetAttribute(ATTRIBUTE_NORMAL)->data.data();
+  Pointer<uint> colors(data.GetVertexCount());
+  Pointer<Vec3<float>>& vertices = data.GetVertices();
+  Pointer<uint>& indices = data.GetIndices();
+  Pointer<Vec3<float>> normals = data.GetAttribute(MESH_NORMALS_LOCATION)->second;
 
-  for (int i = 0;i < indices.size();i+=3)
+  for (int i = 0;i < indices.Size();i+=3)
   {
     RecalcPositions(vertices[indices[i]]);
   }
@@ -112,10 +112,10 @@ void Chunk::RecalcGrid(MeshData& data)
   RecalcPositions(vertices[MeshFactory::IndexGrid(CHUNK_WIDTH,CHUNK_HEIGHT-1,CHUNK_WIDTH,CHUNK_HEIGHT)]);
   index = MeshFactory::IndexGrid(0, CHUNK_HEIGHT, CHUNK_WIDTH, CHUNK_HEIGHT);
   RecalcPositions(vertices[index]);
-  for (int i = 0;i < indices.size();i += 3)
+  for (int i = 0;i < indices.Size();i += 3)
   {
     normals[indices[i]] = MeshFactory::CalculateNormal(vertices[indices[i]], vertices[indices[i + 1]], vertices[indices[i + 2]]);
     RecalcColors(vertices[indices[i]], vertices[indices[i+1]], vertices[indices[i+2]], &colors[indices[i]]);
   }
-  data.AddAttribute(AttributeData(ATTRIBUTE_COLOR, colors));
+  data.AddAttribute({MESH_COLORS_LOCATION, BufferAttributeType::UBYTE4}, colors);
 }

@@ -5,75 +5,47 @@
 #include <graphics/buffers/VertexBuffer.h>
 #include <vector>
 #include <functional>
+#include <common/Pointer.h>
 
 #define MESH_VERTICES_LOCATION	0
 #define MESH_TEXCOORDS_LOCATION 1
 #define MESH_COLORS_LOCATION	2 
 #define MESH_NORMALS_LOCATION	3
 
-#define ATTRIBUTE_COLOR		Greet::AttributeDefaults(MESH_COLORS_LOCATION, 4, sizeof(unsigned int), GL_UNSIGNED_BYTE,GL_TRUE)
-#define ATTRIBUTE_NORMAL	Greet::AttributeDefaults(MESH_NORMALS_LOCATION,3, sizeof(Greet::Vec3<float>) ,GL_FLOAT,GL_FALSE)
-#define ATTRIBUTE_TEXCOORD	Greet::AttributeDefaults(MESH_TEXCOORDS_LOCATION,2, sizeof(Greet::Vec2),GL_FLOAT,GL_FALSE)
-
 namespace Greet {
 
-  struct AttributeDefaults
-  {
-    uint location;
-    uint vertexValueSize;
-    uint memoryValueSize;
-    uint glType;
-    bool normalized;
-    AttributeDefaults(uint location, uint vertexValueSize, uint memoryValueSize, uint glType, bool normalized)
-      : location(location), vertexValueSize(vertexValueSize), memoryValueSize(memoryValueSize), glType(glType), normalized(normalized)
-    {
-    }
-
-  };
-
-  struct AttributeData
-  {
-    public:
-      uint location;
-      uint vertexValueSize;
-      uint memoryValueSize;
-      uint glType;
-      bool normalized;
-      std::vector<char> data;
-    public:
-      template <typename T>
-      AttributeData(AttributeDefaults defaults, const std::vector<T>& data) 
-      : location(defaults.location), vertexValueSize(defaults.vertexValueSize), 
-      memoryValueSize(defaults.memoryValueSize), glType(defaults.glType), 
-      normalized(defaults.normalized), data{(char*)data.data(), (char*)data.data() + data.size() * sizeof(T)}
-    {
-    }
-
-    public:
-      virtual ~AttributeData() {}
-  };
-
-  class MeshData
+  class MeshData final
   {
     friend class Mesh;
     private:
-      std::vector<Vec3<float>> m_vertices;
-      std::vector<uint> m_indices;
-      std::vector<AttributeData> m_data;
+      Pointer<Vec3<float>> m_vertices;
+      Pointer<uint> m_indices;
+      std::vector<std::pair<BufferAttribute, Pointer<char>>> m_data;
     public:
-      MeshData(const std::vector<Vec3<float>>& vertices, const std::vector<uint>& indices);
-      MeshData(std::vector<Vec3<float>>&& vertices, std::vector<uint>&& indices);
-      virtual ~MeshData();
-      void AddAttribute(AttributeData&& data);
-      const AttributeData* GetAttribute(AttributeDefaults defaults) const;
-      AttributeData* RemoveAttribute(AttributeDefaults defaults);
+      MeshData(const Pointer<Vec3<float>>& vertices, const Pointer<uint>& indices);
+      ~MeshData() {}
 
-      const std::vector<Vec3<float>>& GetVertices() const { return m_vertices; }
-      const std::vector<uint>& GetIndices() const { return m_indices; }
-      std::vector<Vec3<float>>& GetVertices() { return m_vertices; }
-      std::vector<uint>& GetIndices() { return m_indices; }
-      uint GetVertexCount() const { return m_vertices.size(); }
-      uint GetIndexCount() const { return m_indices.size(); }
+      void AddAttribute(const BufferAttribute& attribute, const Pointer<char>& data)
+      {
+        if(data.Size() / attribute.size != m_vertices.Size())
+        {
+          Log::Error("Attribute length doesn't match vertices length");
+          Log::Error("Attribute Length: ", data.Size() / attribute.size);
+          Log::Error("Vertices Length:  ", m_vertices.Size());
+          ASSERT(false, "");
+        }
+        else
+          m_data.push_back({attribute, data});
+      }
+      const std::pair<BufferAttribute, Pointer<char>>* GetAttribute(int location) const;
+      std::pair<BufferAttribute, Pointer<char>>* RemoveAttribute(int location);
+
+      const Pointer<Vec3<float>>& GetVertices() const { return m_vertices; }
+      const Pointer<uint>& GetIndices() const { return m_indices; }
+      Pointer<Vec3<float>>& GetVertices() { return m_vertices; }
+      Pointer<uint>& GetIndices() { return m_indices; }
+      uint GetVertexCount() const { return m_vertices.Size(); }
+      uint GetIndexCount() const { return m_indices.Size(); }
 
       void GenerateNormals();
       MeshData* LowPolify();

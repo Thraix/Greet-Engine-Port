@@ -13,12 +13,12 @@ namespace Greet
 
   Ref<VertexBuffer> VertexBuffer::CreateDynamic(const void* data, uint size)
   {
-    return std::shared_ptr<VertexBuffer>(new VertexBuffer(data, size, BufferDrawType::DYNAMIC));
+    return Create(data, size, BufferDrawType::DYNAMIC);
   }
 
   Ref<VertexBuffer> VertexBuffer::CreateStatic(const void* data, uint size)
   {
-    return std::shared_ptr<VertexBuffer>(new VertexBuffer(data, size, BufferDrawType::STATIC));
+    return Create(data, size, BufferDrawType::STATIC);
   }
 
   Ref<VertexBuffer> VertexBuffer::Create(const void* data, uint size, BufferDrawType type)

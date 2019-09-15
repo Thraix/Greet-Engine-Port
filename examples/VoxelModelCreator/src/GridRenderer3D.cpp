@@ -8,7 +8,7 @@ namespace vmc
     : Renderer3D(), lineShader(Shader::FromFile("res/shaders/simple.shader"))
   {
     MeshData meshdata = MeshFactory::Cube2(0.5f, 0.5f, 0.5f, 1, 1, 1);
-    std::vector<Vec2> texCoords(6 * 4);
+    Pointer<Vec2> texCoords(6 * 4);
     for (int i = 0;i < 6;i++)
     {
       texCoords[i * 4 + 0] = Vec2(0, 0);
@@ -17,7 +17,7 @@ namespace vmc
       texCoords[i * 4 + 3] = Vec2(0, 1);
     }
 
-    meshdata.AddAttribute(AttributeData(ATTRIBUTE_TEXCOORD, texCoords));
+    meshdata.AddAttribute({MESH_TEXCOORDS_LOCATION, BufferAttributeType::VEC2}, texCoords);
     mesh = new Mesh(meshdata);
     material = new Material(Shader::FromFile("res/shaders/voxel.shader"));
     //material->AddUniform<uint>(Uniform1ui("color"));

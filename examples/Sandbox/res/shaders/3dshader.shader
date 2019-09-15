@@ -24,14 +24,13 @@ const float gradient = 1.5;
 
 void main()
 {
-
 	vec4 worldPosition = transformationMatrix * vec4(position, 1.0f);
 	vec4 positionRelativeToCamera = viewMatrix * worldPosition;
 	gl_Position = projectionMatrix * positionRelativeToCamera;
 	vert_color = mat_color * vec4(color.b, color.g, color.r, color.a);
 
 	vert_texCoord = texCoord;
-	surfaceNormal = (transformationMatrix * vec4(normal, 0.0)).xyz;
+	surfaceNormal = mat3(transformationMatrix) * normal;
 	toLightVector = light_position - worldPosition.xyz;
 	toCameraVector = (inverse(viewMatrix) * vec4(0, 0, 0, 1)).xyz - worldPosition.xyz;
 
@@ -64,7 +63,7 @@ uniform float ambient = 0.3;
 
 void main()
 {
-	out_color = vec4(1,1,1,1);
+	out_color = vert_color;
 	if (hasTexture > 0.5)
 	{
 		out_color *= texture(textureSampler, vert_texCoord);

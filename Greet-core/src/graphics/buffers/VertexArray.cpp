@@ -4,12 +4,6 @@
 
 namespace Greet {
 
-  void VertexArrayDeleter::operator()(uint* id)
-  {
-    glDeleteVertexArrays(1, id);
-    delete id;
-  }
-
   VertexArray::VertexArray()
     : id{0}
   {

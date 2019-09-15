@@ -74,12 +74,12 @@ namespace Greet
     public:
       template<typename S>
       friend class Pointer;
-      uint* refCount;
 
     private:
       // Element count
       uint size;
       T* data;
+      uint* refCount;
 
     public:
       Pointer(uint size)
@@ -103,24 +103,36 @@ namespace Greet
       Pointer(const std::vector<T>& vec)
         : size{vec.size()}, data{(T*)malloc(size * sizeof(T))}, refCount{new uint{1}}
       {
-        memcpy(data, vec.data(), size * sizeof(T));
+          memcpy(data, vec.data(), size * sizeof(T));
+        }
+
+      Pointer(Pointer&& pointer)
+        : size{pointer.size}, data{(T*)pointer.data}, refCount{pointer.refCount}
+      {
+        size = pointer.size;
+        ++*refCount;
       }
 
       template <typename S>
       Pointer(Pointer<S>&& pointer)
       : size{pointer.size}, data{(T*)pointer.data}, refCount{pointer.refCount}
       {
-        ASSERT(pointer.data, "Moving invalid Pointer");
         ASSERT((pointer.size * sizeof(S)) % sizeof(T) == 0, "Pointer doesn't match new type");
         size = pointer.size * sizeof(S) / sizeof(T);
-        pointer.Invalidate();
+        ++*refCount;
+      }
+
+      Pointer(const Pointer& pointer)
+        : size{pointer.size}, data{(T*)pointer.data}, refCount{pointer.refCount}
+      {
+        size = pointer.size;
+        ++*refCount;
       }
 
       template <typename S>
       Pointer(const Pointer<S>& pointer)
       : size{pointer.size}, data{(T*)pointer.data}, refCount{pointer.refCount}
       {
-        ASSERT(pointer.data, "Copying invalid Pointer", __LINE__);
         ASSERT((pointer.size * sizeof(S)) % sizeof(T) == 0, "Pointer doesn't match new type");
         size = pointer.size * sizeof(S) / sizeof(T);
         ++*refCount;
@@ -128,36 +140,47 @@ namespace Greet
 
       ~Pointer()
       {
-        if(refCount)
+        --*refCount;
+        if(*refCount == 0)
         {
-          --*refCount;
-          if(*refCount == 0)
-          {
-            free(data);
-            delete refCount;
-          }
+          free(data);
+          delete refCount;
         }
       }
 
       template <typename S>
       Pointer& operator=(Pointer<S>&& pointer)
       {
-        ASSERT(pointer.data, "Moving invalid Pointer");
         ASSERT((pointer.size * sizeof(S)) % sizeof(T) == 0, "Pointer doesn't match new type");
         size = pointer.size * sizeof(S) / sizeof(T);
+        data = (T*)pointer.data;
+        refCount = pointer.refCount;
+        ++*refCount;
+        return *this;
+      }
+
+      Pointer& operator=(Pointer&& pointer)
+      {
         size = pointer.size;
         data = (T*)pointer.data;
         refCount = pointer.refCount;
-        pointer.Invalidate();
+        ++*refCount;
         return *this;
       }
 
       template <typename S>
       Pointer& operator=(const Pointer<S>& pointer)
       {
-        ASSERT(pointer.data, "Copying invalid Pointer");
         ASSERT((pointer.size * sizeof(S)) % sizeof(T) == 0, "Pointer doesn't match new type");
         size = pointer.size * sizeof(S) / sizeof(T);
+        data = (T*)pointer.data;
+        refCount = pointer.refCount;
+        ++*refCount;
+        return *this;
+      }
+
+      Pointer& operator=(const Pointer& pointer)
+      {
         size = pointer.size;
         data = (T*)pointer.data;
         refCount = pointer.refCount;
@@ -167,14 +190,14 @@ namespace Greet
 
       T& At(uint i)
       {
-        ASSERT(data, "Indexing invalid Pointer");
         ASSERT(i < size, "Index out of bound in Pointer");
         return *(data + i);
       }
 
       const T& At(uint i) const
       {
-        return At(i);
+        ASSERT(i < size, "Index out of bound in Pointer");
+        return *(data + i);
       }
 
       T& operator[](uint i)
@@ -187,22 +210,22 @@ namespace Greet
         return At(i);
       }
 
-      uint Size()
+      uint Size() const
       {
         return size;
       }
 
-      uint PointerSize()
+      uint ByteSize() const
       {
         return size * sizeof(T);
       }
 
-      Pointer Copy(const Pointer& pointer)
+      Pointer Copy(const Pointer& pointer) const
       {
         return Pointer(pointer.data, pointer.size);
       }
 
-      T* Data()
+      T* Data() const
       {
         return (T*)data;
       }

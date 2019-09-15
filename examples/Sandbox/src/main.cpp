@@ -112,13 +112,13 @@ class Core : public App
 
         uint gridWidth = 99;
         uint gridLength = 99;
-#if 1 
+#if 1
         std::vector<float> noise = Noise::GenNoise(gridWidth+1, gridWidth + 1,5,8, 8,0.5f);
         MeshData gridMesh = MeshFactory::LowPolyGrid(0, 0, 0, gridWidth+1, gridLength+1, gridWidth, gridLength, noise,1);
         RecalcGrid(gridMesh, gridWidth, gridLength);
         terrain = new EntityModel(new Mesh(gridMesh), terrainMaterial, Vec3<float>(0, -15, 0), Vec3<float>(1.0f, 1.0f, 1.0f), Vec3<float>(0.0f, 0.0f, 0.0f));
-        gridMesh.RemoveAttribute(ATTRIBUTE_NORMAL);
-        gridMesh.RemoveAttribute(ATTRIBUTE_COLOR);
+        gridMesh.RemoveAttribute(MESH_NORMALS_LOCATION);
+        gridMesh.RemoveAttribute(MESH_COLORS_LOCATION);
         CalcGridVertexOffset(gridMesh);
 
         water = new EntityModel(new Mesh(gridMesh), waterMaterial, Vec3<float>(0, -15, 0), Vec3<float>(1.0f, 1.0f, 1.0f), Vec3<float>(0.0f, 0.0f, 0.0f));
@@ -133,6 +133,7 @@ class Core : public App
       cube = new EntityModel(new Mesh(cubeMesh), modelMaterial, Vec3<float>(1,0,0), Vec3<float>(1, 1, 1), Vec3<float>(0, 0, 0));
 
       MeshData sphereMeshData = MeshFactory::Sphere(Vec3<float>(0,0,0), 0.5f, 20, 20);
+      sphereMeshData.GenerateNormals();
       //sphereMeshData->LowPolify();
       Mesh* sphereMesh = new Mesh(sphereMeshData);
       //sphereMesh->SetEnableWireframe(true);
@@ -148,11 +149,10 @@ class Core : public App
       stall = new EntityModel(stallMesh, stallMaterial, Vec3<float>(0.0f, 0.0f, -25), Vec3(3.0f, 3.0f, 3.0f), Vec3(0.0f, 0.0f, 0.0f));
 
       // MEMORY LEAK WITH MESHDATA
+      //MeshData data = MeshData::ReadFromFile("res/objs/dragon.gobj");
       MeshData data = OBJUtils::LoadObj("res/objs/dragon.obj");
-      std::vector<Vec3<float>> normals = std::vector<Vec3<float>>(data.GetVertexCount());
-      MeshFactory::CalculateNormals(data.GetVertices(), data.GetIndices(), normals);
-      data.AddAttribute(AttributeData(ATTRIBUTE_NORMAL, normals));
-      data.LowPolify();
+      data = *data.LowPolify();
+      data.GenerateNormals();
       data.WriteToFile("res/objs/dragon.gobj");
       Mesh* dragonMesh = new Mesh(data);
       dragon = new EntityModel(dragonMesh, flatMaterial, Vec3<float>(20.0f, 0.0f, -25), Vec3(1.0f, 1.0f, 1.0f), Vec3(0.0f, 0.0f, 0.0f));
@@ -185,7 +185,7 @@ class Core : public App
 
       renderer3d->Submit(new Portal({1.0f,1.0f,1.0f}));
       renderer3d->Submit(stall);
-      //renderer3d->Submit(dragon);
+      renderer3d->Submit(dragon);
       renderer3d->Submit(terrain);
       renderer3d->Submit(sphere);
       renderer3d->Submit(cube);
@@ -265,12 +265,12 @@ class Core : public App
 
     void CalcGridVertexOffset(MeshData& data)
     {
-      std::vector<Vec3<float>>& vertices = data.GetVertices();
+      Pointer<Vec3<float>>& vertices = data.GetVertices();
       uint vertexCount = data.GetVertexCount();
       uint indexCount = data.GetIndexCount();
-      std::vector<uint>& indices = data.GetIndices();
+      Pointer<uint>& indices = data.GetIndices();
 
-      std::vector<byte> offsets = std::vector<byte>(4 * vertexCount);
+      Pointer<byte> offsets(4 * vertexCount);
       for (int i = 0;i < indexCount;i+=3)
       {
         Vec3<float> v1 = vertices[indices[i+1]] - vertices[indices[i]];
@@ -280,16 +280,16 @@ class Core : public App
         offsets[indices[i]*4 + 2] = round(v2.x);
         offsets[indices[i]*4 + 3] = round(v2.z);
       }
-      data.AddAttribute(AttributeData(AttributeDefaults(4, 4, 4 * sizeof(byte), GL_BYTE,GL_FALSE), offsets));
+      data.AddAttribute({4, BufferAttributeType::BYTE4}, offsets);
     }
 
     void RecalcGrid(MeshData& data, uint gridWidth, uint gridLength)
     {
-      std::vector<uint> colors = std::vector<uint>(data.GetVertexCount());
-      std::vector<Vec3<float>>& vertices = data.GetVertices();
+      Pointer<uint> colors(data.GetVertexCount());
+      Pointer<Vec3<float>>& vertices = data.GetVertices();
       uint indexCount = data.GetIndexCount();
-      std::vector<uint>& indices = data.GetIndices();
-      Vec3<float>* normals = (Vec3<float>*)data.GetAttribute(ATTRIBUTE_NORMAL)->data.data();
+      Pointer<uint>& indices = data.GetIndices();
+      Pointer<Vec3<float>> normals = data.GetAttribute(MESH_NORMALS_LOCATION)->second;
       for (int i = 0;i < indexCount;i+=3)
       {
         RecalcPositions(vertices[indices[i]]);
@@ -303,7 +303,7 @@ class Core : public App
         normals[indices[i]] = MeshFactory::CalculateNormal(vertices[indices[i]], vertices[indices[i + 1]], vertices[indices[i + 2]]);
         RecalcColors(vertices[indices[i]], vertices[indices[i+1]], vertices[indices[i+2]], &colors[indices[i]]);
       }
-      data.AddAttribute(AttributeData(ATTRIBUTE_COLOR, colors));
+      data.AddAttribute({MESH_COLORS_LOCATION, BufferAttributeType::UBYTE4, true}, colors);
     }
 
     float Random()
@@ -357,7 +357,7 @@ class Core : public App
           velocityNeg.y = 0;
         }
         if (e.GetButton() == GLFW_KEY_SPACE)
-        { 
+        {
           velocityPos.y = 0;
         }
       }
@@ -438,31 +438,8 @@ class Core : public App
 };
 #endif
 
-#include <fstream>
 int main()
 {
-#if 0
-  JSONObject obj = JSONLoader::LoadJSON("test.json");
-  Log::Info("object1",obj.HasKey("object1") ? "true" : "false");
-  Log::Info("object1.string1", obj.GetObject("object1").GetValue("string1"));
-  Log::Info("object1.float", obj.GetObject("object1").GetValueAsFloat("float"));
-  Log::Info("object1.null", obj.GetObject("object1").IsNull("null") ? "true" : "false");
-  Log::Info("object1.true", obj.GetObject("object1").GetValueAsBool("true") ? "true" : "false");
-  Log::Info("object1.false", obj.GetObject("object1").GetValueAsBool("false") ? "true" : "false");
-  Log::Info("string2", obj.GetValueAsFloat("string2"));
-  std::ofstream file("save.txt");
-  std::cout << obj << std::endl;
-  file.close();
-  system("pause");
-#endif
-
-  /*
-  float f[] = {0.0f, 0.0f, 1.0f};
-  Ref<VertexBuffer> buffer = VertexBuffer::Create(f, sizeof(f));
-  buffer->SetStructure({{{0, BufferAttributeType::VEC2}, {1, BufferAttributeType::FLOAT}}});
-  Ref<VertexArray> vao = VertexArray::Create();
-  vao->AddVertexBuffer(buffer);
-  */
   Core game;
   game.Start();
 }

@@ -28,7 +28,7 @@ namespace Greet {
       bool wireframe = false;
 
     public:
-      Mesh(const std::vector<Vec3<float>>& vertices, const std::vector<uint>& indices);
+      Mesh(const Pointer<Vec3<float>>& vertices, const Pointer<uint>& indices);
       Mesh(const MeshData& data);
 
       void Render() const;
@@ -46,12 +46,7 @@ namespace Greet {
       inline void SetEnableWireframe(bool _wireframe) { wireframe = _wireframe; }
       inline bool IsEnableWireframe() const { return wireframe; }
 
-      void AddAttribute(uint location, const Vec3<float>* data);
-      void AddAttribute(uint location, const Vec2* data);
-      //void addAttribute(uint location, uint attributeSize, const float* data);
-      void AddAttribute(uint location, uint attributeSize, const uint* data);
-      void AddAttribute(const AttributeData& attr);
-      void AddAttribute(uint location, const void* data, uint dataSize, uint typeCount, uint glType, bool normalized);
+      void AddAttribute(const BufferAttribute& attribute, const Pointer<char>& data);
 
       void SetDefaultAttribute4f(uint location, const Vec4& data);
       void SetDefaultAttribute3f(uint location, const Vec3<float>& data);

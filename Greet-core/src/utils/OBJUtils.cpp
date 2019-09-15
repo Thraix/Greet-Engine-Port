@@ -61,7 +61,7 @@ namespace Greet {
         dataLine = StringUtils::split_string(line, " ");
         for(int i = 1; i<dataLine.size();i++)
         {
-          if(dataLine[i] == "")
+          if(dataLine[i] == "" || dataLine[i] == "\r")
             continue;
           auto it = verticesMap.find(dataLine[i]);
           if(it != verticesMap.end())
@@ -102,10 +102,10 @@ namespace Greet {
 
     MeshData mesh{vertexPos, indices};
     if(vertexTexCoords.size() > 0)
-      mesh.AddAttribute(AttributeData(ATTRIBUTE_TEXCOORD, vertexTexCoords));
+      mesh.AddAttribute({MESH_TEXCOORDS_LOCATION, BufferAttributeType::VEC2}, Pointer<Vec2>{vertexTexCoords});
 
     if(vertexNormals.size() > 0)
-      mesh.AddAttribute(AttributeData(ATTRIBUTE_NORMAL, vertexNormals));
+      mesh.AddAttribute({MESH_NORMALS_LOCATION, BufferAttributeType::VEC3}, Pointer<Vec3<float>>{vertexNormals});
 
     return mesh;
   }

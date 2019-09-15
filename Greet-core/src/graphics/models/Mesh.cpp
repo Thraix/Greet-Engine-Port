@@ -6,19 +6,19 @@
 
 namespace Greet {
 
-  Mesh::Mesh(const std::vector<Vec3<float>>& vertices, const std::vector<uint>& indices)
+  Mesh::Mesh(const Pointer<Vec3<float>>& vertices, const Pointer<uint>& indices)
   {
     m_drawMode = GL_TRIANGLES;
-    m_vertexCount = vertices.size();
-    m_indexCount = indices.size();
+    m_vertexCount = vertices.Size();
+    m_indexCount = indices.Size();
 
     vao = VertexArray::Create();
-    ibo = Buffer::Create((uint)(indices.size()*sizeof(uint)), BufferType::INDEX, BufferDrawType::STATIC);
+    ibo = Buffer::Create((uint)(indices.Size()*sizeof(uint)), BufferType::INDEX, BufferDrawType::STATIC);
     ibo->Enable();
-    ibo->UpdateData((void*)indices.data());
+    ibo->UpdateData((void*)indices.Data());
 
     // Attributes 
-    AddAttribute(MESH_VERTICES_LOCATION, vertices.data()); // vertices
+    AddAttribute({MESH_VERTICES_LOCATION, BufferAttributeType::VEC3}, vertices); // vertices
 
     // Set default color to white
     GLCall(glVertexAttrib4f(MESH_COLORS_LOCATION,1.0f,1.0f,1.0f,1.0f));
@@ -31,10 +31,12 @@ namespace Greet {
   Mesh::Mesh(const MeshData& data)
     : Mesh(data.GetVertices(), data.GetIndices())
   {
-    for (uint i = 0;i < data.m_data.size();i++)
+    vao->Enable();
+    for (auto&& [attribute, bufferData] : data.m_data)
     {
-      AddAttribute(data.m_data[i]);
+      AddAttribute(attribute, bufferData);
     }
+    vao->Disable();
   }
 
   void Mesh::Render() const
@@ -72,44 +74,11 @@ namespace Greet {
     GLCall(glFrontFace(GL_CCW));
   }
 
-  void Mesh::AddAttribute(uint location, const Vec3<float>* data)
+  void Mesh::AddAttribute(const BufferAttribute& attribute, const Pointer<char>& data)
   {
-    AddAttribute(location, (void*)data, sizeof(Vec3<float>), 3, GL_FLOAT, false);
-  }
-
-  void Mesh::AddAttribute(uint location, const Vec2* data)
-  {
-    AddAttribute(location, (void*)data, sizeof(Vec2), 2, GL_FLOAT, false);
-  }
-
-  void Mesh::AddAttribute(uint location, uint attributeSize, const uint* data)
-  {
-    AddAttribute(location, (void*)data, sizeof(byte), attributeSize, GL_UNSIGNED_BYTE, true);
-  }
-
-  void Mesh::AddAttribute(const AttributeData& attr)
-  {
-    AddAttribute(attr.location, attr.data.data(), attr.memoryValueSize, attr.vertexValueSize, attr.glType, attr.normalized);
-  }
-
-  void Mesh::AddAttribute(uint location, const void* data, uint typeSize, uint typeCount, uint glType, bool normalized)
-  {
-    if (HasVBO(location))
-      return;
-
-    vao->Enable();
-    ibo->Enable();
-
-    Ref<Buffer> b = Buffer::Create(m_vertexCount * typeSize, BufferType::ARRAY, BufferDrawType::STATIC);
-    b->Enable();
-    b->UpdateData(data);
-
-    GLCall(glEnableVertexAttribArray(location));
-    GLCall(glVertexAttribPointer(location, typeCount, glType, normalized, 0, 0));
-    b->Disable();
-    m_vbos.emplace(location, std::move(b));
-    ibo->Disable();
-    vao->Disable();
+    Ref<VertexBuffer> buffer = VertexBuffer::Create(data.Data(), data.ByteSize());
+    buffer->SetStructure({attribute});
+    vao->AddVertexBuffer(buffer);
   }
 
   bool Mesh::HasVBO(uint location) const

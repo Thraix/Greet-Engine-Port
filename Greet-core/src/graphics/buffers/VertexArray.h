@@ -7,11 +7,6 @@
 
 namespace Greet {
 
-  struct VertexArrayDeleter
-  {
-    void operator()(uint* id);
-  };
-
   class VertexArray final 
   {
     private:

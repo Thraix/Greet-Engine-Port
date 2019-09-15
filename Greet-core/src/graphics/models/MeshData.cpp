@@ -7,12 +7,12 @@
 
 namespace Greet {
 
-  MeshData::MeshData(const std::vector<Vec3<float>>& vertices, const std::vector<uint>& indices)
+  MeshData::MeshData(const Pointer<Vec3<float>>& vertices, const Pointer<uint>& indices)
     : m_vertices(vertices), m_indices(indices)
   {
     for(auto it = m_indices.begin(); it != m_indices.end(); ++it)
     {
-      if(*it >= m_vertices.size())
+      if(*it >= m_vertices.Size())
       {
         Log::Error("Index out of bound in MeshData creation");
         *it = 0;
@@ -20,41 +20,11 @@ namespace Greet {
     }
   }
 
-  MeshData::MeshData(std::vector<Vec3<float>>&& vertices, std::vector<uint>&& indices)
-    : m_vertices{std::move(vertices)},m_indices{std::move(indices)}
-  {
-    for(auto it = m_indices.begin(); it != m_indices.end(); ++it)
-    {
-      if(*it >= m_vertices.size())
-      {
-        Log::Error("Index out of bound in MeshData creation");
-        *it = 0;
-      }
-    }
-  }
-
-  MeshData::~MeshData()
-  {
-  }
-
-  void MeshData::AddAttribute(AttributeData&& data)
-  {
-    if(data.data.size() / data.memoryValueSize != m_vertices.size())
-    {
-      Log::Error("Attribute length doesn't match vertices length");
-      Log::Error("Attribute Length: ", data.data.size() / data.memoryValueSize);
-      Log::Error("Vertices Length:  ", m_vertices.size());
-      ASSERT(false, "");
-    }
-    else
-      m_data.push_back(data);
-  }
-
-  const AttributeData* MeshData::GetAttribute(AttributeDefaults defaults) const
+  const std::pair<BufferAttribute, Pointer<char>>* MeshData::GetAttribute(int location) const
   {
     for (auto it = m_data.begin(); it != m_data.end(); it++)
     {
-      if ((*it).location == defaults.location)
+      if ((*it).first.location == location)
       {
         return &*it;
       }
@@ -62,11 +32,11 @@ namespace Greet {
     return nullptr;
   }
 
-  AttributeData* MeshData::RemoveAttribute(AttributeDefaults defaults)
+  std::pair<BufferAttribute, Pointer<char>>* MeshData::RemoveAttribute(int location)
   {
     for (auto it = m_data.begin(); it != m_data.end(); it++)
     {
-      if ((*it).location == defaults.location)
+      if ((*it).first.location == location)
       {
         m_data.erase(it);
         return &*it;
@@ -77,9 +47,8 @@ namespace Greet {
 
   void MeshData::GenerateNormals()
   {
-    std::vector<Vec3<float>> normals(m_vertices.size());
-    MeshFactory::CalculateNormals(m_vertices, m_indices, normals);
-    AddAttribute(AttributeData(ATTRIBUTE_NORMAL, normals));
+    Pointer<Vec3<float>> normals = MeshFactory::CalculateNormals(m_vertices, m_indices);
+    AddAttribute({MESH_NORMALS_LOCATION, BufferAttributeType::VEC3}, normals);
   }
 
   MeshData* MeshData::LowPolify()
@@ -192,24 +161,22 @@ namespace Greet {
     // Write the different data of the mesh
     for(auto it = m_data.begin();it != m_data.end(); ++it)
     {
-      fout.write((char*)&(*it).location,sizeof(uint));
-      fout.write((char*)&(*it).vertexValueSize,sizeof(uint));
-      fout.write((char*)&(*it).memoryValueSize,sizeof(uint));
-      fout.write((char*)&(*it).glType,sizeof(uint));
-      fout.write((char*)&(*it).normalized,sizeof(bool));
+      fout.write((char*)&(*it).first.location,sizeof(uint));
+      fout.write((char*)&(*it).first.type,sizeof(uint));
+      fout.write((char*)&(*it).first.normalize,sizeof(bool));
     }
 
     // Write all vertex data.
-    fout.write((char*)m_vertices.data(), vertexCount * sizeof(Vec3<float>));
+    fout.write((char*)m_vertices.Data(), vertexCount * sizeof(Vec3<float>));
 
     // Write index data.
-    fout.write((char*)m_indices.data(), indexCount * sizeof(uint)); 
+    fout.write((char*)m_indices.Data(), indexCount * sizeof(uint)); 
 
 
     // Write all attribute data
     for(auto it = m_data.begin();it != m_data.end(); ++it)
     {
-      fout.write((char*)(*it).data.data(), (*it).memoryValueSize * vertexCount);
+      fout.write((char*)(*it).second.Data(), BufferAttributeToByteSize((*it).first.type) * vertexCount);
     }
     fout.close();
   }
@@ -267,7 +234,7 @@ namespace Greet {
     fin.read((char*)&attributeCount,sizeof(size_t));
 
     // Check if the file is big enough to contain attribute parameters.
-    int attribLength = (sizeof(uint) * 4 + sizeof(bool));
+    int attribLength = (sizeof(uint) * 2 + sizeof(bool));
     int attribsLength = attributeCount * attribLength; 
 
     // Remove attribLength from fileSize to easier check sizes later.
@@ -279,7 +246,7 @@ namespace Greet {
       return MeshFactory::Cube(0,0,0,1,1,1);
     }
 
-    std::vector<AttributeDefaults> attributeParameters;
+    std::vector<BufferAttribute> attributeParameters;
 
     if(attribLength > 1024)
     {
@@ -293,21 +260,19 @@ namespace Greet {
     {
       // Read uints
       uint location = ((uint*)pointer)[0];
-      uint vertexValueSize = ((uint*)pointer)[1];
-      uint memoryValueSize = ((uint*)pointer)[2];
-      uint glType = ((uint*)pointer)[3];
+      uint bufferType = ((uint*)pointer)[1];
 
       // Move pointer
       pointer += sizeof(uint)*4;
 
       // Read bool
-      bool normalized = ((bool*)buffer)[0];
+      bool normalize = ((bool*)buffer)[0];
 
       // Move pointer
       pointer += sizeof(bool);
 
-      attributeParameters.push_back(AttributeDefaults(location,vertexValueSize, memoryValueSize,glType,normalized));
-      fileSize -= memoryValueSize * vertexCount;
+      attributeParameters.push_back({location, (BufferAttributeType)bufferType, normalize});
+      fileSize -= BufferAttributeToByteSize((BufferAttributeType)bufferType) * vertexCount;
       if(fileSize < 0)
       {
         Log::Error("Could not read MESH file, file is too small to contain attribute data");
@@ -330,9 +295,10 @@ namespace Greet {
     // Read attribute data
     for(auto it = attributeParameters.begin();it!=attributeParameters.end();++it)
     {
-      std::vector<char> data = std::vector<char>(it->memoryValueSize * vertexCount);
-      fin.read(data.data(),it->memoryValueSize * vertexCount);
-      meshData.AddAttribute(AttributeData(*it, data));
+      uint memSize = BufferAttributeToByteSize(it->type);
+      Pointer<char> data(memSize * vertexCount);
+      fin.read(data.Data(), memSize * vertexCount);
+      meshData.AddAttribute(*it, data);
     }
 
     fin.close();
