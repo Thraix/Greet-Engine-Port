@@ -1,6 +1,7 @@
 #include "Frame.h"
 
 #include <graphics/gui/GUIUtils.h>
+#include <internal/GreetGL.h>
 #include <utils/Utils.h>
 #include <utils/AABBUtils.h>
 

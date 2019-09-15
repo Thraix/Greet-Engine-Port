@@ -1,10 +1,13 @@
 #include "Shader.h"
+
 #include <graphics/shaders/ShaderFactory.h>
+#include <internal/GreetGL.h>
 #include <utils/ErrorHandle.h>
 #include <utils/FileUtils.h>
+#include <utils/HotSwapping.h>
+
 #include <fstream>
 #include <sstream>
-#include <utils/HotSwapping.h>
 
 namespace Greet {
 

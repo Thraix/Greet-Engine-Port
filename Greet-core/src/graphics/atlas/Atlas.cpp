@@ -1,5 +1,7 @@
 #include "Atlas.h"
 
+#include <internal/GreetGL.h>
+
 namespace Greet {
 
   Atlas::Atlas(uint atlasSize, uint textureSize)
@@ -15,7 +17,7 @@ namespace Greet {
     occupied.resize(m_textures);
     std::fill(occupied.begin(), occupied.end(), false);
 
-    BYTE* bits = new BYTE[bitCount];
+    byte* bits = new byte[bitCount];
     for (uint i = 0; i < bitCount; i+=4)
     {
       bits[i+FI_RGBA_RED  ]	 = 255;
@@ -32,7 +34,7 @@ namespace Greet {
   {
   }
 
-  void Atlas::GenTexture(BYTE* bits)
+  void Atlas::GenTexture(byte* bits)
   {
     GLCall(glBindTexture(GL_TEXTURE_2D, *texId));
     GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST));
@@ -60,7 +62,7 @@ namespace Greet {
     return success;
   }
 
-  bool Atlas::AddTexture(const std::vector<BYTE>& bits, const std::string& name)
+  bool Atlas::AddTexture(const std::vector<byte>& bits, const std::string& name)
   {
     uint textures = m_width / m_textureSize;
     if (textureMap.size() >= textures*textures)

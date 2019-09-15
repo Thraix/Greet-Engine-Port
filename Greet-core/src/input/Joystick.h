@@ -2,7 +2,6 @@
 
 #include <vector>
 #include <math/Maths.h>
-#include <internal/GreetGL.h>
 
 #ifndef MAX_JOYSTICKS 
 #define MAX_JOYSTICKS 4

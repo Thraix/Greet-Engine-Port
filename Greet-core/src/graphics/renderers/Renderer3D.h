@@ -2,7 +2,6 @@
 
 #include <math/Maths.h>
 #include <graphics/models/EntityModel.h>
-#include <internal/GreetGL.h>
 #include <graphics/cameras/Camera.h>
 #include <graphics/Skybox.h>
 #include <graphics/layers/Scene.h>

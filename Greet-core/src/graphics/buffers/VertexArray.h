@@ -9,7 +9,7 @@ namespace Greet {
 
   enum class DrawType
   {
-    TRIANGLES = GL_TRIANGLES, LINES = GL_LINES
+    TRIANGLES = 0x0004, LINES = 0x0001
   };
 
   class VertexArray final 

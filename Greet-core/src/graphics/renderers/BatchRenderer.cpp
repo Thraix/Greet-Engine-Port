@@ -1,7 +1,8 @@
 #include "BatchRenderer.h"
 
-#include <logging/Log.h>
 #include <graphics/RenderCommand.h>
+#include <internal/GreetGL.h>
+#include <logging/Log.h>
 
 namespace Greet {
 
@@ -70,8 +71,8 @@ namespace Greet {
     const Vec2 maskTexPos = renderable.GetMaskTexPos();
     const Vec2 maskTexSize = renderable.GetMaskTexSize();
 
-    const GLuint texID = renderable.GetTexID();
-    const GLuint maskTexID = renderable.GetMaskTexID();
+    const uint texID = renderable.GetTexID();
+    const uint maskTexID = renderable.GetMaskTexID();
     uint ts = GetTextureSlot(texID);
     uint mts = GetTextureSlot(maskTexID);
     Draw(renderable.GetPosition(),renderable.GetSize(), texPos, texSize, ts, color, mts,maskTexPos,maskTexSize);
@@ -234,7 +235,7 @@ namespace Greet {
     m_buffer++;
   }
 
-  uint BatchRenderer::GetTextureSlot(const GLuint texID)
+  uint BatchRenderer::GetTextureSlot(const uint texID)
   {
     if (texID == 0)
       return 0.0f;

@@ -1,5 +1,6 @@
 #include "TextBox.h"
 
+#include <internal/GreetGL.h>
 #include <utils/StringUtils.h>
 
 namespace Greet

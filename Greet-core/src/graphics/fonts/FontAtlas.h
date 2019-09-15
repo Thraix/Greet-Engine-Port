@@ -1,10 +1,12 @@
 #pragma once
 
-#include <internal/GreetGL.h>
 #include <graphics/textures/Texture2D.h>
 #include <map>
 #include <math/Vec4.h>
 #include <logging/Logger.h>
+
+typedef struct FT_LibraryRec_  *FT_Library;
+typedef struct FT_FaceRec_*  FT_Face;
 
 namespace Greet
 {
@@ -20,8 +22,6 @@ namespace Greet
     Vec4 textureCoords;
   };
 
-
-
   class FontAtlas
   {
     private:
@@ -32,7 +32,7 @@ namespace Greet
       uint height;
       uint fontSize;
       std::map<char, Glyph> glyphs;
-      std::vector<BYTE> m_pixels;
+      std::vector<byte> m_pixels;
 
       uint yPos;
       uint xPos;

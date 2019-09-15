@@ -1,11 +1,12 @@
 #include "Component.h"
 
+#include <graphics/gui/Container.h>
+#include <internal/GreetGL.h>
 #include <utils/AABBUtils.h>
 #include <utils/UUID.h>
+
 #include <functional>
 #include <cstdlib>
-#include <graphics/gui/Container.h>
-
 
 namespace Greet
 {

@@ -22,7 +22,7 @@ namespace Greet {
 
       uint m_vertexCount;
       uint m_indexCount;
-      uint m_drawMode;
+      DrawType m_drawMode;
       bool m_culling = true;
       bool m_clockwise = false;
       bool wireframe = false;
@@ -36,7 +36,7 @@ namespace Greet {
       void Bind() const;
       void Unbind() const;
 
-      inline void SetDrawMode(uint drawMode) { m_drawMode = drawMode; }
+      inline void SetDrawMode(DrawType drawType) { m_drawMode = drawType; }
       inline void SetClockwiseRender(bool clockwise) { m_clockwise = clockwise; }
       inline bool IsClockwiseRender() const { return m_clockwise; }
 

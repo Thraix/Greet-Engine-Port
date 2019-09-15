@@ -2,7 +2,6 @@
 
 #include <graphics/cameras/Camera.h>
 #include <math/Maths.h>
-#include <internal/GreetGL.h>
 #include <event/EventDispatcher.h>
 
 namespace Greet {

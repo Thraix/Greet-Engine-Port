@@ -1,6 +1,7 @@
 #include "RenderCommand.h"
 
 #include <graphics/Window.h>
+#include <internal/GreetGL.h>
 #include <logging/Log.h>
 
 namespace Greet

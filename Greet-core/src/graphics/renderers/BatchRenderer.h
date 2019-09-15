@@ -1,11 +1,13 @@
 #pragma once
 
-#include <graphics/renderers/Renderer2D.h>
 #include <common/Types.h>
 
+#include <graphics/buffers/VertexArray.h>
+#include <graphics/renderers/Renderer2D.h>
 #include <graphics/Renderable2D.h>
 #include <graphics/RenderablePoly.h>
-#include <graphics/buffers/VertexArray.h>
+
+#include <vector>
 
 #define RENDERER_MAX_TEXTURES	32
 #define RENDERER_MAX_SPRITES	360000
@@ -36,7 +38,7 @@ namespace Greet {
       uint* indices;
       VertexData* m_buffer;
 
-      std::vector<GLuint> m_texSlots;
+      std::vector<uint> m_texSlots;
 
     public:
       BatchRenderer();
@@ -57,7 +59,7 @@ namespace Greet {
       void FillRect(const Vec2& position, const Vec2& size, const uint& color);
       void FillRect(const Vec2& position, const Vec2& size, const uint& color, const Sprite* mask);
       void AppendVertexBuffer(const Vec2& position, const Vec2& texCoord, const uint& texID, const uint& color, const uint& maskTexId, const Vec2& maskTexCoord);
-      uint GetTextureSlot(const GLuint texID);
+      uint GetTextureSlot(const uint texID);
       void End() override;
       void Flush() override;
       void EnableBuffers();

@@ -12,7 +12,7 @@ namespace Greet {
   {
     m_focused = nullptr;
 
-    GLint texIDs[32];
+    int texIDs[32];
     for (int i = 0; i < 32; i++)
     {
       texIDs[i] = i;

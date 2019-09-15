@@ -1,6 +1,8 @@
 #include "UUID.h"
 
 #include <graphics/Window.h>
+#include <logging/Log.h>
+
 #include <ctime>
 
 namespace Greet {
@@ -35,8 +37,6 @@ namespace Greet {
         m_usedUUID.insert(number);
         return number;
       }
-      else
-        Log::Info("Hit");
     }
     Log::Warning("Could not generate random UUID. Try again.");
     return 0;

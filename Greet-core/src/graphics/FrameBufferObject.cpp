@@ -1,6 +1,7 @@
 #include "FrameBufferObject.h"
 
 #include <graphics/Window.h>
+#include <internal/GreetGL.h>
 #include <math/Maths.h>
 
 namespace Greet {

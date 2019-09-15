@@ -1,11 +1,12 @@
 #pragma once
 
-#include <math/Maths.h>
-#include <graphics/Window.h>
-#include <event/WindowEvent.h>
 #include <event/Event.h>
 #include <event/ViewportEvent.h>
+#include <event/WindowEvent.h>
 #include <graphics/RenderCommand.h>
+#include <graphics/Window.h>
+#include <logging/Log.h>
+#include <math/Maths.h>
 
 namespace Greet {
   class Camera {

@@ -1,20 +1,19 @@
 #pragma once
 
 #include <common/Memory.h>
-#include <internal/GreetGL.h>
 
 namespace Greet {
 
   enum class BufferType
   {
-    ARRAY = GL_ARRAY_BUFFER,
-    INDEX = GL_ELEMENT_ARRAY_BUFFER,
+    ARRAY = 0x8892, // GL_ARRAY_BUFFER
+    INDEX = 0x8893, // GL_ELEMENT_ARRAY_BUFFER
   };
 
   enum class BufferDrawType : uint
   {
-    STATIC = GL_STATIC_DRAW,
-    DYNAMIC = GL_DYNAMIC_DRAW
+    STATIC = 0x88E4, // GL_STATIC_DRAW
+    DYNAMIC = 0x88E8 // GL_DYNAMIC_DRAW
   };
 
   class Buffer

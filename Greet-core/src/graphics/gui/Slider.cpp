@@ -1,5 +1,6 @@
 #include "Slider.h"
 
+#include <internal/GreetGL.h>
 #include <math/Maths.h>
 
 namespace Greet

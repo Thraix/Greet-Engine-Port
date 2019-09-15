@@ -1,5 +1,6 @@
 #include "Window.h"
 
+#include <internal/GreetGL.h>
 #include <graphics/fonts/FontManager.h>
 #include <graphics/textures/TextureManager.h>
 #include <graphics/atlas/AtlasManager.h>
@@ -44,7 +45,7 @@ namespace Greet {
       joysticks.push_back(std::unique_ptr<Joystick>{new Joystick{i}});
       if(glfwJoystickPresent(i) == GLFW_TRUE)
       {
-        joysticks.back()->SetState(true); 
+        joysticks.back()->SetState(true);
         EventDispatcher::OnEvent(JoystickConnectEvent{i});
       }
     }
@@ -225,5 +226,22 @@ namespace Greet {
       EventDispatcher::OnEvent(JoystickConnectEvent{joy});
     else
       EventDispatcher::OnEvent(JoystickDisconnectEvent{joy});
+  }
+
+  void Window::SetTitle(const std::string& title)
+  {
+    glfwSetWindowTitle(window, title.c_str());
+  }
+
+  Joystick* Window::GetJoystick(uint joystick)
+  {
+    ASSERT(joystick < GLFW_JOYSTICKS, "WINDOW","Invalid Joystick. Ranges from 0-3: ", joystick);
+    return (joysticks[joystick]).get();
+  }
+
+  bool Window::IsJoystickConnected(uint joystick)
+  {
+    ASSERT(joystick < GLFW_JOYSTICKS, "WINDOW", "Invalid Joystick. Ranges from 0-3: ", joystick);
+    return joysticks[joystick]->m_connected;
   }
 }

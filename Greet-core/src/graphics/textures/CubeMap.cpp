@@ -3,6 +3,7 @@
 #include <internal/GreetGL.h>
 #include <utils/ImageUtils.h>
 #include <utils/ErrorHandle.h>
+#include <internal/GreetGL.h>
 
 namespace Greet {
   CubeMap::CubeMap(const std::string& top, const std::string& bottom, const std::string& left, const std::string& right, const std::string& front, const std::string& back)
@@ -106,7 +107,7 @@ namespace Greet {
     LoadImage(res.second,width,height,mapLocation,true);
   }
 
-  void CubeMap::LoadImage(const std::vector<BYTE>& bits, uint width, uint height, uint mapLocation, bool flip)
+  void CubeMap::LoadImage(const std::vector<byte>& bits, uint width, uint height, uint mapLocation, bool flip)
   {
     if(flip)
     {

@@ -1,6 +1,7 @@
 #include "Mesh.h"
 
 #include <utils/ErrorHandle.h>
+#include <internal/GreetGL.h>
 #include <graphics/RenderCommand.h>
 #include <logging/Logger.h>
 
@@ -10,7 +11,7 @@ namespace Greet {
   Mesh::Mesh(const Pointer<Vec3<float>>& vertices, const Pointer<uint>& indices)
     : m_clockwise(false)
   {
-    m_drawMode = GL_TRIANGLES;
+    m_drawMode = DrawType::TRIANGLES;
     m_vertexCount = vertices.Size();
     m_indexCount = indices.Size();
 
@@ -43,7 +44,7 @@ namespace Greet {
 
   void Mesh::Render() const
   {
-    vao->Render(DrawType::TRIANGLES, m_indexCount);
+    vao->Render(m_drawMode, m_indexCount);
   }
 
   void Mesh::Bind() const

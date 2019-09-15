@@ -39,7 +39,6 @@
 #include <graphics/Window.h>
 #include <graphics/atlas/Atlas.h>
 #include <graphics/atlas/AtlasManager.h>
-#include <graphics/buffers/BatchIndexBuffer.h>
 #include <graphics/buffers/Buffer.h>
 #include <graphics/buffers/VertexArray.h>
 #include <graphics/buffers/VertexBuffer.h>

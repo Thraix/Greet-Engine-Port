@@ -18,6 +18,8 @@
 #define JOYSTICK_STATE_DISCONNECTED 0x0
 #define JOYSTICK_STATE_CONNECTED	0x1
 
+class GLFWwindow;
+
 namespace Greet {
   class GUI;
   typedef void(*WINDOW_RESIZE)(int width, int height);
@@ -76,10 +78,10 @@ namespace Greet {
       inline static int GetWidth() { return width; };
       inline static int GetHeight() { return height; };
       inline static float GetAspect() { return width / (float) height; }
-      inline static void SetTitle(const std::string& title) { glfwSetWindowTitle(window,title.c_str()); }
+      static void SetTitle(const std::string& title);
 
-      inline static Joystick* GetJoystick(uint joystick){ ASSERT(joystick < GLFW_JOYSTICKS, "WINDOW","Invalid Joystick. Ranges from 0-3: ", joystick); return (joysticks[joystick]).get(); }
-      inline static bool IsJoystickConnected(uint joystick){ ASSERT(joystick < GLFW_JOYSTICKS, "WINDOW", "Invalid Joystick. Ranges from 0-3: ", joystick); return joysticks[joystick]->m_connected; }
+      static Joystick* GetJoystick(uint joystick);
+      static bool IsJoystickConnected(uint joystick);
 
 
       inline static void* getUserPointer(Window* window) { return window->pointer; }

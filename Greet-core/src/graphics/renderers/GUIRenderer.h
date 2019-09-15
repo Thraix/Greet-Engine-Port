@@ -3,7 +3,6 @@
 #include <graphics/fonts/Font.h>
 #include <graphics/renderers/Renderer2D.h>
 #include <graphics/buffers/VertexArray.h>
-#include <internal/GreetGL.h>
 #include <math/Vec4.h>
 #include <stack>
 

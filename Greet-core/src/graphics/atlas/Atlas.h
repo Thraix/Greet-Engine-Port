@@ -18,7 +18,7 @@ namespace Greet{
       uint m_texturesSide;
       uint m_textures;
 
-      BYTE* m_bits;
+      byte* m_bits;
     public:
       Atlas(uint atlasSize, uint textureSize);
       Atlas(Atlas&&) = default;
@@ -27,10 +27,10 @@ namespace Greet{
 
       bool AddTexture(const std::string& name, const std::string& filePath);
       void RemoveTexture(const std::string& textureName);
-      bool AddTexture(const std::vector<BYTE>& bits, const std::string& name);
+      bool AddTexture(const std::vector<byte>& bits, const std::string& name);
       Sprite GetSprite(const std::string& name) const;
       Sprite GetSpriteFromSheet(const std::string& sheetName, Vec2 texPos, Vec2 texSize) const;
     private:
-      void GenTexture(BYTE* bits);
+      void GenTexture(byte* bits);
   };
 }

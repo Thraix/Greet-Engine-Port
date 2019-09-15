@@ -26,6 +26,6 @@ namespace Greet {
       void LoadCubeMap(const std::string& top, const std::string& bottom, const std::string& left, const std::string& right, const std::string& front, const std::string& back);
       void LoadParameters();
       void LoadImage(const std::string& image, uint mapLocation);
-      void LoadImage(const std::vector<BYTE>& bits, uint width, uint height, uint mapLocation, bool flip);
+      void LoadImage(const std::vector<byte>& bits, uint width, uint height, uint mapLocation, bool flip);
   };
 }

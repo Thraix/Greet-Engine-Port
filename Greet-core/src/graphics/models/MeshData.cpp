@@ -1,7 +1,9 @@
 #include "MeshData.h"
-#include <logging/Log.h>
-#include <fstream>
+
 #include <graphics/models/MeshFactory.h>
+#include <logging/Log.h>
+
+#include <fstream>
 #include <set>
 #include <map>
 

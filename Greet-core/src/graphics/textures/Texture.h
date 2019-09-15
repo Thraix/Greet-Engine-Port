@@ -1,7 +1,6 @@
 #pragma once
 
 #include <string>
-#include <internal/GreetGL.h>
 #include <memory>
 #include <common/Types.h>
 
@@ -10,8 +9,8 @@ namespace Greet {
   enum class TextureFilter
   {
     NONE,
-    LINEAR = GL_LINEAR,
-    NEAREST = GL_NEAREST
+    LINEAR = 0x2601,  //GL_LINEAR
+    NEAREST = 0x2600, //GL_NEAREST
   };
 
   enum class TextureWrap
@@ -26,11 +25,11 @@ namespace Greet {
 
   enum class TextureInternalFormat
   {
-    DEPTH_COMPONENT = GL_DEPTH_COMPONENT,
-    DEPTH_STENCIL = GL_DEPTH_STENCIL,
-    RED = GL_RED,
-    RGB = GL_RGB,
-    RGBA = GL_RGBA
+    DEPTH_COMPONENT = 0x1902, // GL_DEPTH_COMPONENT
+    DEPTH_STENCIL = 0x84F9,   // GL_DEPTH_STENCIL
+    RED = 0x1903,             // GL_RED
+    RGB = 0x1907,             // GL_RGB
+    RGBA = 0x1908             // GL_RGBA
   };
 
   struct TextureParams
@@ -48,7 +47,7 @@ namespace Greet {
     TextureInternalFormat internalFormat;
   };
 
-  
+
   struct TextureDeleter final
   {
     void operator()(uint* id);

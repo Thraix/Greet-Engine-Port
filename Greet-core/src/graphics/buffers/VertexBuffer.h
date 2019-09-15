@@ -3,6 +3,7 @@
 #include <common/Types.h>
 #include <common/Memory.h>
 #include <graphics/buffers/Buffer.h>
+#include <logging/Log.h>
 
 namespace Greet
 {
@@ -53,15 +54,15 @@ namespace Greet
   {
     switch(type)
     {
-      case BufferAttributeType::FLOAT:  return GL_FLOAT;
-      case BufferAttributeType::VEC2:   return GL_FLOAT;
-      case BufferAttributeType::VEC3:   return GL_FLOAT;
-      case BufferAttributeType::VEC4:   return GL_FLOAT;
-      case BufferAttributeType::MAT3:   return GL_FLOAT;
-      case BufferAttributeType::MAT4:   return GL_FLOAT;
-      case BufferAttributeType::UINT:   return GL_UNSIGNED_INT;
-      case BufferAttributeType::UBYTE4: return GL_UNSIGNED_BYTE;
-      case BufferAttributeType::BYTE4:  return GL_BYTE;
+      case BufferAttributeType::FLOAT:  return 0x1406; // GL_FLOAT
+      case BufferAttributeType::VEC2:   return 0x1406; // GL_FLOAT
+      case BufferAttributeType::VEC3:   return 0x1406; // GL_FLOAT
+      case BufferAttributeType::VEC4:   return 0x1406; // GL_FLOAT
+      case BufferAttributeType::MAT3:   return 0x1406; // GL_FLOAT
+      case BufferAttributeType::MAT4:   return 0x1406; // GL_FLOAT
+      case BufferAttributeType::UINT:   return 0x1405; // GL_UNSIGNED_INT
+      case BufferAttributeType::UBYTE4: return 0x1401; // GL_UNSIGNED_BYTE
+      case BufferAttributeType::BYTE4:  return 0x1400; // GL_BYTE
     }
 
     ASSERT(false, "Unsupported BufferAttributeType");
@@ -89,7 +90,7 @@ namespace Greet
 
     public:
       BufferStructure() {}
-      BufferStructure(const std::initializer_list<BufferAttribute>& attributes) 
+      BufferStructure(const std::initializer_list<BufferAttribute>& attributes)
         : attributes{attributes}, vertexSize{0}
       {
         uint offset = 0;

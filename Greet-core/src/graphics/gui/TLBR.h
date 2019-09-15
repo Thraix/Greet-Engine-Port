@@ -1,8 +1,10 @@
 #pragma once
 
+#include <graphics/gui/GUIUtils.h>
+#include <logging/Log.h>
 #include <math/Vec4.h>
 #include <utils/xml/XMLObject.h>
-#include <graphics/gui/GUIUtils.h>
+
 #include <cstdlib>
 
 namespace Greet

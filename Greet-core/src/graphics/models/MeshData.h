@@ -1,7 +1,6 @@
 #pragma once
 
 #include <math/Maths.h>
-#include <internal/GreetGL.h>
 #include <graphics/buffers/VertexBuffer.h>
 #include <vector>
 #include <functional>

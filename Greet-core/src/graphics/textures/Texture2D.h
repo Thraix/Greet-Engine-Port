@@ -18,7 +18,7 @@ namespace Greet {
     public:
       Texture2D(uint width, uint height, TextureParams params = TextureParams());
       Texture2D(const std::string& filename, TextureParams params = TextureParams());
-      Texture2D(const std::vector<BYTE>& bits, uint width, uint height, TextureParams params = TextureParams());
+      Texture2D(const std::vector<byte>& bits, uint width, uint height, TextureParams params = TextureParams());
       Texture2D(uint texID, uint width, uint height, TextureParams params = TextureParams());
       Texture2D(TextureParams params = TextureParams());
 
@@ -27,14 +27,14 @@ namespace Greet {
 
       virtual ~Texture2D();
 
-      void SetPixels(const std::vector<BYTE>& pixels) const;
+      void SetPixels(const std::vector<byte>& pixels) const;
       void ReloadResource() override;
       inline uint GetWidth() const { return m_width; }
       inline uint GetHeight() const { return m_height; }
     protected:
       void LoadTexture(const std::string& filename);
       void GenTexture(uint width, uint height);
-      void GenTexture(const std::vector<BYTE>& bits);
+      void GenTexture(const std::vector<byte>& bits);
 
   };
 }

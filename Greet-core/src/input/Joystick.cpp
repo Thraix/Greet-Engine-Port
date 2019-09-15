@@ -1,9 +1,10 @@
 #include "Joystick.h"
 
+#include <event/EventDispatcher.h>
+#include <event/JoystickEvent.h>
 #include <internal/GreetGL.h>
 #include <logging/Log.h>
-#include <event/JoystickEvent.h>
-#include <event/EventDispatcher.h>
+
 #include <cstring>
 
 namespace Greet {

@@ -5,6 +5,7 @@
 #include <graphics/Renderable2D.h>
 #include <utils/ColorUtils.h>
 #include <graphics/RenderCommand.h>
+#include <internal/GreetGL.h>
 
 namespace Greet
 {

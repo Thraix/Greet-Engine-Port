@@ -1,5 +1,7 @@
 #include "SatValSlider.h"
 
+#include <internal/GreetGL.h>
+
 namespace Greet
 {
   REGISTER_COMPONENT_DEFINITION(SatValSlider);

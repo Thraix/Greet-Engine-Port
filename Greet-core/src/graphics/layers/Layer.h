@@ -19,7 +19,7 @@ namespace Greet {
       Layer(Renderer2D* renderer, const Ref<Shader>& shader, Mat3 projectionMatrix)
         : m_renderer(renderer), m_shader(shader), m_projectionMatrix(projectionMatrix)
       {
-        GLint texIDs[32];
+        int texIDs[32];
         for (int i = 0; i < 32; i++)
         {
           texIDs[i] = i;

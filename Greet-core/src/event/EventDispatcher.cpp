@@ -2,7 +2,7 @@
 
 #include <functional>
 #include <utils/Utils.h>
-#include <logging/Logger.h>
+#include <logging/Log.h>
 #include <graphics/GlobalSceneManager.h>
 
 namespace Greet {

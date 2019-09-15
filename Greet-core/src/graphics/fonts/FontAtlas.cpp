@@ -1,5 +1,7 @@
 #include "FontAtlas.h"
+
 #include <math/Vec3.h>
+#include <internal/GreetGL.h>
 
 namespace Greet
 {

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <graphics/layers/Scene.h>
+#include <vector>
 
 namespace Greet {
   class SceneManager 

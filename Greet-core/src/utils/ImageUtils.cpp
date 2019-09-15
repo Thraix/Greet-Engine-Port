@@ -9,11 +9,11 @@
 
 namespace Greet {
 
-  void ImageUtils::PrintImage(BYTE* bits, uint width, uint height)
+  void ImageUtils::PrintImage(byte* bits, uint width, uint height)
   {
     for (uint y = 0;y<height;y++)
     {
-      BYTE* pixel = (BYTE*)bits;
+      byte* pixel = (byte*)bits;
       for (uint x = 0;x<width;x++)
       {
         std::string s = "pixel(" + StringUtils::to_string(x) + "," + StringUtils::to_string(y) + ")";
@@ -27,9 +27,9 @@ namespace Greet {
     }
   }
 
-  std::vector<BYTE> ImageUtils::FlipImage(const std::vector<BYTE>& bits, uint width, uint height)
+  std::vector<byte> ImageUtils::FlipImage(const std::vector<byte>& bits, uint width, uint height)
   {
-    std::vector<BYTE> result(width*height*4);
+    std::vector<byte> result(width*height*4);
     size_t offset = 4*width*height;
     size_t rowOffset = 0;
     for (uint y = 0;y < height;y++)
@@ -45,7 +45,7 @@ namespace Greet {
     return result;
   }
 
-  std::pair<bool, std::vector<BYTE>> ImageUtils::LoadImage(const std::string& filepath, uint* width, uint* height)
+  std::pair<bool, std::vector<byte>> ImageUtils::LoadImage(const std::string& filepath, uint* width, uint* height)
   {
     FREE_IMAGE_FORMAT fif = FIF_UNKNOWN;
 
@@ -73,7 +73,7 @@ namespace Greet {
     }
 
 
-    BYTE* fiBits = FreeImage_GetBits(dib);
+    byte* fiBits = FreeImage_GetBits(dib);
 
     *width = FreeImage_GetWidth(dib);
     *height = FreeImage_GetHeight(dib);
@@ -87,7 +87,7 @@ namespace Greet {
       return {false,ImageFactory::GetBadBPPImage(width,height)};
     }
 
-    std::vector<BYTE> bits((*width) * (*height) * 4);
+    std::vector<byte> bits((*width) * (*height) * 4);
     uint resultI = 0;
     uint bitsI = 0;
     for(uint y = 0; y < *height; y++)
@@ -109,9 +109,9 @@ namespace Greet {
     return {true,bits};
   }
 
-  std::vector<BYTE> ImageUtils::CreateHeightmapImage(const std::vector<float>& heightMap, uint width, uint height)
+  std::vector<byte> ImageUtils::CreateHeightmapImage(const std::vector<float>& heightMap, uint width, uint height)
   {
-    std::vector<BYTE> data(width * height * 4);
+    std::vector<byte> data(width * height * 4);
     for(int i = 0;i<width*height;i++)
     {
       data[i * 4 + FI_RGBA_RED]   = heightMap[i] * 255;
@@ -122,7 +122,7 @@ namespace Greet {
     return data;
   }
 
-  std::vector<BYTE> ImageUtils::CropImage(const std::vector<BYTE>& bits, uint width,  uint height,  uint cx,  uint cy,  uint cwidth,  uint cheight)
+  std::vector<byte> ImageUtils::CropImage(const std::vector<byte>& bits, uint width,  uint height,  uint cx,  uint cy,  uint cwidth,  uint cheight)
   {
     if (cx >= width || cy >= height || cx + cwidth > width || cy + cheight > height)
     {
@@ -131,7 +131,7 @@ namespace Greet {
       return ImageFactory::GetCropErrorImage(&width,&height);
     }
     cy = height - cheight - cy;
-    std::vector<BYTE> result(cwidth * cheight * 4);
+    std::vector<byte> result(cwidth * cheight * 4);
     size_t offset = (cx + cy * width) * 4;
     size_t resultOffset = 0;
     for (uint y = 0;y < cheight;y++)
