@@ -8,6 +8,7 @@ namespace Greet {
     : id{0}, dataSize{dataSize}, type{type}, drawType{drawType}
   {
     GLCall(glGenBuffers(1, &id));
+    Enable();
   }
 
   Buffer::~Buffer()

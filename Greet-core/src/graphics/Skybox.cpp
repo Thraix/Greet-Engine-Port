@@ -26,20 +26,17 @@ namespace Greet {
 
   void Skybox::Render(const Mat4& projectionMatrix, const Mat4& viewMatrix) const
   {
-    GLCall(glActiveTexture(GL_TEXTURE0));
-    GLCall(glDisable(GL_DEPTH_TEST));
-    GLCall(glFrontFace(GL_CCW));
+    RenderCommand::EnableDepthTest(false);
     m_shader->Enable();
     m_shader->SetUniformMat4("projectionMatrix", projectionMatrix);
     m_shader->SetUniformMat4("viewMatrix", viewMatrix);
-    m_map.Enable();
+    m_map.Enable(0);
     m_mesh->Bind();
     m_mesh->Render();
     m_mesh->Unbind();
     m_map.Disable();
     m_shader->Disable();
-    GLCall(glEnable(GL_DEPTH_TEST));
-
+    RenderCommand::ResetDepthTest();
   }
 
   void Skybox::Render(const Camera& camera) const

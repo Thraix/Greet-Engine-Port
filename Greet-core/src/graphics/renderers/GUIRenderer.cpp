@@ -4,6 +4,7 @@
 #include <cmath>
 #include <graphics/Renderable2D.h>
 #include <utils/ColorUtils.h>
+#include <graphics/RenderCommand.h>
 
 namespace Greet
 {
@@ -34,6 +35,7 @@ namespace Greet
     m_indices = new uint[m_iboSize];
     ibo = Buffer::Create(m_iboSize, BufferType::INDEX, BufferDrawType::DYNAMIC);
     ibo->Disable();
+    vao->SetIndexBuffer(ibo);
     vao->Disable();
   }
 
@@ -52,7 +54,10 @@ namespace Greet
   {
     if (m_iboCount > 0)
     {
-      GLCall(glDisable(GL_DEPTH_TEST));
+      RenderCommand::EnableCulling(false);
+      // TODO: Remove this and actually draw the different things correctly
+      // instead
+      RenderCommand::EnableDepthTest(false);
 
       for (byte i = 0; i < m_textureCount; i++)
       {
@@ -60,21 +65,16 @@ namespace Greet
         GLCall(glBindTexture(GL_TEXTURE_2D, m_textures[i]));
       }
 
-      // TODO: Remove this and actually draw the different things correctly
-      // instead
-      GLCall(glDisable(GL_CULL_FACE));
       vao->Enable();
-      ibo->Enable();
       ibo->UpdateData(m_indices, sizeof(uint) * m_iboCount);
 
-      GLCall(glDrawElements(GL_TRIANGLES, m_iboSize, GL_UNSIGNED_INT, NULL));
+      vao->Render(DrawType::TRIANGLES, m_iboCount);
 
-      ibo->Disable();
       vao->Disable();
 
       GLCall(glActiveTexture(GL_TEXTURE0));
-      GLCall(glEnable(GL_CULL_FACE));
-      GLCall(glEnable(GL_DEPTH_TEST));
+      RenderCommand::ResetCulling();
+      RenderCommand::ResetDepthTest();
     }
   }
 

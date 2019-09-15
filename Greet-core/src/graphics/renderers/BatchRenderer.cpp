@@ -1,7 +1,7 @@
 #include "BatchRenderer.h"
 
 #include <logging/Log.h>
-#include <internal/GreetGL.h>
+#include <graphics/RenderCommand.h>
 
 namespace Greet {
 
@@ -37,6 +37,7 @@ namespace Greet {
     indices = new uint[RENDERER_INDICES_SIZE];
     ibo = Buffer::Create(sizeof(indices), BufferType::INDEX, BufferDrawType::DYNAMIC);
     ibo->Disable();
+    vao->SetIndexBuffer(ibo);
     vao->Disable();
   }
 
@@ -271,7 +272,7 @@ namespace Greet {
 
   void BatchRenderer::Flush()
   {
-    GLCall(glDisable(GL_DEPTH_TEST));
+    RenderCommand::EnableDepthTest(false);
     for (uint i = 0; i < m_texSlots.size(); i++)
     {
       GLCall(glActiveTexture(GL_TEXTURE0 + i));
@@ -279,28 +280,24 @@ namespace Greet {
     }
 
     EnableBuffers();
-
-    GLCall(glDrawElements(GL_TRIANGLES, m_iboSize, GL_UNSIGNED_INT, NULL));
-
+    vao->Render(DrawType::TRIANGLES, m_iboSize);
     DisableBuffers();
 
     m_iboSize = 0;
     m_texSlots.clear();
     GLCall(glActiveTexture(GL_TEXTURE0));
-    GLCall(glEnable(GL_DEPTH_TEST));
+    RenderCommand::ResetDepthTest();
   }
 
   void BatchRenderer::EnableBuffers()
   {
     vao->Enable();
-    ibo->Enable();
     ibo->UpdateData(indices, m_iboSize*sizeof(uint));
   }
 
   void BatchRenderer::DisableBuffers()
   {
     vao->Disable();
-    ibo->Disable();
   }
 
   void BatchRenderer::AddIndicesPoly(uint vertices)

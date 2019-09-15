@@ -42,6 +42,12 @@ namespace Greet {
     GLCall(glBindTexture(m_textureType, *texId));
   }
 
+  void Texture::Enable(uint index) const
+  {
+    GLCall(glActiveTexture(GL_TEXTURE0 + index));
+    GLCall(glBindTexture(m_textureType, *texId));
+  }
+
   void Texture::Disable() const
   {
     GLCall(glBindTexture(m_textureType, 0));

@@ -27,17 +27,16 @@ namespace vmc
     // For drawing lines...
     vao = VertexArray::Create();
     vbo = VertexBuffer::CreateDynamic(nullptr, 2 * sizeof(Vec3<float>));
-    vbo->Enable();
     vbo->SetStructure({{{0, BufferAttributeType::VEC3}}});
     vao->AddVertexBuffer(vbo);
+    vbo->Disable();
 
     m_indices = new uint[2]{ 0, 1 };
     ibo = Buffer::Create(2 * sizeof(uint), BufferType::INDEX, BufferDrawType::STATIC);
-    ibo->Enable();
     ibo->UpdateData(m_indices);
     ibo->Disable();
 
-    vbo->Disable();
+    vao->SetIndexBuffer(ibo);
     vao->Disable();
   }
 
@@ -118,9 +117,7 @@ namespace vmc
     vbo->Disable();
 
     vao->Enable();
-    ibo->Enable();
-    GLCall(glDrawElements(GL_LINES, 2, GL_UNSIGNED_INT, NULL));
-    ibo->Disable();
+    vao->Render(DrawType::LINES, 2);
     vao->Disable();
 
     lineShader->Disable();

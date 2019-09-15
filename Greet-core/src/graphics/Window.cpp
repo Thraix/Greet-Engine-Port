@@ -3,7 +3,7 @@
 #include <graphics/fonts/FontManager.h>
 #include <graphics/textures/TextureManager.h>
 #include <graphics/atlas/AtlasManager.h>
-#include <internal/GreetGL.h>
+#include <graphics/RenderCommand.h>
 #include <event/EventDispatcher.h>
 #include <graphics/gui/ComponentFactory.h>
 #include <event/WindowEvent.h>
@@ -85,13 +85,8 @@ namespace Greet {
     glfwSetJoystickCallback(joystick_callback);
 
     glfwSwapInterval(0);
-    GLCall(glEnable(GL_TEXTURE_2D));
-    GLCall(glEnable(GL_BLEND));
-    GLCall(glEnable(GL_DEPTH_TEST));
-    GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
-    GLCall(glEnable(GL_MULTISAMPLE));
     ASSERT(glewInit() == GLEW_OK,"Glew failed to init.");
-    GLCall(glProvokingVertex(GL_FIRST_VERTEX_CONVENTION));
+    RenderCommand::Init();
 
     Log::Info("OpenGL Version: ", glGetString(GL_VERSION));
     Log::Info("GLFW Version: ", glfwGetVersionString());
@@ -146,7 +141,7 @@ namespace Greet {
 
   void Window::window_resize(GLFWwindow *window, int width, int height)
   {
-    glViewport(0, 0, width, height);
+    RenderCommand::ResetViewport();
     Window::width = width;
     Window::height = height;
     EventDispatcher::OnEvent(WindowResizeEvent{width,height});

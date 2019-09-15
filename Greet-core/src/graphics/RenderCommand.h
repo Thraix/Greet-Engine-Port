@@ -6,13 +6,20 @@
 
 namespace Greet
 {
+  enum class CullFaceDirection
+  {
+    CW, CCW
+  };
+
   class RenderCommand 
   {
+
     private:
       RenderCommand() = delete;
       static std::stack<Vec4> viewportStack;
       static Vec4 clearColor;
     public:
+      static void Init();
       /*
          Values relative to the current viewport
          position is from the top-left of the screen
@@ -23,6 +30,7 @@ namespace Greet
 
       static void PopViewportStack();
       static Vec4 TopViewportStack();
+      static void ResetViewport();
 
       static float GetViewportWidth();
       static float GetViewportHeight();
@@ -31,6 +39,13 @@ namespace Greet
       static void SetClearColor(const Vec4& clearColor);
       static const Vec4& GetClearColor();
       static void Clear();
+
+      static void EnableCulling(bool enabled);
+      static void SetCullFace(CullFaceDirection face);
+      static void ResetCulling();
+
+      static void EnableDepthTest(bool enabled);
+      static void ResetDepthTest();
   };
 } 
 

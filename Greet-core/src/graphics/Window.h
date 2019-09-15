@@ -1,6 +1,5 @@
 #pragma once
 
-#include <internal/GreetGL.h>
 #include <common/Types.h>
 #include <input/Joystick.h>
 #include <math/Maths.h>

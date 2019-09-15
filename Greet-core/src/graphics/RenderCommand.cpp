@@ -8,6 +8,19 @@ namespace Greet
   std::stack<Vec4> RenderCommand::viewportStack;
   Vec4 RenderCommand::clearColor{0,0,0,1};
 
+
+  void RenderCommand::Init()
+  {
+    ResetCulling();
+    ResetDepthTest();
+
+    GLCall(glEnable(GL_TEXTURE_2D));
+    GLCall(glEnable(GL_BLEND));
+    GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
+    GLCall(glEnable(GL_MULTISAMPLE));
+    GLCall(glProvokingVertex(GL_FIRST_VERTEX_CONVENTION));
+  }
+
   void RenderCommand::PushViewportStack(float x, float y, float width, float height)
   {
     PushViewportStack({x,y,width,height});
@@ -46,6 +59,14 @@ namespace Greet
       : viewportStack.top();
 
     GLCall(glViewport(vp.x, vp.y, vp.z, vp.w));
+  }
+
+  void RenderCommand::ResetViewport()
+  {
+    while(!viewportStack.empty())
+      viewportStack.pop();
+
+    GLCall(glViewport(0,0,Window::GetWidth(), Window::GetHeight()));
   }
 
   Vec4 RenderCommand::TopViewportStack()
@@ -90,6 +111,42 @@ namespace Greet
   void RenderCommand::Clear()
   {
     GLCall(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
+  }
+
+  void RenderCommand::EnableCulling(bool enabled)
+  {
+    if(enabled) { GLCall(glEnable (GL_CULL_FACE)); }
+    else        { GLCall(glDisable(GL_CULL_FACE)); }
+  }
+
+  void RenderCommand::SetCullFace(CullFaceDirection face)
+  {
+    switch(face)
+    {
+      case CullFaceDirection::CCW: 
+        GLCall(glFrontFace(GL_CCW));
+        return;
+      case CullFaceDirection::CW: 
+        GLCall(glFrontFace(GL_CW));
+        return;
+    }
+  }
+
+  void RenderCommand::ResetCulling()
+  {
+    SetCullFace(CullFaceDirection::CCW);
+    EnableCulling(true);
+  }
+
+  void RenderCommand::EnableDepthTest(bool enabled)
+  {
+    if(enabled) { GLCall(glEnable (GL_DEPTH_TEST)); }
+    else        { GLCall(glDisable(GL_DEPTH_TEST)); }
+  }
+
+  void RenderCommand::ResetDepthTest()
+  {
+    EnableDepthTest(true);
   }
 }
 

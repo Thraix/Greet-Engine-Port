@@ -68,6 +68,7 @@ namespace Greet {
       Texture& operator=(Texture&& texture) = default;
 
       virtual void Enable() const;
+      virtual void Enable(uint index) const;
       virtual void Disable() const;
 
       uint GetTexId() const;

@@ -34,13 +34,27 @@ namespace Greet {
     buffers.push_back(buffer);
   }
 
+  void VertexArray::SetIndexBuffer(const Ref<Buffer>& indexBuffer)
+  {
+    this->indexBuffer = indexBuffer;
+  }
+
   void VertexArray::Enable() const
   {
     GLCall(glBindVertexArray(id));
+    if(indexBuffer)
+      indexBuffer->Enable();
+  }
+
+  void VertexArray::Render(DrawType type, uint count)
+  {
+    GLCall(glDrawElements((uint)type, count * sizeof(uint), GL_UNSIGNED_INT, nullptr));
   }
 
   void VertexArray::Disable()
   {
+    if(indexBuffer)
+      indexBuffer->Disable();
     GLCall(glBindVertexArray(0));
   }
 

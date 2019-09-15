@@ -1,12 +1,14 @@
 #include "Mesh.h"
 
 #include <utils/ErrorHandle.h>
-#include <internal/GreetGL.h>
+#include <graphics/RenderCommand.h>
 #include <logging/Logger.h>
+
 
 namespace Greet {
 
   Mesh::Mesh(const Pointer<Vec3<float>>& vertices, const Pointer<uint>& indices)
+    : m_clockwise(false)
   {
     m_drawMode = GL_TRIANGLES;
     m_vertexCount = vertices.Size();
@@ -14,18 +16,18 @@ namespace Greet {
 
     vao = VertexArray::Create();
     ibo = Buffer::Create((uint)(indices.Size()*sizeof(uint)), BufferType::INDEX, BufferDrawType::STATIC);
-    ibo->Enable();
     ibo->UpdateData((void*)indices.Data());
 
-    // Attributes 
+    // Attributes
     AddAttribute({MESH_VERTICES_LOCATION, BufferAttributeType::VEC3}, vertices); // vertices
 
     // Set default color to white
     GLCall(glVertexAttrib4f(MESH_COLORS_LOCATION,1.0f,1.0f,1.0f,1.0f));
 
     // Unbind
-    vao->Disable();
     ibo->Disable();
+    vao->SetIndexBuffer(ibo);
+    vao->Disable();
   }
 
   Mesh::Mesh(const MeshData& data)
@@ -41,37 +43,27 @@ namespace Greet {
 
   void Mesh::Render() const
   {
-    GLCall(glDrawElements(m_drawMode, m_indexCount * sizeof(uint), GL_UNSIGNED_INT,0));
+    vao->Render(DrawType::TRIANGLES, m_indexCount);
   }
 
   void Mesh::Bind() const
   {
-    if (m_culling)
-    {	
-      GLCall(glEnable(GL_CULL_FACE));
-      GLCall(glFrontFace(m_clockwise ? GL_CW : GL_CCW));
-    }
-    else
-    {
-      GLCall(glDisable(GL_CULL_FACE));
-    }
+    RenderCommand::EnableCulling(m_culling);
+    RenderCommand::SetCullFace(m_clockwise ? CullFaceDirection::CW : CullFaceDirection::CCW);
 
-    if(wireframe) 
+    if(wireframe)
     {
       GLCall(glPolygonMode(GL_FRONT_AND_BACK, GL_LINE));
     }
 
     vao->Enable();
-    ibo->Enable();
   }
 
   void Mesh::Unbind() const
   {
-    ibo->Disable();
     vao->Disable();
-    GLCall(glEnable(GL_CULL_FACE));
+    RenderCommand::ResetCulling();
     GLCall(glPolygonMode(GL_FRONT_AND_BACK, GL_FILL));
-    GLCall(glFrontFace(GL_CCW));
   }
 
   void Mesh::AddAttribute(const BufferAttribute& attribute, const Pointer<char>& data)
