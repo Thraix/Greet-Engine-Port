@@ -7,13 +7,12 @@
 #include "Grid.h"
 
 using namespace Greet;
-namespace vmc 
+namespace vmc
 {
   class Core : public App
   {
     private:
       Grid* grid;
-      Layer* uilayer;
       Renderable2D* cursor;
       GUIScene* guiScene;
 
@@ -27,7 +26,6 @@ namespace vmc
 
       ~Core()
       {
-        delete uilayer;
         delete grid;
         delete guiScene;
       }
@@ -41,22 +39,12 @@ namespace vmc
         guiScene = new GUIScene(new GUIRenderer(), Shader::FromFile("res/shaders/gui.shader"));
         guiScene->AddFrame(FrameFactory::GetFrame("res/guis/editor.xml"));
 
+        Loaders::LoadTextures("res/loaders/textures.json");
         // Load Textures and Fonts.
-        TextureManager::Add("cursor", Texture2D("res/textures/cursor.png"));
-        TextureManager::Add("mask", Texture2D("res/textures/mask.png",TextureParams(
-                TextureFilter::LINEAR, 
-                TextureWrap::CLAMP_TO_EDGE, 
-                TextureInternalFormat::RGB)));
-        TextureManager::Add("guimask", Texture2D("res/textures/guimask.png"));
-        TextureManager::Add("skybox", CubeMap("res/textures/skybox.png"));
         FontManager::Add(new FontContainer("Anonymous Pro.ttf", "anonymous"));
 
-        cursor = new Renderable2D(Vec2(0, 0), Vec2(32, 32), 0xffffffff, Sprite(TextureManager::Get2D("cursor")), Sprite(TextureManager::Get2D("mask")));
-        uilayer = new Layer(new BatchRenderer(), ShaderFactory::DefaultShader(), Mat3::OrthographicViewport());
-        uilayer->Add(cursor);
 
         grid = new Grid();
-        //GlobalSceneManager::GetSceneManager().Add2DScene(uilayer, "uilayer");
         GlobalSceneManager::GetSceneManager().Add2DScene(guiScene, "GUIScene");
         Frame* frame = guiScene->GetFrame("Frame");
         if(!frame)
@@ -104,18 +92,7 @@ namespace vmc
 
       void OnEvent(Event& event) override
       {
-        if(EVENT_IS_TYPE(event, EventType::VIEWPORT_RESIZE))
-        {
-          ViewportResizeEvent& e = static_cast<ViewportResizeEvent&>(event);
-          uilayer->SetProjectionMatrix(Mat3::OrthographicViewport());
-        }
-        if(EVENT_IS_TYPE(event, EventType::MOUSE_MOVE))
-        {
-          MouseMoveEvent& mEvent = (MouseMoveEvent&)event;
-          Vec2 pos = ~ uilayer->GetProjectionMatrix() * mEvent.GetPosition();
-          cursor->SetPosition(pos);
-        }
-        else if(EVENT_IS_TYPE(event, EventType::KEY_PRESS))
+        if(EVENT_IS_TYPE(event, EventType::KEY_PRESS))
         {
           KeyPressEvent& kEvent = (KeyPressEvent&)event;
           if(kEvent.GetButton() == GLFW_KEY_F10)

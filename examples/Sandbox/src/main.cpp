@@ -8,6 +8,8 @@
 
 using namespace Greet;
 
+
+
 #if 1
 class Core : public App
 {
@@ -31,8 +33,9 @@ class Core : public App
     EntityModel* sphere;
     EntityModel* tetrahedron;
     std::vector<EntityModel> models;
-    FrameBufferObject* fbo;
     Light* light;
+
+    SceneView* sceneView;
 
 
     float progressFloat;
@@ -44,8 +47,6 @@ class Core : public App
     Button* button;
     Label* fps;
     Renderable2D* cursor;
-    Renderable2D* driverTest;
-    Renderable2D* fboScene;
 
   public:
     Core()
@@ -79,13 +80,14 @@ class Core : public App
       std::vector<BYTE> image = ImageUtils::CreateHeightmapImage(noise, noiseS, noiseS);
 
       Loaders::LoadTextures("res/loaders/textures.json");
+
       TextureManager::Add("noise",Texture2D(image, noiseS, noiseS, TextureParams(TextureFilter::NEAREST, TextureWrap::CLAMP_TO_EDGE, TextureInternalFormat::RGBA)));
 
-      FontManager::Add(new FontContainer("res/fonts/Anonymous Pro.ttf", "anonymous"));
-      FontManager::Add(new FontContainer("res/fonts/Roboto-Thin.ttf", "roboto"));
       FontManager::Add(new FontContainer("res/fonts/NotoSansUI-Regular.ttf","noto"));
 
-      fbo = new FrameBufferObject(960,540);
+      GUIScene* guiScene = new GUIScene(new GUIRenderer(), Shader::FromFile("res/shaders/gui.shader"));
+      guiScene->AddFrame(FrameFactory::GetFrame("res/guis/header.xml"));
+
       //camera = new TPCamera(vec3(-3.5, -7.8, 5.5), 18, 0.66, 38.5, 15, 80, 0, 0.8f); // Profile shot
       camera = new TPCamera(90, 0.01f,1000.0f, Vec3<float>(0, 0, 0), 15, 0, 0, 0, 80, -0.8f, 0.8f);
       Skybox* skybox = new Skybox(TextureManager::Get3D("skybox"));
@@ -201,11 +203,28 @@ class Core : public App
       //Tree t(renderer3d,0,0,0);
       uint pos = 0;
       //		Log::Info(JSONLoader::isNumber("0.1234s",pos));
-      GlobalSceneManager::GetSceneManager().Add2DScene(uilayer, "uilayer");
+      GlobalSceneManager::GetSceneManager().Add2DScene(guiScene, "guiScene");
       layer3d = new Layer3D(camera, skybox);
       layer3d->AddRenderer(renderer3d);
       layer3d->AddRenderer(waterRenderer);
-      GlobalSceneManager::GetSceneManager().Add3DScene(layer3d, "World");
+      Frame* frame = guiScene->GetFrame("FrameHeader");
+      if(!frame)
+      {
+        GlobalSceneManager::GetSceneManager().Add3DScene(layer3d, "World");
+        GlobalSceneManager::GetSceneManager().Add2DScene(uilayer, "uilayer");
+        return;
+      }
+
+      fps = frame->GetComponentByName<Label>("fpsCounter");
+      sceneView = frame->GetComponentByName<SceneView>("scene");
+      if(!sceneView)
+      {
+        GlobalSceneManager::GetSceneManager().Add3DScene(layer3d, "World");
+        GlobalSceneManager::GetSceneManager().Add2DScene(uilayer, "uilayer");
+        return;
+      }
+      sceneView->GetSceneManager().Add3DScene(layer3d, "World");
+      sceneView->GetSceneManager().Add2DScene(uilayer, "uilayer");
       //GlobalSceneManager::GetSceneManager().Add3DScene(new World(camera, 10, 10), "WorldTerrain");
     }
 
@@ -314,7 +333,8 @@ class Core : public App
     void Tick() override
     {
       std::string s = StringUtils::to_string(GetFPS()) + " fps | " + StringUtils::to_string(GetUPS())+ " ups";
-      //fps->text = s;
+      if(fps)
+        fps->SetText(StringUtils::to_string(GetFPS()));
       Window::SetTitle("Best Game Ever | " + s);
     }
 
@@ -344,7 +364,10 @@ class Core : public App
     {
       if(EVENT_IS_TYPE(event, EventType::MOUSE_MOVE))
       {
-        cursor->SetPosition(((MouseMoveEvent&)event).GetPosition());
+        // Temporary add viewport since we are not inside the layer
+        RenderCommand::PushViewportStack(sceneView->GetRealPosition(), Vec2(Window::GetWidth(), Window::GetHeight()) - sceneView->GetRealPosition());
+        cursor->SetPosition(Input::GetMousePosPixel());
+        RenderCommand::PopViewportStack();
       }
       else if(EVENT_IS_TYPE(event, EventType::KEY_RELEASE))
       {
@@ -371,6 +394,7 @@ class Core : public App
       }
       else if(EVENT_IS_TYPE(event, EventType::VIEWPORT_RESIZE))
       {
+        Log::Info("Resize");
         ViewportResizeEvent& e = static_cast<ViewportResizeEvent&>(event);
         uilayer->SetProjectionMatrix(Mat3::OrthographicViewport());
       }
