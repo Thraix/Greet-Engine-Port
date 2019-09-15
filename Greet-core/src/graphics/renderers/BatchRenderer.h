@@ -5,7 +5,7 @@
 
 #include <graphics/Renderable2D.h>
 #include <graphics/RenderablePoly.h>
-#include <graphics/buffers/BatchIndexBuffer.h>
+#include <graphics/buffers/VertexArray.h>
 
 #define RENDERER_MAX_TEXTURES	32
 #define RENDERER_MAX_SPRITES	360000
@@ -27,12 +27,13 @@ namespace Greet {
   {
 
     private:
-      uint m_ibo;
-      uint m_vbo;
-      uint m_vao;
+      Ref<VertexBuffer> vbo;
+      Ref<VertexArray> vao;
+      Ref<Buffer> ibo;
+
       uint m_iboSize;
       uint m_lastIndex;
-      uint* m_indices;
+      uint* indices;
       VertexData* m_buffer;
 
       std::vector<GLuint> m_texSlots;

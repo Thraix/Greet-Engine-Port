@@ -12,10 +12,7 @@ namespace Greet {
 
   BatchRenderer::~BatchRenderer()
   {
-    delete m_indices;
-    GLCall(glDeleteBuffers(1, &m_ibo));
-    GLCall(glDeleteBuffers(1, &m_vbo));
-    GLCall(glDeleteVertexArrays(1, &m_vao));
+    delete indices;
     for (uint i = 0; i < m_texSlots.size(); i++)
     {
       delete &m_texSlots[i];
@@ -24,38 +21,29 @@ namespace Greet {
 
   void BatchRenderer::Init()
   {
-    GLCall(glGenVertexArrays(1, &m_vao));
-    GLCall(glGenBuffers(1, &m_vbo));
+    vao = VertexArray::Create();
+    vbo = VertexBuffer::CreateDynamic(nullptr, RENDERER_BUFFER_SIZE);
+    vbo->SetStructure({
+        { SHADER_VERTEX_INDEX, BufferAttributeType::VEC2},
+        { SHADER_TEXCOORD_INDEX, BufferAttributeType::VEC2},
+        { SHADER_TEXID_INDEX, BufferAttributeType::FLOAT},
+        { SHADER_COLOR_INDEX, BufferAttributeType::UBYTE4, true},
+        { SHADER_MASK_TEXCOORD_INDEX, BufferAttributeType::VEC2},
+        { SHADER_MASK_TEXID_INDEX, BufferAttributeType::FLOAT}
+        });
+    vao->AddVertexBuffer(vbo);
+    vbo->Disable();
 
-    GLCall(glBindVertexArray(m_vao));
-    GLCall(glBindBuffer(GL_ARRAY_BUFFER, m_vbo));
-
-    GLCall(glBufferData(GL_ARRAY_BUFFER, RENDERER_BUFFER_SIZE, NULL, GL_DYNAMIC_DRAW));
-
-    GLCall(glEnableVertexAttribArray(SHADER_VERTEX_INDEX));
-    GLCall(glEnableVertexAttribArray(SHADER_TEXCOORD_INDEX));
-    GLCall(glEnableVertexAttribArray(SHADER_TEXID_INDEX));
-    GLCall(glEnableVertexAttribArray(SHADER_COLOR_INDEX));
-    GLCall(glEnableVertexAttribArray(SHADER_MASK_TEXCOORD_INDEX));
-    GLCall(glEnableVertexAttribArray(SHADER_MASK_TEXID_INDEX));
-    GLCall(glVertexAttribPointer(SHADER_VERTEX_INDEX, 2, GL_FLOAT, GL_FALSE, RENDERER_VERTEX_SIZE, (const GLvoid*)offsetof(VertexData, VertexData::vertex)));
-    GLCall(glVertexAttribPointer(SHADER_TEXCOORD_INDEX, 2, GL_FLOAT, GL_FALSE, RENDERER_VERTEX_SIZE, (const GLvoid*)offsetof(VertexData, VertexData::texCoord)));
-    GLCall(glVertexAttribPointer(SHADER_TEXID_INDEX, 1, GL_FLOAT, GL_FALSE, RENDERER_VERTEX_SIZE, (const GLvoid*)offsetof(VertexData, VertexData::texID)));
-    GLCall(glVertexAttribPointer(SHADER_COLOR_INDEX, 4, GL_UNSIGNED_BYTE, GL_TRUE, RENDERER_VERTEX_SIZE, (const GLvoid*)offsetof(VertexData, VertexData::color)));
-    GLCall(glVertexAttribPointer(SHADER_MASK_TEXCOORD_INDEX, 2, GL_FLOAT, GL_FALSE, RENDERER_VERTEX_SIZE, (const GLvoid*)offsetof(VertexData, VertexData::maskTexCoord)));
-    GLCall(glVertexAttribPointer(SHADER_MASK_TEXID_INDEX, 1, GL_FLOAT, GL_FALSE, RENDERER_VERTEX_SIZE, (const GLvoid*)offsetof(VertexData, VertexData::maskTexID)));
-    GLCall(glBindBuffer(GL_ARRAY_BUFFER, 0));
-
-    //Generate all the indices at runtime
-    m_indices = new GLuint[RENDERER_INDICES_SIZE];
-    GLCall(glGenBuffers(1, &m_ibo));
-    GLCall(glBindVertexArray(0));
+    indices = new uint[RENDERER_INDICES_SIZE];
+    ibo = Buffer::Create(sizeof(indices), BufferType::INDEX, BufferDrawType::DYNAMIC);
+    ibo->Disable();
+    vao->Disable();
   }
 
   void BatchRenderer::Begin()
   {
-    GLCall(glBindBuffer(GL_ARRAY_BUFFER, m_vbo));
-    GLCall(m_buffer = (VertexData*)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY));
+    vbo->Enable();
+    m_buffer = (VertexData*)vbo->MapBuffer();
     m_iboSize = 0;
     m_lastIndex = 0;
   }
@@ -277,8 +265,8 @@ namespace Greet {
 
   void BatchRenderer::End()
   {
-    GLCall(glUnmapBuffer(GL_ARRAY_BUFFER));
-    GLCall(glBindBuffer(GL_ARRAY_BUFFER, 0));
+    vbo->UnmapBuffer();
+    vbo->Disable();
   }
 
   void BatchRenderer::Flush()
@@ -304,15 +292,15 @@ namespace Greet {
 
   void BatchRenderer::EnableBuffers()
   {
-    GLCall(glBindVertexArray(m_vao));
-    GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ibo));
-    GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_iboSize*sizeof(uint), m_indices, GL_DYNAMIC_DRAW));
+    vao->Enable();
+    ibo->Enable();
+    ibo->UpdateData(indices, m_iboSize*sizeof(uint));
   }
 
   void BatchRenderer::DisableBuffers()
   {
-    GLCall(glBindVertexArray(0));
-    GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
+    vao->Disable();
+    ibo->Disable();
   }
 
   void BatchRenderer::AddIndicesPoly(uint vertices)
@@ -320,11 +308,11 @@ namespace Greet {
     vertices -= 2;
     for (uint i = 0; i < vertices; i++)
     {
-      m_indices[m_iboSize + 3 * i] = m_lastIndex;
-      m_indices[m_iboSize + 3 * i + 1] = m_lastIndex + i+1;
-      m_indices[m_iboSize + 3 * i + 2] = m_lastIndex + i+2;
+      indices[m_iboSize + 3 * i] = m_lastIndex;
+      indices[m_iboSize + 3 * i + 1] = m_lastIndex + i+1;
+      indices[m_iboSize + 3 * i + 2] = m_lastIndex + i+2;
 
     }
-    m_lastIndex = m_indices[m_iboSize + 3 * (vertices - 1) + 2] + 1;
+    m_lastIndex = indices[m_iboSize + 3 * (vertices - 1) + 2] + 1;
   }
 }

@@ -2,6 +2,7 @@
 
 #include <graphics/fonts/Font.h>
 #include <graphics/renderers/Renderer2D.h>
+#include <graphics/buffers/VertexArray.h>
 #include <internal/GreetGL.h>
 #include <math/Vec4.h>
 #include <stack>
@@ -32,9 +33,9 @@ namespace Greet
       uint m_vertices;
 
 
-      uint m_ibo;
-      uint m_vbo;
-      uint m_vao;
+      Ref<Buffer> ibo;
+      Ref<VertexBuffer> vbo;
+      Ref<VertexArray> vao;
       uint m_lastIndex;
       uint* m_indices;
       uint m_iboCount;

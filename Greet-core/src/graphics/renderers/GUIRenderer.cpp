@@ -11,43 +11,36 @@ namespace Greet
   GUIRenderer::GUIRenderer()
   {
     translationStack.push({0, 0});
-    GLCall(glGenVertexArrays(1, &m_vao));
-    GLCall(glGenBuffers(1, &m_vbo));
 
-    GLCall(glBindVertexArray(m_vao));
-    GLCall(glBindBuffer(GL_ARRAY_BUFFER, m_vbo));
     m_textures = new uint[32];
     m_vertices = 10000;
     m_bufferSize = m_vertices * sizeof(GUIVertex) * 4;
     m_iboSize = m_vertices * 6;
-    GLCall(glBufferData(GL_ARRAY_BUFFER, m_bufferSize, NULL, GL_DYNAMIC_DRAW));
 
-    GLCall(glEnableVertexAttribArray(0));
-    GLCall(glEnableVertexAttribArray(1));
-    GLCall(glEnableVertexAttribArray(2));
-    GLCall(glEnableVertexAttribArray(3));
-    GLCall(glEnableVertexAttribArray(4));
-    GLCall(glEnableVertexAttribArray(5));
-    GLCall(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(GUIVertex), (const GLvoid*)offsetof(GUIVertex, GUIVertex::pos)));
-    GLCall(glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(GUIVertex), (const GLvoid*)offsetof(GUIVertex, GUIVertex::texCoord)));
-    GLCall(glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, sizeof(GUIVertex), (const GLvoid*)offsetof(GUIVertex, GUIVertex::texId)));
-    GLCall(glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(GUIVertex), (const GLvoid*)offsetof(GUIVertex, GUIVertex::color)));
-    GLCall(glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(GUIVertex), (const GLvoid*)offsetof(GUIVertex, GUIVertex::viewport)));
-    GLCall(glVertexAttribPointer(5, 1, GL_FLOAT, GL_FALSE, sizeof(GUIVertex), (const GLvoid*)offsetof(GUIVertex, GUIVertex::isHSV)));
+    vao = VertexArray::Create();
+    vbo = VertexBuffer::CreateDynamic(nullptr, m_bufferSize);
+    vbo->SetStructure({
+        {0, BufferAttributeType::VEC2},
+        {1, BufferAttributeType::VEC2},
+        {2, BufferAttributeType::FLOAT},
+        {3, BufferAttributeType::VEC4},
+        {4, BufferAttributeType::VEC4},
+        {5, BufferAttributeType::FLOAT},
+        });
+    vao->AddVertexBuffer(vbo);
 
-    GLCall(glBindBuffer(GL_ARRAY_BUFFER, 0));
+    vbo->Disable();
     //Generate all the indices at runtime
     m_indices = new uint[m_iboSize];
-    GLCall(glGenBuffers(1, &m_ibo));
-    GLCall(glBindVertexArray(0));
+    ibo = Buffer::Create(m_iboSize, BufferType::INDEX, BufferDrawType::DYNAMIC);
+    ibo->Disable();
+    vao->Disable();
   }
 
   void GUIRenderer::Begin()
   {
-    GLCall(glBindBuffer(GL_ARRAY_BUFFER, m_vbo));
-    GLCall(m_buffer = (GUIVertex*)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY));
-    //GLCall(glPolygonMode( GL_FRONT_AND_BACK, GL_LINE ));
-    //GLCall(glLineWidth(1));
+    vbo->Enable();
+    m_buffer = (GUIVertex*)vbo->MapBuffer();
 
     m_bufferBegin = m_buffer;
     m_lastIndex = 0;
@@ -70,14 +63,14 @@ namespace Greet
       // TODO: Remove this and actually draw the different things correctly
       // instead
       GLCall(glDisable(GL_CULL_FACE));
-      GLCall(glBindVertexArray(m_vao));
-      GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ibo));
-      GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * m_iboCount, m_indices, GL_DYNAMIC_DRAW));
+      vao->Enable();
+      ibo->Enable();
+      ibo->UpdateData(m_indices, sizeof(uint) * m_iboCount);
 
       GLCall(glDrawElements(GL_TRIANGLES, m_iboSize, GL_UNSIGNED_INT, NULL));
 
-      GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ibo));
-      GLCall(glBindVertexArray(0));
+      ibo->Disable();
+      vao->Disable();
 
       GLCall(glActiveTexture(GL_TEXTURE0));
       GLCall(glEnable(GL_CULL_FACE));
@@ -87,8 +80,8 @@ namespace Greet
 
   void GUIRenderer::End()
   {
-    GLCall(glUnmapBuffer(GL_ARRAY_BUFFER));
-    GLCall(glBindBuffer(GL_ARRAY_BUFFER, 0));
+    vbo->UnmapBuffer();
+    vbo->Disable();
   }
 
   void GUIRenderer::Flush()
