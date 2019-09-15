@@ -1,7 +1,7 @@
 #include "Frame.h"
 
 #include <graphics/gui/GUIUtils.h>
-#include <internal/GreetGL.h>
+#include <input/InputDefines.h>
 #include <utils/Utils.h>
 #include <utils/AABBUtils.h>
 
@@ -142,7 +142,7 @@ namespace Greet {
     if(EVENT_IS_TYPE(event, EventType::MOUSE_PRESS))
     {
       MousePressEvent& e = static_cast<MousePressEvent&>(event);
-      if (e.GetButton() == GLFW_MOUSE_BUTTON_1)
+      if (e.GetButton() == GREET_MOUSE_1)
       {
         m_posOrigin = pos;
         m_sizeOrigin = size.size;
@@ -153,7 +153,7 @@ namespace Greet {
     else if(EVENT_IS_TYPE(event, EventType::MOUSE_RELEASE))
     {
       MouseReleaseEvent& e = static_cast<MouseReleaseEvent&>(event);
-      if (e.GetButton() == GLFW_MOUSE_BUTTON_1)
+      if (e.GetButton() == GREET_MOUSE_1)
         m_resizing = false;
     }
     else if(EVENT_IS_TYPE(event, EventType::MOUSE_MOVE))

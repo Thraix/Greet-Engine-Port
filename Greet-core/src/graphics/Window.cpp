@@ -1,5 +1,6 @@
 #include "Window.h"
 
+#include <input/InputDefines.h>
 #include <internal/GreetGL.h>
 #include <graphics/fonts/FontManager.h>
 #include <graphics/textures/TextureManager.h>
@@ -235,13 +236,13 @@ namespace Greet {
 
   Joystick* Window::GetJoystick(uint joystick)
   {
-    ASSERT(joystick < GLFW_JOYSTICKS, "WINDOW","Invalid Joystick. Ranges from 0-3: ", joystick);
+    ASSERT(joystick < GREET_JOYSTICKS, "WINDOW","Invalid Joystick. Ranges from 0-3: ", joystick);
     return (joysticks[joystick]).get();
   }
 
   bool Window::IsJoystickConnected(uint joystick)
   {
-    ASSERT(joystick < GLFW_JOYSTICKS, "WINDOW", "Invalid Joystick. Ranges from 0-3: ", joystick);
+    ASSERT(joystick < GREET_JOYSTICKS, "WINDOW", "Invalid Joystick. Ranges from 0-3: ", joystick);
     return joysticks[joystick]->m_connected;
   }
 }

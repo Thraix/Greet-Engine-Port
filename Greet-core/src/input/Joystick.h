@@ -3,7 +3,7 @@
 #include <vector>
 #include <math/Maths.h>
 
-#ifndef MAX_JOYSTICKS 
+#ifndef MAX_JOYSTICKS
 #define MAX_JOYSTICKS 4
 #endif
 
@@ -23,12 +23,12 @@ namespace Greet {
       const int m_jsNum;
 
       // Axis Data
-      int axisCount; 
+      int axisCount;
       const float* axis;
       float* previousAxis;
 
       // Button data
-      int buttonCount; 
+      int buttonCount;
       unsigned char* previousButtons;
       const unsigned char* buttons;
 

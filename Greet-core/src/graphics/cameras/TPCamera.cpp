@@ -2,7 +2,7 @@
 
 #include <graphics/Window.h>
 #include <event/MouseEvent.h>
-#include <internal/GreetGL.h>
+#include <input/InputDefines.h>
 
 namespace Greet {
 
@@ -22,7 +22,7 @@ namespace Greet {
   {
   }
 
-  TPCamera::TPCamera(float fov, float near, float far, const Vec3<float>& position, float distance, float height, float rotation, float distanceMin, float distanceMax, float heightMin, float heightMax, float rotationSpeed, float heightSpeed, float distanceSpeed) 
+  TPCamera::TPCamera(float fov, float near, float far, const Vec3<float>& position, float distance, float height, float rotation, float distanceMin, float distanceMax, float heightMin, float heightMax, float rotationSpeed, float heightSpeed, float distanceSpeed)
     : Camera(fov, near, far), m_position(position), m_distance(distance), m_height(height), m_rotation(rotation), m_rotationSpeed(rotationSpeed), m_heightSpeed(heightSpeed), m_distanceSpeed(distanceSpeed)
   {
     m_rotationWanted = m_rotation;
@@ -169,21 +169,21 @@ namespace Greet {
     if(EVENT_IS_TYPE(event, EventType::MOUSE_PRESS))
     {
       MousePressEvent mEvent = (MousePressEvent&)event;
-      if(mEvent.GetButton() == GLFW_MOUSE_BUTTON_1) 
+      if(mEvent.GetButton() == GREET_MOUSE_1)
         m_mouse1 = true;
-      else if(mEvent.GetButton() == GLFW_MOUSE_BUTTON_2) 
+      else if(mEvent.GetButton() == GREET_MOUSE_2)
         m_mouse2 = true;
-      else if(mEvent.GetButton() == GLFW_MOUSE_BUTTON_3) 
+      else if(mEvent.GetButton() == GREET_MOUSE_3)
         m_mouse3 = true;
     }
     else if(EVENT_IS_TYPE(event, EventType::MOUSE_RELEASE))
     {
       MousePressEvent mEvent = (MousePressEvent&)event;
-      if(mEvent.GetButton() == GLFW_MOUSE_BUTTON_1) 
+      if(mEvent.GetButton() == GREET_MOUSE_1)
         m_mouse1 = false;
-      else if(mEvent.GetButton() == GLFW_MOUSE_BUTTON_2) 
+      else if(mEvent.GetButton() == GREET_MOUSE_2)
         m_mouse2 = false;
-      else if(mEvent.GetButton() == GLFW_MOUSE_BUTTON_3) 
+      else if(mEvent.GetButton() == GREET_MOUSE_3)
         m_mouse3 = false;
     }
     else if(EVENT_IS_TYPE(event, EventType::MOUSE_MOVE))

@@ -3,21 +3,21 @@
 #include <math/MathFunc.h>
 #include <cstring>
 
-#define _0_0 0 
-#define _0_1 1 
-#define _0_2 2 
-#define _0_3 3 
-#define _1_0 4 
-#define _1_1 5 
-#define _1_2 6 
-#define _1_3 7 
-#define _2_0 8 
-#define _2_1 9 
+#define _0_0 0
+#define _0_1 1
+#define _0_2 2
+#define _0_3 3
+#define _1_0 4
+#define _1_1 5
+#define _1_2 6
+#define _1_3 7
+#define _2_0 8
+#define _2_1 9
 #define _2_2 10
-#define _2_3 11 
-#define _3_0 12 
-#define _3_1 13 
-#define _3_2 14 
+#define _2_3 11
+#define _3_0 12
+#define _3_1 13
+#define _3_2 14
 #define _3_3 15
 #define SIZE 4
 #define FLOATS SIZE*SIZE

@@ -1,6 +1,6 @@
 #include "TextBox.h"
 
-#include <internal/GreetGL.h>
+#include <input/InputDefines.h>
 #include <utils/StringUtils.h>
 
 namespace Greet
@@ -99,7 +99,7 @@ namespace Greet
     if(EVENT_IS_TYPE(event, EventType::MOUSE_PRESS))
     {
       MousePressEvent& e = static_cast<MousePressEvent&>(event);
-      if(e.GetButton() == GLFW_MOUSE_BUTTON_1)
+      if(e.GetButton() == GREET_MOUSE_1)
       {
         // TODO: In the future we probably want to do some smart, average character length
         // to determain around where the cursor should be.
@@ -126,7 +126,7 @@ namespace Greet
     else if(EVENT_IS_TYPE(event, EventType::KEY_RELEASE))
     {
       KeyReleaseEvent& e = static_cast<KeyReleaseEvent&>(event);
-      if(e.GetButton() == GLFW_KEY_LEFT_CONTROL)
+      if(e.GetButton() == GREET_KEY_LEFT_CONTROL)
         ctrlDown = false;
     }
     else if(EVENT_IS_TYPE(event, EventType::KEY_TYPE))
@@ -146,25 +146,25 @@ namespace Greet
   {
     // Easier to type if the blinker is turned on while typing
     cursorBlinkTimer = 0;
-    if(event.GetButton() == GLFW_KEY_LEFT_CONTROL)
+    if(event.GetButton() == GREET_KEY_LEFT_CONTROL)
     {
       ctrlDown = true;
     }
-    else if(event.GetButton() == GLFW_KEY_LEFT)
+    else if(event.GetButton() == GREET_KEY_LEFT)
     {
       if(ctrlDown)
         MoveCursorWord(false);
       else
         MoveCursor(-1);
     }
-    else if(event.GetButton() == GLFW_KEY_RIGHT)
+    else if(event.GetButton() == GREET_KEY_RIGHT)
     {
       if(ctrlDown)
         MoveCursorWord(true);
       else
         MoveCursor(1);
     }
-    else if(event.GetButton() == GLFW_KEY_BACKSPACE)
+    else if(event.GetButton() == GREET_KEY_BACKSPACE)
     {
       if(cursorPos > 0)
       {
@@ -182,7 +182,7 @@ namespace Greet
         }
       }
     }
-    else if(event.GetButton() == GLFW_KEY_DELETE)
+    else if(event.GetButton() == GREET_KEY_DELETE)
     {
       if(cursorPos < str.length())
       {
@@ -203,20 +203,20 @@ namespace Greet
         }
       }
     }
-    else if(event.GetButton() == GLFW_KEY_HOME)
+    else if(event.GetButton() == GREET_KEY_HOME)
     {
       MoveCursor(-cursorPos);
     }
-    else if(event.GetButton() == GLFW_KEY_END)
+    else if(event.GetButton() == GREET_KEY_END)
     {
       MoveCursor(text->GetText().length()-cursorPos);
     }
-    else if(event.GetButton() == GLFW_KEY_PAGE_UP)
+    else if(event.GetButton() == GREET_KEY_PAGE_UP)
     {
       // TODO: When multiline is implemented move to top of page
       MoveCursor(-cursorPos);
     }
-    else if(event.GetButton() == GLFW_KEY_PAGE_DOWN)
+    else if(event.GetButton() == GREET_KEY_PAGE_DOWN)
     {
       // TODO: When multiline is implemented move to bottom of page
       MoveCursor(text->GetText().length()-cursorPos);

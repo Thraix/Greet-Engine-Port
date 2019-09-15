@@ -1,11 +1,12 @@
 #pragma once
 
+#include <input/InputDefines.h>
 #include <math/Vec2.h>
 #include <vector>
 
 namespace Greet
 {
-  class Input 
+  class Input
   {
     public:
       friend class Window;
@@ -39,5 +40,4 @@ namespace Greet
 
       static void Update();
   };
-} 
-
+}

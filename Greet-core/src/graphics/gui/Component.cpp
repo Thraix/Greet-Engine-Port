@@ -1,7 +1,8 @@
 #include "Component.h"
 
 #include <graphics/gui/Container.h>
-#include <internal/GreetGL.h>
+#include <input/InputDefines.h>
+#include <utils/LogUtils.h>
 #include <utils/AABBUtils.h>
 #include <utils/UUID.h>
 
@@ -161,7 +162,7 @@ namespace Greet
     {
       if(!isFocused)
         guiScene->RequestFocus(this);
-      if(event.GetButton() == GLFW_MOUSE_BUTTON_1)
+      if(event.GetButton() == GREET_MOUSE_1)
       {
         pressed = true;
         CallOnPressCallback();
@@ -193,7 +194,7 @@ namespace Greet
 
   void Component::OnMouseReleaseEventHandler(MouseReleaseEvent& event, const Vec2& componentPos)
   {
-    if(event.GetButton() == GLFW_MOUSE_BUTTON_1)
+    if(event.GetButton() == GREET_MOUSE_1)
     {
       if(pressed)
       {

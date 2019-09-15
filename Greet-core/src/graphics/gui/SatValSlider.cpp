@@ -1,6 +1,6 @@
 #include "SatValSlider.h"
 
-#include <internal/GreetGL.h>
+#include <input/InputDefines.h>
 
 namespace Greet
 {
@@ -73,7 +73,7 @@ namespace Greet
     if(EVENT_IS_TYPE(event, EventType::MOUSE_PRESS))
     {
       MousePressEvent& e = static_cast<MousePressEvent&>(event);
-      if(e.GetButton() == GLFW_MOUSE_BUTTON_1 && pressed)
+      if(e.GetButton() == GREET_MOUSE_1 && pressed)
       {
         float oldSat = sat;
         float oldVal = val;
