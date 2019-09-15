@@ -8,7 +8,7 @@
 namespace Greet {
 
 
-  class UUID 
+  class UUID
   {
     public:
       friend class Window;

@@ -330,7 +330,7 @@ namespace Greet
         float x = circlePos.x;
         circlePos.x = radius - size.w*0.5;
 
-        a = aEnd; 
+        a = aEnd;
         Vec2 nextCirclePos{cos(a)*radius,sin(a)*radius};
         float t = (circlePos.x - x) / (nextCirclePos.x - x);
         circlePos.y = (nextCirclePos.y - circlePos.y) * t + circlePos.y;
@@ -340,7 +340,7 @@ namespace Greet
         float y = circlePos.y;
         circlePos.y = radius - size.h*0.5;
 
-        a = aStart; 
+        a = aStart;
         Vec2 nextCirclePos{cos(a)*radius,sin(a)*radius};
         float t = (circlePos.y - y) / (nextCirclePos.y - y);
         circlePos.x = (nextCirclePos.x - circlePos.x) * t + circlePos.x;
@@ -348,9 +348,9 @@ namespace Greet
 
       // Top left
       AppendVertexBuffer(position+radius - circlePos, Vec2(0,0), 0, color, viewport, isHsv);
-      // Top right 
+      // Top right
       AppendVertexBuffer(position+Vec2(size.x-radius+circlePos.x,radius-circlePos.y), Vec2(0,0), 0, color, viewport, isHsv);
-      // Bottom right 
+      // Bottom right
       AppendVertexBuffer(position+size-radius + circlePos, Vec2(0,0), 0, color, viewport, isHsv);
       // bottom left
       AppendVertexBuffer(position+Vec2(radius-circlePos.x,size.y-radius+circlePos.y), Vec2(0,0), 0, color, viewport, isHsv);

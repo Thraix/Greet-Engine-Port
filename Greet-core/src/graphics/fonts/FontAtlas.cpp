@@ -6,7 +6,7 @@
 namespace Greet
 {
   FontAtlas::FontAtlas(const std::string& filename, uint width, uint height, uint fontSize)
-    : yPos(0), xPos(0), nextYPos(0), width(width), height(height), fontSize(fontSize), 
+    : yPos(0), xPos(0), nextYPos(0), width(width), height(height), fontSize(fontSize),
     atlas{width, height,TextureParams(TextureFilter::LINEAR,TextureWrap::CLAMP_TO_EDGE,TextureInternalFormat::RGBA)},m_pixels(width*height*4)
   {
     if(FT_Init_FreeType(&library))
@@ -64,7 +64,7 @@ namespace Greet
         m_pixels[4*((x+xPos) + (y+yPos) * width)+0] = 0xff;
         m_pixels[4*((x+xPos) + (y+yPos) * width)+1] = 0xff;
         m_pixels[4*((x+xPos) + (y+yPos) * width)+2] = 0xff;
-        m_pixels[4*((x+xPos) + (y+yPos) * width)+3] = a; 
+        m_pixels[4*((x+xPos) + (y+yPos) * width)+3] = a;
       }
     }
     Glyph g;
@@ -83,12 +83,12 @@ namespace Greet
     return ret.first->second;
   }
 
-  uint FontAtlas::GetTextureId() const 
+  uint FontAtlas::GetTextureId() const
   {
     return atlas.GetTexId();
   }
 
-  uint FontAtlas::GetBaselineOffset() const 
+  uint FontAtlas::GetBaselineOffset() const
   {
     return (face->size->metrics.descender+ face->size->metrics.ascender) / 64.0f;
   }

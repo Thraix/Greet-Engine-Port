@@ -23,7 +23,7 @@ namespace Greet {
   {
 
   }
-  
+
   CubeMap::CubeMap()
     : Texture(GL_TEXTURE_CUBE_MAP)
   {

@@ -7,7 +7,7 @@ namespace Greet {
   class MeshFactory
   {
     public:
-      enum PolygonSizeFormat 
+      enum PolygonSizeFormat
       {
         SIDE_LENGTH, INSCRIBED_RADIUS, CIRCUMSCRIBED_RADIUS
       };

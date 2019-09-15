@@ -274,7 +274,7 @@ namespace Greet{
     {
       return !Compare(second);
     }
-    
+
     Vec3 operator-() const
     {
       return Vec3(-x, -y, -z);
@@ -304,7 +304,7 @@ namespace Greet{
       return stream << "(" << vec.x << ", " << vec.y << ", " << vec.z << ")";
     }
   };
-  namespace Vec 
+  namespace Vec
   {
     template <typename Real>
     static Real Dot(const Vec3<Real>& lhs, const Vec3<Real>& rhs)

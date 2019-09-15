@@ -52,7 +52,7 @@ namespace Greet {
        */
       const std::string& GetName() const { return m_name; }
 
-      /* 
+      /*
        * Set the loglevel for the stream
        */
       void SetLogLevel(LogLevel level);
@@ -105,7 +105,7 @@ namespace Greet {
       auto PutHelper(const T& t, long long)
         -> decltype(t.begin(), t.end(), std::declval<void>())
       {
-        auto size = t.size()-1; 
+        auto size = t.size()-1;
         for(auto it = t.begin();it!=t.end();++it,--size)
         {
           Put(*it);

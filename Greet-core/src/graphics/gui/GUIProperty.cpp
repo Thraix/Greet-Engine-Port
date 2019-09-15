@@ -9,9 +9,9 @@ namespace Greet
     {
       switch(property)
       {
-        case WIDTH: case MARGIN_LEFT: case MARGIN_RIGHT: case BORDER_LEFT: case BORDER_RIGHT: 
+        case WIDTH: case MARGIN_LEFT: case MARGIN_RIGHT: case BORDER_LEFT: case BORDER_RIGHT:
           return GUIUtils::CalcSize(xmlObject.GetAttribute(property), content->GetPotentialWidth());
-        case HEIGHT: case MARGIN_TOP: case MARGIN_BOTTOM: case BORDER_TOP: case BORDER_BOTTOM: 
+        case HEIGHT: case MARGIN_TOP: case MARGIN_BOTTOM: case BORDER_TOP: case BORDER_BOTTOM:
           return GUIUtils::CalcSize(xmlObject.GetAttribute(property), content->GetPotentialHeight());
         default:
           Log::Warning("Invalid property, not float: ", property);

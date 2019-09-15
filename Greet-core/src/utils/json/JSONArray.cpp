@@ -55,7 +55,7 @@ namespace Greet {
     {
       os << arr.GetObject(i);
       if(i != size - 1)
-      { 
+      {
         os << ",\n";
       }
     }

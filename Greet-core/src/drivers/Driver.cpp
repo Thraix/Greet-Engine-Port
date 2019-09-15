@@ -3,14 +3,14 @@
 #include <logging/Log.h>
 
 namespace Greet {
-  Driver::Driver(float time, DriverListener* listener) 
+  Driver::Driver(float time, DriverListener* listener)
     : m_time(time), m_elapsed(0), m_listener(listener)
   {
 
   }
 
-  void Driver::Preupdate(float timeElapsed) 
-  { 
+  void Driver::Preupdate(float timeElapsed)
+  {
     m_elapsedSinceStart += timeElapsed;
     m_elapsed = timeElapsed;
     if (m_elapsedSinceStart >= m_time)
@@ -31,7 +31,7 @@ namespace Greet {
     return false;
   }
 
-  void Driver::OnFinished() 
+  void Driver::OnFinished()
   {
     m_listener->OnDriverFinished();
   }

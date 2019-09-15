@@ -12,8 +12,8 @@ namespace Greet
       friend class XMLexception;
       struct XMLLoadData
       {
-        int pos; 
-        int line; 
+        int pos;
+        int line;
         const std::string& file;
       };
     private:
@@ -57,6 +57,6 @@ namespace Greet
       void ReadText(const std::string& string, XMLLoadData& data);
       void ReadWhiteSpace(const std::string& string, XMLLoadData& data);
       void ReplacePredefinedEntities(std::string& string, XMLLoadData& data);
-      std::string ReadXMLName(const std::string& string, XMLLoadData& data); 
+      std::string ReadXMLName(const std::string& string, XMLLoadData& data);
   };
 }

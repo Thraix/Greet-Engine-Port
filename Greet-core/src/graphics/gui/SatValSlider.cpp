@@ -41,7 +41,7 @@ namespace Greet
     delete sliderComponent;
   }
 
-  void SatValSlider::Measure() 
+  void SatValSlider::Measure()
   {
     sliderComponent->Measure();
     Component::Measure();

@@ -99,7 +99,7 @@ namespace Greet {
           {
             float f;
             GLCall(glGetUniformfv(oldProgram, found->second, &f));
-            SetUniform1f(it->name, f);      
+            SetUniform1f(it->name, f);
           }
           else
           {
@@ -119,25 +119,25 @@ namespace Greet {
         {
           Vec2 f;
           GLCall(glGetnUniformfv(oldProgram, found->second, sizeof(Vec2), (float*)&f));
-          SetUniform2f(it->name, f);      
+          SetUniform2f(it->name, f);
         }
         else if(it->type == GL_FLOAT_VEC3)
         {
           Vec3<float> f;
           GLCall(glGetnUniformfv(oldProgram, found->second, sizeof(Vec3<float>), (float*)&f));
-          SetUniform3f(it->name, f);      
+          SetUniform3f(it->name, f);
         }
         else if(it->type == GL_FLOAT_VEC4)
         {
           Vec4 f;
           GLCall(glGetnUniformfv(oldProgram, found->second, sizeof(Vec4), (float*)&f));
-          SetUniform4f(it->name, f);      
+          SetUniform4f(it->name, f);
         }
         else if(it->type == GL_FLOAT)
         {
           Vec4 f;
           GLCall(glGetnUniformfv(oldProgram, found->second, sizeof(Vec4), (float*)&f));
-          SetUniform4f(it->name, f);      
+          SetUniform4f(it->name, f);
         }
         else if(it->type == GL_INT || it->type == GL_SAMPLER_2D)
         {
@@ -145,7 +145,7 @@ namespace Greet {
           {
             int i;
             GLCall(glGetUniformiv(oldProgram, found->second, &i));
-            SetUniform1i(it->name, i);      
+            SetUniform1i(it->name, i);
           }
           else
           {
@@ -167,7 +167,7 @@ namespace Greet {
           {
             uint i;
             GLCall(glGetUniformuiv(oldProgram, found->second, &i));
-            SetUniform1ui(it->name, i);      
+            SetUniform1ui(it->name, i);
           }
           else
           {
@@ -187,13 +187,13 @@ namespace Greet {
         {
           Mat3 mat;
           GLCall(glGetnUniformfv(oldProgram, found->second, sizeof(Mat3), mat.elements));
-          SetUniformMat3(it->name, mat);      
+          SetUniformMat3(it->name, mat);
         }
         else if(it->type == GL_FLOAT_MAT4)
         {
           Mat4 mat;
           GLCall(glGetnUniformfv(oldProgram, found->second, sizeof(Mat4), mat.elements));
-          SetUniformMat4(it->name, mat);      
+          SetUniformMat4(it->name, mat);
         }
       }
     }
@@ -243,7 +243,7 @@ namespace Greet {
 
   uint Shader::Load(const std::string& vertSrc, const std::string& fragSrc, const std::string& geomSrc, bool hasGeometry)
   {
-    GLCall(uint program = glCreateProgram()); 
+    GLCall(uint program = glCreateProgram());
 
     uint shader = CompileAttachShader(program, vertSrc, GL_VERTEX_SHADER, true);
     if (!shader)
@@ -388,7 +388,7 @@ namespace Greet {
         }
       }
       GLCall(glCompileShader(shader));
-    }	
+    }
     return shader;
   }
 
@@ -494,7 +494,7 @@ namespace Greet {
   }
 
   Ref<Shader> Shader::FromFile(const std::string& vertPath, const std::string& fragPath)
-  {	
+  {
     std::string vertSourceString = FileUtils::read_file(vertPath.c_str());
     std::string fragSourceString = FileUtils::read_file(fragPath.c_str());
     return std::shared_ptr<Shader>(new Shader{vertSourceString, fragSourceString});
@@ -502,7 +502,7 @@ namespace Greet {
 
 
   Ref<Shader> Shader::FromFile(const std::string& vertPath, const std::string& fragPath, const std::string& geomPath)
-  {	
+  {
     std::string vertSourceString = FileUtils::read_file(vertPath.c_str());
     std::string fragSourceString = FileUtils::read_file(fragPath.c_str());
     std::string geomSourceString = FileUtils::read_file(geomPath.c_str());

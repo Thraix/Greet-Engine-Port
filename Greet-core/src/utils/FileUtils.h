@@ -14,7 +14,7 @@
 #include <string>
 #include <cstring>
 #include <logging/Log.h>
-namespace Greet { 
+namespace Greet {
 
   struct TimeModified
   {

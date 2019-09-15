@@ -11,12 +11,12 @@ namespace Greet
   {
     m_isFocusable = true;
     if(object.HasAttribute("minValue"))
-      min = atof(object.GetAttribute("minValue").c_str()); 
+      min = atof(object.GetAttribute("minValue").c_str());
     if(object.HasAttribute("maxValue"))
-      max = atof(object.GetAttribute("maxValue").c_str()); 
+      max = atof(object.GetAttribute("maxValue").c_str());
 
-    vertical = GUIUtils::GetBooleanFromXML(object,"vertical", false); 
-    reverse = GUIUtils::GetBooleanFromXML(object,"reverseProgress", false); 
+    vertical = GUIUtils::GetBooleanFromXML(object,"vertical", false);
+    reverse = GUIUtils::GetBooleanFromXML(object,"reverseProgress", false);
     progressColor = GUIUtils::GetColorFromXML(object, "progressColor", Vec4(1,1,1,1));
   }
 
@@ -29,7 +29,7 @@ namespace Greet
     else
       localSize.w *= percentage;
 
-    Vec2 progressPos = pos + GetBorder().LeftTop() + GetPadding().LeftTop(); 
+    Vec2 progressPos = pos + GetBorder().LeftTop() + GetPadding().LeftTop();
 
     if(reverse)
       renderer->SubmitRoundedRect(progressPos + (GetContentSize() - localSize), localSize, progressColor, currentStyle->radius,currentStyle->roundedPrecision,false);
@@ -46,7 +46,7 @@ namespace Greet
 
   void ProgressBar::AttachValueReference(float* reference)
   {
-    valueReference = reference; 
+    valueReference = reference;
   }
 
   float ProgressBar::GetValue() const

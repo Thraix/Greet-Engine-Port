@@ -34,8 +34,8 @@ namespace Greet
 
   void RenderCommand::PushViewportStack(const Vec4& viewport)
   {
-    const Vec4& lastViewport = viewportStack.empty() 
-      ? Vec4(0, 0, Window::GetWidth(), Window::GetHeight()) 
+    const Vec4& lastViewport = viewportStack.empty()
+      ? Vec4(0, 0, Window::GetWidth(), Window::GetHeight())
       : viewportStack.top();
 
     Vec4 vp{viewport};
@@ -55,8 +55,8 @@ namespace Greet
     viewportStack.pop();
 
     // Use window size as default viewport if stack is empty
-    const Vec4& vp = viewportStack.empty() 
-      ? Vec4(0, 0, Window::GetWidth(), Window::GetHeight()) 
+    const Vec4& vp = viewportStack.empty()
+      ? Vec4(0, 0, Window::GetWidth(), Window::GetHeight())
       : viewportStack.top();
 
     GLCall(glViewport(vp.x, vp.y, vp.z, vp.w));
@@ -124,10 +124,10 @@ namespace Greet
   {
     switch(face)
     {
-      case CullFaceDirection::CCW: 
+      case CullFaceDirection::CCW:
         GLCall(glFrontFace(GL_CCW));
         return;
-      case CullFaceDirection::CW: 
+      case CullFaceDirection::CW:
         GLCall(glFrontFace(GL_CW));
         return;
     }

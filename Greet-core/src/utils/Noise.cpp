@@ -24,10 +24,10 @@ namespace Greet {
     for(int i = 0;i<octaves;i++)
     {
       // Convert to 1 step grid system.
-      float xx = x / stepX; 
-      float yy = y / stepY; 
+      float xx = x / stepX;
+      float yy = y / stepY;
 
-      // Retrieve the 4 noise points round the "pixel" 
+      // Retrieve the 4 noise points round the "pixel"
       float tl = Smooth(xx, yy, i);
       float tr = Smooth(xx+1, yy, i);
       float bl = Smooth(xx, yy+1, i);
@@ -83,7 +83,7 @@ namespace Greet {
             case 1: // edges
               result += noise * 1.0 / 24.0;
               break;
-            case 2: // edge-corners 
+            case 2: // edge-corners
               result += noise * 1.0 / 80.0;
               break;
             case 3: // corners
@@ -106,7 +106,7 @@ namespace Greet {
 
     NoiseData3D data;
     data.width = width;
-    data.height = height; 
+    data.height = height;
     data.length = length;
     data.result = result;
     data.smoothCache = smoothCache;
@@ -124,7 +124,7 @@ namespace Greet {
     float sX = stepX,sY = stepY,sZ = stepZ;
     // Calculate the noise for each "pixel"
     // Could be improved by not computing the same noise values multiple timers
-    // Retrieve the 4 noise points round the "pixel" 
+    // Retrieve the 4 noise points round the "pixel"
     for(int i = 0;i<octaves;i++)
     {
       float persistanceNorm = persistance / totalPersistance;
@@ -135,13 +135,13 @@ namespace Greet {
           for(int x = 0;x<width;x++)
           {
             // Convert to 1 step grid system.
-            float xx = (x + offsetX) / sX; 
-            float yy = (y + offsetY) / sY; 
-            float zz = (z + offsetZ) / sZ; 
+            float xx = (x + offsetX) / sX;
+            float yy = (y + offsetY) / sY;
+            float zz = (z + offsetZ) / sZ;
 
-            float xCache = x / sX; 
-            float yCache = y / sY; 
-            float zCache = z / sZ; 
+            float xCache = x / sX;
+            float yCache = y / sY;
+            float zCache = z / sZ;
 
             float btl = Smooth(xx  , yy  , zz  , xCache  , yCache  , zCache  , i, data);
             float btr = Smooth(xx+1, yy  , zz  , xCache+1, yCache  , zCache  , i, data);
@@ -198,10 +198,10 @@ namespace Greet {
   float Noise::PRNG(int x, int y, int z, int octave)
   {
     // hash the values to get a better "random" n value
-    size_t n = 
-      std::hash<int>()(x * 34184077) ^ 
-      std::hash<int>()(y * 15487067) ^ 
-      std::hash<int>()(z * 67867967) ^ 
+    size_t n =
+      std::hash<int>()(x * 34184077) ^
+      std::hash<int>()(y * 15487067) ^
+      std::hash<int>()(z * 67867967) ^
       std::hash<int>()(octave * 87855217);
     return (double)( ( n * (n * n * 20947 + 794327) + 1376312589) & 0x7fffffff) / 1073741823.0*0.5;
   }

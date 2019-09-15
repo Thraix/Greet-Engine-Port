@@ -40,7 +40,7 @@ namespace Greet {
     return x*x + y*y;
   }
 
-  float Vec2::Dot(const Vec2& vec) const 
+  float Vec2::Dot(const Vec2& vec) const
   {
     return x*vec.x + y*vec.y;
   }

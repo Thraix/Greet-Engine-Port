@@ -12,9 +12,9 @@ namespace Greet {
     std::vector<float> result;
     std::vector<float> smoothCache;
 
-    float& SmoothCache(uint x, uint y, uint z) { 
+    float& SmoothCache(uint x, uint y, uint z) {
       return smoothCache[x + y * (width+1) + z * (width+1) * (height+1)];
-    } 
+    }
   };
 
   class Noise

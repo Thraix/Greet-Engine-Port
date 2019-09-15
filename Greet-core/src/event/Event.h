@@ -18,7 +18,7 @@ namespace Greet {
     VIEWPORT_EVENT = BIT(5),
   };
 
-  enum class EventType : uint 
+  enum class EventType : uint
   {
     NONE = 0,
     WINDOW_RESIZE, WINDOW_MOVE, WINDOW_CLOSE, WINDOW_FOCUS, WINDOW_UNFOCUS,

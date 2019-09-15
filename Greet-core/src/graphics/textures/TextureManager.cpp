@@ -42,7 +42,7 @@ namespace Greet{
       ErrorHandle::SetErrorCode(GREET_ERROR_MANAGER_GET);
       Log::Error("Could not find the given texture: ", texturename);
       return emptyTexture2D;
-    } 
+    }
     return it->second;
   }
 
@@ -54,7 +54,7 @@ namespace Greet{
       ErrorHandle::SetErrorCode(GREET_ERROR_MANAGER_GET);
       Log::Error("Could not find the given texture: ", texturename);
       return emptyCubeMap;
-    } 
+    }
     return it->second;
   }
 

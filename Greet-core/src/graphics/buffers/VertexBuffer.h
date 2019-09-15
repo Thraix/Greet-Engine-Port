@@ -128,4 +128,4 @@ namespace Greet
       static Ref<VertexBuffer> CreateStatic(const void* data, uint size);
       static Ref<VertexBuffer> Create(const void* data, uint size, BufferDrawType type = BufferDrawType::STATIC);
   };
-} 
+}

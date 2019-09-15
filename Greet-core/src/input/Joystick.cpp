@@ -9,7 +9,7 @@
 
 namespace Greet {
   Joystick::Joystick(int jsNum)
-    : m_jsNum{jsNum}, m_connected{false}, m_wasConnected{false}, 
+    : m_jsNum{jsNum}, m_connected{false}, m_wasConnected{false},
     buttonCount{0}, axisCount{0},
     buttons{nullptr}, axis{nullptr},
     previousButtons{nullptr}, previousAxis{nullptr}

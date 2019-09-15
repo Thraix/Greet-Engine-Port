@@ -3,7 +3,7 @@
 namespace Greet {
 
   template <typename Real>
-  struct Vec3; 
+  struct Vec3;
 
   class Quaternion
   {

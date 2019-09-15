@@ -114,7 +114,7 @@ namespace Greet {
       {
         retObject.AddArray(key,jsonArray);
         jsonArray = JSONArray();
-      } 
+      }
       while (IsIndent(file, currentPos));
       c = file[currentPos++];
     } while (c == ',');

@@ -124,9 +124,9 @@ namespace Greet {
   void Window::GrabMouse(bool grab)
   {
     if(grab)
-      glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); 
+      glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     else
-      glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL); 
+      glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
   }
 
   void Window::TransformScreenToWindowPos(Vec2& pos)

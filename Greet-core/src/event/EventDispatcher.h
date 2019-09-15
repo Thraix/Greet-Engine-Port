@@ -9,7 +9,7 @@ namespace Greet {
   {
     public:
       typedef std::function<void(Event& e)> EventFn;
-    private:  
+    private:
       // Global Event Receivers, these will receive all events
       // event if they are handled or caused focus.
       // Generally used for Application level stuff (screenshots, etc.)

@@ -17,7 +17,7 @@ namespace Greet {
         : Camera(fov, near, far), position(position), yaw(rotation.x), pitch(rotation.y), roll(rotation.z),
         viewMatrix(Mat4::ViewMatrix(position, Vec3<float>(yaw,pitch, roll)))
       {
-      
+
       }
 
       const Mat4& GetViewMatrix() const override { return viewMatrix; }

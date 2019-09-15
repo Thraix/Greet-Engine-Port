@@ -20,7 +20,7 @@ namespace Greet
       Log::Warning("RadioButton is not inside a RadioGroup");
   }
 
-  void RadioButton::CallOnClickCallback() 
+  void RadioButton::CallOnClickCallback()
   {
     if(radioParent)
       radioParent->NotifyRadioChange(this);

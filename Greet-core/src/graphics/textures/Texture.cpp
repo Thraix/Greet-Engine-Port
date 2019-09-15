@@ -20,7 +20,7 @@ namespace Greet {
       glGenTextures(1, &id);
       *texId = id;
     }
-    else 
+    else
     {
       *texId = 0;
     }
@@ -55,6 +55,6 @@ namespace Greet {
 
   uint Texture::GetTexId() const
   {
-    return *texId.get(); 
+    return *texId.get();
   }
 }

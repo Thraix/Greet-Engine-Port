@@ -4,7 +4,7 @@
 #include <utils/Utils.h>
 
 
-namespace Greet { namespace ImageFactory 
+namespace Greet { namespace ImageFactory
   {
     std::vector<BYTE> GetBadFormatImage(uint* width, uint* height)
     {

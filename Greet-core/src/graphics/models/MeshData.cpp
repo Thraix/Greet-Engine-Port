@@ -55,8 +55,8 @@ namespace Greet {
 
   MeshData* MeshData::LowPolify()
   {
-    std::set<uint> usedProvokingVertices; 
-    std::map<uint,uint> usedIndices; 
+    std::set<uint> usedProvokingVertices;
+    std::map<uint,uint> usedIndices;
     std::vector<Vec3<float>> newVertices;
     std::vector<uint> newIndices;
 
@@ -153,9 +153,9 @@ namespace Greet {
     uint indexCount = GetIndexCount();
     size_t dataCount = m_data.size();
 
-    // Write how many vertices we have 
+    // Write how many vertices we have
     fout.write((char*)&vertexCount,sizeof(uint));
-    // Write how many indices we have 
+    // Write how many indices we have
     fout.write((char*)&indexCount,sizeof(uint));
     // Write how many attributes we have
     fout.write((char*)&dataCount,sizeof(size_t));
@@ -172,7 +172,7 @@ namespace Greet {
     fout.write((char*)m_vertices.Data(), vertexCount * sizeof(Vec3<float>));
 
     // Write index data.
-    fout.write((char*)m_indices.Data(), indexCount * sizeof(uint)); 
+    fout.write((char*)m_indices.Data(), indexCount * sizeof(uint));
 
 
     // Write all attribute data
@@ -211,7 +211,7 @@ namespace Greet {
       Log::Error("Could not read MESH file, signature invalid.");
       return MeshFactory::Cube(0,0,0,1,1,1);
     }
-    // Read how many attributes we have. 
+    // Read how many attributes we have.
     uint vertexCount;
     fin.read((char*)&vertexCount,sizeof(uint));
     fileSize -= vertexCount * sizeof(Vec3<float>);
@@ -221,7 +221,7 @@ namespace Greet {
       return MeshFactory::Cube(0,0,0,1,1,1);
     }
 
-    // Read how many attributes we have. 
+    // Read how many attributes we have.
     uint indexCount;
     fin.read((char*)&indexCount,sizeof(uint));
     fileSize -= indexCount * sizeof(uint);
@@ -231,13 +231,13 @@ namespace Greet {
       return MeshFactory::Cube(0,0,0,1,1,1);
     }
 
-    // Read how many attributes we have. 
+    // Read how many attributes we have.
     size_t attributeCount;
     fin.read((char*)&attributeCount,sizeof(size_t));
 
     // Check if the file is big enough to contain attribute parameters.
     int attribLength = (sizeof(uint) * 2 + sizeof(bool));
-    int attribsLength = attributeCount * attribLength; 
+    int attribsLength = attributeCount * attribLength;
 
     // Remove attribLength from fileSize to easier check sizes later.
     fileSize -= attribsLength;
@@ -288,7 +288,7 @@ namespace Greet {
     std::vector<Vec3<float>> vertices = std::vector<Vec3<float>>(vertexCount);
     fin.read((char*)vertices.data(),vertexCount*sizeof(Vec3<float>));
 
-    // Read indices 
+    // Read indices
     std::vector<uint> indices = std::vector<uint>(indexCount);
     fin.read((char*)indices.data(),indexCount*sizeof(uint));
 

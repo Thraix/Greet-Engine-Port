@@ -6,7 +6,7 @@
 
 namespace Greet
 {
-  class Resource 
+  class Resource
   {
     friend class HotSwapping;
 
@@ -25,12 +25,12 @@ namespace Greet
       Resource& operator=(Resource&& res);
       virtual ~Resource();
       void CheckResource();
-      virtual void ReloadResource() {} 
+      virtual void ReloadResource() {}
 
       friend bool operator<(const Resource& r1, const Resource& r2)
       {
         return r1.id < r2.id;
       }
   };
-} 
+}
 

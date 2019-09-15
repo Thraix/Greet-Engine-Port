@@ -27,8 +27,8 @@ namespace Greet
   {
     m_isFocusable = true;
 
-    text = new Label("Label",this, 
-        object.GetText(), 
+    text = new Label("Label",this,
+        object.GetText(),
         GUIUtils::GetStringFromXML(object, "font",""),
         GUIUtils::GetFloatFromXML(object,"fontSize",20));
 
@@ -109,7 +109,7 @@ namespace Greet
         uint index = 0;
         while(it != widths.end() && w+*it <= translatedPos.x)
         {
-          ++it; 
+          ++it;
           index++;
         }
         // The cursor should be at the cursor behind

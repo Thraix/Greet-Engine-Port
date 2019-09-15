@@ -4,7 +4,7 @@
 #include <graphics/gui/Label.h>
 
 namespace Greet {
-  class Button : public Component 
+  class Button : public Component
   {
     private:
       REGISTER_COMPONENT_DECLARATION(Button);

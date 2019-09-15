@@ -29,7 +29,7 @@ namespace Greet { namespace StringUtils{
     return std::regex_match(str, std::regex("[-+]?[0-9]*\.?[0-9]*"));
   }
 
-  inline std::vector<std::string> split_string(const std::string &s, const std::string& delimiter) 
+  inline std::vector<std::string> split_string(const std::string &s, const std::string& delimiter)
   {
     size_t start = 0;
     size_t end = s.find_first_of(delimiter);
@@ -63,7 +63,7 @@ namespace Greet { namespace StringUtils{
 
   inline bool starts_with(const std::string& s, const std::string& prefix)
   {
-    return s.compare(0, prefix.size(), prefix) == 0;		
+    return s.compare(0, prefix.size(), prefix) == 0;
   }
 
   inline bool ends_with(const std::string& s, const std::string& prefix)

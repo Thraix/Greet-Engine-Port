@@ -5,7 +5,7 @@
 #include <graphics/fonts/FontManager.h>
 
 namespace Greet {
-  class Label : public Component 
+  class Label : public Component
   {
     private:
       REGISTER_COMPONENT_DECLARATION(Label);

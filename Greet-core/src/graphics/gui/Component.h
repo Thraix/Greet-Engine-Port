@@ -51,7 +51,7 @@ namespace Greet
       Component(const std::string& name, Component* parent);
       Component(const XMLObject& object, Component* parent);
 
-      virtual void PostConstruction(){} 
+      virtual void PostConstruction(){}
 
       // Measurements that doesn't depend on the parent
       virtual void Measure();
@@ -119,13 +119,13 @@ namespace Greet
       // Faster to use since it sets all values and does a single remeasure.
       Component& SetSize(float width, float height, ComponentSize::Type widthType, ComponentSize::Type heightType, bool remeasure = true);
 
-      const Style& GetNormalStyle() const; 
-      const Style& GetHoverStyle() const; 
-      const Style& GetPressStyle() const; 
+      const Style& GetNormalStyle() const;
+      const Style& GetHoverStyle() const;
+      const Style& GetPressStyle() const;
 
-      Component& SetNormalStyle(const Style& style); 
-      Component& SetHoverStyle(const Style& style); 
-      Component& SetPressStyle(const Style& style); 
+      Component& SetNormalStyle(const Style& style);
+      Component& SetHoverStyle(const Style& style);
+      Component& SetPressStyle(const Style& style);
 
       virtual bool IsMouseInside(const Vec2& parentMouse) const;
       virtual void SetPosition(const Vec2& pos);

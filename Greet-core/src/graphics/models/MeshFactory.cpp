@@ -18,8 +18,8 @@ namespace Greet {
     memset(normals.Data(), 0, sizeof(float) * 3 * vertices.Size());
     for (uint i = 0; i < indices.Size(); i += 3)
     {
-      if(indices[i] >= vertices.Size() || 
-          indices[i+1] >= vertices.Size() || 
+      if(indices[i] >= vertices.Size() ||
+          indices[i+1] >= vertices.Size() ||
           indices[i+2] >= vertices.Size())
       {
         Log::Error("Index out of bound in CalculateNormals");
@@ -104,7 +104,7 @@ namespace Greet {
     vertices[2]  = Vec3<float>(x+halfWidth, y, z+halfLength);
     vertices[3]  = Vec3<float>(x-halfWidth, y, z+halfLength);
 
-    Pointer<Vec3<float>> normals = Pointer<Vec3<float>>(4);	
+    Pointer<Vec3<float>> normals = Pointer<Vec3<float>>(4);
     normals[0]  = Vec3<float>(0.0f, 1.0f, 0.0f);
     normals[1]  = Vec3<float>(0.0f, 1.0f, 0.0f);
     normals[2]  = Vec3<float>(0.0f, 1.0f, 0.0f);
@@ -244,13 +244,13 @@ namespace Greet {
   MeshData MeshFactory::Tetrahedron(float x, float y, float z, float Size)
   {
     float tan30 = 0.5773502f;  //   tan(30/180*PI)
-    float cos30 = 1.1547005f; //   1 / cos(30/180*PI) 
+    float cos30 = 1.1547005f; //   1 / cos(30/180*PI)
     float halfSize = Size * 0.5f;
     float l1 = halfSize*cos30;
-    float l2 = halfSize*tan30; // 
+    float l2 = halfSize*tan30; //
     float height = Size*0.8164965f;// Height of tetrahedron
     float corner = Size*0.4082483f; // Size/sqrt(6) -> Center to corner
-    float face = height - corner; // Center to face 
+    float face = height - corner; // Center to face
 
     Vec3<float> v1 = Vec3<float>(x, y-face, z + l1);
     Vec3<float> v2 = Vec3<float>(x + halfSize, y - face, z - l2);
@@ -360,7 +360,7 @@ namespace Greet {
     {
       return x * 2 - 1 + z * 2 * gridWidth;
     }
-    else 
+    else
     {
       return x * 2 - 1 + z * 2 * gridWidth;
     }
@@ -481,7 +481,7 @@ namespace Greet {
     uint i = 1;
     for(uint lat = 0; lat < latitudes; ++lat)
     {
-      float y = radius * sin(ay - M_PI * 0.5f); 
+      float y = radius * sin(ay - M_PI * 0.5f);
       for(uint lon = 0; lon< longitudes; ++lon)
       {
         float r = sqrt(radius*radius - y * y);

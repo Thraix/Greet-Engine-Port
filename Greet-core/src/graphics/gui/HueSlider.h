@@ -4,7 +4,7 @@
 
 namespace Greet
 {
-  class HueSlider : public Slider 
+  class HueSlider : public Slider
   {
     private:
       REGISTER_COMPONENT_DECLARATION(HueSlider);

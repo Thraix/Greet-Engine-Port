@@ -37,7 +37,7 @@ namespace Greet {
     }
   }
 
-  void BatchRenderer3D::Update(float timeElapsed) 
+  void BatchRenderer3D::Update(float timeElapsed)
   {
     for (auto&& entityModels: m_map)
     {

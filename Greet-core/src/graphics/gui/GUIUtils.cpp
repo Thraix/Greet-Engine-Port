@@ -8,7 +8,7 @@ namespace Greet
 {
   bool GUIUtils::GetBooleanFromXML(const XMLObject& object, const std::string& key, bool defaultValue)
   {
-    if(object.HasAttribute(key)) 
+    if(object.HasAttribute(key))
       return GetBoolean(object.GetAttribute(key));
     return defaultValue;
   }
@@ -107,9 +107,9 @@ namespace Greet
       *retType = ComponentSize::Type::WRAP;
     else if(*endPos == 'w')
       *retType = ComponentSize::Type::WEIGHT;
-    else 
+    else
     {
-      if(endPos != &*size.end()) 
+      if(endPos != &*size.end())
         Log::Warning("Invalid string in size property \"", size, "\"");
       *retType = ComponentSize::Type::PIXELS;
     }

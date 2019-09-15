@@ -6,15 +6,15 @@
 
 #define BIT(x) (1 << (x))
 
-namespace Greet { 
+namespace Greet {
 
   struct Utils
   {
-    template<class T> struct ptr_less 
+    template<class T> struct ptr_less
     {
       bool operator()(const T* lhs, const T* rhs) const
       {
-        return *lhs < *rhs; 
+        return *lhs < *rhs;
       }
     };
 

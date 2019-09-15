@@ -4,14 +4,14 @@
 #include <graphics/RenderCommand.h>
 #include <cstring>
 
-#define _0_0 0 
-#define _0_1 1 
-#define _0_2 2 
+#define _0_0 0
+#define _0_1 1
+#define _0_2 2
 #define _1_0 3
-#define _1_1 4 
-#define _1_2 5  
-#define _2_0 6 
-#define _2_1 7 
+#define _1_1 4
+#define _1_2 5
+#define _2_0 6
+#define _2_1 7
 #define _2_2 8
 #define SIZE 3
 #define FLOATS SIZE*SIZE

@@ -6,7 +6,7 @@
 #include <utils/xml/XML.h>
 
 namespace Greet {
-  class Frame : public Container 
+  class Frame : public Container
   {
     private:
       REGISTER_FRAME_DECLARATION(Frame);

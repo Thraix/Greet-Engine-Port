@@ -78,8 +78,8 @@ namespace Greet {
     GLCall(glViewport(0,0,Window::GetWidth(),Window::GetHeight()));
   }
 
-  const Texture2D& FrameBufferObject::GetColorTexture(uint attachmentId) const 
-  { 
+  const Texture2D& FrameBufferObject::GetColorTexture(uint attachmentId) const
+  {
     auto it = m_colorTextures.find(attachmentId);
     if (it != m_colorTextures.end())
       return it->second;

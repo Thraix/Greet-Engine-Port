@@ -19,14 +19,14 @@ namespace Greet {
       Mat4 viewMatrix;
 
     public:
-      Camera(float fov, float near, float far) : 
-        projectionMatrix{Mat4::ProjectionMatrix(RenderCommand::GetViewportAspect(), fov, near, far)}, 
-        fov{fov}, near{near}, far{far} 
+      Camera(float fov, float near, float far) :
+        projectionMatrix{Mat4::ProjectionMatrix(RenderCommand::GetViewportAspect(), fov, near, far)},
+        fov{fov}, near{near}, far{far}
       {}
       virtual const Mat4& GetViewMatrix() const { return viewMatrix;}
       virtual const Mat4& GetProjectionMatrix() const { return projectionMatrix;}
-      virtual void SetProjectionMatrix(const Mat4& projectionMatrix) 
-      { 
+      virtual void SetProjectionMatrix(const Mat4& projectionMatrix)
+      {
         Camera::projectionMatrix = projectionMatrix;
       }
       virtual void Update(float timeElapsed) {};

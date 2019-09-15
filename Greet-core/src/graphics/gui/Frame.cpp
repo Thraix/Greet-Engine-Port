@@ -179,7 +179,7 @@ namespace Greet {
     return AABBUtils::PointInsideBox(mousePos, -resizeMargin, GetSize() + resizeMargin*2);
   }
 
-  void Frame::SetPosition(const Vec2& pos) 
+  void Frame::SetPosition(const Vec2& pos)
   {
     if(m_stayInsideWindow)
     {

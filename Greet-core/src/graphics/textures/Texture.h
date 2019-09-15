@@ -56,7 +56,7 @@ namespace Greet {
   class Texture
   {
     protected:
-      std::unique_ptr<uint,TextureDeleter> texId; 
+      std::unique_ptr<uint,TextureDeleter> texId;
       uint m_textureType;
     public:
       Texture(uint textureType, bool generateTexture = true);

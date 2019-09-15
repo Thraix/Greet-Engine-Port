@@ -75,7 +75,7 @@ namespace Greet
     return objects[i];
   }
 
-  const std::vector<XMLObject>& XMLObject::GetObjects() const 
+  const std::vector<XMLObject>& XMLObject::GetObjects() const
   {
     return objects;
   }
@@ -319,18 +319,18 @@ namespace Greet
 
   std::string XMLObject::ReadXMLName(const std::string& string, XMLLoadData& data)
   {
-    if(!(StringUtils::IsLetter(string[data.pos]) || 
-          string[data.pos] == '_' || 
+    if(!(StringUtils::IsLetter(string[data.pos]) ||
+          string[data.pos] == '_' ||
           string[data.pos] == ':'))
       throw XMLException(std::string("Name doesn't start with a letter."), data);
 
     int endPos = data.pos + 1;
     while (endPos < string.length() && (
-          StringUtils::IsLetter(string[endPos]) || 
-          string[endPos] == '_' || 
-          string[endPos] == '-' || 
-          string[endPos] == ':' || 
-          string[endPos] == '.')) 
+          StringUtils::IsLetter(string[endPos]) ||
+          string[endPos] == '_' ||
+          string[endPos] == '-' ||
+          string[endPos] == ':' ||
+          string[endPos] == '.'))
       endPos++;
     return string.substr(data.pos, endPos - data.pos);
   }

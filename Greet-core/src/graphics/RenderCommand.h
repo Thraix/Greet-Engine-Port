@@ -11,7 +11,7 @@ namespace Greet
     CW, CCW
   };
 
-  class RenderCommand 
+  class RenderCommand
   {
 
     private:
@@ -47,5 +47,5 @@ namespace Greet
       static void EnableDepthTest(bool enabled);
       static void ResetDepthTest();
   };
-} 
+}
 

@@ -4,7 +4,7 @@
 
 namespace Greet
 {
-  class SatValSlider : public Component 
+  class SatValSlider : public Component
   {
     private:
       REGISTER_COMPONENT_DECLARATION(SatValSlider);

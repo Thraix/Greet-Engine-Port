@@ -4,7 +4,7 @@
 
 namespace Greet {
 
-  LinearDriver::LinearDriver(float& value, float change, float time, bool relativeChange, DriverListener* listener) 
+  LinearDriver::LinearDriver(float& value, float change, float time, bool relativeChange, DriverListener* listener)
     : Driver1(value, time, listener)
   {
     if (relativeChange)
@@ -14,7 +14,7 @@ namespace Greet {
   }
 
   void LinearDriver::Update()
-  {	
+  {
     m_value += m_elapsed * m_speed;
   }
 }

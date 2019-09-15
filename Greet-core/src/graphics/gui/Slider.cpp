@@ -75,7 +75,7 @@ namespace Greet
     SetValue(GUIUtils::GetFloatFromXML(xmlObject, "defaultValue", (maxValue-minValue)/2.0f));
   }
 
-  void Slider::Measure() 
+  void Slider::Measure()
   {
     sliderComponent->Measure();
     Component::Measure();

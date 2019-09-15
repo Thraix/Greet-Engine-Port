@@ -24,7 +24,7 @@ namespace Greet {
   class GUI;
   typedef void(*WINDOW_RESIZE)(int width, int height);
   typedef void(*JOYSTICK_STATE)(uint joystick, unsigned char state);
-  typedef void(*WINDOW_FOCUS)(int state); 
+  typedef void(*WINDOW_FOCUS)(int state);
 
   class Window
   {

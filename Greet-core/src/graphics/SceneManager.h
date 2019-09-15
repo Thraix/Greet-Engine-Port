@@ -4,9 +4,9 @@
 #include <vector>
 
 namespace Greet {
-  class SceneManager 
+  class SceneManager
   {
-    typedef std::pair<std::string, Scene*> SceneElement; 
+    typedef std::pair<std::string, Scene*> SceneElement;
     private:
       // they are the same but 3d scenes are always rendered first
     std::vector<SceneElement> m_scenes2d;

@@ -28,7 +28,7 @@ namespace Greet { namespace ShaderFactory {
 #include "skyboxshader.vert"
     ;
 
-  static const char* skybox_shader_frag = 
+  static const char* skybox_shader_frag =
 #include "skyboxshader.frag"
     ;
 

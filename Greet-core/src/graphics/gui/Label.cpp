@@ -1,6 +1,6 @@
 #include "Label.h"
 
-namespace Greet 
+namespace Greet
 {
   REGISTER_COMPONENT_DEFINITION(Label);
 

@@ -5,7 +5,7 @@
 #include <utils/xml/XML.h>
 
 namespace Greet {
-  class Container : public Component 
+  class Container : public Component
   {
     private:
       REGISTER_COMPONENT_DECLARATION(Container);

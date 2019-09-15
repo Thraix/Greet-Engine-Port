@@ -5,7 +5,7 @@
 #include <string>
 #include <fstream>
 
-namespace Greet { 
+namespace Greet {
   class OBJUtils
   {
     private:

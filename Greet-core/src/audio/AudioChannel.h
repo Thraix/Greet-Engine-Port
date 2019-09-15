@@ -6,7 +6,7 @@
 namespace Greet{
 
   struct AudioChannel
-  {	
+  {
     std::string m_name;
     float m_volume;
     float m_pitch;

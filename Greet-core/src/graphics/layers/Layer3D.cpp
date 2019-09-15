@@ -33,7 +33,7 @@ namespace Greet {
     }
   }
 
-  void Layer3D::PostRender() const 
+  void Layer3D::PostRender() const
   {
   }
 

@@ -4,7 +4,7 @@
 #include <list>
 
 namespace Greet {
-  class ParticlePool : public Renderable2D 
+  class ParticlePool : public Renderable2D
   {
     private:
       std::list<Particle*> m_free;

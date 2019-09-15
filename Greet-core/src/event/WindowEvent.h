@@ -24,7 +24,7 @@ namespace Greet
   {
     protected:
       int x;
-      int y; 
+      int y;
       int dx;
       int dy;
 

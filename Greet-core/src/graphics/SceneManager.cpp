@@ -8,7 +8,7 @@ namespace Greet {
   SceneManager::SceneManager()
     : focusedScene{nullptr}
   {
-  
+
   }
 
   void SceneManager::Add2DScene(Scene* scene, const std::string& name)
@@ -33,7 +33,7 @@ namespace Greet {
 
   Scene* SceneManager::Remove2DScene(const std::string& name)
   {
-    auto it = std::find_if(m_scenes2d.begin(), m_scenes2d.end(), 
+    auto it = std::find_if(m_scenes2d.begin(), m_scenes2d.end(),
         [name] (const SceneElement& scene) { return scene.first == name; });
     m_scenes2d.erase(it);
     return it->second;
@@ -41,7 +41,7 @@ namespace Greet {
 
   Scene* SceneManager::Remove3DScene(const std::string& name)
   {
-    auto it = std::find_if(m_scenes3d.begin(), m_scenes3d.end(), 
+    auto it = std::find_if(m_scenes3d.begin(), m_scenes3d.end(),
         [name] (const SceneElement& scene) { return scene.first == name; });
     m_scenes3d.erase(it);
     return it->second;
@@ -49,14 +49,14 @@ namespace Greet {
 
   Scene* SceneManager::Get2DScene(const std::string& name) const
   {
-    auto it = std::find_if(m_scenes2d.begin(), m_scenes2d.end(), 
+    auto it = std::find_if(m_scenes2d.begin(), m_scenes2d.end(),
         [name] (const SceneElement& scene) { return scene.first == name; });
     return it->second;
   }
 
   Scene* SceneManager::Get3DScene(const std::string& name) const
   {
-    auto it = std::find_if(m_scenes3d.begin(), m_scenes3d.end(), 
+    auto it = std::find_if(m_scenes3d.begin(), m_scenes3d.end(),
         [name] (const SceneElement& scene) { return scene.first == name; });
     return it->second;
   }

@@ -39,7 +39,7 @@ namespace Greet
         size.size.w = GetWrapSize().w;
       else
         size.size.w = size.value.w;
-    } 
+    }
 
     if(size.heightType != ComponentSize::Type::WEIGHT || (container && container->IsVertical() ))
     {
@@ -47,7 +47,7 @@ namespace Greet
         size.size.h = GetWrapSize().h;
       else
         size.size.h = size.value.h;
-    } 
+    }
   }
 
   void Component::MeasureFill()
@@ -109,7 +109,7 @@ namespace Greet
   {
     renderer->PushTranslation(translation);
 
-    // Border around Component 
+    // Border around Component
     if (currentStyle->hasBorderColor)
       //renderer->SubmitRect(pos + Vec2(0,0), size, currentStyle->borderColor, false);
       renderer->SubmitRoundedRect(pos+Vec2(0,0),size.size, currentStyle->borderColor, currentStyle->borderRadius, currentStyle->roundedPrecision, false);
@@ -277,7 +277,7 @@ namespace Greet
     return parent;
   }
 
-  void Component::SetPosition(const Vec2& pos) 
+  void Component::SetPosition(const Vec2& pos)
   {
     this->pos = pos;
   }
@@ -287,12 +287,12 @@ namespace Greet
     return size.size;
   }
 
-  float Component::GetWidth() const 
+  float Component::GetWidth() const
   {
     return size.size.w;
   }
 
-  float Component::GetHeight() const 
+  float Component::GetHeight() const
   {
     return size.size.h;
   }
@@ -417,7 +417,7 @@ namespace Greet
   uint Component::GetComponentDepth() const
   {
     uint depth = 1;
-    const Component* par = this; 
+    const Component* par = this;
     while(par->GetParent())
     {
       depth++;
@@ -439,7 +439,7 @@ namespace Greet
   const std::string& Component::GetName() const
   {
     return name;
-  }  
+  }
 
   const TLBR& Component::GetMargin() const
   {

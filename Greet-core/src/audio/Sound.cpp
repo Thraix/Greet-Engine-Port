@@ -34,7 +34,7 @@ namespace Greet {
   }
 
   void Sound::Play()
-  { 
+  {
     gc_int32 quit = 0;
     m_handle = gau_create_handle_sound(SoundManager::m_mixer, m_sound, &destroy_on_finish, &quit, NULL);
     m_handle->sound = this;

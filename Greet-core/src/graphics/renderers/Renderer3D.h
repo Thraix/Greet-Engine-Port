@@ -18,7 +18,7 @@ namespace Greet{
       Renderer3D()
       {}
 
-      virtual ~Renderer3D() 
+      virtual ~Renderer3D()
       {}
 
       virtual void Update(float timeElapsed) {}

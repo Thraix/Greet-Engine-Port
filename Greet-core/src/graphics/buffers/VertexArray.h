@@ -12,7 +12,7 @@ namespace Greet {
     TRIANGLES = 0x0004, LINES = 0x0001
   };
 
-  class VertexArray final 
+  class VertexArray final
   {
     private:
       uint id;

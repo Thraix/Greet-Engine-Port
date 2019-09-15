@@ -1,4 +1,4 @@
-#include "AtlasManager.h"	
+#include "AtlasManager.h"
 
 #include <logging/Log.h>
 #include <common/Types.h>
@@ -25,7 +25,7 @@ namespace Greet{
     {
       ErrorHandle::SetErrorCode(GREET_ERROR_MANAGER_GET);
       Log::Error("Could not find the given atlas: ", name);
-      return m_atlas.begin()->second; 
+      return m_atlas.begin()->second;
     }
     return it->second;
   }

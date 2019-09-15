@@ -101,7 +101,7 @@ namespace Greet {
         if(bpp == 4)
           bits[resultI++] = fiBits[bitsI + FI_RGBA_ALPHA];
         else
-          bits[resultI++] = 0xff; 
+          bits[resultI++] = 0xff;
         bitsI += bpp;
       }
     }

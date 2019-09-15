@@ -42,7 +42,7 @@ namespace Greet
     Component::PreRender(renderer, trans);
   }
 
-  void Divider::OnMeasured() 
+  void Divider::OnMeasured()
   {
     if(parent)
     {

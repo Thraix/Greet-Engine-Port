@@ -6,7 +6,7 @@
 #include <graphics/gui/Component.h>
 #include <cstdlib>
 
-namespace Greet 
+namespace Greet
 {
   REGISTER_COMPONENT_DEFINITION(Container);
 
@@ -45,7 +45,7 @@ namespace Greet
     }
   }
 
-  void Container::PostConstruction() 
+  void Container::PostConstruction()
   {
     for(auto&& comp : m_components)
     {
@@ -97,7 +97,7 @@ namespace Greet
     {
       if(this->vertical)
         usedSpace += comp->GetMargin().GetHeight() + spacing;
-      else 
+      else
         usedSpace += comp->GetMargin().GetWidth() + spacing;
 
       if(this->vertical && comp->GetHeightSizeType() != ComponentSize::Type::WEIGHT)

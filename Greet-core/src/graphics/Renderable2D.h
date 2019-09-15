@@ -31,13 +31,13 @@ namespace Greet{
     public:
       Renderable2D(const Vec2& position,const Vec2& size, uint color, Sprite sprite)
         : m_position(position),m_size(size), m_color(color), m_sprite(sprite)
-      {	
+      {
 
       }
 
       Renderable2D(const Vec2& position,const Vec2& size, uint color, Sprite sprite, Sprite mask)
         : m_position(position),m_size(size), m_color(color), m_sprite(sprite), m_mask(mask)
-      {	
+      {
 
       }
 
@@ -64,10 +64,10 @@ namespace Greet{
           renderer->Submit(*this);
       }
 
-      virtual bool Update(float timeElapsed) override 
-      { 
+      virtual bool Update(float timeElapsed) override
+      {
         if(m_sprite)
-          return m_sprite->Update(timeElapsed); 
+          return m_sprite->Update(timeElapsed);
         return false;
       }
 

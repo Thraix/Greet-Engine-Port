@@ -22,5 +22,5 @@ namespace Greet
       const SceneManager& GetSceneManager() const;
       SceneManager& GetSceneManager();
   };
-} 
+}
 

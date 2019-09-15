@@ -22,7 +22,7 @@ namespace Greet {
   {
     public:
       JoystickPressEvent(int joystick, int button)
-        : JoystickButtonEvent(joystick, button) 
+        : JoystickButtonEvent(joystick, button)
       {}
 
       EventType GetType() const {return EventType::JOYSTICK_PRESS;}
@@ -32,7 +32,7 @@ namespace Greet {
   {
     public:
       JoystickReleaseEvent(int joystick, int button)
-        : JoystickButtonEvent(joystick, button) 
+        : JoystickButtonEvent(joystick, button)
       {}
 
       EventType GetType() const {return EventType::JOYSTICK_RELEASE;}
@@ -50,8 +50,8 @@ namespace Greet {
       float dy;
 
     public:
-      JoystickStickMoveEvent(int joystick, int stickXNum, int stickYNum, float x, float y, float dx, float dy) 
-        : joystick{joystick}, stickXNum{stickXNum}, stickYNum{stickYNum}, x{x}, y{y}, dx{dx}, dy{dy} 
+      JoystickStickMoveEvent(int joystick, int stickXNum, int stickYNum, float x, float y, float dx, float dy)
+        : joystick{joystick}, stickXNum{stickXNum}, stickYNum{stickYNum}, x{x}, y{y}, dx{dx}, dy{dy}
       {}
 
       int GetJoystick() const { return joystick; }
@@ -75,7 +75,7 @@ namespace Greet {
       float dVal;
 
     public:
-      JoystickTriggerMoveEvent(int joystick, int triggerNum, float val, float dVal) 
+      JoystickTriggerMoveEvent(int joystick, int triggerNum, float val, float dVal)
         : joystick{joystick}, triggerNum{triggerNum}, val{val}, dVal{dVal}
       {}
 

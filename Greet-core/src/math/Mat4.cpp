@@ -98,7 +98,7 @@ namespace Greet {
   {
     Vec3<float> yaxis = normal;
     yaxis.Normalize();
-    
+
     Vec3<float> xaxis = (forward.Cross(yaxis)).Normalize();
     Vec3<float> zaxis = xaxis.Cross(yaxis);
 
@@ -122,11 +122,11 @@ namespace Greet {
 
   Mat4 Mat4::TPCamera(const Vec3<float>& position, float distance, float height, float rotation)
   {
-    return 
-      RotateRX(asin(height)) * 
-      Mat4::RotateY(90) * 
-      Mat4::Translate(Vec3<float>(sqrt(1 - height*height) * distance, -height * distance, 0)) * 
-      Mat4::RotateY(rotation) * 
+    return
+      RotateRX(asin(height)) *
+      Mat4::RotateY(90) *
+      Mat4::Translate(Vec3<float>(sqrt(1 - height*height) * distance, -height * distance, 0)) *
+      Mat4::RotateY(rotation) *
       Mat4::Translate(-position.x, -position.y, -position.z);
   }
 
