@@ -13,7 +13,7 @@ namespace Greet
     private:
       static uint s_Id;
       uint id;
-      TimeModified modDate;
+      FileUtils::TimeModified modDate;
     protected:
       std::string filePath;
     public:

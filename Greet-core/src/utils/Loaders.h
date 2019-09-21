@@ -3,9 +3,8 @@
 #include <string>
 
 namespace Greet {
-  class Loaders
+  struct Loaders
   {
-    public:
-      static void LoadTextures(const std::string& jsonFile);
+    static void LoadTextures(const std::string& jsonFile);
   };
 }

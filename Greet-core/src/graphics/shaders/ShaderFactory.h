@@ -2,39 +2,24 @@
 
 #include <graphics/shaders/Shader.h>
 
-namespace Greet { namespace ShaderFactory {
+namespace Greet {
 
-  static const char* default_shader_vert =
-#include "default2dshader.vert"
-    ;
+  struct ShaderFactory
+  {
 
-  static const char* default_shader_frag =
-#include "default2dshader.frag"
-    ;
+    static const char* default_shader_vert;
+    static const char* default_shader_frag;
+    static const char* debug_shader_frag;
+    static const char* led_shader_frag;
+    static const char* basic_light_shader_frag;
+    static const char* skybox_shader_vert;
+    static const char* skybox_shader_frag;
 
-  static const char* debug_shader_frag =
-#include "debugshader.frag"
-    ;
+    static Ref<Shader> LEDShader();
+    static Ref<Shader> DefaultShader();
+    static Ref<Shader> DebugShader();
+    static Ref<Shader> BasicLightShader();
+    static Ref<Shader> SkyboxShader();
 
-  static const char* led_shader_frag =
-#include "ledshader.frag"
-    ;
-
-  static const char* basic_light_shader_frag =
-#include "basiclightshader.frag"
-    ;
-
-  static const char* skybox_shader_vert =
-#include "skyboxshader.vert"
-    ;
-
-  static const char* skybox_shader_frag =
-#include "skyboxshader.frag"
-    ;
-
-  Ref<Shader> LEDShader();
-  Ref<Shader> DefaultShader();
-  Ref<Shader> DebugShader();
-  Ref<Shader> BasicLightShader();
-  Ref<Shader> SkyboxShader();
-}}
+  };
+}

@@ -16,30 +16,30 @@
 #include <logging/Log.h>
 namespace Greet {
 
-  struct TimeModified
-  {
-    timespec time;
-    TimeModified(const timespec& time)
-      : time{time}{}
-    TimeModified()
-    {}
+  struct FileUtils {
 
-    bool operator<(const TimeModified& rhs)
+    struct TimeModified
     {
-      if (time.tv_sec == rhs.time.tv_sec)
-        return time.tv_nsec < rhs.time.tv_nsec;
-      else
-        return time.tv_sec < rhs.time.tv_sec;
-    }
-    friend std::ostream& operator<<(std::ostream& stream, const TimeModified& time)
-    {
-      return stream << time.time.tv_sec << "." << time.time.tv_nsec;
-    }
-  };
+      timespec time;
+      TimeModified(const timespec& time)
+        : time{time}{}
+      TimeModified()
+      {}
 
-  namespace FileUtils {
+      bool operator<(const TimeModified& rhs)
+      {
+        if (time.tv_sec == rhs.time.tv_sec)
+          return time.tv_nsec < rhs.time.tv_nsec;
+        else
+          return time.tv_sec < rhs.time.tv_sec;
+      }
+      friend std::ostream& operator<<(std::ostream& stream, const TimeModified& time)
+      {
+        return stream << time.time.tv_sec << "." << time.time.tv_nsec;
+      }
+    };
 
-    inline void print_working_directory()
+    static void print_working_directory()
     {
       char cCurrentPath[FILENAME_MAX];
 
@@ -50,14 +50,14 @@ namespace Greet {
       Log::Info(cCurrentPath);
     }
 
-    inline TimeModified GetTimeModified(const std::string& filename)
+    static TimeModified GetTimeModified(const std::string& filename)
     {
       struct stat attrib;
       stat(filename.c_str(), &attrib);
       return TimeModified{attrib.st_mtim};
     }
 
-    inline std::string read_file(const std::string& filepath)
+    static std::string read_file(const std::string& filepath)
     {
       FILE *file = fopen(filepath.c_str(), "rt");
       if (!file)
@@ -77,7 +77,7 @@ namespace Greet {
       return result;
     }
 
-    inline void write_file(const std::string& filepath, const std::string& write)
+    static void write_file(const std::string& filepath, const std::string& write)
     {
       FILE *file = fopen(filepath.c_str(),"wt");
       fseek(file, 0, SEEK_END);
@@ -85,7 +85,7 @@ namespace Greet {
       fclose(file);
     }
 
-    inline bool file_exists(const std::string& filepath)
+    static bool file_exists(const std::string& filepath)
     {
       if (FILE *file = fopen(filepath.c_str(), "r"))
       {
@@ -97,4 +97,5 @@ namespace Greet {
         return false;
       }
     }
-  }}
+  };
+}

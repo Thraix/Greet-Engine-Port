@@ -43,7 +43,7 @@ namespace Greet
 
   void Resource::CheckResource()
   {
-    TimeModified newDate = FileUtils::GetTimeModified(filePath);
+    FileUtils::TimeModified newDate = FileUtils::GetTimeModified(filePath);
     if(modDate < newDate)
     {
       modDate = newDate;

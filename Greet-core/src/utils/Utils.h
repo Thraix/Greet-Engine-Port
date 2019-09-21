@@ -18,7 +18,7 @@ namespace Greet {
       }
     };
 
-    inline static const std::string CurrentDateTime()
+    static const std::string CurrentDateTime()
     {
       time_t now = time(0);
       struct tm tstruct;
@@ -35,7 +35,7 @@ namespace Greet {
       return dynamic_cast<const Base*>(ptr) != nullptr;
     }
 
-    inline static std::string GetTime()
+    static std::string GetTime()
     {
       time_t currentTime;
       struct tm *localTime;
@@ -53,7 +53,7 @@ namespace Greet {
       return res;
     }
 
-    inline static byte* GetBytesFromString(const std::string& s)
+    static byte* GetBytesFromString(const std::string& s)
     {
       byte* bytes = new byte[s.length()];
       for(uint i = 0;i<s.length();i++)
@@ -63,7 +63,7 @@ namespace Greet {
       return bytes;
     }
 
-    inline static uint HSVtoARGB(float hue, float sat, float val)
+    static uint HSVtoARGB(float hue, float sat, float val)
     {
       int h = (int)(hue * 6.0f);
       float f = hue * 6.0f - h;
@@ -108,7 +108,7 @@ namespace Greet {
       return 0xff000000 + ((int)(r * 255.0f) << 16) + ((int)(g * 255.0f) << 8) + (int)(b * 255.0f);
     }
 
-    inline static unsigned long long powi(uint b, uint n)
+    static unsigned long long powi(uint b, uint n)
     {
       unsigned long long r = 1;
       for (uint i = 0; i < n; i++)
