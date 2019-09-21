@@ -109,7 +109,7 @@ namespace Greet {
             for(int i = 0;i<it->arraySize;i++)
             {
               GLCall(int location = glGetUniformLocation(program,
-                  std::string(found->first + "["+std::to_string(i)+"]").c_str()));
+                    std::string(found->first + "["+std::to_string(i)+"]").c_str()));
               GLCall(glGetUniformfv(oldProgram, location, &values[i]));
             }
             SetUniform1fv(it->name, it->arraySize, values);
@@ -139,7 +139,11 @@ namespace Greet {
           GLCall(glGetnUniformfv(oldProgram, found->second, sizeof(Vec4), (float*)&f));
           SetUniform4f(it->name, f);
         }
-        else if(it->type == GL_INT || it->type == GL_SAMPLER_2D)
+        else if(it->type == GL_INT ||
+            it->type == GL_SAMPLER_1D ||
+            it->type == GL_SAMPLER_2D ||
+            it->type == GL_SAMPLER_3D ||
+            it->type == GL_SAMPLER_CUBE)
         {
           if(it->arraySize == 1)
           {
@@ -155,7 +159,7 @@ namespace Greet {
             for(int i = 0;i<it->arraySize;i++)
             {
               GLCall(int location = glGetUniformLocation(program,
-                  std::string(found->first + "["+std::to_string(i)+"]").c_str()));
+                    std::string(found->first + "["+std::to_string(i)+"]").c_str()));
               GLCall(glGetUniformiv(oldProgram, location, &values[i]));
             }
             SetUniform1iv(it->name, it->arraySize, values);
@@ -177,7 +181,7 @@ namespace Greet {
             for(int i = 0;i<it->arraySize;i++)
             {
               GLCall(int location = glGetUniformLocation(program,
-                  std::string(found->first + "["+std::to_string(i)+"]").c_str()));
+                    std::string(found->first + "["+std::to_string(i)+"]").c_str()));
               GLCall(glGetUniformuiv(oldProgram, location, &values[i]));
             }
             SetUniform1uiv(it->name, it->arraySize, values);
@@ -257,6 +261,21 @@ namespace Greet {
       CompileAttachShader(program, geomSrc, GL_GEOMETRY_SHADER, true);
     }
     GLCall(glLinkProgram(program));
+    int resultFlag;
+    GLCall(glGetProgramiv(program, GL_LINK_STATUS, &resultFlag));
+    if (resultFlag == GL_FALSE)
+    {
+      GLint length;
+      GLCall(glGetProgramiv(program, GL_INFO_LOG_LENGTH, &length));
+      std::vector<char> error(length);
+      GLCall(glGetProgramInfoLog(program, length, &length, &error[0]));
+      Log::Error("Failed to link shader!\n", &error[0]);
+      glDeleteProgram(program);
+      GLCall(program = glCreateProgram());
+      CompileAttachShader(program, ShaderFactory::default_shader_vert, GL_VERTEX_SHADER, true);
+      CompileAttachShader(program, ShaderFactory::default_shader_frag, GL_FRAGMENT_SHADER, true);
+      GLCall(glLinkProgram(program));
+    }
     GLCall(glValidateProgram(program));
     return program;
   }

@@ -30,6 +30,8 @@ namespace Greet{
       bool AddTexture(const std::vector<byte>& bits, const std::string& name);
       Sprite GetSprite(const std::string& name) const;
       Sprite GetSpriteFromSheet(const std::string& sheetName, Vec2 texPos, Vec2 texSize) const;
+      int GetTextureSize() const { return m_textureSize; }
+      int GetAtlasSize() const { return GetWidth(); }
     private:
       void GenTexture(byte* bits);
   };

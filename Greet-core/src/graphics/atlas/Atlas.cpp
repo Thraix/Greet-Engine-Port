@@ -20,10 +20,10 @@ namespace Greet {
     byte* bits = new byte[bitCount];
     for (uint i = 0; i < bitCount; i+=4)
     {
-      bits[i+FI_RGBA_RED  ]	 = 255;
-      bits[i+FI_RGBA_GREEN]	 = 0;
-      bits[i+FI_RGBA_BLUE]	 = 255;
-      bits[i+FI_RGBA_ALPHA]	 = 255;
+      bits[i]   = 255;
+      bits[i+1] = 0;
+      bits[i+2] = 255;
+      bits[i+3] = 255;
     }
 
     GenTexture(bits);
@@ -81,7 +81,6 @@ namespace Greet {
         occupied[i] = true;
         x = i % m_texturesSide;
         y = (i - x) / m_texturesSide;
-        GLCall(glBindTexture(GL_TEXTURE_2D, *texId));
         if(bits.size() == 0)
         {
           GLCall(glTexSubImage2D(GL_TEXTURE_2D, 0, x*m_textureSize,m_textureSize*m_texturesSide -m_textureSize - y*m_textureSize,m_textureSize,m_textureSize,GL_RGBA, GL_UNSIGNED_BYTE, nullptr));
@@ -90,7 +89,6 @@ namespace Greet {
         {
           GLCall(glTexSubImage2D(GL_TEXTURE_2D, 0, x*m_textureSize,m_textureSize*m_texturesSide -m_textureSize - y*m_textureSize,m_textureSize,m_textureSize,GL_RGBA, GL_UNSIGNED_BYTE, bits.data()));
         }
-        GLCall(glBindTexture(GL_TEXTURE_2D, 0));
         return true;
       }
     }
