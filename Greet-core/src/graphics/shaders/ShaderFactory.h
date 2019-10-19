@@ -7,19 +7,18 @@ namespace Greet {
   struct ShaderFactory
   {
 
-    static const char* default_shader_vert;
-    static const char* default_shader_frag;
-    static const char* debug_shader_frag;
-    static const char* led_shader_frag;
-    static const char* basic_light_shader_frag;
-    static const char* skybox_shader_vert;
-    static const char* skybox_shader_frag;
+    static const char* shader2d;
+    static const char* shader3d;
+    static const char* shaderGUI;
+    static const char* shaderSkybox;
+    static const char* shaderErrorVert;
+    static const char* shaderErrorFrag;
 
-    static Ref<Shader> LEDShader();
-    static Ref<Shader> DefaultShader();
-    static Ref<Shader> DebugShader();
-    static Ref<Shader> BasicLightShader();
-    static Ref<Shader> SkyboxShader();
+    static Ref<Shader> Shader2D();
+    static Ref<Shader> Shader3D();
+    static Ref<Shader> ShaderGUI();
+    static Ref<Shader> ShaderSkybox();
+    static Ref<Shader> ShaderError();
 
   };
 }

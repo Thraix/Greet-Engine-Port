@@ -25,7 +25,7 @@ namespace Greet {
           texIDs[i] = i;
         }
         m_shader->Enable();
-        m_shader->SetUniformMat3("pr_matrix", m_projectionMatrix);
+        m_shader->SetUniformMat3("projectionMatrix", m_projectionMatrix);
         m_shader->SetUniform1iv("textures", 32, texIDs);
         m_shader->Disable();
       }
@@ -79,7 +79,7 @@ namespace Greet {
       {
         m_projectionMatrix = projectionMatrix;
         m_shader->Enable();
-        m_shader->SetUniformMat3("pr_matrix", m_projectionMatrix);
+        m_shader->SetUniformMat3("projectionMatrix", m_projectionMatrix);
         m_shader->Disable();
       }
 

@@ -7,7 +7,7 @@
 namespace Greet {
 
   Skybox::Skybox(const CubeMap& cubemap)
-    : Skybox{cubemap, ShaderFactory::SkyboxShader()}
+    : Skybox{cubemap, ShaderFactory::ShaderSkybox()}
   {
   }
 

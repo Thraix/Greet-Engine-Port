@@ -38,10 +38,10 @@ namespace Greet {
       Shader(const std::string& vertSrc, const std::string& fragSrc, const std::string& geomSrc);
       Shader(const std::string& vertSrc, const std::string& fragSrc);
 
-      std::array<std::stringstream,3> ReadFile(const std::string& filename);
       uint Load(const std::string& filename);
       uint Load(const std::string& vertSrc, const std::string& fragSrc, const std::string& geomSrc, bool hasGeometry);
       uint Load(const std::string& vertSrc, const std::string& fragSrc);
+      uint LoadError(uint program);
       uint CompileAttachShader(const uint program, const std::string& shaderSrc, const uint shaderType, bool safeFail);
       uint CompileShader(const uint program, const std::string& shaderSrc, const uint shaderType, bool safeFail);
       void AttachShader(const uint program, uint shader);
@@ -73,12 +73,17 @@ namespace Greet {
       void SetUniformMat3(const std::string& name, const Mat3 &value) const;
       void SetUniformMat4(const std::string& name, const Mat4 &value) const;
       bool operator<(const Shader& s);
+    private:
+      static std::array<std::string,3> ReadFile(const std::string& filename);
+      static std::array<std::string,3> ReadStream(std::istream& stream);
     public:
       static Ref<Shader> FromFile(const std::string& shaderPath);
       static Ref<Shader> FromFile(const std::string& vertPath, const std::string& fragPath);
       static Ref<Shader> FromFile(const std::string& vertPath, const std::string& fragPath, const std::string& geomPath);
+      static Ref<Shader> FromSource(const std::string& shaderSrc);
       static Ref<Shader> FromSource(const std::string& vertSrc, const std::string& fragSrc);
       static Ref<Shader> FromSource(const std::string& vertSrc, const std::string& fragSrc, const std::string& geomSrc);
+
   };
 
 }

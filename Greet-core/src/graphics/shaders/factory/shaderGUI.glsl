@@ -1,15 +1,15 @@
+  R"(
 //vertex
 #version 330 core
 
-layout(location = 0) in vec2 position;
+layout(location = 0) in vec3 position;
 layout(location = 1) in vec2 texCoord;
 layout(location = 2) in float texID;
 layout(location = 3) in vec4 color;
 layout(location = 4) in vec4 viewport;
 layout(location = 5) in float isHsv;
 
-uniform mat3 pr_matrix = mat3(1.0);
-uniform mat3 ml_matrix = mat3(1.0);
+uniform mat3 projectionMatrix = mat3(1.0);
 
 out DATA
 {
@@ -23,8 +23,8 @@ out DATA
 
 void main()
 {
-	gl_Position = vec4(pr_matrix * vec3(position, 1.0), 1.0);
-	vs_out.pos = position;
+	gl_Position = vec4(projectionMatrix * vec3(position.xy, 1.0), 1.0);
+	vs_out.pos = position.xy;
 	vs_out.texCoord = vec2(texCoord.x, 1 - texCoord.y);
 	vs_out.texID = texID;
 	vs_out.color = color;
@@ -70,3 +70,4 @@ void main()
 		//color = vec4(fs_in.texCoord.xy,0.0,1.0);
 	}
 }
+)"

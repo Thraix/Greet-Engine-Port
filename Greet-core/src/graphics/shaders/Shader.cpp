@@ -17,7 +17,7 @@ namespace Greet {
   }
 
   Shader::Shader(const std::string& vertSrc, const std::string& fragSrc, const std::string& geomSrc)
-    : m_shaderID{Load(vertSrc, fragSrc, geomSrc, true)}, uniforms{GetUniforms(m_shaderID)}
+    : m_shaderID{Load(vertSrc, fragSrc, geomSrc, geomSrc.size() != 0)}, uniforms{GetUniforms(m_shaderID)}
   {
 
   }
@@ -37,19 +37,19 @@ namespace Greet {
   {
     if(m_shaderID)
     {
-      std::array<std::stringstream,3> ss = ReadFile(filePath);
-      if(!ss[0].str().empty())
+      std::array<std::string,3> ss = ReadFile(filePath);
+      if(!ss[0].empty())
       {
-        uint vertShader = CompileShader(m_shaderID, ss[0].str(), GL_VERTEX_SHADER, false);
+        uint vertShader = CompileShader(m_shaderID, ss[0], GL_VERTEX_SHADER, false);
         if(!vertShader)
           return;
-        uint fragShader = CompileShader(m_shaderID, ss[1].str(), GL_FRAGMENT_SHADER, false);
+        uint fragShader = CompileShader(m_shaderID, ss[1], GL_FRAGMENT_SHADER, false);
         if(!fragShader)
           return;
         uint geomShader = 0;
-        if(!ss[2].str().empty())
+        if(!ss[2].empty())
         {
-          geomShader = CompileShader(m_shaderID, ss[2].str(), GL_GEOMETRY_SHADER, false);
+          geomShader = CompileShader(m_shaderID, ss[2], GL_GEOMETRY_SHADER, false);
           if(!geomShader)
             return;
         }
@@ -204,21 +204,30 @@ namespace Greet {
 
   }
 
-  std::array<std::stringstream,3> Shader::ReadFile(const std::string& filename)
+  std::array<std::string,3> Shader::ReadFile(const std::string& filename)
+  {
+    std::ifstream file(filename);
+    if (!file.good())
+    {
+      Log::Error("Shader::FromFile Couldn't find shader in path \'", filename, "\'");
+      return {
+        ShaderFactory::shaderErrorVert,
+        ShaderFactory::shaderErrorFrag,
+        ""};
+    }
+    return ReadStream(file);
+  }
+
+  std::array<std::string,3> Shader::ReadStream(std::istream& stream)
   {
     std::array<std::stringstream, 3> ss;
     const static uint VERTEX = 0;
     const static uint FRAGMENT = 1;
     const static uint GEOMETRY = 2;
-    std::ifstream file(filename);
-    if (!file.good())
-    {
-      Log::Error("Shader::FromFile Couldn't find shader in path \'", filename, "\'");
-      return ss;
-    }
+
     std::string line;
     uint shader = VERTEX;
-    while (std::getline(file, line))
+    while (std::getline(stream, line))
     {
       if (line == "//vertex")
         shader = VERTEX;
@@ -229,15 +238,13 @@ namespace Greet {
       else
         ss[shader] << line << std::endl;
     }
-    return ss;
+    return {ss[0].str(),ss[1].str(),ss[2].str()};
   }
 
   uint Shader::Load(const std::string& filename)
   {
-    std::array<std::stringstream,3> ss =  ReadFile(filename);
-    if(!ss[0].str().empty())
-      return Load(ss[0].str(), ss[1].str(), ss[2].str(), !ss[2].str().empty());
-    return Load(ShaderFactory::default_shader_vert, ShaderFactory::default_shader_frag);
+    std::array<std::string,3> ss =  ReadFile(filename);
+    return Load(ss[0], ss[1], ss[2], !ss[2].empty());
   }
 
   uint Shader::Load(const std::string& vertSrc, const std::string& fragSrc)
@@ -251,14 +258,15 @@ namespace Greet {
 
     uint shader = CompileAttachShader(program, vertSrc, GL_VERTEX_SHADER, true);
     if (!shader)
-      return shader;
+      return LoadError(program);
     shader = CompileAttachShader(program, fragSrc, GL_FRAGMENT_SHADER, true);
     if (!shader)
-      return shader;
+      return LoadError(program);
     if (hasGeometry)
     {
-      // If this fails just ignore it
-      CompileAttachShader(program, geomSrc, GL_GEOMETRY_SHADER, true);
+      shader = CompileAttachShader(program, geomSrc, GL_GEOMETRY_SHADER, true);
+      if(!shader)
+        return LoadError(program);
     }
     GLCall(glLinkProgram(program));
     int resultFlag;
@@ -270,12 +278,20 @@ namespace Greet {
       std::vector<char> error(length);
       GLCall(glGetProgramInfoLog(program, length, &length, &error[0]));
       Log::Error("Failed to link shader!\n", &error[0]);
-      glDeleteProgram(program);
-      GLCall(program = glCreateProgram());
-      CompileAttachShader(program, ShaderFactory::default_shader_vert, GL_VERTEX_SHADER, true);
-      CompileAttachShader(program, ShaderFactory::default_shader_frag, GL_FRAGMENT_SHADER, true);
-      GLCall(glLinkProgram(program));
+      return LoadError(program);
     }
+    GLCall(glValidateProgram(program));
+    return program;
+  }
+
+  uint Shader::LoadError(uint program)
+  {
+    glDeleteProgram(program);
+    GLCall(program = glCreateProgram());
+
+    CompileAttachShader(program, ShaderFactory::shaderErrorVert, GL_VERTEX_SHADER, true);
+    CompileAttachShader(program, ShaderFactory::shaderErrorFrag, GL_FRAGMENT_SHADER, true);
+    GLCall(glLinkProgram(program));
     GLCall(glValidateProgram(program));
     return program;
   }
@@ -366,7 +382,7 @@ namespace Greet {
         if(safeFail)
         {
           // Should never fail
-          GLCall(glShaderSource(shader, 1, &ShaderFactory::default_shader_frag, NULL));
+          GLCall(glShaderSource(shader, 1, &ShaderFactory::shaderErrorFrag, NULL));
         }
         else
         {
@@ -381,7 +397,7 @@ namespace Greet {
         if(safeFail)
         {
           // Should never fail
-          GLCall(glShaderSource(shader, 1, &ShaderFactory::default_shader_vert, NULL));
+          GLCall(glShaderSource(shader, 1, &ShaderFactory::shaderErrorVert, NULL));
         }
         else
         {
@@ -509,14 +525,14 @@ namespace Greet {
 
   Ref<Shader> Shader::FromFile(const std::string& shaderPath)
   {
-    return std::shared_ptr<Shader>(new Shader{shaderPath});
+    return Ref<Shader>{new Shader{shaderPath}};
   }
 
   Ref<Shader> Shader::FromFile(const std::string& vertPath, const std::string& fragPath)
   {
     std::string vertSourceString = FileUtils::read_file(vertPath.c_str());
     std::string fragSourceString = FileUtils::read_file(fragPath.c_str());
-    return std::shared_ptr<Shader>(new Shader{vertSourceString, fragSourceString});
+    return Ref<Shader>(new Shader{vertSourceString, fragSourceString});
   }
 
 
@@ -525,16 +541,23 @@ namespace Greet {
     std::string vertSourceString = FileUtils::read_file(vertPath.c_str());
     std::string fragSourceString = FileUtils::read_file(fragPath.c_str());
     std::string geomSourceString = FileUtils::read_file(geomPath.c_str());
-    return std::shared_ptr<Shader>(new Shader{vertSourceString,fragSourceString,geomSourceString});
+    return Ref<Shader>(new Shader{vertSourceString,fragSourceString,geomSourceString});
+  }
+
+  Ref<Shader> Shader::FromSource(const std::string& shaderSrc)
+  {
+    std::stringstream shaderStream{shaderSrc};
+    std::array<std::string, 3> ss = ReadStream(shaderStream);
+    return Ref<Shader>(new Shader{ss[0], ss[1], ss[2]});
   }
 
   Ref<Shader> Shader::FromSource(const std::string& vertSrc, const std::string& fragSrc)
   {
-    return std::shared_ptr<Shader>(new Shader{vertSrc, fragSrc});
+    return Ref<Shader>(new Shader{vertSrc, fragSrc});
   }
 
   Ref<Shader> Shader::FromSource(const std::string& vertSrc, const std::string& fragSrc, const std::string& geomSrc)
   {
-    return std::shared_ptr<Shader>(new Shader{vertSrc, fragSrc, geomSrc});
+    return Ref<Shader>(new Shader{vertSrc, fragSrc, geomSrc});
   }
 }

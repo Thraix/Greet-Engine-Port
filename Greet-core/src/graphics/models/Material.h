@@ -1,6 +1,5 @@
 #pragma once
 
-#include <graphics/shaders/Uniformable.h>
 #include <graphics/shaders/Shader.h>
 #include <graphics/shaders/ShaderFactory.h>
 #include <graphics/textures/Texture2D.h>

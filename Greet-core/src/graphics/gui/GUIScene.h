@@ -24,6 +24,7 @@ namespace Greet {
       Ref<Shader> m_shader;
 
     public:
+      GUIScene(GUIRenderer* renderer);
       GUIScene(GUIRenderer* renderer, const Ref<Shader>& shader);
 
       void OnEvent(Event& event);

@@ -1,12 +1,16 @@
 #include "GUIScene.h"
 
-#include <graphics/gui/GUIUtils.h>
 #include <event/EventDispatcher.h>
-#include <graphics/gui/Frame.h>
 #include <graphics/RenderCommand.h>
+#include <graphics/gui/Frame.h>
+#include <graphics/gui/GUIUtils.h>
+#include <graphics/shaders/ShaderFactory.h>
 
 namespace Greet {
 
+  GUIScene::GUIScene(GUIRenderer* renderer)
+    : GUIScene{renderer, ShaderFactory::ShaderGUI()}
+  {}
   GUIScene::GUIScene(GUIRenderer* renderer, const Ref<Shader>& shader)
     : m_renderer(renderer), m_shader(shader), projectionMatrix(Mat3::OrthographicViewport())
   {
@@ -18,7 +22,7 @@ namespace Greet {
       texIDs[i] = i;
     }
     m_shader->Enable();
-    m_shader->SetUniformMat3("pr_matrix", projectionMatrix);
+    m_shader->SetUniformMat3("projectionMatrix", projectionMatrix);
     m_shader->SetUniform1iv("textures", 32, texIDs);
     m_shader->Disable();
   }
@@ -95,7 +99,7 @@ namespace Greet {
   {
     projectionMatrix = Mat3::OrthographicViewport();
     m_shader->Enable();
-    m_shader->SetUniformMat3("pr_matrix", projectionMatrix);
+    m_shader->SetUniformMat3("projectionMatrix", projectionMatrix);
     m_shader->Disable();
     for (auto it = frames.begin(); it != frames.end(); ++it)
     {

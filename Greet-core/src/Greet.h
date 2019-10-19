@@ -88,8 +88,6 @@
 #include <graphics/renderers/Renderer3D.h>
 #include <graphics/shaders/Shader.h>
 #include <graphics/shaders/ShaderFactory.h>
-#include <graphics/shaders/Uniformable.h>
-#include <graphics/shaders/uniforms/Uniform.h>
 #include <graphics/textures/CubeMap.h>
 #include <graphics/textures/ImageFactory.h>
 #include <graphics/textures/Texture.h>

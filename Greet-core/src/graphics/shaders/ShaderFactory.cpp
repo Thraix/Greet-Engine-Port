@@ -5,55 +5,52 @@
 
 namespace Greet {
 
-  const char* ShaderFactory::default_shader_vert =
-#include "default2dshader.vert"
+  const char* ShaderFactory::shader2d=
+#include "factory/shader2d.glsl"
     ;
 
-  const char* ShaderFactory::default_shader_frag =
-#include "default2dshader.frag"
+  const char* ShaderFactory::shader3d =
+#include "factory/shader3d.glsl"
     ;
 
-  const char* ShaderFactory::debug_shader_frag =
-#include "debugshader.frag"
+  const char* ShaderFactory::shaderGUI =
+#include "factory/shaderGUI.glsl"
     ;
 
-  const char* ShaderFactory::led_shader_frag =
-#include "ledshader.frag"
+  const char* ShaderFactory::shaderSkybox =
+#include "factory/shaderSkybox.glsl"
     ;
 
-  const char* ShaderFactory::basic_light_shader_frag =
-#include "basiclightshader.frag"
+  const char* ShaderFactory::shaderErrorVert =
+#include "factory/shaderError.vert"
+    ;
+  const char* ShaderFactory::shaderErrorFrag =
+#include "factory/shaderError.frag"
     ;
 
-  const char* ShaderFactory::skybox_shader_vert =
-#include "skyboxshader.vert"
-    ;
-
-  const char* ShaderFactory::skybox_shader_frag =
-#include "skyboxshader.frag"
-    ;
-
-  Ref<Shader> ShaderFactory::LEDShader()
+  Ref<Shader> ShaderFactory::Shader2D()
   {
-    return Shader::FromSource(default_shader_vert, led_shader_frag);
+    return Shader::FromSource(shader2d);
   }
 
-  Ref<Shader> ShaderFactory::DefaultShader()
+  Ref<Shader> ShaderFactory::Shader3D()
   {
-    return Shader::FromSource(default_shader_vert, default_shader_frag);
+    return Shader::FromSource(shader3d);
   }
 
-  Ref<Shader> ShaderFactory::BasicLightShader()
+  Ref<Shader> ShaderFactory::ShaderGUI()
   {
-    return Shader::FromSource(default_shader_vert, basic_light_shader_frag);
-  }
-  Ref<Shader> ShaderFactory::DebugShader()
-  {
-    return Shader::FromSource(default_shader_vert, debug_shader_frag);
+    return Shader::FromSource(shaderGUI);
   }
 
-  Ref<Shader> ShaderFactory::SkyboxShader()
+  Ref<Shader> ShaderFactory::ShaderSkybox()
   {
-    return Shader::FromSource(skybox_shader_vert, skybox_shader_frag);
+    return Shader::FromSource(shaderSkybox);
+  }
+
+  Ref<Shader> ShaderFactory::ShaderError()
+  {
+    Log::Info("Loading error shader");
+    return Shader::FromSource(shaderErrorVert, shaderErrorFrag);
   }
 }

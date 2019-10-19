@@ -85,7 +85,7 @@ class Core : public App
 
       FontManager::Add(new FontContainer("res/fonts/NotoSansUI-Regular.ttf","noto"));
 
-      GUIScene* guiScene = new GUIScene(new GUIRenderer(), Shader::FromFile("res/shaders/gui.shader"));
+      GUIScene* guiScene = new GUIScene(new GUIRenderer());
       guiScene->AddFrame(FrameFactory::GetFrame("res/guis/header.xml"));
 
       //camera = new TPCamera(vec3(-3.5, -7.8, 5.5), 18, 0.66, 38.5, 15, 80, 0, 0.8f); // Profile shot
@@ -179,7 +179,7 @@ class Core : public App
       light->SetToUniform(flatShader, "light");
       flatShader->Disable();
 
-      uilayer = new Layer(new BatchRenderer(), ShaderFactory::DefaultShader(), Mat3::OrthographicViewport());
+      uilayer = new Layer(new BatchRenderer(), ShaderFactory::Shader2D(), Mat3::OrthographicViewport());
       Vec4 colorPink = ColorUtils::GetMaterialColorAsHSV(300 /360.0f, 3);
       cursor = new Renderable2D(Vec2(0,0),Vec2(32,32),0xffffffff, Sprite(TextureManager::Get2D("cursor")), Sprite(TextureManager::Get2D("mask")));
       uilayer->Add(cursor);

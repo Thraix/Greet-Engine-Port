@@ -36,7 +36,7 @@ namespace vmc
         FontManager::Add(new FontContainer("res/fonts/NotoSansUI-Regular.ttf","noto"));
         SetFrameCap(144);
 
-        guiScene = new GUIScene(new GUIRenderer(), Shader::FromFile("res/shaders/gui.shader"));
+        guiScene = new GUIScene(new GUIRenderer());
         guiScene->AddFrame(FrameFactory::GetFrame("res/guis/editor.xml"));
 
         Loaders::LoadTextures("res/loaders/textures.json");
