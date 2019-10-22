@@ -29,7 +29,6 @@ class Core : public App
       guiScene = new GUIScene(new GUIRenderer());
 
       guiScene->AddFrame(FrameFactory::GetFrame("res/guis/gui.xml"));
-      guiScene->AddFrame(FrameFactory::GetFrame("res/guis/colorpicker.xml"));
 
       Frame* frame = guiScene->GetFrame("LeftComponent");
       if(frame != nullptr)

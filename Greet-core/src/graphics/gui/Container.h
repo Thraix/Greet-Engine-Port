@@ -18,6 +18,8 @@ namespace Greet {
       Container();
       Container(const std::string& name, Component* parent);
       Container(const XMLObject& object, Component* parent);
+
+
       virtual ~Container();
 
       void Measure() override;

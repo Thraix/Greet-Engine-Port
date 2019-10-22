@@ -35,6 +35,7 @@ namespace Greet
       else
         AddComponent(component);
     }
+
   }
 
   Container::~Container()

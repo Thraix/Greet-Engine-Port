@@ -1,72 +1,71 @@
 <Frame
   name="LeftComponent"
-  width="400" height="fill_parent" minWidth="100" spacing="10"
+  width="fill_parent" height="fill_parent" minWidth="100" spacing="10"
   resizeTop="false" resizeLeft="false" resizeBottom="false" resizeRight="true"
   padding="10" border="1"
   borderColor="#37474f" 
   backgroundColor="#263238" 
   >
-  <Label 
-    fontSize="18" font="noto" color="#90a4ae">Frame header</Label>
-  <Divider name="divider" backgroundColor="#90a4ae"/>
-  <Label color="#90a4ae" font="noto" fontSize="20">Do you like Popcorn?</Label>
+<Container width="fill_parent" height="fill_parent" verticalAlign="false">
+  <Container width="400" height="fill_parent">
+    <Label fontSize="18" font="noto" color="#90a4ae">Frame header</Label>
+    <Divider name="divider" backgroundColor="#90a4ae"/>
+    <Label color="#90a4ae" font="noto" fontSize="20">Do you like Popcorn?</Label>
 
-  <RadioGroup name="Radio" width="fill_parent" height="wrap_content" margin="0" spacing="10">
-    <Container verticalAlign="false">
-      <RadioButton width="16" height="16" 
-        radius="8" activeradius="8"
-        backgroundColor="#263238" borderColor="#455a64" border="1" 
-        activebackgroundColor="#455a64" activeborderColor="#455a64" activeborder="1"/>
-      <Label color="#90a4ae" font="noto" fontSize="12">Yes</Label>
-    </Container>
-    <Container verticalAlign="false">
-      <RadioButton width="16" height="16" 
-        radius="8" activeradius="8"
-        backgroundColor="#263238" borderColor="#455a64" border="1" 
-        activebackgroundColor="#455a64" activeborderColor="#455a64" activeborder="1"/>
-      <Label color="#90a4ae" font="noto" fontSize="12">No</Label>
-    </Container>
-    <Container verticalAlign="false">
-      <RadioButton width="16" height="16" 
-        radius="8" activeradius="8"
-        backgroundColor="#263238" borderColor="#455a64" border="1" 
-        activebackgroundColor="#455a64" activeborderColor="#455a64" activeborder="1"/>
-      <Label color="#90a4ae" font="noto" fontSize="12">Maybe</Label>
-    </Container>
-  </RadioGroup>
+    <RadioGroup name="Radio" width="fill_parent" height="wrap_content" margin="0" spacing="10">
+      <Container verticalAlign="false">
+        <RadioButton width="16" height="16" 
+          radius="8" activeradius="8"
+          backgroundColor="#263238" borderColor="#455a64" border="1" 
+          activebackgroundColor="#455a64" activeborderColor="#455a64" activeborder="1"/>
+        <Label color="#90a4ae" font="noto" fontSize="12">Yes</Label>
+      </Container>
+      <Container verticalAlign="false">
+        <RadioButton width="16" height="16" 
+          radius="8" activeradius="8"
+          backgroundColor="#263238" borderColor="#455a64" border="1" 
+          activebackgroundColor="#455a64" activeborderColor="#455a64" activeborder="1"/>
+        <Label color="#90a4ae" font="noto" fontSize="12">No</Label>
+      </Container>
+      <Container verticalAlign="false">
+        <RadioButton width="16" height="16" 
+          radius="8" activeradius="8"
+          backgroundColor="#263238" borderColor="#455a64" border="1" 
+          activebackgroundColor="#455a64" activeborderColor="#455a64" activeborder="1"/>
+        <Label color="#90a4ae" font="noto" fontSize="12">Maybe</Label>
+      </Container>
+    </RadioGroup>
 
-  <Button width="fill_parent" height="20" name="button"
-    backgroundColor="#37474f" borderColor="#455a64" 
-    hoverbackgroundColor="#37474f" hoverborderColor="#455a64" 
-    color="#90a4ae" fontSize="16" font="noto"
-    hoverborder="1"
-    radius="8" borderRadius="9"
-    hoverradius="5" hoverborderRadius="9"
-    border="1 1 1 1">Button!</Button>
+    <Button width="fill_parent" height="20" name="button"
+      backgroundColor="#37474f" borderColor="#455a64" 
+      hoverbackgroundColor="#37474f" hoverborderColor="#455a64" 
+      color="#90a4ae" fontSize="16" font="noto"
+      hoverborder="1"
+      radius="8" borderRadius="9"
+      hoverradius="5" hoverborderRadius="9"
+      border="1 1 1 1">Button!</Button>
 
-  <TextBox
-    width="fill_parent" height="20"
-    backgroundColor="#37474f" borderColor="#455a64" 
-    border="1" font="noto" fontSize="16" color="#90a4ae"
-    hintColor="#263238" hintText="Username"
-    radius="6" borderRadius="7"
-    padding="0 10"></TextBox>
+    <TextBox
+      width="fill_parent" height="20"
+      backgroundColor="#37474f" borderColor="#455a64" 
+      border="1" font="noto" fontSize="16" color="#90a4ae"
+      hintColor="#263238" hintText="Username"
+      radius="6" borderRadius="7"
+      padding="0 10"></TextBox>
 
-  <TextBox
-    width="fill_parent" height="20"
-    backgroundColor="#37474f" borderColor="#455a64" 
-    border="1" font="noto" fontSize="16" color="#90a4ae"
-    hintColor="#263238" hintText="Password"
-    radius="6" borderRadius="7"
-    padding="0 10" password="true" ></TextBox>
+    <TextBox
+      width="fill_parent" height="20"
+      backgroundColor="#37474f" borderColor="#455a64" 
+      border="1" font="noto" fontSize="16" color="#90a4ae"
+      hintColor="#263238" hintText="Password"
+      radius="6" borderRadius="7"
+      padding="0 10" password="true" ></TextBox>
 
-  <Slider
-    name="Slider"
-    backgroundColor="#37474f" 
-    borderColor="#455a64" 
-    border="1"
-    width="fill_parent" height="25" margin="0"
-    minValue="10" maxValue="90" defaultValue="30" stepSize="10" indicatorInside="true">
+    <Slider
+      name="Slider"
+      width="fill_parent" height="25" margin="0"
+      backgroundColor="#37474f" borderColor="#455a64" border="1"
+      minValue="10" maxValue="90" defaultValue="30" stepSize="10" indicatorInside="true">
     <Component
       borderColor="#263238" 
       backgroundColor="#455a64" 
@@ -84,44 +83,44 @@
     height="100"
     verticalAlign="false" padding="0">
 
-    <ProgressBar
-      width="20" height="fill_parent" name="progressBarVertical"
-      backgroundColor="#37474f" 
-      borderColor="#455a64" 
-      progressColor="#607d8b"
-      border="1" padding="0"
-      radius="9"
-      borderRadius="10"
-      minValue="0.25" maxValue="1.25" vertical="true"/>
+  <ProgressBar
+    width="20" height="fill_parent" name="progressBarVertical"
+    backgroundColor="#37474f" 
+    borderColor="#455a64" 
+    progressColor="#607d8b"
+    border="1" padding="0"
+    radius="9"
+    borderRadius="10"
+    minValue="0.25" maxValue="1.25" vertical="true"/>
 
-    <Divider backgroundColor="#455a64" vertical="true"/>
+  <Divider backgroundColor="#455a64" vertical="true"/>
 
-    <ProgressBar
-      width="20" height="fill_parent" name="progressBarVerticalReverse"
-      backgroundColor="#37474f" 
-      borderColor="#455a64" 
-      progressColor="#607d8b"
-      border="1" padding="0"
-      radius="9"
-      borderRadius="10"
-      minValue="0.25" maxValue="1.25" vertical="true" reverseProgress="true"/>
+  <ProgressBar
+    width="20" height="fill_parent" name="progressBarVerticalReverse"
+    backgroundColor="#37474f" 
+    borderColor="#455a64" 
+    progressColor="#607d8b"
+    border="1" padding="0"
+    radius="9"
+    borderRadius="10"
+    minValue="0.25" maxValue="1.25" vertical="true" reverseProgress="true"/>
 
-    <Divider backgroundColor="#455a64" vertical="true"/>
+  <Divider backgroundColor="#455a64" vertical="true"/>
 
-    <Slider
-      backgroundColor="#37474f" 
-      borderColor="#455a64" 
-      border="1"
-      vertical="true"
-      width="25" height="fill_parent" margin="0"
-      minValue="10" maxValue="90" defaultValue="30" stepSize="10" indicatorInside="true">
-      <Component
-        borderColor="#263238" 
-        backgroundColor="#455a64" 
-        width="fill_parent" height="5" margin="0"
-        border="1"
-        />
-    </Slider>
+  <Slider
+    backgroundColor="#37474f" 
+    borderColor="#455a64" 
+    border="1"
+    vertical="true"
+    width="25" height="fill_parent" margin="0"
+    minValue="10" maxValue="90" defaultValue="30" stepSize="10" indicatorInside="true">
+  <Component
+    borderColor="#263238" 
+    backgroundColor="#455a64" 
+    width="fill_parent" height="5" margin="0"
+    border="1"
+    />
+</Slider>
 
   </Container>
 
@@ -146,7 +145,9 @@
     minValue="0.25" maxValue="1.25" reverseProgress="true"/>
 
   <Container width="fill_parent" verticalAlign="false">
-    <Label width="wrap_content" height="fill_parent" fontSize="16" font="noto" color="#90a4ae">Background Color: </Label>
+    <Label 
+      width="wrap_content" height="fill_parent" 
+      fontSize="16" font="noto" color="#90a4ae">Background Color: </Label>
 
     <ColorPicker
       width="60" height="30" name="backgroundChanger"
@@ -156,5 +157,30 @@
       radius="2"
       borderRadius="4"
       />
+  </Container>
+</Container>
+<Divider width="5" backgroundColor="#455a64" vertical="true"/>
+<Docker>
+  <TabLayout/>
+  <DockerSplit vertical="true">
+    <DockerContainer>
+      <DockerTab title="Project Explorer"/>
+      <DockerTab title="File Browser"/>
+    </DockerContainer>
+    <DockerContainer>
+      <DockerTab title="Editor">
+        <Content/>
+      </DockerTab>
+    </DockerContainer>
+    <DockerSplit vertical="false">
+      <DockerContainer>
+        <DockerTab title="Debugger"/>
+      </DockerContainer>
+      <DockerContainer>
+        <DockerTab title="Console"/>
+      </DockerContainer>
+    </DockerSplit>
+  </DockerSplit>
+</Docker>
   </Container>
 </Frame>

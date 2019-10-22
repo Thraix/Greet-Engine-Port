@@ -56,6 +56,7 @@
 #include <graphics/gui/ComponentFactory.h>
 #include <graphics/gui/Container.h>
 #include <graphics/gui/Divider.h>
+#include <graphics/gui/Docker.h>
 #include <graphics/gui/Frame.h>
 #include <graphics/gui/GUIMouseListener.h>
 #include <graphics/gui/GUIProperty.h>
@@ -72,6 +73,9 @@
 #include <graphics/gui/Style.h>
 #include <graphics/gui/TLBR.h>
 #include <graphics/gui/TextBox.h>
+#include <graphics/gui/docker/DockerContainer.h>
+#include <graphics/gui/docker/DockerSplit.h>
+#include <graphics/gui/docker/DockerTab.h>
 #include <graphics/layers/Group.h>
 #include <graphics/layers/Layer.h>
 #include <graphics/layers/Layer3D.h>
