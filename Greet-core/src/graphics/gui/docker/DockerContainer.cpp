@@ -76,6 +76,17 @@ namespace Greet
     }
   }
 
+  Component* DockerContainer::GetComponentByNameNoCast(const std::string& name)
+  {
+    for(auto&& child : children)
+    {
+      Component* comp = child->GetComponentByNameNoCast(name);
+      if(comp)
+        return comp;
+    }
+    return nullptr;
+  }
+
   int DockerContainer::GetTab(const Vec2& mousePos)
   {
     if(mousePos.y >= 0 && mousePos.y < TAB_HEIGHT)

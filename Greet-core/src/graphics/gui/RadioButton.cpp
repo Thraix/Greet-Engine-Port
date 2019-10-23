@@ -7,7 +7,7 @@ namespace Greet
   REGISTER_COMPONENT_DEFINITION(RadioButton);
 
   RadioButton::RadioButton(const XMLObject& xmlObject, Component* parent)
-    : Component(xmlObject, parent), active(false)
+    : Component(xmlObject, parent), active(false), radioParent{nullptr}
   {
     m_isFocusable = true;
     activeStyle.Load("active", xmlObject, &normalStyle);
@@ -24,6 +24,8 @@ namespace Greet
   {
     if(radioParent)
       radioParent->NotifyRadioChange(this);
+    else
+      Log::Error("No RadioGroup parent");
     Select(true);
     Component::CallOnClickCallback();
   }

@@ -28,6 +28,7 @@ namespace Greet {
       void Render(GUIRenderer* renderer) const override;
       void Update(float timeElapsed) override;
       void OnEvent(Event& event, const Vec2& componentPos) override;
+      Component* GetComponentByNameNoCast(const std::string& name) override;
       void SetGUIScene(GUIScene* scene) override;
       void SetPosition(const Vec2& position) override;
       void SetSize(const Vec2& size) override;

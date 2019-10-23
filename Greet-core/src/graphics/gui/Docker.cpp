@@ -70,6 +70,14 @@ namespace Greet
     split->SetPosition({0,0});
   }
 
+  Component* Docker::GetComponentByNameNoCast(const std::string& name)
+  {
+    Component* comp = Component::GetComponentByNameNoCast(name);
+    if(comp)
+      return comp;
+    return split->GetComponentByNameNoCast(name);
+  }
+
   void Docker::SetGUIScene(GUIScene* scene)
   {
     guiScene = scene;

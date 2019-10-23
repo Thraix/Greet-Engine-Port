@@ -55,6 +55,17 @@ namespace Greet
     }
   }
 
+  Component* DockerSplit::GetComponentByNameNoCast(const std::string& name)
+  {
+    for(auto&& child : children)
+    {
+      Component* comp = child->GetComponentByNameNoCast(name);
+      if(comp)
+        return comp;
+    }
+    return nullptr;
+  }
+
   void DockerSplit::SetGUIScene(GUIScene* scene)
   {
     for(auto&& child : children)

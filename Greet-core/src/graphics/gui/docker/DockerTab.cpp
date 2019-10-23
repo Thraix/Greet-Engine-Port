@@ -15,9 +15,10 @@ namespace Greet
       component = ComponentFactory::GetComponent(object.GetObject(0), docker);
       if(object.GetObjectCount() >= 2)
       {
-        Log::Warning("DockerTab contains more than one component. Consider putting them in a Container");
+        Log::Warning("DockerTab contains more than one component. Only one will display. Put them in a Container");
         component = new Component({"Component", {}, ""}, docker);
       }
+      component->PostConstruction();
     }
   }
 
@@ -26,11 +27,6 @@ namespace Greet
     delete component;
   }
 
-
-  const std::string& DockerTab::GetTitle() const
-  {
-    return title;
-  }
 
   void DockerTab::Render(GUIRenderer* renderer) const
   {
@@ -47,6 +43,16 @@ namespace Greet
   void DockerTab::OnEvent(Event& event, const Vec2& componentPos)
   {
     component->OnEventHandler(event, componentPos + position + Vec2{0.0f, (float)TAB_HEIGHT});
+  }
+
+  Component* DockerTab::GetComponentByNameNoCast(const std::string& name)
+  {
+    return component->GetComponentByNameNoCast(name);
+  }
+
+  const std::string& DockerTab::GetTitle() const
+  {
+    return title;
   }
 
   void DockerTab::SetGUIScene(GUIScene* scene)

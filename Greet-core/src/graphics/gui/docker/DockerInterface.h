@@ -30,6 +30,7 @@ namespace Greet
       virtual void Render(GUIRenderer* renderer) const = 0;
       virtual void Update(float timeElapsed) = 0;
       virtual void OnEvent(Event& event, const Vec2& translation) = 0;
+      virtual Component* GetComponentByNameNoCast(const std::string& name) = 0;
       virtual void SetPosition(const Vec2& position) = 0;
       virtual void SetSize(const Vec2& position) = 0;
       virtual void SetGUIScene(GUIScene* scene) = 0;
