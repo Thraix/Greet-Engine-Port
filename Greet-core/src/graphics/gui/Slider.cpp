@@ -119,13 +119,14 @@ namespace Greet
     sliderComponent->PostRender(renderer);
   }
 
-  void Slider::OnEvent(Event& event, const Vec2& translatedPos)
+  void Slider::OnEvent(Event& event, const Vec2& componentPos)
   {
     if(EVENT_IS_TYPE(event, EventType::MOUSE_PRESS))
     {
       MousePressEvent& e = static_cast<MousePressEvent&>(event);
       if(e.GetButton() == GREET_MOUSE_1 && pressed)
       {
+        Vec2 translatedPos = e.GetPosition() - componentPos;
         float oldValue = GetSliderValueFromPos(sliderPos);
         if(flags & SLIDER_FLAG_VERTICAL)
           SetValue(GetSliderValueFromPos(translatedPos.y));
@@ -141,6 +142,7 @@ namespace Greet
       MouseMoveEvent& e = static_cast<MouseMoveEvent&>(event);
       if(pressed)
       {
+        Vec2 translatedPos = e.GetPosition() - componentPos;
         float oldValue = GetSliderValueFromPos(sliderPos);
         if(flags & SLIDER_FLAG_VERTICAL)
           SetValue(GetSliderValueFromPos(translatedPos.y));

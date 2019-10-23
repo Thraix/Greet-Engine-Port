@@ -31,7 +31,7 @@ namespace Greet
       void PreRender(GUIRenderer* renderer, const Vec2& translation) const override;
       void Render(GUIRenderer* renderer) const override;
 
-      virtual void OnEvent(Event& event, const Vec2& translatedPos) override;
+      virtual void OnEvent(Event& event, const Vec2& componentPos) override;
 
       // Callbacks
       virtual void SetOnSatChangeCallback(OnSatChangeCallback callback);

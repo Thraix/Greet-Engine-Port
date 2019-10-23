@@ -53,7 +53,7 @@ namespace Greet {
       // Clamp the container inside window after resizing it.
       void ResizeScreenClamp();
 
-      void OnEvent(Event& event, const Vec2& translatedPos) override;
+      void OnEvent(Event& event, const Vec2& componentPos) override;
 
       // Getters and setters
       virtual Vec2 GetComponentPosition() const { return Vec2(currentStyle->margin.left + currentStyle->border.left, currentStyle->margin.top + currentStyle->border.top); };

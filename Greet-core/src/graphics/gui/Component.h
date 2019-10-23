@@ -86,7 +86,7 @@ namespace Greet
       virtual void OnMouseMoveEventHandler(MouseMoveEvent& event, const Vec2& componentPos);
       virtual void OnMouseReleaseEventHandler(MouseReleaseEvent& event, const Vec2& componentPos);
 
-      virtual void OnEvent(Event& event, const Vec2& translatedMousePos) {}
+      virtual void OnEvent(Event& event, const Vec2& componentPos) {}
 
 
       // Callbacks

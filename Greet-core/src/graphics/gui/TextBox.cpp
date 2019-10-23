@@ -94,13 +94,14 @@ namespace Greet
       cursorBlinkTimer -= 1;
   }
 
-  void TextBox::OnEvent(Event& event, const Vec2& translatedPos)
+  void TextBox::OnEvent(Event& event, const Vec2& componentPos)
   {
     if(EVENT_IS_TYPE(event, EventType::MOUSE_PRESS))
     {
       MousePressEvent& e = static_cast<MousePressEvent&>(event);
       if(e.GetButton() == GREET_MOUSE_1)
       {
+        Vec2 translatedPos = e.GetPosition() - componentPos;
         // TODO: In the future we probably want to do some smart, average character length
         // to determain around where the cursor should be.
         std::vector<float> widths{text->GetFont()->GetPartialWidths(str)};

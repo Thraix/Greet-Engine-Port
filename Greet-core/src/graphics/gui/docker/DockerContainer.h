@@ -14,8 +14,6 @@ namespace Greet {
   class DockerContainer : public DockerInterface
   {
     protected:
-      Docker* docker;
-
       bool vertical;
       std::vector<DockerTab*> children;
       uint currentTab = 0;
@@ -24,8 +22,13 @@ namespace Greet {
       DockerContainer(const XMLObject& object, Docker* docker);
       virtual ~DockerContainer();
 
+      int GetTab(const Vec2& mousePos);
+
     public:
       void Render(GUIRenderer* renderer) const override;
+      void Update(float timeElapsed) override;
+      void OnEvent(Event& event, const Vec2& componentPos) override;
+      void SetGUIScene(GUIScene* scene) override;
       void SetPosition(const Vec2& position) override;
       void SetSize(const Vec2& size) override;
   };

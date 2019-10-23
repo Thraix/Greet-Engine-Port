@@ -40,7 +40,7 @@ namespace Greet
 
       virtual void Render(GUIRenderer* renderer) const override;
 
-      virtual void OnEvent(Event& event, const Vec2& translatedPos) override;
+      virtual void OnEvent(Event& event, const Vec2& componentPos) override;
 
       // Callbacks
       virtual void SetOnValueChangeCallback(OnValueChangeCallback callback);

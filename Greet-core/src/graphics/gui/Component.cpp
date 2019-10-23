@@ -129,19 +129,21 @@ namespace Greet
     else if(EVENT_IS_TYPE(event, EventType::MOUSE_RELEASE))
       OnMouseReleaseEventHandler(static_cast<MouseReleaseEvent&>(event), componentPos);
     else if(EVENT_IS_TYPE(event, EventType::KEY_PRESS))
-      OnEvent(event, -componentPos);
+      OnEvent(event, componentPos);
     else if(EVENT_IS_TYPE(event, EventType::KEY_RELEASE))
-      OnEvent(event, -componentPos);
+      OnEvent(event, componentPos);
     else if(EVENT_IS_TYPE(event, EventType::KEY_TYPE))
-      OnEvent(event, -componentPos);
+      OnEvent(event, componentPos);
     else
-      OnEvent(event, -componentPos);
+      OnEvent(event, componentPos);
   }
 
   void Component::OnMousePressEventHandler(MousePressEvent& event, const Vec2& componentPos)
   {
     if(m_isFocusable)
     {
+      if(!guiScene)
+        Log::Error("GuiScene not initialized");
       if(!isFocused)
         guiScene->RequestFocus(this);
       if(event.GetButton() == GREET_MOUSE_1)
@@ -149,7 +151,7 @@ namespace Greet
         pressed = true;
         CallOnPressCallback();
       }
-      OnEvent(event, event.GetPosition() - componentPos);
+      OnEvent(event, componentPos);
     }
   }
 
@@ -164,7 +166,7 @@ namespace Greet
           isHovered = true;
           MouseEntered();
         }
-        OnEvent(event, event.GetPosition() - componentPos);
+        OnEvent(event, componentPos);
       }
       else if(isHovered)
       {
@@ -183,7 +185,7 @@ namespace Greet
         if(IsMouseInside(event.GetPosition() - componentPos))
           CallOnClickCallback();
         CallOnReleaseCallback();
-        OnEvent(event, event.GetPosition() - componentPos);
+        OnEvent(event, componentPos);
         pressed = false;
       }
     }

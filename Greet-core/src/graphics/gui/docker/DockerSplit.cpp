@@ -39,6 +39,30 @@ namespace Greet
     }
   }
 
+  void DockerSplit::Update(float timeElapsed)
+  {
+    for(auto&& child : children)
+    {
+      child->Update(timeElapsed);
+    }
+  }
+
+  void DockerSplit::OnEvent(Event& event, const Vec2& componentPos)
+  {
+    for(auto&& child : children)
+    {
+      child->OnEvent(event, componentPos);
+    }
+  }
+
+  void DockerSplit::SetGUIScene(GUIScene* scene)
+  {
+    for(auto&& child : children)
+    {
+      child->SetGUIScene(scene);
+    }
+  }
+
   void DockerSplit::SetPosition(const Vec2& _position)
   {
     position = _position;

@@ -137,11 +137,12 @@ namespace Greet {
     }
   }
 
-  void Frame::OnEvent(Event& event, const Vec2& translatedPos)
+  void Frame::OnEvent(Event& event, const Vec2& componentPos)
   {
     if(EVENT_IS_TYPE(event, EventType::MOUSE_PRESS))
     {
       MousePressEvent& e = static_cast<MousePressEvent&>(event);
+      Vec2 translatedPos = e.GetPosition() - componentPos;
       if (e.GetButton() == GREET_MOUSE_1)
       {
         m_posOrigin = pos;
@@ -158,6 +159,8 @@ namespace Greet {
     }
     else if(EVENT_IS_TYPE(event, EventType::MOUSE_MOVE))
     {
+      MouseMoveEvent& e = static_cast<MouseMoveEvent&>(event);
+      Vec2 translatedPos = e.GetPosition() - componentPos;
       if (m_resizing)
         Resize(translatedPos);
     }

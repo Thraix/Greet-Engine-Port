@@ -18,6 +18,10 @@ namespace Greet {
       Docker(const XMLObject& object, Component* parent);
 
       void Render(GUIRenderer* renderer) const override;
+      void Update(float timeElapsed) override;
+      void OnEvent(Event& event, const Vec2& componentPos) override;
       void OnMeasured() override;
+
+      void SetGUIScene(GUIScene* scene) override;
   };
 }

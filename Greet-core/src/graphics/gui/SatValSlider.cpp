@@ -68,13 +68,14 @@ namespace Greet
     sliderComponent->PostRender(renderer);
   }
 
-  void SatValSlider::OnEvent(Event& event, const Vec2& translatedPos)
+  void SatValSlider::OnEvent(Event& event, const Vec2& componentPos)
   {
     if(EVENT_IS_TYPE(event, EventType::MOUSE_PRESS))
     {
       MousePressEvent& e = static_cast<MousePressEvent&>(event);
       if(e.GetButton() == GREET_MOUSE_1 && pressed)
       {
+        Vec2 translatedPos = e.GetPosition() - componentPos;
         float oldSat = sat;
         float oldVal = val;
 
@@ -89,6 +90,8 @@ namespace Greet
     {
       if(pressed)
       {
+        MouseMoveEvent& e = static_cast<MouseMoveEvent&>(event);
+        Vec2 translatedPos = e.GetPosition() - componentPos;
         float oldSat = GetSliderSatFromPos(sat);
         float oldVal = GetSliderValFromPos(val);
 

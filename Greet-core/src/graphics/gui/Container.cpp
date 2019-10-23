@@ -283,6 +283,8 @@ namespace Greet
 
   void Container::OnMousePressEventHandler(MousePressEvent& event, const Vec2& componentPos)
   {
+    if(name == "container")
+      Log::Info("mouse press", event.GetPosition() - componentPos);
     for(auto it = m_components.rbegin(); it != m_components.rend();++it)
     {
       Component* c{*it};

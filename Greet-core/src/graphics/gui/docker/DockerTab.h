@@ -21,9 +21,13 @@ namespace Greet {
       DockerTab(const XMLObject& object, Docker* parent);
       virtual ~DockerTab();
 
+      const std::string& GetTitle() const;
     public:
-        void SetPosition(const Vec2& position) override;
-        void SetSize(const Vec2& position) override;
-        void Render(GUIRenderer* renderer) const override;
+      void Render(GUIRenderer* renderer) const override;
+      void Update(float timeElapsed) override;
+      void OnEvent(Event& event, const Vec2& componentPos) override;
+      void SetGUIScene(GUIScene* scene) override;
+      void SetPosition(const Vec2& position) override;
+      void SetSize(const Vec2& position) override;
   };
 }

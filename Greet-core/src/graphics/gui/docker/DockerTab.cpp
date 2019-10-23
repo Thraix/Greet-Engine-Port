@@ -7,43 +7,63 @@ namespace Greet
   DockerTab::DockerTab(const XMLObject& object, Docker* docker)
     : DockerInterface{docker}, component{nullptr}
   {
+    title = GUIUtils::GetStringFromXML(object, "title", "");
     if(object.GetObjectCount() == 0)
       Log::Warning("DockerTab contains no component");
     else
     {
       component = ComponentFactory::GetComponent(object.GetObject(0), docker);
       if(object.GetObjectCount() >= 2)
+      {
         Log::Warning("DockerTab contains more than one component. Consider putting them in a Container");
+        component = new Component({"Component", {}, ""}, docker);
+      }
     }
   }
 
   DockerTab::~DockerTab()
   {
-    if(component)
-      delete component;
+    delete component;
+  }
+
+
+  const std::string& DockerTab::GetTitle() const
+  {
+    return title;
   }
 
   void DockerTab::Render(GUIRenderer* renderer) const
   {
     component->PreRender(renderer, docker->GetPosition());
-    component->Render(renderer);
+    component->RenderHandle(renderer);
     component->PostRender(renderer);
+  }
+
+  void DockerTab::Update(float timeElapsed)
+  {
+    component->UpdateHandle(timeElapsed);
+  }
+
+  void DockerTab::OnEvent(Event& event, const Vec2& componentPos)
+  {
+    component->OnEventHandler(event, componentPos + position + Vec2{0.0f, (float)TAB_HEIGHT});
+  }
+
+  void DockerTab::SetGUIScene(GUIScene* scene)
+  {
+    component->SetGUIScene(scene);
   }
 
   void DockerTab::SetPosition(const Vec2& _position)
   {
     position = _position;
-    if(component)
-      component->SetPosition(position);
+    component->SetPosition(position + Vec2{0.0f, (float)TAB_HEIGHT});
   }
 
-  void DockerTab::SetSize(const Vec2& _size) 
+  void DockerTab::SetSize(const Vec2& _size)
   {
     size = _size;
-    if(component)
-    {
-      component->Measure();
-      component->MeasureFill(size, {1, 1});
-    }
+    component->Measure();
+    component->MeasureFill(size, {1, 1});
   }
 }

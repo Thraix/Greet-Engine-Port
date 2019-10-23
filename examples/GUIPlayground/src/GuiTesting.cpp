@@ -31,7 +31,7 @@ class Core : public App
       guiScene->AddFrame(FrameFactory::GetFrame("res/guis/gui.xml"));
 
       Frame* frame = guiScene->GetFrame("LeftComponent");
-      if(frame != nullptr)
+      if(frame != nullptr && false)
       {
         using namespace std::placeholders;
         // Function callbacks

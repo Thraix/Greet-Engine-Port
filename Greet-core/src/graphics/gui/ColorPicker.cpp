@@ -20,7 +20,7 @@ namespace Greet
     delete picker;
   }
 
-  void ColorPicker::OnEvent(Event& event, const Vec2& translatedPos)
+  void ColorPicker::OnEvent(Event& event, const Vec2& componentPos)
   {
 
     if(EVENT_IS_TYPE(event, EventType::MOUSE_PRESS))

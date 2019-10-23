@@ -7,6 +7,7 @@ namespace Greet
   Docker::Docker(const XMLObject& object, Component* parent)
     : Component(object, parent), split{nullptr}
   {
+    m_isFocusable = true;
     for(auto&& child : object.GetObjects())
     {
       if(child.GetName() == "DockerSplit")
@@ -41,22 +42,37 @@ namespace Greet
       }
     }
     if(split == nullptr)
+    {
       Log::Error("No DockerSplit found in Docker");
+      split = new DockerSplit({"DockerSplit",{},""}, this);
+    }
   }
 
   void Docker::Render(GUIRenderer* renderer) const
   {
-    if(split)
-      split->Render(renderer);
+    split->Render(renderer);
+  }
+
+  void Docker::Update(float timeElapsed)
+  {
+    split->Update(timeElapsed);
+  }
+
+  void Docker::OnEvent(Event& event, const Vec2& componentPos) 
+  {
+    split->OnEvent(event, componentPos);
   }
 
   void Docker::OnMeasured()
   {
-    if(split)
-    {
-      split->SetSize(GetSize());
-      // Update positions of child dockers
-      split->SetPosition({0,0});
-    }
+    split->SetSize(GetSize());
+    // Update positions of child dockers
+    split->SetPosition({0,0});
+  }
+
+  void Docker::SetGUIScene(GUIScene* scene)
+  {
+    guiScene = scene;
+    split->SetGUIScene(scene);
   }
 }
