@@ -35,7 +35,7 @@ namespace Greet
       Slider(const XMLObject& xmlObject, Component* parent);
 
       virtual void Measure() override;
-      virtual void MeasureFill(float parentEmptyWidth, float parentEmptyHeight, float parentWeight, bool vertical) override;
+      virtual void MeasureFill(const Vec2& emptyParentSpace, const Vec2& percentageFill) override;
       virtual void OnMeasured() override;
 
       virtual void Render(GUIRenderer* renderer) const override;

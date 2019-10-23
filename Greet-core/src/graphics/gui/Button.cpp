@@ -25,7 +25,7 @@ namespace Greet {
   void Button::OnMeasured()
   {
     label->Measure();
-    label->MeasureFill(GetContentSize().w,GetContentSize().h,1,true);
+    label->MeasureFill(GetContentSize(),{1,1});
   }
 
   void Button::Render(GUIRenderer* renderer) const

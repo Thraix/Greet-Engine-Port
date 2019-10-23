@@ -63,15 +63,16 @@ namespace Greet
     Component::Measure();
   }
 
-  void Container::MeasureFill(float parentEmptyWidth, float parentEmptyHeight, float parentTotalWeight, bool vertical)
+  void Container::MeasureFill(const Vec2& emptyParentSpace, const Vec2& percentageFill)
   {
-    Component::MeasureFill(parentEmptyWidth, parentEmptyHeight, parentTotalWeight, vertical);
+    Component::MeasureFill(emptyParentSpace, percentageFill);
 
     Vec2 emptySpace = GetMeasureFillSize();
-
+    float weight = GetMeasureTotalWeight();
     for(auto&& comp : m_components)
     {
-      comp->MeasureFill(emptySpace.w,emptySpace.h, GetMeasureTotalWeight(), this->vertical);
+      const Vec2& childSize = comp->GetSizeValue();
+      comp->MeasureFill(emptySpace, {this->vertical ? 1 : childSize.w / weight, this->vertical ? childSize.h / weight : 1});
     }
 
     float offset = 0;

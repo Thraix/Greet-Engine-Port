@@ -4,9 +4,8 @@
   resizeTop="false" resizeLeft="false" resizeBottom="false" resizeRight="true"
   padding="10" border="1"
   borderColor="#37474f" 
-  backgroundColor="#263238" 
-  >
-<Container width="fill_parent" height="fill_parent" verticalAlign="false">
+  backgroundColor="#263238">
+<Container name="container" width="fill_parent" height="fill_parent" verticalAlign="false">
   <Container width="400" height="fill_parent">
     <Label fontSize="18" font="noto" color="#90a4ae">Frame header</Label>
     <Divider name="divider" backgroundColor="#90a4ae"/>
@@ -70,8 +69,7 @@
       borderColor="#263238" 
       backgroundColor="#455a64" 
       width="5" height="fill_parent" margin="0"
-      border="1"
-      />
+      border="1"/>
   </Slider>
 
   <Label
@@ -118,69 +116,77 @@
     borderColor="#263238" 
     backgroundColor="#455a64" 
     width="fill_parent" height="5" margin="0"
-    border="1"
-    />
+    border="1"/>
 </Slider>
 
-  </Container>
+      </Container>
 
-  <ProgressBar
-    width="fill_parent" height="20" name="progressBar" 
-    backgroundColor="#37474f" 
-    borderColor="#455a64" 
-    progressColor="#607d8b"
-    border="1" 
-    radius="9"
-    borderRadius="10"
-    minValue="0.25" maxValue="1.25"/>
+      <ProgressBar
+        width="fill_parent" height="20" name="progressBar" 
+        backgroundColor="#37474f" 
+        borderColor="#455a64" 
+        progressColor="#607d8b"
+        border="1" 
+        radius="9"
+        borderRadius="10"
+        minValue="0.25" maxValue="1.25"/>
 
-  <ProgressBar
-    width="fill_parent" height="20" name="progressBarReverse"
-    backgroundColor="#37474f" 
-    borderColor="#455a64" 
-    progressColor="#607d8b"
-    border="1" padding="0"
-    radius="9"
-    borderRadius="10"
-    minValue="0.25" maxValue="1.25" reverseProgress="true"/>
+      <ProgressBar
+        width="fill_parent" height="20" name="progressBarReverse"
+        backgroundColor="#37474f" 
+        borderColor="#455a64" 
+        progressColor="#607d8b"
+        border="1" padding="0"
+        radius="9"
+        borderRadius="10"
+        minValue="0.25" maxValue="1.25" reverseProgress="true"/>
 
-  <Container width="fill_parent" verticalAlign="false">
-    <Label 
-      width="wrap_content" height="fill_parent" 
-      fontSize="16" font="noto" color="#90a4ae">Background Color: </Label>
+      <Container width="fill_parent" verticalAlign="false">
+        <Label 
+          width="wrap_content" height="fill_parent" 
+          fontSize="16" font="noto" color="#90a4ae">Background Color: </Label>
 
-    <ColorPicker
-      width="60" height="30" name="backgroundChanger"
-      backgroundColor="#455a64"
-      borderColor="#455a64" 
-      border="2"
-      radius="2"
-      borderRadius="4"
-      />
-  </Container>
-</Container>
-<Divider width="5" backgroundColor="#455a64" vertical="true"/>
-<Docker>
-  <TabLayout/>
-  <DockerSplit vertical="true">
-    <DockerContainer>
-      <DockerTab title="Project Explorer"/>
-      <DockerTab title="File Browser"/>
-    </DockerContainer>
-    <DockerContainer>
-      <DockerTab title="Editor">
-        <Content/>
-      </DockerTab>
-    </DockerContainer>
-    <DockerSplit vertical="false">
-      <DockerContainer>
-        <DockerTab title="Debugger"/>
-      </DockerContainer>
-      <DockerContainer>
-        <DockerTab title="Console"/>
-      </DockerContainer>
-    </DockerSplit>
-  </DockerSplit>
-</Docker>
+        <ColorPicker
+          width="60" height="30" name="backgroundChanger"
+          backgroundColor="#455a64"
+          borderColor="#455a64" 
+          border="2"
+          radius="2"
+          borderRadius="4"/>
+      </Container>
+    </Container>
+    <Divider width="5" backgroundColor="#455a64" vertical="true"/>
+    <Docker width="1w" height="1w" name="docker" backgroundColor="#000000">
+      <TabLayout/>
+      <DockerSplit>
+        <DockerSplit vertical="false">
+          <DockerSplit>
+            <DockerContainer>
+              <DockerTab title="Project Explorer">
+                <Component width="fill_parent" height="fill_parent" backgroundColor="#ff0000"/>
+              </DockerTab>
+              <DockerTab title="File browser">
+                <Component width="fill_parent" height="fill_parent" backgroundColor="#00ff00"/>
+              </DockerTab>
+            </DockerContainer>
+            <DockerContainer>
+              <DockerTab title="Editor">
+                <Component width="fill_parent" height="fill_parent" backgroundColor="#0000ff"/>
+              </DockerTab>
+            </DockerContainer>
+          </DockerSplit>
+          <DockerContainer>
+            <DockerTab title="Console">
+              <Component width="fill_parent" height="fill_parent" backgroundColor="#ffff00"/>
+            </DockerTab>
+          </DockerContainer>
+        </DockerSplit>
+        <DockerContainer>
+          <DockerTab title="Debugger">
+            <Component width="fill_parent" height="fill_parent" backgroundColor="#ff00ff"/>
+          </DockerTab>
+        </DockerContainer>
+      </DockerSplit>
+    </Docker>
   </Container>
 </Frame>

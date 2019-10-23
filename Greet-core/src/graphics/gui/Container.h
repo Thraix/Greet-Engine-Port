@@ -23,7 +23,7 @@ namespace Greet {
       virtual ~Container();
 
       void Measure() override;
-      void MeasureFill(float parentEmptyWidth, float parentEmptyHeight, float parentTotalWeight, bool vertical) override;
+      void MeasureFill(const Vec2& emptyParentSpace, const Vec2& percentageFill) override;
       Vec2 GetMeasureFillSize() override;
       float GetMeasureTotalWeight() override;
 

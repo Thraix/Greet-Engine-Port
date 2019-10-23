@@ -81,10 +81,10 @@ namespace Greet
     Component::Measure();
   }
 
-  void Slider::MeasureFill(float parentEmptyWidth, float parentEmptyHeight, float parentWeight, bool vertical)
+  void Slider::MeasureFill(const Vec2& emptyParentSpace, const Vec2& percentageFill)
   {
-    Component::MeasureFill(parentEmptyWidth, parentEmptyHeight, parentWeight, vertical);
-    sliderComponent->MeasureFill(GetContentSize().w,GetContentSize().h,1,flags & SLIDER_FLAG_VERTICAL);
+    Component::MeasureFill(emptyParentSpace, percentageFill);
+    sliderComponent->MeasureFill(GetContentSize(),{1,1});
   }
 
   void Slider::OnMeasured()

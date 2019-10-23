@@ -26,7 +26,7 @@ namespace Greet
       virtual ~SatValSlider();
 
       virtual void Measure() override;
-      virtual void MeasureFill(float parentEmptyWidth, float parentEmptyHeight, float parentWeight, bool vertical) override;
+      virtual void MeasureFill(const Vec2& emptyParentSpace, const Vec2& percentageFill) override;
 
       void PreRender(GUIRenderer* renderer, const Vec2& translation) const override;
       void Render(GUIRenderer* renderer) const override;

@@ -74,6 +74,7 @@
 #include <graphics/gui/TLBR.h>
 #include <graphics/gui/TextBox.h>
 #include <graphics/gui/docker/DockerContainer.h>
+#include <graphics/gui/docker/DockerInterface.h>
 #include <graphics/gui/docker/DockerSplit.h>
 #include <graphics/gui/docker/DockerTab.h>
 #include <graphics/layers/Group.h>

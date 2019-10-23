@@ -44,8 +44,9 @@ namespace Greet {
       Frame* RemoveFrame(Frame* frame);
       Frame* GetFrame(const std::string& name);
 
-      float GetWidth();
-      float GetHeight();
+      float GetWidth() const;
+      float GetHeight() const;
+      Vec2 GetSize() const;
 
   };
 }

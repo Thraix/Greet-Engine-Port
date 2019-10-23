@@ -32,8 +32,7 @@ namespace Greet
 
   void Component::Measure()
   {
-    Container* container = dynamic_cast<Container*>(parent);
-    if(size.widthType != ComponentSize::Type::WEIGHT || (container && container->IsVertical() ))
+    if(size.widthType != ComponentSize::Type::WEIGHT)
     {
       if(size.widthType == ComponentSize::Type::WRAP)
         size.size.w = GetWrapSize().w;
@@ -41,7 +40,7 @@ namespace Greet
         size.size.w = size.value.w;
     }
 
-    if(size.heightType != ComponentSize::Type::WEIGHT || (container && container->IsVertical() ))
+    if(size.heightType != ComponentSize::Type::WEIGHT)
     {
       if(size.heightType == ComponentSize::Type::WRAP)
         size.size.h = GetWrapSize().h;
@@ -52,32 +51,15 @@ namespace Greet
 
   void Component::MeasureFill()
   {
-    MeasureFill(guiScene->GetWidth(), guiScene->GetHeight(), 1, true);
+    MeasureFill(guiScene->GetSize(), {1, 1});
   }
 
-  void Component::MeasureFill(float parentEmptyWidth, float parentEmptyHeight, float parentTotalWeight, bool vertical)
+  void Component::MeasureFill(const Vec2& emptyParentSpace, const Vec2& percentageFill)
   {
-    // Width
     if(size.widthType == ComponentSize::Type::WEIGHT)
-    {
-      if(vertical)
-        size.size.w = parentEmptyWidth;
-      else
-        size.size.w = parentEmptyWidth * size.value.w / parentTotalWeight;
-    }
-    // else we have already set the size in Measure
-
-
-    // Height
+      size.size.w = emptyParentSpace.x * percentageFill.x;
     if(size.heightType == ComponentSize::Type::WEIGHT)
-    {
-      if(!vertical)
-        size.size.h = parentEmptyHeight;
-      else
-        size.size.h = parentEmptyHeight * size.value.h / parentTotalWeight;
-    }
-    // else we have already set the size in Measure
-
+      size.size.h = emptyParentSpace.y * percentageFill.y;
     OnMeasured();
   }
 

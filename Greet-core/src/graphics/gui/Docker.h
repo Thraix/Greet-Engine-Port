@@ -18,5 +18,6 @@ namespace Greet {
       Docker(const XMLObject& object, Component* parent);
 
       void Render(GUIRenderer* renderer) const override;
+      void OnMeasured() override;
   };
 }

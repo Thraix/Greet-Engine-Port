@@ -194,7 +194,7 @@ namespace Greet {
       return;
     }
     frame->Measure();
-    frame->MeasureFill(GetWidth(),GetHeight(), 1, true);
+    frame->MeasureFill(GetSize(), {1, 1});
     frame->SetGUIScene(this);
     frames.push_back(frame);
     frame->PostConstruction();
@@ -237,12 +237,17 @@ namespace Greet {
     }
     return nullptr;
   }
-  float GUIScene::GetWidth()
+  float GUIScene::GetWidth() const
   {
     return RenderCommand::GetViewportWidth();
   }
-  float GUIScene::GetHeight()
+  float GUIScene::GetHeight() const
   {
     return RenderCommand::GetViewportHeight();
+  }
+
+  Vec2 GUIScene::GetSize() const
+  {
+    return {RenderCommand::GetViewportWidth(), RenderCommand::GetViewportHeight()};
   }
 }

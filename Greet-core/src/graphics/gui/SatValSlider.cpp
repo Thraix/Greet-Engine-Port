@@ -47,10 +47,10 @@ namespace Greet
     Component::Measure();
   }
 
-  void SatValSlider::MeasureFill(float parentEmptyWidth, float parentEmptyHeight, float parentWeight, bool vertical)
+  void SatValSlider::MeasureFill(const Vec2& emptyParentSpace, const Vec2& percentageFill)
   {
-    Component::MeasureFill(parentEmptyWidth, parentEmptyHeight, parentWeight, vertical);
-    sliderComponent->MeasureFill(GetContentSize().w,GetContentSize().h,1, false);
+    Component::MeasureFill(emptyParentSpace, percentageFill);
+    sliderComponent->MeasureFill(GetContentSize(), {1, 1});
   }
 
   void SatValSlider::PreRender(GUIRenderer* renderer, const Vec2& translation) const

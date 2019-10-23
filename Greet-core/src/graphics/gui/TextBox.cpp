@@ -56,8 +56,8 @@ namespace Greet
   {
     text->Measure();
     hintText->Measure();
-    text->MeasureFill(GetContentSize().w,GetContentSize().h, 1, true);
-    hintText->MeasureFill(GetContentSize().w,GetContentSize().h, 1, true);
+    text->MeasureFill(GetContentSize(), {1, 1});
+    hintText->MeasureFill(GetContentSize(), {1, 1});
   }
 
   void TextBox::Render(GUIRenderer* renderer) const

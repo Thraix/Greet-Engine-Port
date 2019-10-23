@@ -57,7 +57,7 @@ namespace Greet
       virtual void Measure();
       // Measurements that does depend on the parent
       void MeasureFill();
-      virtual void MeasureFill(float parentEmptyWidth, float parentEmptyHeight, float parentTotalWeight, bool vertical);
+      virtual void MeasureFill(const Vec2& emptyParentSpace, const Vec2& percentageFill);
       void Remeasure();
 
       // Size has updated

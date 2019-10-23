@@ -11,7 +11,7 @@ namespace Greet
     {
       if(child.GetName() == "DockerSplit")
       {
-        if(split != nullptr)
+        if(split == nullptr)
           split = new DockerSplit(child, this);
         else
           Log::Error("NOTIMPLEMENTED: Docker currently only supports one DockerSplit");
@@ -40,10 +40,23 @@ namespace Greet
         Log::Error("Unknown component in Docker. Component=", child.GetName());
       }
     }
+    if(split == nullptr)
+      Log::Error("No DockerSplit found in Docker");
   }
 
   void Docker::Render(GUIRenderer* renderer) const
   {
+    if(split)
+      split->Render(renderer);
+  }
 
+  void Docker::OnMeasured()
+  {
+    if(split)
+    {
+      split->SetSize(GetSize());
+      // Update positions of child dockers
+      split->SetPosition({0,0});
+    }
   }
 }
