@@ -7,7 +7,7 @@ namespace Greet
   DockerSplit::DockerSplit(const XMLObject& object, Docker* docker)
     : DockerInterface{docker}
   {
-    vertical = GUIUtils::GetBooleanFromXML(object, "vertical", true);
+    vertical = GUIUtils::GetBooleanFromXML(object, "vertical", false);
     for(auto&& objectChild : object.GetObjects())
     {
       if(objectChild.GetName() == "DockerSplit")
@@ -53,12 +53,12 @@ namespace Greet
     {
       MousePressEvent& e = static_cast<MousePressEvent&>(event);
       Vec2 mousePos = e.GetPosition() - componentPos;
-      if((vertical && mousePos.y >= 0 && mousePos.y < size.h) || (!vertical && mousePos.x >= 0 && mousePos.x < size.w))
+      if((vertical && mousePos.x >= 0 && mousePos.x < size.w) || (!vertical && mousePos.y >= 0 && mousePos.y < size.h))
       {
         for(int i = 0;i<children.size()-1;i++)
         {
           mousePos -= children[i]->GetSize();
-          if(vertical && mousePos.x >= -5 && mousePos.x < 5)
+          if(vertical && mousePos.y >= -5 && mousePos.y < 5)
           {
             grabbingEdge = true;
             grabbedEdgeIndex = i;
@@ -66,7 +66,7 @@ namespace Greet
             grabbedSize = children[i]->GetSize().x;
             return;
           }
-          else if(!vertical && mousePos.y >= -5 && mousePos.y < 5)
+          else if(!vertical && mousePos.x >= -5 && mousePos.x < 5)
           {
             grabbingEdge = true;
             grabbedEdgeIndex = i;
@@ -88,17 +88,17 @@ namespace Greet
         const Vec2& sizeNext = children[grabbedEdgeIndex+1]->GetSize();
         if(vertical)
         {
-          float offset = e.GetDX();
-          children[grabbedEdgeIndex]->SetSize({sizeThis.x + offset, sizeThis.y});
-          children[grabbedEdgeIndex+1]->SetPosition({posNext.x + offset, posNext.y});
-          children[grabbedEdgeIndex+1]->SetSize({sizeNext.x - offset, sizeNext.y});
-        }
-        else
-        {
           float offset = e.GetDY();
           children[grabbedEdgeIndex]->SetSize({sizeThis.x, sizeThis.y + offset});
           children[grabbedEdgeIndex+1]->SetPosition({posNext.x, posNext.y + offset});
           children[grabbedEdgeIndex+1]->SetSize({sizeNext.x, sizeNext.y - offset});
+        }
+        else
+        {
+          float offset = e.GetDX();
+          children[grabbedEdgeIndex]->SetSize({sizeThis.x + offset, sizeThis.y});
+          children[grabbedEdgeIndex+1]->SetPosition({posNext.x + offset, posNext.y});
+          children[grabbedEdgeIndex+1]->SetSize({sizeNext.x - offset, sizeNext.y});
         }
       }
     }
@@ -112,9 +112,9 @@ namespace Greet
     {
       child->OnEvent(event, pos);
       if(vertical)
-        pos.x += child->GetSize().x;
-      else
         pos.y += child->GetSize().y;
+      else
+        pos.x += child->GetSize().x;
     }
   }
 
@@ -145,9 +145,9 @@ namespace Greet
     {
       child->SetPosition({floor(offset.x), floor(offset.y)});
       if(vertical)
-        offset.x += child->GetSize().x;
-      else
         offset.y += child->GetSize().y;
+      else
+        offset.x += child->GetSize().x;
     }
   }
 
@@ -158,16 +158,16 @@ namespace Greet
     for(auto&& child : children)
     {
       if(vertical)
-        sumSize.x += child->GetSize().x;
-      else
         sumSize.y += child->GetSize().y;
+      else
+        sumSize.x += child->GetSize().x;
     }
     for(auto&& child : children)
     {
       if(vertical)
-        child->SetSize({floor(_size.x * (child->GetSize().x / sumSize.x)), _size.y});
-      else
         child->SetSize({_size.x, floor(_size.y * (child->GetSize().y / sumSize.y))});
+      else
+        child->SetSize({floor(_size.x * (child->GetSize().x / sumSize.x)), _size.y});
     }
   }
 }

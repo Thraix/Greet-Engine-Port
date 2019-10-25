@@ -163,7 +163,7 @@
   <Component width="fill_parent" height="fill_parent" backgroundColor="#880000"/>
 </DockerTab>
 </DockerContainer>
-<DockerSplit vertical="false">
+<DockerSplit vertical="true">
   <DockerSplit>
     <DockerContainer>
       <DockerTab title="Editor">
