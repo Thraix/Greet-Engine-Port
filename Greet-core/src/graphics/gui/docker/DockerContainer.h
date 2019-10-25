@@ -18,6 +18,9 @@ namespace Greet {
       std::vector<DockerTab*> children;
       uint currentTab = 0;
 
+      bool hover = false;
+      uint hoverTab = 0;
+
     public:
       DockerContainer(const XMLObject& object, Docker* docker);
       virtual ~DockerContainer();

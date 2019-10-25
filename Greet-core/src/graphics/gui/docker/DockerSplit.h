@@ -20,7 +20,6 @@ namespace Greet {
       bool grabbingEdge = false;
       int grabbedEdgeIndex;
       float grabbedPos;
-      float grabbedSize;
 
     public:
       DockerSplit(const XMLObject& object, Docker* docker);

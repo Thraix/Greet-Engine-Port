@@ -37,9 +37,12 @@ namespace Greet
     renderer->SubmitRect({0.0f, 0.0f}, {size.w, TAB_HEIGHT}, {0.039,0.078,0.09,1}, false);
     for(int i = 0;i<children.size();i++)
     {
-      Vec4 color = {0.8f,0.8f,0.8f,1.0f};
+      Vec4 color = {0.5f,0.5f,0.5f,1.0f};
       if(currentTab == i)
         color = {1,1,1,1};
+      else if(hover && hoverTab == i)
+        color = {0.8,0.8,0.8,1};
+
       renderer->SubmitRect({(float)i * (TAB_WIDTH + 1), 0.0f}, {TAB_WIDTH, TAB_HEIGHT}, color, false);
       renderer->SubmitString(children[i]->GetTitle(), {(float)i * (TAB_WIDTH + 1) + TAB_PADDING, 12}, FontManager::Get("noto", 12), {0,0,0,1}, false);
     }
@@ -67,13 +70,27 @@ namespace Greet
         if(tab >= 0)
         {
           currentTab = tab;
-        }
-        else
-        {
-          children[currentTab]->OnEvent(event, componentPos);
+          return;
         }
       }
     }
+    else if(EVENT_IS_TYPE(event, EventType::MOUSE_MOVE))
+    {
+      MouseMoveEvent& e = static_cast<MouseMoveEvent&>(event);
+      Vec2 pos = e.GetPosition() - componentPos;
+      int tab = GetTab(pos);
+      if(tab >= 0)
+      {
+        hoverTab = tab;
+        hover = true;
+        return;
+      }
+      else
+      {
+        hover = false;
+      }
+    }
+    children[currentTab]->OnEvent(event, componentPos);
   }
 
   Component* DockerContainer::GetComponentByNameNoCast(const std::string& name)

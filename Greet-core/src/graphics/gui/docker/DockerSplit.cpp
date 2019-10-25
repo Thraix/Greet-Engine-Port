@@ -63,7 +63,6 @@ namespace Greet
             grabbingEdge = true;
             grabbedEdgeIndex = i;
             grabbedPos = mousePos.x;
-            grabbedSize = children[i]->GetSize().x;
             return;
           }
           else if(!vertical && mousePos.x >= -5 && mousePos.x < 5)
@@ -71,7 +70,6 @@ namespace Greet
             grabbingEdge = true;
             grabbedEdgeIndex = i;
             grabbedPos = mousePos.y;
-            grabbedSize = children[i]->GetSize().y;
             return;
           }
         }
@@ -83,28 +81,38 @@ namespace Greet
       {
         MouseMoveEvent& e = static_cast<MouseMoveEvent&>(event);
         Vec2 mousePos = e.GetPosition() - componentPos;
-        const Vec2& sizeThis = children[grabbedEdgeIndex]->GetSize();
-        const Vec2& posNext = children[grabbedEdgeIndex+1]->GetPosition();
-        const Vec2& sizeNext = children[grabbedEdgeIndex+1]->GetSize();
+
+        DockerInterface* dockerThis = children[grabbedEdgeIndex];
+        DockerInterface* dockerNext = children[grabbedEdgeIndex+1];
+        
+        const Vec2& sizeThis = dockerThis->GetSize();
+        const Vec2& posNext = dockerNext->GetPosition();
+        const Vec2& sizeNext = dockerNext->GetSize();
+
         if(vertical)
         {
           float offset = e.GetDY();
-          children[grabbedEdgeIndex]->SetSize({sizeThis.x, sizeThis.y + offset});
-          children[grabbedEdgeIndex+1]->SetPosition({posNext.x, posNext.y + offset});
-          children[grabbedEdgeIndex+1]->SetSize({sizeNext.x, sizeNext.y - offset});
+          dockerThis->SetSize({sizeThis.x, sizeThis.y + offset});
+          dockerNext->SetPosition({posNext.x, posNext.y + offset});
+          dockerNext->SetSize({sizeNext.x, sizeNext.y - offset});
         }
         else
         {
           float offset = e.GetDX();
-          children[grabbedEdgeIndex]->SetSize({sizeThis.x + offset, sizeThis.y});
-          children[grabbedEdgeIndex+1]->SetPosition({posNext.x + offset, posNext.y});
-          children[grabbedEdgeIndex+1]->SetSize({sizeNext.x - offset, sizeNext.y});
+          dockerThis->SetSize({sizeThis.x + offset, sizeThis.y});
+          dockerNext->SetPosition({posNext.x + offset, posNext.y});
+          dockerNext->SetSize({sizeNext.x - offset, sizeNext.y});
         }
+        return;
       }
     }
     else if(EVENT_IS_TYPE(event, EventType::MOUSE_RELEASE))
     {
-      grabbingEdge = false;
+      if(grabbingEdge)
+      {
+        grabbingEdge = false;
+        return;
+      }
     }
 
     Vec2 pos = componentPos;
