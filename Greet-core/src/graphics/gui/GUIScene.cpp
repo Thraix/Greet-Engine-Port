@@ -1,5 +1,4 @@
 #include "GUIScene.h"
-
 #include <event/EventDispatcher.h>
 #include <graphics/RenderCommand.h>
 #include <graphics/gui/Frame.h>
@@ -97,7 +96,6 @@ namespace Greet {
 
   void GUIScene::ViewportResize(ViewportResizeEvent& event)
   {
-    Log::Info("Viewport: ", event.GetSize());
     projectionMatrix = Mat3::OrthographicViewport();
     m_shader->Enable();
     m_shader->SetUniformMat3("projectionMatrix", projectionMatrix);
@@ -122,7 +120,6 @@ namespace Greet {
       (*it)->RenderHandle(m_renderer);
       (*it)->PostRender(m_renderer);
     }
-    m_renderer->SubmitRect({0,0}, {100,100}, {1,1,1,1}, false);
   }
 
   void GUIScene::PostRender() const
