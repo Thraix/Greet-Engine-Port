@@ -143,9 +143,9 @@ namespace Greet {
 
   void Window::window_resize(GLFWwindow *window, int width, int height)
   {
-    RenderCommand::ResetViewport();
     Window::width = width;
     Window::height = height;
+    RenderCommand::ResetViewport();
     EventDispatcher::OnEvent(WindowResizeEvent{width,height});
     EventDispatcher::OnEvent(ViewportResizeEvent{0, 0, (float)width, (float)height});
   }
