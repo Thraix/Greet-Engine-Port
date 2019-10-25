@@ -62,7 +62,7 @@ namespace Greet
       MousePressEvent& e = static_cast<MousePressEvent&>(event);
       if(e.GetButton() == GREET_MOUSE_1)
       {
-        Vec2 pos = e.GetPosition() - (componentPos + position);
+        Vec2 pos = e.GetPosition() - componentPos;
         int tab = GetTab(pos);
         if(tab >= 0)
         {

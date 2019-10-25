@@ -17,6 +17,11 @@ namespace Greet {
       bool vertical;
       std::vector<DockerInterface*> children;
 
+      bool grabbingEdge = false;
+      int grabbedEdgeIndex;
+      float grabbedPos;
+      float grabbedSize;
+
     public:
       DockerSplit(const XMLObject& object, Docker* docker);
       virtual ~DockerSplit();

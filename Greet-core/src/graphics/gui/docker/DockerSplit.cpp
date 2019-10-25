@@ -49,9 +49,72 @@ namespace Greet
 
   void DockerSplit::OnEvent(Event& event, const Vec2& componentPos)
   {
+    if(EVENT_IS_TYPE(event, EventType::MOUSE_PRESS))
+    {
+      MousePressEvent& e = static_cast<MousePressEvent&>(event);
+      Vec2 mousePos = e.GetPosition() - componentPos;
+      if((vertical && mousePos.y >= 0 && mousePos.y < size.h) || (!vertical && mousePos.x >= 0 && mousePos.x < size.w))
+      {
+        for(int i = 0;i<children.size()-1;i++)
+        {
+          mousePos -= children[i]->GetSize();
+          if(vertical && mousePos.x >= -5 && mousePos.x < 5)
+          {
+            grabbingEdge = true;
+            grabbedEdgeIndex = i;
+            grabbedPos = mousePos.x;
+            grabbedSize = children[i]->GetSize().x;
+            return;
+          }
+          else if(!vertical && mousePos.y >= -5 && mousePos.y < 5)
+          {
+            grabbingEdge = true;
+            grabbedEdgeIndex = i;
+            grabbedPos = mousePos.y;
+            grabbedSize = children[i]->GetSize().y;
+            return;
+          }
+        }
+      }
+    }
+    else if(EVENT_IS_TYPE(event, EventType::MOUSE_MOVE))
+    {
+      if(grabbingEdge)
+      {
+        MouseMoveEvent& e = static_cast<MouseMoveEvent&>(event);
+        Vec2 mousePos = e.GetPosition() - componentPos;
+        const Vec2& sizeThis = children[grabbedEdgeIndex]->GetSize();
+        const Vec2& posNext = children[grabbedEdgeIndex+1]->GetPosition();
+        const Vec2& sizeNext = children[grabbedEdgeIndex+1]->GetSize();
+        if(vertical)
+        {
+          float offset = e.GetDX();
+          children[grabbedEdgeIndex]->SetSize({sizeThis.x + offset, sizeThis.y});
+          children[grabbedEdgeIndex+1]->SetPosition({posNext.x + offset, posNext.y});
+          children[grabbedEdgeIndex+1]->SetSize({sizeNext.x - offset, sizeNext.y});
+        }
+        else
+        {
+          float offset = e.GetDY();
+          children[grabbedEdgeIndex]->SetSize({sizeThis.x, sizeThis.y + offset});
+          children[grabbedEdgeIndex+1]->SetPosition({posNext.x, posNext.y + offset});
+          children[grabbedEdgeIndex+1]->SetSize({sizeNext.x, sizeNext.y - offset});
+        }
+      }
+    }
+    else if(EVENT_IS_TYPE(event, EventType::MOUSE_RELEASE))
+    {
+      grabbingEdge = false;
+    }
+
+    Vec2 pos = componentPos;
     for(auto&& child : children)
     {
-      child->OnEvent(event, componentPos);
+      child->OnEvent(event, pos);
+      if(vertical)
+        pos.x += child->GetSize().x;
+      else
+        pos.y += child->GetSize().y;
     }
   }
 
