@@ -156,7 +156,7 @@ namespace Greet {
     return *this;
   }
 
-  bool Vec2::Compare(const Vec2& other)
+  bool Vec2::Compare(const Vec2& other) const
   {
     return x == other.x && y == other.y;
   }
@@ -206,7 +206,13 @@ namespace Greet {
     return Vec2(-first.x, -first.y);
   }
 
-  float Vec2::operator[](uint i)
+  float& Vec2::operator[](uint i)
+  {
+    assert(i < 2);
+    return *((&x)+i);
+  }
+
+  const float& Vec2::operator[](uint i) const
   {
     assert(i < 2);
     return *((&x)+i);
@@ -260,38 +266,38 @@ namespace Greet {
     return *this;
   }
 
-  bool Vec2::operator==(const Vec2 &other)
+  bool Vec2::operator==(const Vec2 &other) const
   {
     return Compare(other);
   }
 
-  bool Vec2::operator!=(const Vec2 &other)
+  bool Vec2::operator!=(const Vec2 &other) const
   {
     return !Compare(other);
   }
 
-  bool Vec2::operator<(const Vec2& other)
+  bool Vec2::operator<(const Vec2& other) const
   {
     if(x == other.x)
       return y < other.y;
     return x < other.x;
   }
 
-  bool Vec2::operator>(const Vec2& other)
+  bool Vec2::operator>(const Vec2& other) const
   {
     if(x == other.x)
       return y > other.y;
     return x > other.x;
   }
 
-  bool Vec2::operator<=(const Vec2& other)
+  bool Vec2::operator<=(const Vec2& other) const
   {
     if(x == other.x)
       return y <= other.y;
     return x <= other.x;
   }
 
-  bool Vec2::operator>=(const Vec2& other)
+  bool Vec2::operator>=(const Vec2& other) const
   {
     if(x == other.x)
       return y >= other.y;

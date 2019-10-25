@@ -50,7 +50,7 @@ namespace Greet{
       Vec2& Multiply(const float other);
       Vec2& Divide(const float other);
 
-      bool Compare(const Vec2& other);
+      bool Compare(const Vec2& other) const;
 
       friend Vec2 operator+(const Vec2& first, const Vec2 &second);
       friend Vec2 operator-(const Vec2& first, const Vec2 &second);
@@ -63,7 +63,8 @@ namespace Greet{
       friend Vec2 operator*(const Vec2& first, const float c);
       friend Vec2 operator/(const Vec2& first, const float c);
 
-      float operator[](uint i);
+      float& operator[](uint i);
+      const float& operator[](uint i) const;
 
       Vec2& operator+=(const Vec2 &other);
       Vec2& operator-=(const Vec2 &other);
@@ -76,13 +77,13 @@ namespace Greet{
       Vec2& operator/=(const float c);
 
 
-      bool operator!=(const Vec2 &other);
-      bool operator==(const Vec2 &other);
+      bool operator!=(const Vec2 &other) const;
+      bool operator==(const Vec2 &other) const;
 
-      bool operator<(const Vec2& other);
-      bool operator>(const Vec2& other);
-      bool operator<=(const Vec2& other);
-      bool operator>=(const Vec2& other);
+      bool operator<(const Vec2& other) const;
+      bool operator>(const Vec2& other) const;
+      bool operator<=(const Vec2& other) const;
+      bool operator>=(const Vec2& other) const;
 
       friend std::ostream& operator<<(std::ostream& stream, const Vec2& vec);
 

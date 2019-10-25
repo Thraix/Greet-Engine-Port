@@ -55,21 +55,14 @@ namespace Greet
       Vec2 mousePos = e.GetPosition() - componentPos;
       if((vertical && mousePos.x >= 0 && mousePos.x < size.w) || (!vertical && mousePos.y >= 0 && mousePos.y < size.h))
       {
+        int vecIndex = vertical ? 1 : 0;
         for(int i = 0;i<children.size()-1;i++)
         {
           mousePos -= children[i]->GetSize();
-          if(vertical && mousePos.y >= -5 && mousePos.y < 5)
+          if(mousePos[vecIndex] >= -5 && mousePos[vecIndex] < 5)
           {
             grabbingEdge = true;
             grabbedEdgeIndex = i;
-            grabbedPos = mousePos.x;
-            return;
-          }
-          else if(!vertical && mousePos.x >= -5 && mousePos.x < 5)
-          {
-            grabbingEdge = true;
-            grabbedEdgeIndex = i;
-            grabbedPos = mousePos.y;
             return;
           }
         }
@@ -84,25 +77,22 @@ namespace Greet
 
         DockerInterface* dockerThis = children[grabbedEdgeIndex];
         DockerInterface* dockerNext = children[grabbedEdgeIndex+1];
-        
-        const Vec2& sizeThis = dockerThis->GetSize();
-        const Vec2& posNext = dockerNext->GetPosition();
-        const Vec2& sizeNext = dockerNext->GetSize();
 
-        if(vertical)
-        {
-          float offset = e.GetDY();
-          dockerThis->SetSize({sizeThis.x, sizeThis.y + offset});
-          dockerNext->SetPosition({posNext.x, posNext.y + offset});
-          dockerNext->SetSize({sizeNext.x, sizeNext.y - offset});
-        }
-        else
-        {
-          float offset = e.GetDX();
-          dockerThis->SetSize({sizeThis.x + offset, sizeThis.y});
-          dockerNext->SetPosition({posNext.x + offset, posNext.y});
-          dockerNext->SetSize({sizeNext.x - offset, sizeNext.y});
-        }
+        Vec2 sizeThis = dockerThis->GetSize();
+        Vec2 posNext = dockerNext->GetPosition();
+        Vec2 sizeNext = dockerNext->GetSize();
+
+        int vecIndex = vertical ? 1 : 0;
+
+        float offset = e.GetDeltaPosition()[vecIndex];
+
+        sizeThis[vecIndex] += offset;
+        posNext[vecIndex] += offset;
+        sizeNext[vecIndex] -= offset;
+
+        dockerThis->SetSize(sizeThis);
+        dockerNext->SetPosition(posNext);
+        dockerNext->SetSize(sizeNext);
         return;
       }
     }
@@ -116,13 +106,11 @@ namespace Greet
     }
 
     Vec2 pos = componentPos;
+    int vecIndex = vertical ? 1 : 0;
     for(auto&& child : children)
     {
       child->OnEvent(event, pos);
-      if(vertical)
-        pos.y += child->GetSize().y;
-      else
-        pos.x += child->GetSize().x;
+      pos[vecIndex] += child->GetSize()[vecIndex];
     }
   }
 
@@ -149,13 +137,11 @@ namespace Greet
   {
     position = _position;
     Vec2 offset = position;
+    int vecIndex = vertical ? 1 : 0;
     for(auto&& child : children)
     {
       child->SetPosition({floor(offset.x), floor(offset.y)});
-      if(vertical)
-        offset.y += child->GetSize().y;
-      else
-        offset.x += child->GetSize().x;
+      offset[vecIndex] += child->GetSize()[vecIndex];
     }
   }
 
@@ -163,19 +149,17 @@ namespace Greet
   {
     size = _size;
     Vec2 sumSize{0,0};
+    int vecIndex = vertical ? 1 : 0;
+
     for(auto&& child : children)
     {
-      if(vertical)
-        sumSize.y += child->GetSize().y;
-      else
-        sumSize.x += child->GetSize().x;
+      sumSize[vecIndex] += child->GetSize()[vecIndex];
     }
     for(auto&& child : children)
     {
-      if(vertical)
-        child->SetSize({_size.x, floor(_size.y * (child->GetSize().y / sumSize.y))});
-      else
-        child->SetSize({floor(_size.x * (child->GetSize().x / sumSize.x)), _size.y});
+      Vec2 childSize = _size;
+      childSize[vecIndex] = floor(_size[vecIndex] * (child->GetSize()[vecIndex] / sumSize[vecIndex]));
+      child->SetSize(childSize);
     }
   }
 }
