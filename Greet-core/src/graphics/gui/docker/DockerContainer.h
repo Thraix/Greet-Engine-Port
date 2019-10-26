@@ -10,11 +10,13 @@
 namespace Greet {
 
   class Docker;
+  class DockerSplit;
 
   class DockerContainer : public DockerInterface
   {
     protected:
       bool vertical;
+      DockerSplit* parentSplit; 
       std::vector<DockerTab*> children;
       uint currentTab = 0;
 
@@ -22,7 +24,7 @@ namespace Greet {
       uint hoverTab = 0;
 
     public:
-      DockerContainer(const XMLObject& object, Docker* docker);
+      DockerContainer(const XMLObject& object, Docker* docker, DockerSplit* parentSplit);
       virtual ~DockerContainer();
 
       void SelectTab(int index);

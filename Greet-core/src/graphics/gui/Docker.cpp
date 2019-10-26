@@ -15,7 +15,7 @@ namespace Greet
       if(child.GetName() == "DockerSplit")
       {
         if(split == nullptr)
-          split = new DockerSplit(child, this);
+          split = new DockerSplit(child, this, nullptr);
         else
           Log::Error("NOTIMPLEMENTED: Docker currently only supports one DockerSplit");
       }
@@ -46,7 +46,7 @@ namespace Greet
     if(split == nullptr)
     {
       Log::Error("No DockerSplit found in Docker");
-      split = new DockerSplit({"DockerSplit",{},""}, this);
+      split = new DockerSplit({"DockerSplit",{},""}, this, nullptr);
     }
   }
 
@@ -67,11 +67,11 @@ namespace Greet
 
   void Docker::OnEvent(Event& event, const Vec2& componentPos) 
   {
-    if(dockerTab != nullptr)
+    if(EVENT_IS_TYPE(event, EventType::MOUSE_RELEASE))
     {
-      if(EVENT_IS_TYPE(event, EventType::MOUSE_RELEASE))
+      MouseReleaseEvent& e = static_cast<MouseReleaseEvent&>(event);
+      if(dockerTab != nullptr)
       {
-        MouseReleaseEvent& e = static_cast<MouseReleaseEvent&>(event);
         if(e.GetButton() == GREET_MOUSE_1)
         {
           if(IsMouseInside(e.GetPosition() - componentPos))
@@ -80,8 +80,9 @@ namespace Greet
           }
           dockerTab = nullptr;
         }
+        return;
       }
-      return;
+      split->OnEvent(event, componentPos);
     }
     split->OnEvent(event, componentPos);
   }

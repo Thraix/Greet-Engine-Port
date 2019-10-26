@@ -6,8 +6,8 @@
 
 namespace Greet
 {
-  DockerContainer::DockerContainer(const XMLObject& object, Docker* docker)
-    : DockerInterface{docker}
+  DockerContainer::DockerContainer(const XMLObject& object, Docker* docker, DockerSplit* parentSplit)
+    : DockerInterface{docker}, parentSplit{parentSplit}
   {
     for(auto&& objectChild : object.GetObjects())
     {
@@ -120,38 +120,38 @@ namespace Greet
     }
     else
     {
+      DockerContainer* tabContainer = tab->GetContainer();
+
       int tabIndex = GetTab(event.GetPosition() - componentPos);
-      int tabIndexContainer = tab->GetContainer()->GetTabIndex(tab);
+      int tabIndexContainer = tabContainer->GetTabIndex(tab);
+
+      // Fix this container
       children.insert(children.begin() + tabIndex, tab);
-      tab->GetContainer()->RemoveTab(tabIndexContainer);
       tab->SetPosition(position);
       tab->SetSize(size);
-      tab->GetContainer()->ClampSelectedTab();
       tab->SetContainer(this);
       SelectTab(tabIndex);
+
+      // Fix tab container
+      tabContainer->RemoveTab(tabIndexContainer);
     }
   }
 
   void DockerContainer::SelectTab(int i)
   {
-    assert(i >= 0 && i < children.size() && "SelectTab: Index out of bound");
+    assert(i >= 0 && i < children.size() && "DockerContainer::SelectTab: Index out of bound");
     currentTab = i;
   }
 
   void DockerContainer::ClampSelectedTab()
   {
-    if(children.size() == 0)
-    {
-      currentTab = 0;
-      return;
-    }
     if(currentTab >= children.size())
       currentTab = children.size()-1;
   }
 
   void DockerContainer::HoverTab(int i)
   {
-    assert(i >= 0 && i < children.size() && "HoverTab: Index out of bound");
+    assert(i >= 0 && i < children.size() && "DockerContainer::HoverTab: Index out of bound");
     hoverTab = i;
     hover = true;
   }
@@ -163,8 +163,13 @@ namespace Greet
 
   void DockerContainer::RemoveTab(int i)
   {
-    assert(i >= 0 && i < children.size() && "RemoveTab: Index out of bound");
+    assert(i >= 0 && i < children.size() && "DockerContainer::RemoveTab: Index out of bound");
     children.erase(children.begin() + i);
+
+    if(children.size() == 0)
+      parentSplit->RemoveDocker(parentSplit->GetDockerIndex(this));
+    else
+      ClampSelectedTab();
   }
 
   Component* DockerContainer::GetComponentByNameNoCast(const std::string& name)
@@ -185,7 +190,7 @@ namespace Greet
       if(children[i] == tab)
         return i;
     }
-    assert(false && "Tab is not inside Container");
+    assert(false && "DockerContainer::GetTabIndex: Tab is not inside DockerContainer");
     return children.size();
   }
 

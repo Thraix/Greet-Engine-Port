@@ -16,12 +16,13 @@ namespace Greet {
     protected:
       bool vertical;
       std::vector<DockerInterface*> children;
+      DockerSplit* parentSplit;
 
       bool grabbingEdge = false;
       int grabbedEdgeIndex;
 
     public:
-      DockerSplit(const XMLObject& object, Docker* docker);
+      DockerSplit(const XMLObject& object, Docker* docker, DockerSplit* parentSplit);
       virtual ~DockerSplit();
 
       void Render(GUIRenderer* renderer) const override;
@@ -29,6 +30,10 @@ namespace Greet {
       void OnEvent(Event& event, const Vec2& componentPos) override;
 
       void HandleDroppedTab(DockerTab* tab, MouseReleaseEvent& event, const Vec2& componentPos) override;
+
+      void RemoveDocker(int index);
+
+      int GetDockerIndex(DockerInterface* interface);
 
       Component* GetComponentByNameNoCast(const std::string& name) override;
 

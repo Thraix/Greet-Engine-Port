@@ -26,6 +26,10 @@ namespace Greet
 
       const Vec2& GetPosition() const { return position; }
       const Vec2& GetSize() const { return size; }
+      bool IsMouseInside(const Vec2& mousePos)
+      {
+        return mousePos.x >= 0 && mousePos.y >= 0 && mousePos.x < size.x && mousePos.y < size.y;
+      }
 
     public:
       virtual void Render(GUIRenderer* renderer) const = 0;
@@ -33,7 +37,7 @@ namespace Greet
       virtual void OnEvent(Event& event, const Vec2& translation) = 0;
 
       virtual void HandleDroppedTab(DockerTab* tab, MouseReleaseEvent& event, const Vec2& componentPos) = 0;
-      
+
       virtual Component* GetComponentByNameNoCast(const std::string& name) = 0;
 
       virtual void SetPosition(const Vec2& position) = 0;
