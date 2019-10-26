@@ -13,7 +13,7 @@ namespace Greet
     {
       if(objectChild.GetName() == "DockerTab")
       {
-        children.push_back(new DockerTab(objectChild, docker));
+        children.push_back(new DockerTab(objectChild, docker, this));
       }
       else
       {
@@ -70,6 +70,7 @@ namespace Greet
         if(tab >= 0)
         {
           currentTab = tab;
+          docker->GrabDockerTab(children[tab]);
           return;
         }
       }
@@ -91,6 +92,40 @@ namespace Greet
       }
     }
     children[currentTab]->OnEvent(event, componentPos);
+  }
+
+  void DockerContainer::HandleDroppedTab(DockerTab* tab, MouseReleaseEvent& event, const Vec2& componentPos)
+  {
+    // Only move inside the current container
+    if(tab->GetContainer() == this)
+    {
+      int tabIndex = GetTab(event.GetPosition() - componentPos);
+      if(tabIndex >= 0)
+      {
+        int current = 0;
+
+        for(int i = 0; i<children.size();i++)
+        {
+          if(children[i] == tab)
+          {
+            current = i;
+            break;
+          }
+        }
+        if(current == tabIndex)
+          return;
+        if(current > tabIndex)
+          std::rotate(children.begin()+tabIndex, children.begin() + current, children.begin() + current+1);
+        else
+          std::rotate(children.begin()+current, children.begin() + 1, children.begin() + tabIndex+1);
+        hover = false;
+        currentTab = tabIndex;
+        return;
+      }
+      Log::Info("index out of bound");
+      return;
+    }
+    Log::Error("NOTIMPLEMENTED: Dropping in other containers");
   }
 
   Component* DockerContainer::GetComponentByNameNoCast(const std::string& name)

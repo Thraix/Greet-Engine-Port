@@ -1,11 +1,13 @@
 #include "Docker.h"
 
+#include <input/InputDefines.h>
+
 namespace Greet
 {
   REGISTER_COMPONENT_DEFINITION(Docker);
 
   Docker::Docker(const XMLObject& object, Component* parent)
-    : Component(object, parent), split{nullptr}
+    : Component(object, parent), split{nullptr}, dockerTab{nullptr}
   {
     m_isFocusable = true;
     for(auto&& child : object.GetObjects())
@@ -48,6 +50,11 @@ namespace Greet
     }
   }
 
+  void Docker::GrabDockerTab(DockerTab* tab)
+  {
+    dockerTab = tab;
+  }
+
   void Docker::Render(GUIRenderer* renderer) const
   {
     split->Render(renderer);
@@ -60,6 +67,22 @@ namespace Greet
 
   void Docker::OnEvent(Event& event, const Vec2& componentPos) 
   {
+    if(dockerTab != nullptr)
+    {
+      if(EVENT_IS_TYPE(event, EventType::MOUSE_RELEASE))
+      {
+        MouseReleaseEvent& e = static_cast<MouseReleaseEvent&>(event);
+        if(e.GetButton() == GREET_MOUSE_1)
+        {
+          if(IsMouseInside(e.GetPosition() - componentPos))
+          {
+            split->HandleDroppedTab(dockerTab, e, componentPos);
+          }
+          dockerTab = nullptr;
+        }
+      }
+      return;
+    }
     split->OnEvent(event, componentPos);
   }
 

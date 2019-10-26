@@ -4,8 +4,8 @@
 
 namespace Greet
 {
-  DockerTab::DockerTab(const XMLObject& object, Docker* docker)
-    : DockerInterface{docker}, component{nullptr}
+  DockerTab::DockerTab(const XMLObject& object, Docker* docker, DockerContainer* parentContainer)
+    : DockerInterface{docker}, component{nullptr}, parentContainer{parentContainer}
   {
     title = GUIUtils::GetStringFromXML(object, "title", "");
     if(object.GetObjectCount() == 0)
@@ -45,6 +45,11 @@ namespace Greet
     component->OnEventHandler(event, componentPos + position + Vec2{0.0f, (float)TAB_HEIGHT});
   }
 
+  void DockerTab::HandleDroppedTab(DockerTab* tab, MouseReleaseEvent& event, const Vec2& componentPos)
+  { 
+    Log::Error("DockerTab doesn't implement HandleDroppedTab"); 
+  }
+
   Component* DockerTab::GetComponentByNameNoCast(const std::string& name)
   {
     return component->GetComponentByNameNoCast(name);
@@ -53,6 +58,11 @@ namespace Greet
   const std::string& DockerTab::GetTitle() const
   {
     return title;
+  }
+
+  DockerContainer* DockerTab::GetContainer()
+  {
+    return parentContainer;
   }
 
   void DockerTab::SetGUIScene(GUIScene* scene)

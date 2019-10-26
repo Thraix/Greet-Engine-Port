@@ -114,6 +114,22 @@ namespace Greet
     }
   }
 
+  void DockerSplit::HandleDroppedTab(DockerTab* tab, MouseReleaseEvent& event, const Vec2& componentPos)
+  {
+    Vec2 mousePos = event.GetPosition() - componentPos;
+    Vec2 position = {0,0};
+    for(auto&& child : children)
+    {
+      if(mousePos.x >= position.x && mousePos.y >= position.y && mousePos.x < position.x + child->GetSize().x && mousePos.y < position.y + child->GetSize().y)
+      {
+        child->HandleDroppedTab(tab, event, componentPos + position);
+        return;
+      }
+      int vecIndex = vertical ? 1 : 0;
+      position[vecIndex] += child->GetSize()[vecIndex];
+    }
+  }
+
   Component* DockerSplit::GetComponentByNameNoCast(const std::string& name)
   {
     for(auto&& child : children)
