@@ -25,6 +25,14 @@ namespace Greet {
       DockerContainer(const XMLObject& object, Docker* docker);
       virtual ~DockerContainer();
 
+      void SelectTab(int index);
+      void ClampSelectedTab();
+      void HoverTab(int index);
+      void UnhoverTab();
+      void RemoveTab(int index);
+
+      int GetTabIndex(DockerTab* tab);
+
       int GetTab(const Vec2& mousePos);
 
     public:

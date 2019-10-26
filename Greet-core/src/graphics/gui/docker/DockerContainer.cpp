@@ -30,6 +30,9 @@ namespace Greet
 
   void DockerContainer::Render(GUIRenderer* renderer) const
   {
+    if(currentTab < 0 || currentTab >= children.size())
+      return;
+
     children[currentTab]->Render(renderer);
 
     renderer->PushTranslation(docker->GetPosition() + position);
@@ -59,7 +62,8 @@ namespace Greet
 
   void DockerContainer::OnEvent(Event& event, const Vec2& componentPos)
   {
-
+    if(currentTab < 0 || currentTab >= children.size())
+      return;
     if(EVENT_IS_TYPE(event, EventType::MOUSE_PRESS))
     {
       MousePressEvent& e = static_cast<MousePressEvent&>(event);
@@ -67,9 +71,9 @@ namespace Greet
       {
         Vec2 pos = e.GetPosition() - componentPos;
         int tab = GetTab(pos);
-        if(tab >= 0)
+        if(tab < children.size())
         {
-          currentTab = tab;
+          SelectTab(tab);
           docker->GrabDockerTab(children[tab]);
           return;
         }
@@ -80,15 +84,14 @@ namespace Greet
       MouseMoveEvent& e = static_cast<MouseMoveEvent&>(event);
       Vec2 pos = e.GetPosition() - componentPos;
       int tab = GetTab(pos);
-      if(tab >= 0)
+      if(tab < children.size())
       {
-        hoverTab = tab;
-        hover = true;
+        HoverTab(tab);
         return;
       }
       else
       {
-        hover = false;
+        UnhoverTab();
       }
     }
     children[currentTab]->OnEvent(event, componentPos);
@@ -100,32 +103,68 @@ namespace Greet
     if(tab->GetContainer() == this)
     {
       int tabIndex = GetTab(event.GetPosition() - componentPos);
-      if(tabIndex >= 0)
+      if(tabIndex < children.size())
       {
-        int current = 0;
-
-        for(int i = 0; i<children.size();i++)
-        {
-          if(children[i] == tab)
-          {
-            current = i;
-            break;
-          }
-        }
+        int current = GetTabIndex(tab);
         if(current == tabIndex)
           return;
         if(current > tabIndex)
           std::rotate(children.begin()+tabIndex, children.begin() + current, children.begin() + current+1);
         else
           std::rotate(children.begin()+current, children.begin() + 1, children.begin() + tabIndex+1);
-        hover = false;
-        currentTab = tabIndex;
+        UnhoverTab();
+        SelectTab(tabIndex);
         return;
       }
-      Log::Info("index out of bound");
       return;
     }
-    Log::Error("NOTIMPLEMENTED: Dropping in other containers");
+    else
+    {
+      int tabIndex = GetTab(event.GetPosition() - componentPos);
+      int tabIndexContainer = tab->GetContainer()->GetTabIndex(tab);
+      children.insert(children.begin() + tabIndex, tab);
+      tab->GetContainer()->RemoveTab(tabIndexContainer);
+      tab->SetPosition(position);
+      tab->SetSize(size);
+      tab->GetContainer()->ClampSelectedTab();
+      tab->SetContainer(this);
+      SelectTab(tabIndex);
+    }
+  }
+
+  void DockerContainer::SelectTab(int i)
+  {
+    assert(i >= 0 && i < children.size() && "SelectTab: Index out of bound");
+    currentTab = i;
+  }
+
+  void DockerContainer::ClampSelectedTab()
+  {
+    if(children.size() == 0)
+    {
+      currentTab = 0;
+      return;
+    }
+    if(currentTab >= children.size())
+      currentTab = children.size()-1;
+  }
+
+  void DockerContainer::HoverTab(int i)
+  {
+    assert(i >= 0 && i < children.size() && "HoverTab: Index out of bound");
+    hoverTab = i;
+    hover = true;
+  }
+
+  void DockerContainer::UnhoverTab()
+  {
+    hover = false;
+  }
+
+  void DockerContainer::RemoveTab(int i)
+  {
+    assert(i >= 0 && i < children.size() && "RemoveTab: Index out of bound");
+    children.erase(children.begin() + i);
   }
 
   Component* DockerContainer::GetComponentByNameNoCast(const std::string& name)
@@ -139,18 +178,28 @@ namespace Greet
     return nullptr;
   }
 
+  int DockerContainer::GetTabIndex(DockerTab* tab)
+  {
+    for(int i = 0;i<children.size(); ++i)
+    {
+      if(children[i] == tab)
+        return i;
+    }
+    assert(false && "Tab is not inside Container");
+    return children.size();
+  }
+
   int DockerContainer::GetTab(const Vec2& mousePos)
   {
     if(mousePos.y >= 0 && mousePos.y < TAB_HEIGHT)
     {
       int tab = floor(mousePos.x / (TAB_WIDTH + 1));
-      if(tab >= 0 && tab < children.size())
+      if(tab < children.size())
       {
         return tab;
       }
     }
-    return -1;
-
+    return children.size();
   }
 
   void DockerContainer::SetGUIScene(GUIScene* scene)

@@ -65,6 +65,11 @@ namespace Greet
     return parentContainer;
   }
 
+  void DockerTab::SetContainer(DockerContainer* container)
+  {
+    parentContainer = container;
+  }
+
   void DockerTab::SetGUIScene(GUIScene* scene)
   {
     component->SetGUIScene(scene);

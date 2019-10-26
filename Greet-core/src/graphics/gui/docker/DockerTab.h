@@ -33,6 +33,7 @@ namespace Greet {
 
       Component* GetComponentByNameNoCast(const std::string& name) override;
       DockerContainer* GetContainer();
+      void SetContainer(DockerContainer* container);
 
       void SetGUIScene(GUIScene* scene) override;
       void SetPosition(const Vec2& position) override;
