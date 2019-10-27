@@ -24,7 +24,7 @@ namespace Greet {
 
       static void pop_indent()
       {
-        ASSERT(m_indent.size() != 0, "JSON INDENT ASSERT");
+        ASSERT(m_indent.size() != 0, "Trying to pop JSON indent that is empty");
         m_indent.pop_back();
       }
   };

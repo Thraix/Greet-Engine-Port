@@ -180,7 +180,7 @@ namespace Greet
 
   void DockerSplit::RemoveDocker(int index)
   {
-    ASSERT(index >= 0 && index < children.size(), "DockerSplit::RemoveContainer: Index out of bound");
+    ASSERT(index >= 0 && index < children.size(), "Index out of bound");
     DockerInterface* interface = *(children.begin() + index);
     children.erase(children.begin() + index);
     delete interface;
@@ -207,7 +207,7 @@ namespace Greet
       if(children[i] == interface)
         return i;
     }
-    ASSERT(false, "DockerSplit::GetDockerIndex: Docker is not inside DockerSplit");
+    ASSERT(false, "Docker is not inside DockerSplit");
     return children.size();
   }
 

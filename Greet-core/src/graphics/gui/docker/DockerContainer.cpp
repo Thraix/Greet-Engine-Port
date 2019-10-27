@@ -145,7 +145,7 @@ namespace Greet
 
   void DockerContainer::SelectTab(int i)
   {
-    ASSERT(i >= 0 && i < children.size(), "DockerContainer::SelectTab: Index out of bound");
+    ASSERT(i >= 0 && i < children.size(), "Index out of bound");
     currentTab = i;
   }
 
@@ -157,7 +157,7 @@ namespace Greet
 
   void DockerContainer::HoverTab(int i)
   {
-    ASSERT(i >= 0 && i < children.size(), "DockerContainer::HoverTab: Index out of bound");
+    ASSERT(i >= 0 && i < children.size(), "Index out of bound");
     hoverTab = i;
     hover = true;
   }
@@ -169,7 +169,7 @@ namespace Greet
 
   void DockerContainer::RemoveTab(int i)
   {
-    ASSERT(i >= 0 && i < children.size(), "DockerContainer::RemoveTab: Index out of bound");
+    ASSERT(i >= 0 && i < children.size(), "Index out of bound");
     children.erase(children.begin() + i);
 
     DockerSplit* split = static_cast<DockerSplit*>(parent);
@@ -197,7 +197,7 @@ namespace Greet
       if(children[i] == tab)
         return i;
     }
-    ASSERT(false, "DockerContainer::GetTabIndex: Tab is not inside DockerContainer");
+    ASSERT(false, "Tab is not inside DockerContainer");
     return children.size();
   }
 

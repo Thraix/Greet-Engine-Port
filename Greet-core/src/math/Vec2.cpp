@@ -2,7 +2,6 @@
 
 #include <logging/Log.h>
 #include <math.h>
-#include <cassert>
 
 namespace Greet {
 
@@ -208,13 +207,13 @@ namespace Greet {
 
   float& Vec2::operator[](uint i)
   {
-    assert(i < 2);
+    ASSERT(i < 2, "Index out of bound");
     return *((&x)+i);
   }
 
   const float& Vec2::operator[](uint i) const
   {
-    assert(i < 2);
+    ASSERT(i < 2, "Index out of bound");
     return *((&x)+i);
   }
 

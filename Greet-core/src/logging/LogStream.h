@@ -72,10 +72,7 @@ namespace Greet {
        */
       friend bool operator==(const LogStream& stream1, const LogStream& stream2);
 
-      /*
-       * For some reason this is needed.
-       */
-      LogStream& operator=(const LogStream& stream);
+      LogStream& operator=(const LogStream& stream) = delete;
 
       // Default level checks, returns true if the given stream should stream with the given output level.
       static bool EQCheck(const LogLevel& myLevel, const LogLevel& outputLevel);

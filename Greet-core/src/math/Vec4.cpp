@@ -1,7 +1,8 @@
 #include "Vec4.h"
 
+#include <logging/Log.h>
+
 #include <math.h>
-#include <cassert>
 
 namespace Greet{
 
@@ -143,9 +144,15 @@ namespace Greet{
     return Vec4(first).Divide(c);
   }
 
-  float Vec4::operator[](uint i)
+  float& Vec4::operator[](uint i)
   {
-    assert(i < 4);
+    ASSERT(i < 4, "Index out of bound");
+    return *((&x)+i);
+  }
+
+  const float& Vec4::operator[](uint i) const
+  {
+    ASSERT(i < 4, "Index out of bound");
     return *((&x)+i);
   }
 

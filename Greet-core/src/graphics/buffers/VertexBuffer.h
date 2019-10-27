@@ -27,7 +27,7 @@ namespace Greet
       case BufferAttributeType::BYTE4:  return 4;
     }
 
-    ASSERT(false, "Unsupported BufferAttributeType");
+    ASSERT(false, "Unsupported BufferAttributeType: ", (int)type);
     return 0;
   }
 
@@ -46,7 +46,7 @@ namespace Greet
       case BufferAttributeType::BYTE4:  return 4 * sizeof(char);
     }
 
-    ASSERT(false, "Unsupported BufferAttributeType");
+    ASSERT(false, "Unsupported BufferAttributeType: ", (int)type);
     return 0;
   }
 
@@ -65,7 +65,7 @@ namespace Greet
       case BufferAttributeType::BYTE4:  return 0x1400; // GL_BYTE
     }
 
-    ASSERT(false, "Unsupported BufferAttributeType");
+    ASSERT(false, "Unsupported BufferAttributeType: ", (int)type);
     return 0;
   }
 

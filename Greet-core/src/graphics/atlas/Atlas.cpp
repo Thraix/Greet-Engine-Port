@@ -7,7 +7,7 @@ namespace Greet {
   Atlas::Atlas(uint atlasSize, uint textureSize)
     : Texture2D(atlasSize,atlasSize,TextureParams(TextureFilter::NEAREST,TextureWrap::NONE,TextureInternalFormat::RGBA)), m_textureSize(textureSize)
   {
-    ASSERT(atlasSize > m_textureSize, "ATLAS", "Atlas size must be greater than the textures sizes");
+    ASSERT(atlasSize > m_textureSize, "Atlas size must be greater than the textures sizes");
     //ASSERT(!(atlasSize == 0) && !(atlasSize & (atlasSize - 1)),"ATLAS", "Atlas size must be a power of two");
     //ASSERT(!(textureSize == 0) && !(m_textureSize & (m_textureSize - 1)), "ATLAS", "Texture size must be a power of two");
     m_texturesSide = atlasSize / m_textureSize;
@@ -92,7 +92,7 @@ namespace Greet {
         return true;
       }
     }
-    ASSERT(false, "AtlasManager failed to find unoccupied space, even though it passed a space check");
+    ASSERT(false, "Atlas failed to find unoccupied space, even though it passed a space check");
   }
 
   Sprite Atlas::GetSprite(const std::string& name) const

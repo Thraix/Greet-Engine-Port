@@ -4,11 +4,12 @@
 #define _USE_MATH_DEFINES
 #endif
 
-#include <iostream>
-#include <math/Vec4.h>
+#include <logging/Log.h>
 #include <math/MathFunc.h>
 #include <math/Quaternion.h>
-#include <cassert>
+#include <math/Vec4.h>
+
+#include <iostream>
 
 namespace Greet{
 
@@ -224,9 +225,15 @@ namespace Greet{
       return Vec3(c / vec.x, c / vec.y, c / vec.z);
     }
 
-    Real operator[](uint i) const
+    const Real& operator[](uint i) const
     {
-      assert(i < 3);
+      ASSERT(i < 3, "Index out of bound");
+      return *((&x)+i);
+    }
+
+    Real& operator[](uint i)
+    {
+      ASSERT(i < 3, "Index out of bound");
       return *((&x)+i);
     }
 

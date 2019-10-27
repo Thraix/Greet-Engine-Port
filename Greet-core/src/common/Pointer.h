@@ -190,13 +190,13 @@ namespace Greet
 
       T& At(uint i)
       {
-        ASSERT(i < size, "Index out of bound in Pointer");
+        ASSERT(i < size, "Index out of bound");
         return *(data + i);
       }
 
       const T& At(uint i) const
       {
-        ASSERT(i < size, "Index out of bound in Pointer");
+        ASSERT(i < size, "Index out of bound");
         return *(data + i);
       }
 

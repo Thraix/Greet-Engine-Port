@@ -9,7 +9,7 @@
 #define ASSERT(x,...) \
 if(!(x)) \
 { \
-  Greet::Log::LogAt(LogLevel::Error(),"[ASSERTION FAILED]","[",__FILENAME__, ":", __LINE__, "] " __VA_ARGS__);\
+  Greet::Log::LogAt(LogLevel::Error(),"[ASSERT]","[",__FILENAME__, "::", __func__,":", __LINE__, "] " __VA_ARGS__);\
   abort();\
 }
 #else

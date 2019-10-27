@@ -49,13 +49,6 @@ namespace Greet {
     return !stream1.m_name.compare(stream2.m_name);
   }
 
-  LogStream& LogStream::operator=(const LogStream& stream)
-  {
-    std::cout << "no copyng cunt" << std::endl;
-    ASSERT(false, "Cannot copy LogStream");
-    return *this;
-  }
-
   bool LogStream::EQCheck(const LogLevel& myLevel, const LogLevel& outputLevel)
   {
     return myLevel == outputLevel;

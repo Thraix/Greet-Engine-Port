@@ -236,13 +236,13 @@ namespace Greet {
 
   Joystick* Window::GetJoystick(uint joystick)
   {
-    ASSERT(joystick < GREET_JOYSTICKS, "WINDOW","Invalid Joystick. Ranges from 0-3: ", joystick);
+    ASSERT(joystick < GREET_JOYSTICKS, "Invalid Joystick. Ranges from 0-3: ", joystick);
     return (joysticks[joystick]).get();
   }
 
   bool Window::IsJoystickConnected(uint joystick)
   {
-    ASSERT(joystick < GREET_JOYSTICKS, "WINDOW", "Invalid Joystick. Ranges from 0-3: ", joystick);
+    ASSERT(joystick < GREET_JOYSTICKS, "Invalid Joystick. Ranges from 0-3: ", joystick);
     return joysticks[joystick]->m_connected;
   }
 }

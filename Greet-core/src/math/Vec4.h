@@ -54,7 +54,8 @@ namespace Greet{
     friend Vec4 operator*(const Vec4& first, const float c);
     friend Vec4 operator/(const Vec4& first, const float c);
 
-    float operator[](uint i);
+    float& operator[](uint i);
+    const float& operator[](uint i) const;
 
     Vec4& operator+=(const Vec4 &other);
     Vec4& operator-=(const Vec4 &other);

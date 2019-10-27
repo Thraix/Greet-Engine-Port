@@ -13,7 +13,7 @@ namespace Greet {
   Texture::Texture(uint textureType, bool generateTexture)
     : texId{new uint{0}}, m_textureType{textureType}
   {
-    ASSERT(m_textureType == GL_TEXTURE_2D || m_textureType == GL_TEXTURE_CUBE_MAP, "Invalid texture enum");
+    ASSERT(m_textureType == GL_TEXTURE_2D || m_textureType == GL_TEXTURE_CUBE_MAP, "Invalid texture enum: ", (uint)m_textureType);
     if(generateTexture)
     {
       uint id;
@@ -29,7 +29,7 @@ namespace Greet {
   Texture::Texture(uint texId, uint textureType)
     : texId{new uint{texId}}, m_textureType{textureType}
   {
-    ASSERT(m_textureType == GL_TEXTURE_2D || m_textureType == GL_TEXTURE_CUBE_MAP, "Invalid texture enum");
+    ASSERT(m_textureType == GL_TEXTURE_2D || m_textureType == GL_TEXTURE_CUBE_MAP, "Invalid texture enum", (uint)m_textureType);
   }
 
   Texture::Texture()
