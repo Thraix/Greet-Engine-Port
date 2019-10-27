@@ -19,6 +19,7 @@ namespace Greet {
       Docker(const XMLObject& object, Component* parent);
 
       void GrabDockerTab(DockerTab* tab);
+      void HandleDroppedTab(MouseReleaseEvent& event, const Vec2& componentPos);
 
       void Render(GUIRenderer* renderer) const override;
       void Update(float timeElapsed) override;

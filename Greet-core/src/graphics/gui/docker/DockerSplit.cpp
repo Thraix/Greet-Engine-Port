@@ -4,8 +4,8 @@
 
 namespace Greet
 {
-  DockerSplit::DockerSplit(const XMLObject& object, Docker* docker, DockerSplit* parentSplit)
-    : DockerInterface{docker}, parentSplit{parentSplit}
+  DockerSplit::DockerSplit(const XMLObject& object, Docker* docker, DockerSplit* parent)
+    : DockerInterface{docker, parent}
   {
     vertical = GUIUtils::GetBooleanFromXML(object, "vertical", false);
     for(auto&& objectChild : object.GetObjects())
@@ -23,6 +23,12 @@ namespace Greet
         Log::Error("Unknown component in DockerSplit. Component=", objectChild.GetName());
       }
     }
+  }
+
+  DockerSplit::DockerSplit(DockerSplit* split, Docker* docker, DockerSplit* parent, bool vertical)
+    : DockerInterface{docker, parent}, children{split}, vertical{vertical}
+  {
+    split->SetParent(this);
   }
 
   DockerSplit::~DockerSplit()
@@ -79,7 +85,7 @@ namespace Greet
     }
     else if(EVENT_IS_TYPE(event, EventType::MOUSE_MOVE))
     {
-        MouseMoveEvent& e = static_cast<MouseMoveEvent&>(event);
+      MouseMoveEvent& e = static_cast<MouseMoveEvent&>(event);
       if(grabbingEdge)
       {
         Vec2 mousePos = e.GetPosition() - componentPos;
@@ -142,7 +148,7 @@ namespace Greet
     }
   }
 
-  void DockerSplit::HandleDroppedTab(DockerTab* tab, MouseReleaseEvent& event, const Vec2& componentPos)
+  bool DockerSplit::HandleDroppedTab(DockerTab* tab, MouseReleaseEvent& event, const Vec2& componentPos)
   {
     Vec2 mousePos = event.GetPosition() - componentPos;
     Vec2 position = {0,0};
@@ -150,23 +156,40 @@ namespace Greet
     {
       if(mousePos.x >= position.x && mousePos.y >= position.y && mousePos.x < position.x + child->GetSize().x && mousePos.y < position.y + child->GetSize().y)
       {
-        child->HandleDroppedTab(tab, event, componentPos + position);
-        return;
+        return child->HandleDroppedTab(tab, event, componentPos + position);
       }
       int vecIndex = vertical ? 1 : 0;
       position[vecIndex] += child->GetSize()[vecIndex];
     }
+    return false;
+  }
+
+  void DockerSplit::AddContainer(int index, DockerContainer* container)
+  {
+    children.insert(children.begin() + index, container);
+
+    int vecIndex = vertical ? 1 : 0;
+
+    Vec2 containerSize = size;
+    containerSize[vecIndex] = size[vecIndex] / (children.size()-1);
+    container->SetParent(this);
+    container->SetSize(containerSize);
+    SetSize(size);
+    SetPosition(position);
   }
 
   void DockerSplit::RemoveDocker(int index)
   {
-    assert(index >= 0 && index < children.size() && "DockerSplit::RemoveContainer: Index out of bound");
+    ASSERT(index >= 0 && index < children.size(), "DockerSplit::RemoveContainer: Index out of bound");
+    DockerInterface* interface = *(children.begin() + index);
     children.erase(children.begin() + index);
+    delete interface;
     if(children.size() == 0)
     {
-      if(parentSplit != nullptr)
+      if(parent != nullptr)
       {
-        parentSplit->RemoveDocker(parentSplit->GetDockerIndex(this));
+        DockerSplit* split = static_cast<DockerSplit*>(parent);
+        static_cast<DockerSplit*>(split)->RemoveDocker(split->GetDockerIndex(this));
       }
     }
     else
@@ -184,7 +207,12 @@ namespace Greet
       if(children[i] == interface)
         return i;
     }
-    assert(false && "DockerSplit::GetDockerIndex: Docker is not inside DockerSplit");
+    ASSERT(false, "DockerSplit::GetDockerIndex: Docker is not inside DockerSplit");
+    return children.size();
+  }
+
+  int DockerSplit::GetDockerCount() const
+  {
     return children.size();
   }
 
@@ -197,6 +225,11 @@ namespace Greet
         return comp;
     }
     return nullptr;
+  }
+
+  bool DockerSplit::IsVertical() const
+  {
+    return vertical;
   }
 
   void DockerSplit::SetGUIScene(GUIScene* scene)

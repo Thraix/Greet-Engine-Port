@@ -17,10 +17,11 @@ namespace Greet
   {
     protected:
       Docker* docker;
+      DockerInterface* parent;
       Vec2 position;
       Vec2 size;
     public:
-      DockerInterface(Docker* docker);
+      DockerInterface(Docker* docker, DockerInterface* parent);
       virtual ~DockerInterface(){}
 
 
@@ -31,12 +32,15 @@ namespace Greet
         return mousePos.x >= 0 && mousePos.y >= 0 && mousePos.x < size.x && mousePos.y < size.y;
       }
 
+      void SetParent(DockerInterface* interface) { parent = interface; }
+
     public:
       virtual void Render(GUIRenderer* renderer) const = 0;
       virtual void Update(float timeElapsed) = 0;
       virtual void OnEvent(Event& event, const Vec2& translation) = 0;
 
-      virtual void HandleDroppedTab(DockerTab* tab, MouseReleaseEvent& event, const Vec2& componentPos) = 0;
+      // Returns true if the tab should be removed from its current container
+      virtual bool HandleDroppedTab(DockerTab* tab, MouseReleaseEvent& event, const Vec2& componentPos) = 0;
 
       virtual Component* GetComponentByNameNoCast(const std::string& name) = 0;
 

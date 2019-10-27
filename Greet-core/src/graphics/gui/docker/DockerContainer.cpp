@@ -6,8 +6,8 @@
 
 namespace Greet
 {
-  DockerContainer::DockerContainer(const XMLObject& object, Docker* docker, DockerSplit* parentSplit)
-    : DockerInterface{docker}, parentSplit{parentSplit}
+  DockerContainer::DockerContainer(const XMLObject& object, Docker* docker, DockerSplit* parent)
+    : DockerInterface{docker, parent}, currentTab{0}
   {
     for(auto&& objectChild : object.GetObjects())
     {
@@ -20,6 +20,13 @@ namespace Greet
         Log::Error("Unknown component in DockerContainer. Component=", objectChild.GetName());
       }
     }
+  }
+
+  DockerContainer::DockerContainer(DockerTab* tab, Docker* docker, DockerSplit* parent)
+    : DockerInterface{docker, parent}, currentTab{0}
+  {
+    children.push_back(tab);
+    tab->SetParent(this);
   }
 
   DockerContainer::~DockerContainer()
@@ -97,7 +104,7 @@ namespace Greet
     children[currentTab]->OnEvent(event, componentPos);
   }
 
-  void DockerContainer::HandleDroppedTab(DockerTab* tab, MouseReleaseEvent& event, const Vec2& componentPos)
+  bool DockerContainer::HandleDroppedTab(DockerTab* tab, MouseReleaseEvent& event, const Vec2& componentPos)
   {
     // Only move inside the current container
     if(tab->GetContainer() == this)
@@ -107,16 +114,16 @@ namespace Greet
       {
         int current = GetTabIndex(tab);
         if(current == tabIndex)
-          return;
+          return false;
         if(current > tabIndex)
           std::rotate(children.begin()+tabIndex, children.begin() + current, children.begin() + current+1);
         else
           std::rotate(children.begin()+current, children.begin() + 1, children.begin() + tabIndex+1);
         UnhoverTab();
         SelectTab(tabIndex);
-        return;
+        return false;
       }
-      return;
+      return false;
     }
     else
     {
@@ -129,17 +136,16 @@ namespace Greet
       children.insert(children.begin() + tabIndex, tab);
       tab->SetPosition(position);
       tab->SetSize(size);
-      tab->SetContainer(this);
+      tab->SetParent(this);
       SelectTab(tabIndex);
 
-      // Fix tab container
-      tabContainer->RemoveTab(tabIndexContainer);
+      return true;
     }
   }
 
   void DockerContainer::SelectTab(int i)
   {
-    assert(i >= 0 && i < children.size() && "DockerContainer::SelectTab: Index out of bound");
+    ASSERT(i >= 0 && i < children.size(), "DockerContainer::SelectTab: Index out of bound");
     currentTab = i;
   }
 
@@ -151,7 +157,7 @@ namespace Greet
 
   void DockerContainer::HoverTab(int i)
   {
-    assert(i >= 0 && i < children.size() && "DockerContainer::HoverTab: Index out of bound");
+    ASSERT(i >= 0 && i < children.size(), "DockerContainer::HoverTab: Index out of bound");
     hoverTab = i;
     hover = true;
   }
@@ -163,11 +169,12 @@ namespace Greet
 
   void DockerContainer::RemoveTab(int i)
   {
-    assert(i >= 0 && i < children.size() && "DockerContainer::RemoveTab: Index out of bound");
+    ASSERT(i >= 0 && i < children.size(), "DockerContainer::RemoveTab: Index out of bound");
     children.erase(children.begin() + i);
 
+    DockerSplit* split = static_cast<DockerSplit*>(parent);
     if(children.size() == 0)
-      parentSplit->RemoveDocker(parentSplit->GetDockerIndex(this));
+      split->RemoveDocker(split->GetDockerIndex(this));
     else
       ClampSelectedTab();
   }
@@ -190,7 +197,7 @@ namespace Greet
       if(children[i] == tab)
         return i;
     }
-    assert(false && "DockerContainer::GetTabIndex: Tab is not inside DockerContainer");
+    ASSERT(false, "DockerContainer::GetTabIndex: Tab is not inside DockerContainer");
     return children.size();
   }
 
@@ -204,6 +211,11 @@ namespace Greet
         return tab;
       }
     }
+    return children.size();
+  }
+
+  int DockerContainer::GetTabCount()
+  {
     return children.size();
   }
 

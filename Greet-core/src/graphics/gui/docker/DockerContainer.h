@@ -16,7 +16,6 @@ namespace Greet {
   {
     protected:
       bool vertical;
-      DockerSplit* parentSplit; 
       std::vector<DockerTab*> children;
       uint currentTab = 0;
 
@@ -25,6 +24,7 @@ namespace Greet {
 
     public:
       DockerContainer(const XMLObject& object, Docker* docker, DockerSplit* parentSplit);
+      DockerContainer(DockerTab* tab, Docker* docker, DockerSplit* parentSplit);
       virtual ~DockerContainer();
 
       void SelectTab(int index);
@@ -36,13 +36,14 @@ namespace Greet {
       int GetTabIndex(DockerTab* tab);
 
       int GetTab(const Vec2& mousePos);
+      int GetTabCount();
 
     public:
       void Render(GUIRenderer* renderer) const override;
       void Update(float timeElapsed) override;
       void OnEvent(Event& event, const Vec2& componentPos) override;
 
-       void HandleDroppedTab(DockerTab* tab, MouseReleaseEvent& event, const Vec2& componentPos) override;
+       bool HandleDroppedTab(DockerTab* tab, MouseReleaseEvent& event, const Vec2& componentPos) override;
 
       Component* GetComponentByNameNoCast(const std::string& name) override;
 

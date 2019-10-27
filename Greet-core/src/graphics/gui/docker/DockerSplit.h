@@ -2,10 +2,10 @@
 
 #include <graphics/gui/docker/DockerContainer.h>
 #include <graphics/gui/docker/DockerInterface.h>
+#include <utils/xml/XML.h>
 
 #include <vector>
 #include <variant>
-#include <utils/xml/XML.h>
 
 namespace Greet {
 
@@ -16,26 +16,29 @@ namespace Greet {
     protected:
       bool vertical;
       std::vector<DockerInterface*> children;
-      DockerSplit* parentSplit;
 
       bool grabbingEdge = false;
       int grabbedEdgeIndex;
 
     public:
-      DockerSplit(const XMLObject& object, Docker* docker, DockerSplit* parentSplit);
+      DockerSplit(const XMLObject& object, Docker* docker, DockerSplit* parent);
+      DockerSplit(DockerSplit* split, Docker* docker, DockerSplit* parent, bool vertical);
       virtual ~DockerSplit();
 
       void Render(GUIRenderer* renderer) const override;
       void Update(float timeElapsed) override;
       void OnEvent(Event& event, const Vec2& componentPos) override;
 
-      void HandleDroppedTab(DockerTab* tab, MouseReleaseEvent& event, const Vec2& componentPos) override;
+      bool HandleDroppedTab(DockerTab* tab, MouseReleaseEvent& event, const Vec2& componentPos) override;
 
+      void AddContainer(int index, DockerContainer* container);
       void RemoveDocker(int index);
 
       int GetDockerIndex(DockerInterface* interface);
+      int GetDockerCount() const;
 
       Component* GetComponentByNameNoCast(const std::string& name) override;
+      bool IsVertical() const;
 
       void SetPosition(const Vec2& _size) override;
       void SetSize(const Vec2& _size) override;

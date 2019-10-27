@@ -12,15 +12,14 @@ namespace Greet {
   class Docker;
   class DockerContainer;
 
-  class DockerTab : public DockerInterface 
+  class DockerTab : public DockerInterface
   {
     protected:
       std::string title;
       Component* component;
-      DockerContainer* parentContainer;
 
     public:
-      DockerTab(const XMLObject& object, Docker* parent, DockerContainer* parentContainer);
+      DockerTab(const XMLObject& object, Docker* docker, DockerContainer* parent);
       virtual ~DockerTab();
 
       const std::string& GetTitle() const;
@@ -29,11 +28,10 @@ namespace Greet {
       void Update(float timeElapsed) override;
       void OnEvent(Event& event, const Vec2& componentPos) override;
 
-      void HandleDroppedTab(DockerTab* tab, MouseReleaseEvent& event, const Vec2& componentPos) override;
+      bool HandleDroppedTab(DockerTab* tab, MouseReleaseEvent& event, const Vec2& componentPos) override;
 
       Component* GetComponentByNameNoCast(const std::string& name) override;
       DockerContainer* GetContainer();
-      void SetContainer(DockerContainer* container);
 
       void SetGUIScene(GUIScene* scene) override;
       void SetPosition(const Vec2& position) override;

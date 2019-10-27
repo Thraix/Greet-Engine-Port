@@ -19,17 +19,17 @@ namespace Greet
         else
           Log::Error("NOTIMPLEMENTED: Docker currently only supports one DockerSplit");
       }
-      else if(child.GetName() == "DockerContainer") 
+      else if(child.GetName() == "DockerContainer")
       {
         Log::Error("NOTIMPLEMENTED: Docker containing only DockerContainer is currently not supported");
         // This should contain DockerTabs which are actual tabs
         // Maybe this should be wrapped in a DockerSplit
-        // TODO: Add docker container component 
+        // TODO: Add docker container component
       }
       else if(child.GetName() == "DockerTab")
       {
         Log::Error("NOTIMPLEMENTED: Docker containing only DockerTab is currently not supported");
-        // Add Docker tab component 
+        // Add Docker tab component
         // TODO: Maybe this should be wrapped in a docker container
       }
       else if(child.GetName() == "TabLayout")
@@ -55,6 +55,70 @@ namespace Greet
     dockerTab = tab;
   }
 
+  void Docker::HandleDroppedTab(MouseReleaseEvent& event, const Vec2& componentPos)
+  {
+    Vec2 mousePos = event.GetPosition() - componentPos;
+    DockerContainer* container = dockerTab->GetContainer();
+    int tabIndex = container->GetTabIndex(dockerTab);
+
+    int splitLimit = 0;
+    bool globalSplit = false;
+    bool vertical = false;
+    bool front = true;
+
+    if(mousePos.x < splitLimit)
+    {
+      container->RemoveTab(tabIndex);
+      vertical = false;
+      globalSplit = true;
+      front = true;
+    }
+    else if(mousePos.x >= GetSize().w - splitLimit)
+    {
+      container->RemoveTab(tabIndex);
+      vertical = false;
+      globalSplit = true;
+      front = false;
+    }
+    else if(mousePos.y < splitLimit)
+    {
+      container->RemoveTab(tabIndex);
+      vertical = true;
+      globalSplit = true;
+      front = true;
+    }
+    else if(mousePos.y >= GetSize().h - splitLimit)
+    {
+      container->RemoveTab(tabIndex);
+      vertical = true;
+      globalSplit = true;
+      front = false;
+    }
+
+    if(globalSplit)
+    {
+      DockerContainer* container = new DockerContainer(dockerTab, this, nullptr);
+      if(split->IsVertical() != vertical)
+      {
+        split = new DockerSplit(split, this, nullptr, vertical);
+        OnMeasured();
+      }
+      split->AddContainer(front ? 0 : split->GetDockerCount(), container);
+      dockerTab = nullptr;
+      return;
+    }
+
+    if(IsMouseInside(mousePos))
+    {
+      if(split->HandleDroppedTab(dockerTab, event, componentPos))
+      {
+        container->RemoveTab(tabIndex);
+      }
+    }
+    dockerTab = nullptr;
+
+  }
+
   void Docker::Render(GUIRenderer* renderer) const
   {
     split->Render(renderer);
@@ -65,7 +129,7 @@ namespace Greet
     split->Update(timeElapsed);
   }
 
-  void Docker::OnEvent(Event& event, const Vec2& componentPos) 
+  void Docker::OnEvent(Event& event, const Vec2& componentPos)
   {
     if(EVENT_IS_TYPE(event, EventType::MOUSE_RELEASE))
     {
@@ -74,11 +138,7 @@ namespace Greet
       {
         if(e.GetButton() == GREET_MOUSE_1)
         {
-          if(IsMouseInside(e.GetPosition() - componentPos))
-          {
-            split->HandleDroppedTab(dockerTab, e, componentPos);
-          }
-          dockerTab = nullptr;
+          HandleDroppedTab(e, componentPos);
         }
         return;
       }

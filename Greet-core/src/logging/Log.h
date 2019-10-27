@@ -5,7 +5,16 @@
 #include <string.h>
 
 #define __FILENAME__ (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)
-#define ASSERT(x,...) if(!(x)) { Greet::Log::Error("[",__FILENAME__, ":", __LINE__, "] " __VA_ARGS__);abort();}
+#if _DEBUG
+#define ASSERT(x,...) \
+if(!(x)) \
+{ \
+  Greet::Log::LogAt(LogLevel::Error(),"[ASSERTION FAILED]","[",__FILENAME__, ":", __LINE__, "] " __VA_ARGS__);\
+  abort();\
+}
+#else
+#define ASSERT(x,...)
+#endif
 
 namespace Greet {
   /*
@@ -78,6 +87,5 @@ namespace Greet {
       {
         m_log.m_logger.Log(level, args...);
       }
-
   };
 }
