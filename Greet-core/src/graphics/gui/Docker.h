@@ -14,6 +14,8 @@ namespace Greet {
     protected:
       DockerSplit* split;
       DockerTab* dockerTab;
+    public:
+      const int edgeWidth = 10;
 
     public:
       Docker(const XMLObject& object, Component* parent);

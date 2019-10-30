@@ -4,8 +4,8 @@
 
 namespace Greet
 {
-  DockerTab::DockerTab(const XMLObject& object, Docker* docker, DockerContainer* parent)
-    : DockerInterface{docker, parent}, component{nullptr}
+  DockerTab::DockerTab(const XMLObject& object, Docker* docker, DockerContainer* parentContainer)
+    : docker{docker}, parentContainer{parentContainer}, component{nullptr}
   {
     title = GUIUtils::GetStringFromXML(object, "title", "");
     if(object.GetObjectCount() == 0)
@@ -42,13 +42,7 @@ namespace Greet
 
   void DockerTab::OnEvent(Event& event, const Vec2& componentPos)
   {
-    component->OnEventHandler(event, componentPos + position + Vec2{0.0f, (float)TAB_HEIGHT});
-  }
-
-  bool DockerTab::HandleDroppedTab(DockerTab* tab, MouseReleaseEvent& event, const Vec2& componentPos)
-  {
-    Log::Error("DockerTab doesn't implement HandleDroppedTab");
-    return false;
+    component->OnEventHandler(event, componentPos + position + Vec2{0.0f, 0.0f});
   }
 
   Component* DockerTab::GetComponentByNameNoCast(const std::string& name)
@@ -63,7 +57,12 @@ namespace Greet
 
   DockerContainer* DockerTab::GetContainer()
   {
-    return static_cast<DockerContainer*>(parent);
+    return parentContainer;
+  }
+
+  void DockerTab::SetContainer(DockerContainer* _parentContainer)
+  {
+    parentContainer = _parentContainer;
   }
 
   void DockerTab::SetGUIScene(GUIScene* scene)
@@ -74,7 +73,7 @@ namespace Greet
   void DockerTab::SetPosition(const Vec2& _position)
   {
     position = _position;
-    component->SetPosition(position + Vec2{0.0f, (float)TAB_HEIGHT});
+    component->SetPosition(position);
   }
 
   void DockerTab::SetSize(const Vec2& _size)

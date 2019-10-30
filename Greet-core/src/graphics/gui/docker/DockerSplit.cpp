@@ -43,6 +43,24 @@ namespace Greet
     {
       child->Render(renderer);
     }
+    int vecIndex = vertical ? 1 : 0;
+    Vec2 offset{position};
+
+    Vec2 p{0,0};
+    Vec2 s{(float)docker->edgeWidth, (float)docker->edgeWidth};
+
+    // Code for rendering edges, needed for later
+#if 0
+    p[vecIndex] = -docker->edgeWidth;
+    s[1-vecIndex] = size[1-vecIndex];
+    for(int i = 0;i<children.size()-1;i++)
+    {
+      offset[vecIndex] += children[i]->GetSize()[vecIndex] + docker->edgeWidth;
+      renderer->PushTranslation(offset);
+      renderer->SubmitRect(p, s, {1,1,1,1}, false);
+      renderer->PopTranslation();
+    }
+#endif
   }
 
   void DockerSplit::Update(float timeElapsed)
@@ -64,11 +82,12 @@ namespace Greet
         int vecIndex = vertical ? 1 : 0;
         for(int i = 0;i<children.size()-1;i++)
         {
-          mousePos -= children[i]->GetSize();
-          if(mousePos[vecIndex] >= -5 && mousePos[vecIndex] < 5)
+          mousePos[vecIndex] -= children[i]->GetSize()[vecIndex] + docker->edgeWidth;
+          if(mousePos[vecIndex] >= -docker->edgeWidth && mousePos[vecIndex] < 0)
           {
             grabbingEdge = true;
             grabbedEdgeIndex = i;
+            event.AddFlag(EVENT_FOCUSED | EVENT_HANDLED);
             return;
           }
         }
@@ -79,7 +98,7 @@ namespace Greet
       {
         if(child->IsMouseInside(e.GetPosition() - pos))
           child->OnEvent(event, pos);
-        pos[vecIndex] += child->GetSize()[vecIndex];
+        pos[vecIndex] += child->GetSize()[vecIndex] + docker->edgeWidth;
       }
       return;
     }
@@ -92,6 +111,8 @@ namespace Greet
 
         DockerInterface* dockerThis = children[grabbedEdgeIndex];
         DockerInterface* dockerNext = children[grabbedEdgeIndex+1];
+        float oldWeightThis = children[grabbedEdgeIndex]->GetWeight();
+        float oldWeightNext = children[grabbedEdgeIndex+1]->GetWeight();
 
         Vec2 sizeThis = dockerThis->GetSize();
         Vec2 posNext = dockerNext->GetPosition();
@@ -101,22 +122,23 @@ namespace Greet
 
         float offset = e.GetDeltaPosition()[vecIndex];
 
-        sizeThis[vecIndex] += offset;
-        posNext[vecIndex] += offset;
-        sizeNext[vecIndex] -= offset;
+        float totalWeight = (oldWeightThis + oldWeightNext);
+        float totalSize = sizeThis[vecIndex] + sizeNext[vecIndex];
+        float weightThis = totalWeight * (sizeThis[vecIndex] + offset) / totalSize;
+        Math::Clamp(&weightThis, 0.0f, totalWeight);
 
-        dockerThis->SetSize(sizeThis);
-        dockerNext->SetPosition(posNext);
-        dockerNext->SetSize(sizeNext);
+        dockerThis->SetWeight(weightThis);
+        dockerNext->SetWeight(totalWeight - weightThis);
+
+        SetSize(size);
         return;
       }
       Vec2 pos = componentPos;
       int vecIndex = vertical ? 1 : 0;
       for(auto&& child : children)
       {
-        if(child->IsMouseInside(e.GetPosition() - pos))
-          child->OnEvent(event, pos);
-        pos[vecIndex] += child->GetSize()[vecIndex];
+        child->OnEvent(event, pos);
+        pos[vecIndex] += child->GetSize()[vecIndex] + docker->edgeWidth;
       }
       return;
     }
@@ -125,6 +147,7 @@ namespace Greet
       if(grabbingEdge)
       {
         grabbingEdge = false;
+        event.AddFlag(EVENT_UNFOCUSED);
         return;
       }
       Vec2 pos = componentPos;
@@ -132,8 +155,7 @@ namespace Greet
       MouseReleaseEvent& e = static_cast<MouseReleaseEvent&>(event);
       for(auto&& child : children)
       {
-        if(child->IsMouseInside(e.GetPosition() - pos))
-          child->OnEvent(event, pos);
+        child->OnEvent(event, pos);
         pos[vecIndex] += child->GetSize()[vecIndex];
       }
       return;
@@ -167,11 +189,11 @@ namespace Greet
   void DockerSplit::AddContainer(int index, DockerContainer* container)
   {
     children.insert(children.begin() + index, container);
+    container->SetWeight(1.0f);
 
     int vecIndex = vertical ? 1 : 0;
 
     Vec2 containerSize = size;
-    containerSize[vecIndex] = size[vecIndex] / (children.size()-1);
     container->SetParent(this);
     container->SetSize(containerSize);
     SetSize(size);
@@ -183,7 +205,10 @@ namespace Greet
     ASSERT(index >= 0 && index < children.size(), "Index out of bound");
     DockerInterface* interface = *(children.begin() + index);
     children.erase(children.begin() + index);
+
+    float weight = interface->GetWeight();
     delete interface;
+
     if(children.size() == 0)
     {
       if(parent != nullptr)
@@ -194,6 +219,23 @@ namespace Greet
     }
     else
     {
+
+      float totalWeight = children.size() + 1 - weight;
+      if(totalWeight != 0)
+      {
+        float upscale = children.size() / totalWeight;
+        for(auto&& child : children)
+        {
+          child->SetWeight(child->GetWeight() * upscale);
+        }
+      }
+      else
+      {
+        for(auto&& child : children)
+        {
+          child->SetWeight(1.0f);
+        }
+      }
       // Resize other components
       SetSize(size);
       SetPosition(position);
@@ -248,25 +290,25 @@ namespace Greet
     for(auto&& child : children)
     {
       child->SetPosition({floor(offset.x), floor(offset.y)});
-      offset[vecIndex] += child->GetSize()[vecIndex];
+      offset[vecIndex] += child->GetSize()[vecIndex] + docker->edgeWidth;
     }
   }
 
   void DockerSplit::SetSize(const Vec2& _size)
   {
     size = _size;
-    Vec2 sumSize{0,0};
     int vecIndex = vertical ? 1 : 0;
+    float totalWeight = children.size();
+    int edgeWidths = docker->edgeWidth * (children.size() - 1);
+    Vec2 pos = position;
 
     for(auto&& child : children)
     {
-      sumSize[vecIndex] += child->GetSize()[vecIndex];
-    }
-    for(auto&& child : children)
-    {
       Vec2 childSize = _size;
-      childSize[vecIndex] = floor(_size[vecIndex] * (child->GetSize()[vecIndex] / sumSize[vecIndex]));
+      childSize[vecIndex] = floor((_size[vecIndex] - edgeWidths) * child->GetWeight() / totalWeight);
       child->SetSize(childSize);
+      child->SetPosition(pos);
+      pos[vecIndex] += childSize[vecIndex] + docker->edgeWidth;
     }
   }
 }

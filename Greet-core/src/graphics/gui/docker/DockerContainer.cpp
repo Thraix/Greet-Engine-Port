@@ -26,7 +26,7 @@ namespace Greet
     : DockerInterface{docker, parent}, currentTab{0}
   {
     children.push_back(tab);
-    tab->SetParent(this);
+    tab->SetContainer(this);
   }
 
   DockerContainer::~DockerContainer()
@@ -40,6 +40,7 @@ namespace Greet
     if(currentTab < 0 || currentTab >= children.size())
       return;
 
+    renderer->PushViewport(position, size);
     children[currentTab]->Render(renderer);
 
     renderer->PushTranslation(docker->GetPosition() + position);
@@ -57,6 +58,7 @@ namespace Greet
       renderer->SubmitString(children[i]->GetTitle(), {(float)i * (TAB_WIDTH + 1) + TAB_PADDING, 12}, FontManager::Get("noto", 12), {0,0,0,1}, false);
     }
     renderer->PopTranslation();
+    renderer->PopViewport();
   }
 
   void DockerContainer::Update(float timeElapsed)
@@ -136,7 +138,7 @@ namespace Greet
       children.insert(children.begin() + tabIndex, tab);
       tab->SetPosition(position);
       tab->SetSize(size);
-      tab->SetParent(this);
+      tab->SetContainer(this);
       SelectTab(tabIndex);
 
       return true;
@@ -232,7 +234,7 @@ namespace Greet
     position = _position;
     for(auto&& child : children)
     {
-      child->SetPosition(_position);
+      child->SetPosition(_position + Vec2{0.0f, TAB_HEIGHT});
     }
   }
 

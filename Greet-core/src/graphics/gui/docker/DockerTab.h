@@ -12,9 +12,14 @@ namespace Greet {
   class Docker;
   class DockerContainer;
 
-  class DockerTab : public DockerInterface
+  class DockerTab
   {
     protected:
+      Docker* docker;
+      DockerContainer* parentContainer;
+      Vec2 position;
+      Vec2 size;
+
       std::string title;
       Component* component;
 
@@ -24,17 +29,16 @@ namespace Greet {
 
       const std::string& GetTitle() const;
     public:
-      void Render(GUIRenderer* renderer) const override;
-      void Update(float timeElapsed) override;
-      void OnEvent(Event& event, const Vec2& componentPos) override;
+      void Render(GUIRenderer* renderer) const;
+      void Update(float timeElapsed);
+      void OnEvent(Event& event, const Vec2& componentPos);
 
-      bool HandleDroppedTab(DockerTab* tab, MouseReleaseEvent& event, const Vec2& componentPos) override;
-
-      Component* GetComponentByNameNoCast(const std::string& name) override;
+      Component* GetComponentByNameNoCast(const std::string& name);
       DockerContainer* GetContainer();
 
-      void SetGUIScene(GUIScene* scene) override;
-      void SetPosition(const Vec2& position) override;
-      void SetSize(const Vec2& position) override;
+      void SetContainer(DockerContainer* parentContainer);
+      void SetGUIScene(GUIScene* scene);
+      void SetPosition(const Vec2& position);
+      void SetSize(const Vec2& position);
   };
 }

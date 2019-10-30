@@ -20,6 +20,8 @@ namespace Greet
       DockerInterface* parent;
       Vec2 position;
       Vec2 size;
+      float weight = 1.0f;
+
     public:
       DockerInterface(Docker* docker, DockerInterface* parent);
       virtual ~DockerInterface(){}
@@ -32,6 +34,8 @@ namespace Greet
         return mousePos.x >= 0 && mousePos.y >= 0 && mousePos.x < size.x && mousePos.y < size.y;
       }
 
+      float GetWeight() const { return weight; }
+      void SetWeight(float _weight) { weight = _weight; }
       void SetParent(DockerInterface* interface) { parent = interface; }
 
     public:
