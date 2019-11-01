@@ -87,6 +87,8 @@ namespace Greet
           {
             grabbingEdge = true;
             grabbedEdgeIndex = i;
+            grabPos = e.GetPosition()[vecIndex] - componentPos[vecIndex];
+            grabSize = children[i]->GetSize()[vecIndex];
             event.AddFlag(EVENT_FOCUSED | EVENT_HANDLED);
             return;
           }
@@ -115,17 +117,22 @@ namespace Greet
         float oldWeightNext = children[grabbedEdgeIndex+1]->GetWeight();
 
         Vec2 sizeThis = dockerThis->GetSize();
-        Vec2 posNext = dockerNext->GetPosition();
         Vec2 sizeNext = dockerNext->GetSize();
 
         int vecIndex = vertical ? 1 : 0;
 
-        float offset = e.GetDeltaPosition()[vecIndex];
+        float offset = mousePos[vecIndex] - grabPos;
 
         float totalWeight = (oldWeightThis + oldWeightNext);
         float totalSize = sizeThis[vecIndex] + sizeNext[vecIndex];
-        float weightThis = totalWeight * (sizeThis[vecIndex] + offset) / totalSize;
-        Math::Clamp(&weightThis, 0.0f, totalWeight);
+
+        sizeThis[vecIndex] = grabSize + offset;
+        float minSizeThis = dockerThis->GetMinSize()[vecIndex];
+        float minSizeNext = dockerNext->GetMinSize()[vecIndex];
+        Math::Clamp(&sizeThis[vecIndex], minSizeThis, totalSize - minSizeNext);
+
+
+        float weightThis = totalWeight * sizeThis[vecIndex] / totalSize;
 
         dockerThis->SetWeight(weightThis);
         dockerNext->SetWeight(totalWeight - weightThis);
@@ -267,6 +274,20 @@ namespace Greet
         return comp;
     }
     return nullptr;
+  }
+
+  Vec2 DockerSplit::GetMinSize() const
+  {
+    Vec2 minSize = {0, 0};
+    int vecIndex = vertical ? 1 : 0;
+    for(auto&& child : children)
+    {
+      Vec2 minSizeChild = child->GetMinSize();
+      minSize[vecIndex] += minSizeChild[vecIndex];
+      minSize[1-vecIndex] = fmax(minSize[1-vecIndex], minSizeChild[1-vecIndex]);
+    }
+    minSize[vecIndex] += (children.size() - 1) * docker->edgeWidth;
+    return minSize;
   }
 
   bool DockerSplit::IsVertical() const

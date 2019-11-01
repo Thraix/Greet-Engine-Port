@@ -46,6 +46,7 @@ namespace Greet {
        bool HandleDroppedTab(DockerTab* tab, MouseReleaseEvent& event, const Vec2& componentPos) override;
 
       Component* GetComponentByNameNoCast(const std::string& name) override;
+      Vec2 GetMinSize() const override;
 
       void SetGUIScene(GUIScene* scene) override;
       void SetPosition(const Vec2& position) override;

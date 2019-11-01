@@ -192,6 +192,11 @@ namespace Greet
     return nullptr;
   }
 
+  Vec2 DockerContainer::GetMinSize() const
+  {
+    return Vec2{20, TAB_HEIGHT+20};
+  }
+
   int DockerContainer::GetTabIndex(DockerTab* tab)
   {
     for(int i = 0;i<children.size(); ++i)

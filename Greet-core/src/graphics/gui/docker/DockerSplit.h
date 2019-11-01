@@ -17,6 +17,8 @@ namespace Greet {
       bool vertical;
       std::vector<DockerInterface*> children;
 
+      float grabPos;
+      float grabSize;
       bool grabbingEdge = false;
       int grabbedEdgeIndex;
 
@@ -36,9 +38,10 @@ namespace Greet {
 
       int GetDockerIndex(DockerInterface* interface);
       int GetDockerCount() const;
+      bool IsVertical() const;
 
       Component* GetComponentByNameNoCast(const std::string& name) override;
-      bool IsVertical() const;
+      Vec2 GetMinSize() const override;
 
       void SetPosition(const Vec2& _size) override;
       void SetSize(const Vec2& _size) override;
