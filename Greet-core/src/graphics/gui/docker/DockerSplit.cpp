@@ -322,6 +322,7 @@ namespace Greet
     float totalWeight = children.size();
     int edgeWidths = docker->edgeWidth * (children.size() - 1);
     Vec2 pos = position;
+    float usedSize = 0.0f;
 
     for(auto&& child : children)
     {
@@ -329,7 +330,15 @@ namespace Greet
       childSize[vecIndex] = floor((_size[vecIndex] - edgeWidths) * child->GetWeight() / totalWeight);
       child->SetSize(childSize);
       child->SetPosition(pos);
+      usedSize += childSize[vecIndex] + docker->edgeWidth;
       pos[vecIndex] += childSize[vecIndex] + docker->edgeWidth;
     }
+    usedSize -= docker->edgeWidth;
+
+    // Add the unused space to the last component
+    DockerInterface* last = children[children.size() - 1];
+    Vec2 childSize = last->GetSize();
+    childSize[vecIndex] += size[vecIndex] - usedSize;
+    last->SetSize(childSize);
   }
 }
