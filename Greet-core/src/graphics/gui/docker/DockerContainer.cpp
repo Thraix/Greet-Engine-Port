@@ -20,6 +20,7 @@ namespace Greet
         Log::Error("Unknown component in DockerContainer. Component=", objectChild.GetName());
       }
     }
+    button = new Button(docker->GetTabButton(), docker);
   }
 
   DockerContainer::DockerContainer(DockerTab* tab, Docker* docker, DockerSplit* parent)
@@ -27,12 +28,14 @@ namespace Greet
   {
     children.push_back(tab);
     tab->SetContainer(this);
+    button = new Button(docker->GetTabButton(), docker);
   }
 
   DockerContainer::~DockerContainer()
   {
     for(auto&& child : children)
       delete child;
+    delete button;
   }
 
   void DockerContainer::Render(GUIRenderer* renderer) const
@@ -44,18 +47,14 @@ namespace Greet
     children[currentTab]->Render(renderer);
 
     renderer->PushTranslation(docker->GetPosition() + position);
-    // 263238
-    renderer->SubmitRect({0.0f, 0.0f}, {size.w, TAB_HEIGHT}, {0.039,0.078,0.09,1}, false);
+    // #263238
+    renderer->SubmitRect({0.0f, 0.0f}, {size.w, button->GetHeight()}, {0.039,0.078,0.09,1}, false);
     for(int i = 0;i<children.size();i++)
     {
-      Vec4 color = {0.5f,0.5f,0.5f,1.0f};
-      if(currentTab == i)
-        color = {1,1,1,1};
-      else if(hover && hoverTab == i)
-        color = {0.8,0.8,0.8,1};
-
-      renderer->SubmitRect({(float)i * (TAB_WIDTH + 1), 0.0f}, {TAB_WIDTH, TAB_HEIGHT}, color, false);
-      renderer->SubmitString(children[i]->GetTitle(), {(float)i * (TAB_WIDTH + 1) + TAB_PADDING, 12}, FontManager::Get("noto", 12), {0,0,0,1}, false);
+      button->PreRender(renderer, {(float)i * ((float)button->GetWidth() + 1), 0.0f});
+      button->SetText(children[i]->GetTitle());
+      button->Render(renderer);
+      button->PostRender(renderer);
     }
     renderer->PopTranslation();
     renderer->PopViewport();
@@ -194,7 +193,7 @@ namespace Greet
 
   Vec2 DockerContainer::GetMinSize() const
   {
-    return Vec2{20, TAB_HEIGHT+20};
+    return Vec2{20, button->GetHeight()+20};
   }
 
   int DockerContainer::GetTabIndex(DockerTab* tab)
@@ -210,9 +209,9 @@ namespace Greet
 
   int DockerContainer::GetTab(const Vec2& mousePos)
   {
-    if(mousePos.y >= 0 && mousePos.y < TAB_HEIGHT)
+    if(mousePos.y >= 0 && mousePos.y < button->GetHeight())
     {
-      int tab = floor(mousePos.x / (TAB_WIDTH + 1));
+      int tab = floor(mousePos.x / (button->GetWidth() + 1));
       if(tab < children.size())
       {
         return tab;
@@ -239,7 +238,7 @@ namespace Greet
     position = _position;
     for(auto&& child : children)
     {
-      child->SetPosition(_position + Vec2{0.0f, TAB_HEIGHT});
+      child->SetPosition(_position + Vec2{0.0f, button->GetHeight()});
     }
   }
 
@@ -250,5 +249,7 @@ namespace Greet
     {
       child->SetSize(_size);
     }
+    button->Measure();
+    button->MeasureFill(size, {1.0f,1.0f});
   }
 }

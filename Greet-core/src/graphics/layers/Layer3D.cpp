@@ -17,7 +17,7 @@ namespace Greet {
   {
   }
 
-  void Layer3D::PreRender() const
+  void Layer3D::PreRender()
   {
     if(skybox)
       skybox->Render(*camera);
@@ -33,7 +33,7 @@ namespace Greet {
     }
   }
 
-  void Layer3D::PostRender() const
+  void Layer3D::PostRender()
   {
   }
 

@@ -17,6 +17,8 @@ namespace Greet {
 
       void OnMeasured() override;
       void Render(GUIRenderer* renderer) const override;
+      void SetText(const std::string& text);
+      const Font* GetFont() const { return label->GetFont(); }
 
       void OnFocused() override;
       void OnUnfocused() override;

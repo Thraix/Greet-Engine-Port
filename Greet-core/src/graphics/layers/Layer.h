@@ -43,7 +43,7 @@ namespace Greet {
         m_renderables.push_back(renderable);
       }
 
-      virtual void PreRender() const override
+      virtual void PreRender() override
       {
         m_shader->Enable();
         setUniforms();
@@ -61,7 +61,7 @@ namespace Greet {
         }
       }
 
-      virtual void PostRender() const override
+      virtual void PostRender() override
       {
         m_renderer->End();
         m_renderer->Flush();

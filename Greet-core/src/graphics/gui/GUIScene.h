@@ -33,9 +33,9 @@ namespace Greet {
       void OnMouseReleaseEventHandler(MouseReleaseEvent& event);
       void ViewportResize(ViewportResizeEvent& event);
 
-      void PreRender() const;
+      void PreRender();
       void Render() const;
-      void PostRender() const;
+      void PostRender();
       void Update(float timeElapsed);
 
       bool RequestFocus(Component* component);

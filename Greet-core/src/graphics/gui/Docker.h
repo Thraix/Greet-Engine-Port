@@ -4,8 +4,10 @@
 #include <graphics/gui/Container.h>
 #include <utils/xml/XML.h>
 #include <graphics/gui/docker/DockerSplit.h>
+#include <graphics/fonts/FontManager.h>
 
 namespace Greet {
+
   class Docker : public Component
   {
     private:
@@ -14,6 +16,7 @@ namespace Greet {
     protected:
       DockerSplit* split;
       DockerTab* dockerTab;
+      XMLObject tabButton;
     public:
       const int edgeWidth = 10;
 
@@ -23,6 +26,9 @@ namespace Greet {
       void GrabDockerTab(DockerTab* tab);
       void HandleDroppedTab(MouseReleaseEvent& event, const Vec2& componentPos);
 
+      const XMLObject& GetTabButton() const;
+
+      // Overrided functions
       void Render(GUIRenderer* renderer) const override;
       void Update(float timeElapsed) override;
       void OnEvent(Event& event, const Vec2& componentPos) override;

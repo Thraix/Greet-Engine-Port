@@ -5,9 +5,6 @@
 #include <graphics/renderers/GUIRenderer.h>
 #include <math/Vec2.h>
 
-#define TAB_WIDTH 100
-#define TAB_HEIGHT 20
-#define TAB_PADDING 5
 namespace Greet
 {
   class Docker;

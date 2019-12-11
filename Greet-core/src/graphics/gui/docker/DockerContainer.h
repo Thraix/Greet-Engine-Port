@@ -2,6 +2,7 @@
 
 #include <graphics/gui/docker/DockerTab.h>
 #include <graphics/gui/docker/DockerInterface.h>
+#include <graphics/gui/Button.h>
 #include <utils/xml/XML.h>
 
 #include <vector>
@@ -21,6 +22,7 @@ namespace Greet {
 
       bool hover = false;
       uint hoverTab = 0;
+      Button* button;
 
     public:
       DockerContainer(const XMLObject& object, Docker* docker, DockerSplit* parentSplit);

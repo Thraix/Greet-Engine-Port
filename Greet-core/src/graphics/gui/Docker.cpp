@@ -7,7 +7,7 @@ namespace Greet
   REGISTER_COMPONENT_DEFINITION(Docker);
 
   Docker::Docker(const XMLObject& object, Component* parent)
-    : Component(object, parent), split{nullptr}, dockerTab{nullptr}
+    : Component(object, parent), split{nullptr}, dockerTab{nullptr}, tabButton{}
   {
     m_isFocusable = true;
     for(auto&& child : object.GetObjects())
@@ -32,11 +32,9 @@ namespace Greet
         // Add Docker tab component
         // TODO: Maybe this should be wrapped in a docker container
       }
-      else if(child.GetName() == "TabLayout")
+      else if(child.GetName() == "TabButton")
       {
-        Log::Error("NOTIMPLEMENTED: TabLayout in Docker");
-        // This will define how the tab button will look like in the top of the DockerContainer
-        // TODO: Set tab style
+        tabButton = child;
       }
       else
       {
@@ -53,6 +51,11 @@ namespace Greet
   void Docker::GrabDockerTab(DockerTab* tab)
   {
     dockerTab = tab;
+  }
+
+  const XMLObject& Docker::GetTabButton() const
+  {
+    return tabButton;
   }
 
   void Docker::HandleDroppedTab(MouseReleaseEvent& event, const Vec2& componentPos)

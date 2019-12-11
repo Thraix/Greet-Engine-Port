@@ -46,7 +46,8 @@ namespace Greet
   Label& Label::SetText(const std::string& text)
   {
     str = text;
-    Remeasure();
+    if(size.widthType == ComponentSize::Type::WRAP)
+      Remeasure();
     return *this;
   }
 

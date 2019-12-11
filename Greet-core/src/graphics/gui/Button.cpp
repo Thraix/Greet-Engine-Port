@@ -10,7 +10,7 @@ namespace Greet {
     : Component(object, parent)
   {
     m_isFocusable = true;
-    label = new Label("Label", this,object.GetText(),GUIUtils::GetStringFromXML(object, "font",""),GUIUtils::GetFloatFromXML(object,"fontSize",20) );
+    label = new Label("Label", this,object.GetText(),GUIUtils::GetStringFromXML(object, "font", "default"),GUIUtils::GetFloatFromXML(object, "fontSize",20));
     label->SetColor(GUIUtils::GetColorFromXML(object, "color", Vec4(0,0,0,1)))
       .SetSize(1,1, ComponentSize::Type::WRAP, ComponentSize::Type::WEIGHT);
 
@@ -37,6 +37,11 @@ namespace Greet {
     renderer->PopTranslation();
   }
 
+  void Button::SetText(const std::string& text)
+  {
+    label->SetText(text);
+  }
+
   void Button::OnFocused()
   {
   }
@@ -48,6 +53,7 @@ namespace Greet {
   void Button::MouseEntered()
   {
     currentStyle = &hoverStyle;
+    Log::Info("test");
   }
 
   void Button::MouseExited()

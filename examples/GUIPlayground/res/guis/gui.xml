@@ -5,7 +5,7 @@
   borderColor="#37474f"
   backgroundColor="#263238">
 <Docker width="1w" height="1w" name="docker" backgroundColor="#110011">
-  <TabLayout/>
+  <TabButton width="100" height="20" font="noto" fontSize="12" hoverbackgroundColor="#aaaaaa" backgroundColor="#ffffff"/>
   <DockerSplit>
     <DockerContainer>
       <DockerTab title="Settings">
