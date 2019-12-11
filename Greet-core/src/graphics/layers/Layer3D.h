@@ -15,9 +15,9 @@ namespace Greet {
       Layer3D(Camera* camera, Skybox* skybox);
       Layer3D(Camera* camera);
       virtual ~Layer3D();
-      virtual void PreRender() const override;
+      virtual void PreRender() override;
       virtual void Render() const override;
-      virtual void PostRender() const override;
+      virtual void PostRender() override;
       virtual void Update(float timeElapsed) override;
       virtual void OnEvent(Event& event) override;
       virtual void ViewportResize(ViewportResizeEvent& event) override;

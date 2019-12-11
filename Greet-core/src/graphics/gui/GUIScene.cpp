@@ -107,7 +107,7 @@ namespace Greet {
     }
   }
 
-  void GUIScene::PreRender() const
+  void GUIScene::PreRender()
   {
     m_shader->Enable();
     m_renderer->Begin();
@@ -123,7 +123,7 @@ namespace Greet {
     }
   }
 
-  void GUIScene::PostRender() const
+  void GUIScene::PostRender()
   {
     m_renderer->End();
     m_renderer->Draw();
