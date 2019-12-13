@@ -22,25 +22,40 @@ namespace Greet
     GLCall(glProvokingVertex(GL_FIRST_VERTEX_CONVENTION));
   }
 
-  void RenderCommand::PushViewportStack(float x, float y, float width, float height)
+  void RenderCommand::PushViewportStack(float x, float y, float width, float height, bool ignoreParent)
   {
-    PushViewportStack({x,y,width,height});
+    PushViewportStack({x,y,width,height}, ignoreParent);
   }
 
-  void RenderCommand::PushViewportStack(const Vec2& pos, const Vec2& size)
+  void RenderCommand::PushViewportStack(const Vec2& pos, const Vec2& size, bool ignoreParent)
   {
-    PushViewportStack({pos.x,pos.y,size.w,size.h});
+    PushViewportStack({pos.x,pos.y,size.w,size.h}, ignoreParent);
   }
 
-  void RenderCommand::PushViewportStack(const Vec4& viewport)
+  void RenderCommand::PushViewportStack(const Vec4& viewport, bool ignoreParent)
   {
-    const Vec4& lastViewport = viewportStack.empty()
-      ? Vec4(0, 0, Window::GetWidth(), Window::GetHeight())
-      : viewportStack.top();
+    if(ignoreParent)
+    {
+      GLCall(glViewport(viewport.x, viewport.y, viewport.z, viewport.w));
+      viewportStack.push(viewport);
+    }
+    else
+    {
+      const Vec4& lastViewport = viewportStack.empty()
+        ? Vec4(0, 0, Window::GetWidth(), Window::GetHeight())
+        : viewportStack.top();
 
-    Vec4 vp{viewport};
-    vp.x += lastViewport.x;
-    vp.y = lastViewport.y + lastViewport.w - viewport.y - viewport.w;
+      Vec4 vp{viewport};
+      vp.x += lastViewport.x;
+      vp.y = lastViewport.y + lastViewport.w - viewport.y - viewport.w;
+      GLCall(glViewport(vp.x, vp.y, vp.z, vp.w));
+      viewportStack.push(vp);
+    }
+  }
+
+  void RenderCommand::PushViewportDefaultStack()
+  {
+    Vec4 vp{0,0, (float)Window::GetWidth(), (float)Window::GetHeight()};
     GLCall(glViewport(vp.x, vp.y, vp.z, vp.w));
     viewportStack.push(vp);
   }
