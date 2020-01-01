@@ -35,7 +35,7 @@ class Core : public App
       if(frame != nullptr)
       {
         using namespace std::placeholders;
-        // Function callbacks 
+        // Function callbacks
         // Somewhat ugly, might look into making function pointers easier, since the structure
         // is always the same.
         frame->GetComponentByName<ProgressBar>("progressBar")

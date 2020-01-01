@@ -6,31 +6,25 @@
 
 namespace Greet {
 
-  BatchRenderer::BatchRenderer()
+  BatchRenderer::BatchRenderer(const Ref<Shader>& shader)
+    : Renderer2D{shader}
   {
-    Init();
-  }
+    // TODO: Make this into a RenderCommand.
+    glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &maxTextures);
 
-  BatchRenderer::~BatchRenderer()
-  {
-    delete indices;
-    for (uint i = 0; i < m_texSlots.size(); i++)
-    {
-      delete &m_texSlots[i];
-    }
-  }
-
-  void BatchRenderer::Init()
-  {
+    std::vector<int> samplerUnits(maxTextures);
+    std::iota(samplerUnits.begin(), samplerUnits.end(), 0);
+    shader->Enable();
+    shader->SetUniform1iv("textures", maxTextures, samplerUnits.data());
     vao = VertexArray::Create();
     vbo = VertexBuffer::CreateDynamic(nullptr, RENDERER_BUFFER_SIZE);
     vbo->SetStructure({
-        { SHADER_VERTEX_INDEX, BufferAttributeType::VEC2},
-        { SHADER_TEXCOORD_INDEX, BufferAttributeType::VEC2},
-        { SHADER_TEXID_INDEX, BufferAttributeType::FLOAT},
-        { SHADER_COLOR_INDEX, BufferAttributeType::UBYTE4, true},
-        { SHADER_MASK_TEXCOORD_INDEX, BufferAttributeType::VEC2},
-        { SHADER_MASK_TEXID_INDEX, BufferAttributeType::FLOAT}
+        { (uint)shader->GetAttributeLocation("position"), BufferAttributeType::VEC2},
+        { (uint)shader->GetAttributeLocation("texCoord"), BufferAttributeType::VEC2},
+        { (uint)shader->GetAttributeLocation("texID"), BufferAttributeType::FLOAT},
+        { (uint)shader->GetAttributeLocation("color"), BufferAttributeType::UBYTE4, true},
+        { (uint)shader->GetAttributeLocation("maskTexCoord"), BufferAttributeType::VEC2},
+        { (uint)shader->GetAttributeLocation("maskTexID"), BufferAttributeType::FLOAT}
         });
     vao->AddVertexBuffer(vbo);
     vbo->Disable();
@@ -40,25 +34,22 @@ namespace Greet {
     ibo->Disable();
     vao->SetIndexBuffer(ibo);
     vao->Disable();
+    shader->Disable();
+  }
+
+  BatchRenderer::~BatchRenderer()
+  {
+    delete indices;
   }
 
   void BatchRenderer::Begin()
   {
+    shader->Enable();
     vbo->Enable();
     m_buffer = (VertexData*)vbo->MapBuffer();
     m_iboSize = 0;
     m_lastIndex = 0;
   }
-
-#if 0
-  void BatchRenderer::Submit(const RenderablePoly* renderable)
-  {
-    const uint color = renderable->GetColor();
-    const Vec2* vertices = renderable->GetVertices();
-    const uint vertexCount = renderable->GetVertexCount();
-    Draw(renderable->GetPosition(),vertices, vertexCount, color);
-  }
-#endif
 
   void BatchRenderer::Submit(const Renderable2D& renderable)
   {
@@ -280,7 +271,7 @@ namespace Greet {
     }
     if (!found)
     {
-      if (size >= RENDERER_MAX_TEXTURES)
+      if (size >= maxTextures)
       {
         End();
         Flush();
@@ -315,6 +306,7 @@ namespace Greet {
     m_texSlots.clear();
     GLCall(glActiveTexture(GL_TEXTURE0));
     RenderCommand::ResetDepthTest();
+    shader->Disable();
   }
 
   void BatchRenderer::EnableBuffers()

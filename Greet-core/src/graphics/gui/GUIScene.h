@@ -19,13 +19,11 @@ namespace Greet {
     private:
       Mat3 projectionMatrix;
       std::list<Frame*> frames;
-      Component* m_focused;
-      GUIRenderer* m_renderer;
-      Ref<Shader> m_shader;
+      Component* focused;
+      GUIRenderer* renderer;
 
     public:
       GUIScene(GUIRenderer* renderer);
-      GUIScene(GUIRenderer* renderer, const Ref<Shader>& shader);
 
       void OnEvent(Event& event);
       void OnMousePressEventHandler(MousePressEvent& event);

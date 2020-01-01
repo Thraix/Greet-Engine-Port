@@ -179,7 +179,7 @@ class Core : public App
       light->SetToUniform(flatShader, "light");
       flatShader->Disable();
 
-      uilayer = new Layer(new BatchRenderer(), ShaderFactory::Shader2D(), Mat3::OrthographicViewport());
+      uilayer = new Layer(new BatchRenderer(ShaderFactory::Shader2D()), Mat3::OrthographicViewport());
       Vec4 colorPink = ColorUtils::GetMaterialColorAsHSV(300 /360.0f, 3);
       cursor = new Renderable2D(Vec2(0,0),Vec2(32,32),0xffffffff, Sprite(TextureManager::Get2D("cursor")), Sprite(TextureManager::Get2D("mask")));
       uilayer->Add(cursor);

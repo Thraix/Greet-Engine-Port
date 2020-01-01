@@ -58,6 +58,7 @@ namespace Greet {
       static void Disable();
       uint GetProgram() const { return m_shaderID; }
 
+      int GetAttributeLocation(const std::string& name) const;
       void BindAttributeOutput(uint attachmentId, const std::string& name) const;
 
       void SetUniformBoolean(const std::string& name, bool value) const;

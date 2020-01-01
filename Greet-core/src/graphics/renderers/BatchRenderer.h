@@ -2,14 +2,13 @@
 
 #include <common/Types.h>
 
-#include <graphics/buffers/VertexArray.h>
-#include <graphics/renderers/Renderer2D.h>
 #include <graphics/Renderable2D.h>
 #include <graphics/RenderablePoly.h>
+#include <graphics/buffers/VertexArray.h>
+#include <graphics/renderers/Renderer2D.h>
 
 #include <vector>
 
-#define RENDERER_MAX_TEXTURES	32
 #define RENDERER_MAX_SPRITES	360000
 #define RENDERER_VERTEX_SIZE	sizeof(VertexData)
 #define RENDERER_SPRITE_SIZE	RENDERER_VERTEX_SIZE * 4
@@ -33,6 +32,7 @@ namespace Greet {
       Ref<VertexArray> vao;
       Ref<Buffer> ibo;
 
+      int maxTextures;
       uint m_iboSize;
       uint m_lastIndex;
       uint* indices;
@@ -41,7 +41,7 @@ namespace Greet {
       std::vector<uint> m_texSlots;
 
     public:
-      BatchRenderer();
+      BatchRenderer(const Ref<Shader>& shader);
       virtual ~BatchRenderer();
       void Begin() override;
       void Submit(const Renderable2D& renderable) override;

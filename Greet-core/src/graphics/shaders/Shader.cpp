@@ -523,6 +523,12 @@ namespace Greet {
     GLCall(glUseProgram(0));
   }
 
+  int Shader::GetAttributeLocation(const std::string& name) const
+  {
+    GLCall(int location = glGetAttribLocation(m_shaderID, name.c_str()));
+    return location;
+  }
+
   Ref<Shader> Shader::FromFile(const std::string& shaderPath)
   {
     return Ref<Shader>{new Shader{shaderPath}};

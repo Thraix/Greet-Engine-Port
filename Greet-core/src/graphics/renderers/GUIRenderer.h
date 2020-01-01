@@ -30,6 +30,7 @@ namespace Greet
       uint m_bufferSize;
       uint m_iboSize;
       uint m_vertices;
+      int maxTextures;
 
 
       Ref<Buffer> ibo;
@@ -47,6 +48,7 @@ namespace Greet
 
     public:
       GUIRenderer();
+      GUIRenderer(const Ref<Shader>& shader);
       void Begin();
       void End();
       void Flush();

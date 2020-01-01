@@ -2,19 +2,32 @@
 
 #include <algorithm>
 #include <cmath>
-#include <graphics/Renderable2D.h>
-#include <utils/ColorUtils.h>
+
 #include <graphics/RenderCommand.h>
+#include <graphics/Renderable2D.h>
+#include <graphics/shaders/ShaderFactory.h>
 #include <internal/GreetGL.h>
+#include <utils/ColorUtils.h>
 
 namespace Greet
 {
-
   GUIRenderer::GUIRenderer()
+    : GUIRenderer{ShaderFactory::ShaderGUI()}
+  {}
+
+  GUIRenderer::GUIRenderer(const Ref<Shader>& shader)
+    : Renderer2D{shader}
   {
+    // TODO: Make this into a RenderCommand.
+    glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &maxTextures);
+
+    std::vector<int> samplerUnits(maxTextures);
+    std::iota(samplerUnits.begin(), samplerUnits.end(), 0);
+    shader->Enable();
+    shader->SetUniform1iv("textures", maxTextures, samplerUnits.data());
     translationStack.push({0, 0});
 
-    m_textures = new uint[32];
+    m_textures = new uint[maxTextures];
     m_vertices = 10000;
     m_bufferSize = m_vertices * sizeof(GUIVertex) * 4;
     m_iboSize = m_vertices * 6;
@@ -22,12 +35,12 @@ namespace Greet
     vao = VertexArray::Create();
     vbo = VertexBuffer::CreateDynamic(nullptr, m_bufferSize);
     vbo->SetStructure({
-        {0, BufferAttributeType::VEC2},
-        {1, BufferAttributeType::VEC2},
-        {2, BufferAttributeType::FLOAT},
-        {3, BufferAttributeType::VEC4},
-        {4, BufferAttributeType::VEC4},
-        {5, BufferAttributeType::FLOAT},
+        {(uint)shader->GetAttributeLocation("position"), BufferAttributeType::VEC2},
+        {(uint)shader->GetAttributeLocation("texCoord"), BufferAttributeType::VEC2},
+        {(uint)shader->GetAttributeLocation("texID"), BufferAttributeType::FLOAT},
+        {(uint)shader->GetAttributeLocation("color"), BufferAttributeType::VEC4},
+        {(uint)shader->GetAttributeLocation("viewport"), BufferAttributeType::VEC4},
+        {(uint)shader->GetAttributeLocation("isHsv"), BufferAttributeType::FLOAT},
         });
     vao->AddVertexBuffer(vbo);
 
@@ -38,10 +51,12 @@ namespace Greet
     ibo->Disable();
     vao->SetIndexBuffer(ibo);
     vao->Disable();
+    shader->Disable();
   }
 
   void GUIRenderer::Begin()
   {
+    shader->Enable();
     vbo->Enable();
     m_buffer = (GUIVertex*)vbo->MapBuffer();
 
@@ -77,6 +92,7 @@ namespace Greet
       RenderCommand::ResetCulling();
       RenderCommand::ResetDepthTest();
     }
+    shader->Disable();
   }
 
   void GUIRenderer::End()
@@ -210,7 +226,7 @@ namespace Greet
         return i + 1;
     }
 
-    if (m_textureCount == 32)
+    if (m_textureCount == maxTextures)
       return 0.0f;
     m_textures[m_textureCount++] = id;
     return m_textureCount;
