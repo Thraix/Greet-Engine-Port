@@ -2,6 +2,7 @@
 
 #include <graphics/shaders/Shader.h>
 #include <graphics/Renderable.h>
+#include <graphics/renderers/BatchRenderer.h>
 #include <graphics/renderers/Renderer2D.h>
 #include <graphics/layers/Scene.h>
 

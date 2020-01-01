@@ -194,7 +194,34 @@ namespace Greet {
 
     AddIndicesPoly(4);
     m_iboSize += 6;
+
     GLCall(glPolygonMode(GL_FRONT_AND_BACK, GL_FILL));
+  }
+
+  void BatchRenderer::DrawLine(const Vec2& pos1, const Vec2& pos2, float width, uint color)
+  {
+    Vec2 delta = pos2-pos1;
+    float alpha = atan(delta.y / delta.x);
+    Vec2 p = Vec2{sin(alpha),cos(alpha)} * width * 0.5f;
+
+    // This if is needed to avoid culling problems
+    if(delta.x >= 0)
+    {
+      AppendVertexBuffer(pos1+Vec2{p.x, -p.y}, Vec2(0, 0), 0, color, 0, Vec2(0, 0));
+      AppendVertexBuffer(pos1+Vec2{-p.x, p.y}, Vec2(0, 1), 0, color, 0, Vec2(0, 1));
+      AppendVertexBuffer(pos2+Vec2{-p.x, p.y}, Vec2(1, 1), 0, color, 0, Vec2(1, 1));
+      AppendVertexBuffer(pos2+Vec2{p.x, -p.y}, Vec2(1, 0), 0, color, 0, Vec2(1, 0));
+    }
+    else
+    {
+      AppendVertexBuffer(pos2+Vec2{p.x, -p.y}, Vec2(0, 0), 0, color, 0, Vec2(0, 0));
+      AppendVertexBuffer(pos2+Vec2{-p.x, p.y}, Vec2(0, 1), 0, color, 0, Vec2(0, 1));
+      AppendVertexBuffer(pos1+Vec2{-p.x, p.y}, Vec2(1, 1), 0, color, 0, Vec2(1, 1));
+      AppendVertexBuffer(pos1+Vec2{p.x, -p.y}, Vec2(1, 0), 0, color, 0, Vec2(1, 0));
+    }
+
+    AddIndicesPoly(4);
+    m_iboSize += 6;
   }
 
   void BatchRenderer::FillRect(const Vec2& position, const Vec2& size, const uint& color)
