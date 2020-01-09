@@ -78,6 +78,7 @@ namespace Greet {
       inline static int GetWidth() { return width; };
       inline static int GetHeight() { return height; };
       inline static float GetAspect() { return width / (float) height; }
+      static GLFWwindow* GetGLFWWindow() { return window; }
       static void SetTitle(const std::string& title);
 
       static Joystick* GetJoystick(uint joystick);
