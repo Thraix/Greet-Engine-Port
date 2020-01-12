@@ -161,7 +161,7 @@ namespace Greet {
       }
     }
 
-    while(unfocused != focused)
+    while(unfocused != tmp)
     {
       unfocused->ChildChangedFocus(false);
       unfocused = unfocused->GetParent();
