@@ -36,7 +36,8 @@ namespace Greet {
       {
         return GetObject(0);
       }
-      return JSONObject();
+      static JSONObject outOfBound;
+      return outOfBound;
     }
     return m_objects[i];
   }

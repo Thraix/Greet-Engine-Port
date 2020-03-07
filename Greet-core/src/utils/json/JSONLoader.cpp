@@ -228,14 +228,13 @@ namespace Greet {
     std::string retValue;
     SetString(file,lastPos,currentPos,&retValue);
     retValue = retValue.substr(1,retValue.size()-2); // remove both " around string
-    StringUtils::replace_all(retValue, "\\\"", "\"");
-    StringUtils::replace_all(retValue, "\\\\", "\\");
-    StringUtils::replace_all(retValue, "\\/", "\/");
-    StringUtils::replace_all(retValue, "\\b", "\b");
-    StringUtils::replace_all(retValue, "\\f", "\f");
-    StringUtils::replace_all(retValue, "\\n", "\n");
-    StringUtils::replace_all(retValue, "\\r", "\r");
-    StringUtils::replace_all(retValue, "\\t", "\t");
+    StringUtils::ReplaceAll(retValue, "\\\"", "\"");
+    StringUtils::ReplaceAll(retValue, "\\\\", "\\");
+    StringUtils::ReplaceAll(retValue, "\\b", "\b");
+    StringUtils::ReplaceAll(retValue, "\\f", "\f");
+    StringUtils::ReplaceAll(retValue, "\\n", "\n");
+    StringUtils::ReplaceAll(retValue, "\\r", "\r");
+    StringUtils::ReplaceAll(retValue, "\\t", "\t");
     //replace_all(retValue, "\\u", "\u");
     *value = retValue;
     return true;

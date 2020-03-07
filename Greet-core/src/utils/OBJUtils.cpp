@@ -58,7 +58,7 @@ namespace Greet {
       }
       else if (s == "f")
       {
-        dataLine = StringUtils::split_string(line, " ");
+        dataLine = StringUtils::SplitString(line, " ");
         for(int i = 1; i<dataLine.size();i++)
         {
           if(dataLine[i] == "" || dataLine[i] == "\r")
@@ -72,7 +72,7 @@ namespace Greet {
           {
             indices.push_back(vertexPos.size());
             verticesMap.emplace(dataLine[i], vertexPos.size());
-            std::vector<std::string> vertex = StringUtils::split_string(dataLine[i], "/");
+            std::vector<std::string> vertex = StringUtils::SplitString(dataLine[i], "/");
 
             // Only position defined
             if(vertex.size() == 1)

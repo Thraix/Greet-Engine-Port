@@ -173,7 +173,7 @@ namespace Greet {
     for (auto it = obj.m_values.begin();it != obj.m_values.end(); ++it, ++i)
     {
       os << JSON::get_indent() << "\"" << it->first << "\"" << ": ";
-      if (it->second == "null" || it->second == "true" || it->second == "false" || StringUtils::is_number(it->second))
+      if (it->second == "null" || it->second == "true" || it->second == "false" || StringUtils::IsNumber(it->second))
       {
         os << it->second;
       }

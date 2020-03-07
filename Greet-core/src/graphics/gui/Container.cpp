@@ -30,7 +30,7 @@ namespace Greet
     for (uint i = 0;i < object.GetObjectCount();i++)
     {
       Component* component = ComponentFactory::GetComponent(object.GetObject(i), this);
-      if(StringUtils::starts_with(component->GetName(),"Failed#"))
+      if(StringUtils::StartsWith(component->GetName(),"Failed#"))
         Log::Error("Could not load Component, could not understand type. (type=",object.GetObject(i).GetName(),")");
       else
         AddComponent(component);

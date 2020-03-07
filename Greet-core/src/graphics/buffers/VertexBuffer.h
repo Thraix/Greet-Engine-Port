@@ -74,7 +74,7 @@ namespace Greet
     uint location;
     BufferAttributeType type;
     uint size;
-    uint offset;
+    unsigned long long offset;
     bool normalize;
 
     BufferAttribute(uint location, BufferAttributeType type, bool normalize = false)

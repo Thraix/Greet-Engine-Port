@@ -77,7 +77,7 @@ namespace Greet
 
     private:
       // Element count
-      uint size;
+      size_t size;
       T* data;
       uint* refCount;
 
@@ -88,20 +88,20 @@ namespace Greet
       }
 
       Pointer(T* data, uint size)
-        : size{size}, data{(T*)malloc(size * sizeof(T))}, refCount{new uint{1}}
+        : size{size}, data{(T*)malloc(size * sizeof(T))}, refCount{new uint{1u}}
       {
         if(data != nullptr)
           memcpy(this->data, data, size * sizeof(T));
       }
 
       Pointer(const std::initializer_list<T>& list)
-        : size{list.size()}, data{(T*)malloc(size * sizeof(T))}, refCount{new uint{1}}
+        : size{list.size()}, data{(T*)malloc(size * sizeof(T))}, refCount{new uint{1u}}
       {
         memcpy(data, list.begin(), size * sizeof(T));
       }
 
       Pointer(const std::vector<T>& vec)
-        : size{vec.size()}, data{(T*)malloc(size * sizeof(T))}, refCount{new uint{1}}
+        : size{vec.size()}, data{(T*)malloc(size * sizeof(T))}, refCount{new uint{1u}}
       {
           memcpy(data, vec.data(), size * sizeof(T));
         }

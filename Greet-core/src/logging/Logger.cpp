@@ -53,6 +53,7 @@ namespace Greet {
       }
     }
     Log::Warning("No stream removed with name: ", name, ". Could not find.");
+    return nullptr;
   }
 
   LogStream* Logger::RemoveLogStream(LogStream* stream)

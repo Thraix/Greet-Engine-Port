@@ -1,0 +1,20 @@
+<makegen>
+  <configuration name="Release">
+    <cflag>-g</cflag>
+    <cflag>-Werror</cflag>
+    <define>_DEBUG</define>
+    <define>_GREET_HOTSWAP</define>
+    <define>_USE_MATH_DEFINES</define>
+    <generatehfile>true</generatehfile>
+    <hfilename>Greet.h</hfilename>
+    <includedir>src/</includedir>
+    <includedir>../deps/includes/</includedir>
+    <outputdir>bin/</outputdir>
+    <outputname>libgreet.so</outputname>
+    <outputtype>sharedlibrary</outputtype>
+    <projectname>Greet Engine</projectname>
+    <srcdir>src/</srcdir>
+  </configuration>
+  <target>Release</target>
+  <version>v1.3.0</version>
+</makegen>

@@ -28,7 +28,7 @@ namespace Greet {
             BufferAttributeToGLPrimitive(attribute.type),
             attribute.normalize ? GL_TRUE : GL_FALSE,
             structure.GetVertexSize(),
-            (const void*)attribute.offset
+            (void*)attribute.offset
             ));
     }
     buffers.push_back(buffer);

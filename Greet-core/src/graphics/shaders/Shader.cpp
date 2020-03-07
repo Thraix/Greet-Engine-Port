@@ -236,7 +236,9 @@ namespace Greet {
       else if (line == "//geometry")
         shader = GEOMETRY;
       else
+      {
         ss[shader] << line << std::endl;
+      }
     }
     return {ss[0].str(),ss[1].str(),ss[2].str()};
   }

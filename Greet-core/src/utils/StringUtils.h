@@ -26,12 +26,12 @@ namespace Greet {
       return std::string(string.length(),'*');
     }
 
-    static bool is_number(const std::string& str)
+    static bool IsNumber(const std::string& str)
     {
-      return std::regex_match(str, std::regex("[-+]?[0-9]*\.?[0-9]*"));
+      return std::regex_match(str, std::regex("[-+]?[0-9]*\\.?[0-9]*"));
     }
 
-    static std::vector<std::string> split_string(const std::string &s, const std::string& delimiter)
+    static std::vector<std::string> SplitString(const std::string &s, const std::string& delimiter)
     {
       size_t start = 0;
       size_t end = s.find_first_of(delimiter);
@@ -51,7 +51,8 @@ namespace Greet {
 
       return output;
     }
-    static void replace_all(std::string& str, const std::string& from, const std::string& to)
+
+    static void ReplaceAll(std::string& str, const std::string& from, const std::string& to)
     {
       if (from.empty())
         return;
@@ -63,12 +64,12 @@ namespace Greet {
       }
     }
 
-    static bool starts_with(const std::string& s, const std::string& prefix)
+    static bool StartsWith(const std::string& s, const std::string& prefix)
     {
       return s.compare(0, prefix.size(), prefix) == 0;
     }
 
-    static bool ends_with(const std::string& s, const std::string& prefix)
+    static bool EndsWith(const std::string& s, const std::string& prefix)
     {
       return s.compare(s.length()-prefix.length(), prefix.size(), prefix) == 0;
     }
