@@ -69,9 +69,9 @@ namespace Greet {
       return s.compare(0, prefix.size(), prefix) == 0;
     }
 
-    static bool EndsWith(const std::string& s, const std::string& prefix)
+    static bool EndsWith(const std::string& s, const std::string& suffix)
     {
-      return s.compare(s.length()-prefix.length(), prefix.size(), prefix) == 0;
+      return s.compare(s.length()-suffix.length(), suffix.size(), suffix) == 0;
     }
 
     static bool IsWhiteSpace(char c)

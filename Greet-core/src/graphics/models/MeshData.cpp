@@ -261,7 +261,7 @@ namespace Greet {
     for(size_t i = 0;i<attributeCount;i++)
     {
       // Read uints
-      uint location = ((uint*)pointer)[0];
+      int location = ((int*)pointer)[0];
       uint bufferType = ((uint*)pointer)[1];
 
       // Move pointer

@@ -13,14 +13,14 @@ namespace Greet {
     private:
       Ref<Shader> m_shader;
       uint uuid;
-      const Texture2D& m_texture;
+      Ref<Texture2D> m_texture;
       float specularExponent = 10;
       float specularStrength = 0.5;
       float diffuseStrength = 0.5;
       Vec4 color;
 
     public:
-      Material(const Ref<Shader>& shader, const Texture2D& texture);
+      Material(const Ref<Shader>& shader, const Ref<Texture2D>& texture);
       Material(const Ref<Shader>& shader);
       virtual ~Material();
 
@@ -37,8 +37,7 @@ namespace Greet {
       inline float GetDiffuseStrength() const { return diffuseStrength; }
       inline const Vec4& GetColor() const { return color; }
       inline const Ref<Shader>& GetShader() const { return m_shader; }
-      inline const Texture& GetTexture() const { return m_texture; }
-      inline uint GetTextureId() const { return m_texture.GetTexId(); }
+      inline Ref<Texture2D> GetTexture() const { return m_texture; }
       friend bool operator<(const Material& m1, const Material& m2) { return m1.uuid < m2.uuid;}
     private:
       void UpdateTexture();

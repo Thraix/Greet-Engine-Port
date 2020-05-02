@@ -5,14 +5,14 @@
 
 namespace Greet {
 
-  Material::Material(const Ref<Shader>& shader, const Texture2D& texture)
+  Material::Material(const Ref<Shader>& shader, const Ref<Texture2D>& texture)
     : m_shader{shader}, m_texture(texture), color(Vec4(1,1,1,1)), uuid{UUID::GetInstance().GetUUID()}
   {
     UpdateTexture();
   }
 
   Material::Material(const Ref<Shader>& shader)
-    : m_shader(shader), m_texture(TextureManager::GetEmptyTexture2D()), color(Vec4(1,1,1,1)), uuid{UUID::GetInstance().GetUUID()}
+    : m_shader(shader), m_texture(nullptr), color(Vec4(1,1,1,1)), uuid{UUID::GetInstance().GetUUID()}
   {
     UpdateTexture();
   }
@@ -30,12 +30,14 @@ namespace Greet {
     m_shader->SetUniform4f("mat_color", color);
     m_shader->SetUniformMat4("projectionMatrix", camera->GetProjectionMatrix());
     m_shader->SetUniformMat4("viewMatrix", camera->GetViewMatrix());
-    m_texture.Enable();
+    if(m_texture)
+      m_texture->Enable();
   }
 
   void Material::Unbind() const
   {
-    m_texture.Disable();
+    if(m_texture)
+      m_texture->Disable();
     m_shader->Disable();
   }
 
@@ -48,7 +50,7 @@ namespace Greet {
   void Material::UpdateTexture()
   {
     m_shader->Enable();
-    m_shader->SetUniformBoolean("hasTexture", m_texture.GetTexId() != 0);
+    m_shader->SetUniformBoolean("hasTexture", m_texture.get() != nullptr);
     m_shader->Disable();
   }
 }

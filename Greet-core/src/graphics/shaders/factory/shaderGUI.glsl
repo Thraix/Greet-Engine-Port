@@ -35,7 +35,7 @@ void main()
 //fragment
 #version 330 core
 
-layout(location = 0) out vec4 color;
+out vec4 outColor;
 
 in DATA
 {
@@ -60,14 +60,13 @@ void main()
 	if (fs_in.pos.x < fs_in.viewport.x || fs_in.pos.y < fs_in.viewport.y || fs_in.pos.x > fs_in.viewport.z || fs_in.pos.y > fs_in.viewport.w)
 		discard;
 	if (fs_in.isHsv > 0.5f)
-		color = vec4(hsv2rgb(fs_in.color.xyz),fs_in.color.a);
+		outColor = vec4(hsv2rgb(fs_in.color.xyz),fs_in.color.a);
 	else
-		color = fs_in.color;
+		outColor = fs_in.color;
 	if (fs_in.texID>0.0)
 	{
 		int tid = int(fs_in.texID - 0.5);
-		color *= texture(textures[tid], fs_in.texCoord);
-		//color = vec4(fs_in.texCoord.xy,0.0,1.0);
+		outColor *= texture(textures[tid], fs_in.texCoord);
 	}
 }
 )"

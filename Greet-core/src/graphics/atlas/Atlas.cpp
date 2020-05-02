@@ -5,19 +5,19 @@
 namespace Greet {
 
   Atlas::Atlas(uint atlasSize, uint textureSize)
-    : Texture2D(atlasSize,atlasSize,TextureParams(TextureFilter::NEAREST,TextureWrap::NONE,TextureInternalFormat::RGBA)), m_textureSize(textureSize)
+    : texture(Texture2D::Create(atlasSize, atlasSize, TextureParams(TextureFilter::NEAREST,TextureWrap::NONE,TextureInternalFormat::RGBA))), textureSize(textureSize)
   {
-    ASSERT(atlasSize > m_textureSize, "ATLAS", "Atlas size must be greater than the textures sizes");
+    ASSERT(atlasSize > textureSize, "ATLAS", "Atlas size must be greater than the textures sizes");
     //ASSERT(!(atlasSize == 0) && !(atlasSize & (atlasSize - 1)),"ATLAS", "Atlas size must be a power of two");
-    //ASSERT(!(textureSize == 0) && !(m_textureSize & (m_textureSize - 1)), "ATLAS", "Texture size must be a power of two");
-    m_texturesSide = atlasSize / m_textureSize;
-    m_textures = (atlasSize / m_textureSize)*(atlasSize / m_textureSize);
+    //ASSERT(!(textureSize == 0) && !(textureSize & (textureSize - 1)), "ATLAS", "Texture size must be a power of two");
+    textureCountSide = atlasSize / textureSize;
+    textureCountTotal = textureCountSide * textureCountSide;
     uint bitCount = atlasSize * atlasSize * 4;
 
-    occupied.resize(m_textures);
+    occupied.resize(textureCountTotal);
     std::fill(occupied.begin(), occupied.end(), false);
 
-    byte* bits = new byte[bitCount];
+    std::vector<byte> bits(bitCount);
     for (uint i = 0; i < bitCount; i+=4)
     {
       bits[i]   = 255;
@@ -26,25 +26,11 @@ namespace Greet {
       bits[i+3] = 255;
     }
 
-    GenTexture(bits);
-    delete[] bits;
+    texture->SetPixels(bits);
   }
 
   Atlas::~Atlas()
   {
-  }
-
-  void Atlas::GenTexture(byte* bits)
-  {
-    GLCall(glBindTexture(GL_TEXTURE_2D, *texId));
-    GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST));
-    GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
-    GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER));
-    GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER));
-
-    GLCall(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_width, m_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, bits));
-
-    GLCall(glBindTexture(GL_TEXTURE_2D, 0));
   }
 
   bool Atlas::AddTexture(const std::string& name, const std::string& filePath)
@@ -52,7 +38,7 @@ namespace Greet {
     uint width;
     uint height;
     auto res = ImageUtils::LoadImage(filePath.c_str(), &width, &height);
-    if (width != m_textureSize || height != m_textureSize)
+    if (width != textureSize || height != textureSize)
     {
       Log::Error("The given textures size is not valid: ",name.c_str()," (",width,",",height,")");
       return false;
@@ -64,30 +50,29 @@ namespace Greet {
 
   bool Atlas::AddTexture(const std::vector<byte>& bits, const std::string& name)
   {
-    uint textures = m_width / m_textureSize;
-    if (textureMap.size() >= textures*textures)
+    if (textureMap.size() >= textureCountTotal)
     {
       Log::Error("There is no more room in the Atlas. Increase size or create a new one.");
       return false;
     }
-    uint x = m_texturesSide;
-    uint y = m_texturesSide;
+    uint x = textureCountSide;
+    uint y = textureCountSide;
 
-    for (uint i = 0; i < m_textures; i++)
+    for (uint i = 0; i < textureCountTotal; i++)
     {
       if (!occupied[i])
       {
         textureMap.emplace(name,i);
         occupied[i] = true;
-        x = i % m_texturesSide;
-        y = (i - x) / m_texturesSide;
+        x = i % textureCountSide;
+        y = (i - x) / textureCountSide;
         if(bits.size() == 0)
         {
-          GLCall(glTexSubImage2D(GL_TEXTURE_2D, 0, x*m_textureSize,m_textureSize*m_texturesSide -m_textureSize - y*m_textureSize,m_textureSize,m_textureSize,GL_RGBA, GL_UNSIGNED_BYTE, nullptr));
+          GLCall(glTexSubImage2D(GL_TEXTURE_2D, 0, x*textureSize,textureSize*textureCountSide -textureSize - y*textureSize,textureSize,textureSize,GL_RGBA, GL_UNSIGNED_BYTE, nullptr));
         }
         else
         {
-          GLCall(glTexSubImage2D(GL_TEXTURE_2D, 0, x*m_textureSize,m_textureSize*m_texturesSide -m_textureSize - y*m_textureSize,m_textureSize,m_textureSize,GL_RGBA, GL_UNSIGNED_BYTE, bits.data()));
+          GLCall(glTexSubImage2D(GL_TEXTURE_2D, 0, x*textureSize,textureSize*textureCountSide -textureSize - y*textureSize,textureSize,textureSize,GL_RGBA, GL_UNSIGNED_BYTE, bits.data()));
         }
         return true;
       }
@@ -95,29 +80,23 @@ namespace Greet {
     ASSERT(false, "AtlasManager failed to find unoccupied space, even though it passed a space check");
   }
 
-  Sprite Atlas::GetSprite(const std::string& name) const
-  {
-    return GetSpriteFromSheet(name, Vec2(0, 0), Vec2(1, 1));
-  }
-
-  Sprite Atlas::GetSpriteFromSheet(const std::string& sheetName, Vec2 texPos, Vec2 texSize) const
+  AtlasCoords Atlas::GetTextureCoords(const std::string& sheetName) const
   {
     auto it = textureMap.find(sheetName);
     if(it != textureMap.end())
     {
       uint j = it->second;
-      uint x = j % (m_width / m_textureSize);
-      uint y = (j - x) / (m_width / m_textureSize);
-      float size = (float)m_textureSize / (float)m_width;
-      Vec2 spriteSize = Vec2(size,size);
-      Vec2 spritePos = spriteSize*Vec2(x, y);
-      spritePos += texPos * spriteSize;
-      spriteSize *= texSize;
-      return Sprite(*this, spritePos, spriteSize);
+      uint x = j % textureCountSide;
+      uint y = (j - x) / textureCountSide;
+
+      float size = textureSize / (float)texture->GetWidth();
+      Vec2 coord1 = Vec2(size, size) * Vec2(x, y);
+      Vec2 coord2 = coord1 + Vec2(size, size);
+      return AtlasCoords{coord1, coord2};
     }
 
     Log::Error("No texture found in Atlas: (", sheetName.c_str(), ")");
-    return Sprite(*this);
+    return AtlasCoords{{0,0}, {1,1}};
   }
 
   void Atlas::RemoveTexture(const std::string& textureName)
@@ -128,5 +107,15 @@ namespace Greet {
       occupied[it->second] = false;
       textureMap.erase(it);
     }
+  }
+
+  void Atlas::Enable(int index) const
+  {
+    texture->Enable(index);
+  }
+
+  void Atlas::Disable() const
+  {
+    texture->Disable();
   }
 }

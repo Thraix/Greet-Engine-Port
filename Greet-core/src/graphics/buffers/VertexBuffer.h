@@ -71,13 +71,13 @@ namespace Greet
 
   struct BufferAttribute
   {
-    uint location;
+    int location;
     BufferAttributeType type;
     uint size;
     unsigned long long offset;
     bool normalize;
 
-    BufferAttribute(uint location, BufferAttributeType type, bool normalize = false)
+    BufferAttribute(int location, BufferAttributeType type, bool normalize = false)
       : location{location}, type{type}, size{BufferAttributeToByteSize(type)}, offset{0}, normalize{normalize}
     {}
   };

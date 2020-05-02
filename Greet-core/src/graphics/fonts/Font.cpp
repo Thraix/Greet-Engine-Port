@@ -17,19 +17,6 @@ namespace Greet{
   void Font::Init()
   {
     m_atlas = new FontAtlas(m_container->GetFileName(),512,512, m_size);
-    /*
-       if (m_container->GetData() == NULL)
-       {
-       m_font = ftgl::texture_font_new_from_file(m_atlas, m_size, m_container->GetFileName().c_str());
-       Log::Info("Here");
-       ASSERT(m_font, "Could not load font from file: ", m_container->m_filename);
-       }
-       else
-       {
-       m_font = ftgl::texture_font_new_from_memory(m_atlas, m_size, m_container->m_data, m_container->m_datasize);
-       ASSERT(m_font, "Could not load font from memory:", m_container->m_filename);
-       }
-       */
   }
 
   float Font::GetWidthOfText(const std::string& text, uint startPos, uint endPos, float scale) const

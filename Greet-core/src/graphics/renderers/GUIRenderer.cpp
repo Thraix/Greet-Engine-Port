@@ -35,12 +35,12 @@ namespace Greet
     vao = VertexArray::Create();
     vbo = VertexBuffer::CreateDynamic(nullptr, m_bufferSize);
     vbo->SetStructure({
-        {(uint)shader->GetAttributeLocation("position"), BufferAttributeType::VEC2},
-        {(uint)shader->GetAttributeLocation("texCoord"), BufferAttributeType::VEC2},
-        {(uint)shader->GetAttributeLocation("texID"), BufferAttributeType::FLOAT},
-        {(uint)shader->GetAttributeLocation("color"), BufferAttributeType::VEC4},
-        {(uint)shader->GetAttributeLocation("viewport"), BufferAttributeType::VEC4},
-        {(uint)shader->GetAttributeLocation("isHsv"), BufferAttributeType::FLOAT},
+        {shader->GetAttributeLocation("position"), BufferAttributeType::VEC2},
+        {shader->GetAttributeLocation("texCoord"), BufferAttributeType::VEC2},
+        {shader->GetAttributeLocation("texID"), BufferAttributeType::FLOAT},
+        {shader->GetAttributeLocation("color"), BufferAttributeType::VEC4},
+        {shader->GetAttributeLocation("viewport"), BufferAttributeType::VEC4},
+        {shader->GetAttributeLocation("isHsv"), BufferAttributeType::FLOAT},
         });
     vao->AddVertexBuffer(vbo);
 

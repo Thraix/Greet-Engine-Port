@@ -4,6 +4,7 @@
 #include <map>
 #include <math/Vec4.h>
 #include <logging/Logger.h>
+#include <common/Memory.h>
 
 typedef struct FT_LibraryRec_  *FT_Library;
 typedef struct FT_FaceRec_*  FT_Face;
@@ -27,7 +28,7 @@ namespace Greet
     private:
       FT_Library library;
       FT_Face face;
-      Texture2D atlas;
+      Ref<Texture2D> atlas;
       uint width;
       uint height;
       uint fontSize;

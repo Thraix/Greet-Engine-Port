@@ -3,26 +3,23 @@
 #include <map>
 #include <graphics/textures/Texture2D.h>
 #include <graphics/textures/CubeMap.h>
+#include <common/Memory.h>
 
 namespace Greet {
   class TextureManager
   {
     private:
-      static std::map<std::string, CubeMap> m_cubeMaps;
-      static std::map<std::string, Texture2D> m_texture2Ds;
-      static Texture2D emptyTexture2D;
-      static CubeMap emptyCubeMap;
+      static std::map<std::string, Ref<CubeMap>> cubeMaps;
+      static std::map<std::string, Ref<Texture2D>> texture2Ds;
     public:
 
-      static const Texture2D& Add(const std::string& name, Texture2D&& texture);
-      static const CubeMap&  Add(const std::string& name, CubeMap&& texture);
-      static const Texture& Get(const std::string& texturename);
-      static const Texture2D& Get2D(const std::string& texturename);
-      static const CubeMap& Get3D(const std::string& texturename);
-      // These are basically textures that cannot be renderered. texId = 0
-      static const Texture2D& GetEmptyTexture2D();
-      static const CubeMap& GetEmptyCubeMap();
-      static void Destroy();
+      static void AddTexture2D(const std::string& id, const Ref<Texture2D>& texture);
+      static void AddCubeMap(const std::string& id, const Ref<CubeMap>& texture);
+
+      static Ref<Texture2D>& LoadTexture2D(const std::string& metaFile);
+      static Ref<CubeMap>& LoadCubeMap(const std::string& metaFile);
+
+      static void CleanupUnused();
     private:
       TextureManager(){}
   };

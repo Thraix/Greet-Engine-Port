@@ -5,9 +5,9 @@
 #include <utils/ErrorHandle.h>
 
 namespace Greet{
-  std::map<std::string, Atlas> AtlasManager::m_atlas;
+  std::map<std::string, Ref<Atlas>> AtlasManager::m_atlas;
 
-  void AtlasManager::Add(const std::string& name, Atlas&& atlas)
+  void AtlasManager::Add(const std::string& name, const Ref<Atlas>& atlas)
   {
     if(m_atlas.find(name) != m_atlas.end())
     {
@@ -18,7 +18,7 @@ namespace Greet{
     m_atlas.emplace(name, std::move(atlas));
   }
 
-  const Atlas& AtlasManager::Get(const std::string& name)
+  Ref<Atlas>& AtlasManager::Get(const std::string& name)
   {
     auto it = m_atlas.find(name);
     if(it == m_atlas.end())

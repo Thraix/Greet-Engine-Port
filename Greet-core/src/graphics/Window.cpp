@@ -3,7 +3,6 @@
 #include <input/InputDefines.h>
 #include <internal/GreetGL.h>
 #include <graphics/fonts/FontManager.h>
-#include <graphics/textures/TextureManager.h>
 #include <graphics/atlas/AtlasManager.h>
 #include <graphics/RenderCommand.h>
 #include <event/EventDispatcher.h>
@@ -56,7 +55,6 @@ namespace Greet {
   void Window::DestroyWindow()
   {
     FontManager::Destroy();
-    TextureManager::Destroy();
     AtlasManager::Destroy();
     ComponentFactory::Cleanup();
     FrameFactory::Cleanup();

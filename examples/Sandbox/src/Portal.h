@@ -12,7 +12,7 @@ class Portal : public Greet::EntityModel
     float delta = 0.0f;
   public:
     Portal(Greet::Vec3<float> position)
-      : Greet::EntityModel{nullptr, new Greet::Material{Greet::Shader::FromFile("res/shaders/portal.shader"), Greet::TextureManager::Get2D("portal")}, position, {10,10,10}, {0,0,0}}
+      : Greet::EntityModel{nullptr, new Greet::Material{Greet::Shader::FromFile("res/shaders/portal.shader"), Greet::TextureManager::LoadTexture2D("res/textures/portal.meta")}, position, {10,10,10}, {0,0,0}}
     {
       using namespace Greet;
       SetMesh(mesh = new Mesh(MeshFactory::Quad(0,0,0,2,2)));

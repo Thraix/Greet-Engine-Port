@@ -7,10 +7,10 @@ namespace Greet {
   class AtlasManager
   {
     private:
-      static std::map<std::string, Atlas> m_atlas;
+      static std::map<std::string, Ref<Atlas>> m_atlas;
     public:
-      static void Add(const std::string& name, Atlas&& atlas);
-      static const Atlas& Get(const std::string& atlasname);
+      static void Add(const std::string& name, const Ref<Atlas>& atlas);
+      static Ref<Atlas>& Get(const std::string& atlasname);
       static void Destroy();
     private:
       AtlasManager(){}

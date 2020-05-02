@@ -1,0 +1,4 @@
+filepath=res/textures/mask.png
+filter=linear
+wrap=clampEdge
+format=rgb

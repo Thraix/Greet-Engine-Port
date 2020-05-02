@@ -19,12 +19,12 @@ namespace Greet {
     vao = VertexArray::Create();
     vbo = VertexBuffer::CreateDynamic(nullptr, RENDERER_BUFFER_SIZE);
     vbo->SetStructure({
-        { (uint)shader->GetAttributeLocation("position"), BufferAttributeType::VEC2},
-        { (uint)shader->GetAttributeLocation("texCoord"), BufferAttributeType::VEC2},
-        { (uint)shader->GetAttributeLocation("texID"), BufferAttributeType::FLOAT},
-        { (uint)shader->GetAttributeLocation("color"), BufferAttributeType::UBYTE4, true},
-        { (uint)shader->GetAttributeLocation("maskTexCoord"), BufferAttributeType::VEC2},
-        { (uint)shader->GetAttributeLocation("maskTexID"), BufferAttributeType::FLOAT}
+        { shader->GetAttributeLocation("position"), BufferAttributeType::VEC2},
+        { shader->GetAttributeLocation("texCoord"), BufferAttributeType::VEC2},
+        { shader->GetAttributeLocation("texID"), BufferAttributeType::FLOAT},
+        { shader->GetAttributeLocation("color"), BufferAttributeType::UBYTE4, true},
+        { shader->GetAttributeLocation("maskTexCoord"), BufferAttributeType::VEC2},
+        { shader->GetAttributeLocation("maskTexID"), BufferAttributeType::FLOAT}
         });
     vao->AddVertexBuffer(vbo);
     vbo->Disable();
