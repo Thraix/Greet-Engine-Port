@@ -28,7 +28,7 @@ namespace Greet {
       return buf;
     }
 
-    static void Screenshot(uint width, uint height);
+    static void Screenshot(uint width, uint height, std::string filename = "");
 
     template<typename Base, typename T>
     inline bool InstanceOf(const T *ptr) {

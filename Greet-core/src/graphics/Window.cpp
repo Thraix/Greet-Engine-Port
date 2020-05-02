@@ -27,6 +27,7 @@ namespace Greet {
   GLFWwindow *Window::window;
   bool Window::mouseButtonDown[MAX_MOUSEBUTTONS];
   bool Window::isMouseButtonDown;
+  bool Window::isMouseGrabbed = false;
 
 
   void Window::CreateWindow(std::string title, uint width, uint height)
@@ -99,6 +100,11 @@ namespace Greet {
     return true;
   }
 
+  void Window::Close()
+  {
+    glfwSetWindowShouldClose(window, 1);
+  }
+
   bool Window::Closed()
   {
     return glfwWindowShouldClose(window) == 1;
@@ -111,6 +117,7 @@ namespace Greet {
 
   void Window::Update()
   {
+    glfwPollEvents();
     // Only update the joystick if we have focus.
     // Otherwise it will send events all the time
     if (focus)
@@ -122,11 +129,11 @@ namespace Greet {
   void Window::Render()
   {
     glfwSwapBuffers(window);
-    glfwPollEvents();
   }
 
   void Window::GrabMouse(bool grab)
   {
+    isMouseGrabbed = grab;
     if(grab)
       glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     else

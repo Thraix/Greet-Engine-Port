@@ -42,6 +42,8 @@ namespace Greet {
       static bool isMouseButtonDown;
       static Vec2 mousePos;
       static Vec2 mousePosPixel;
+      static bool isMouseGrabbed;
+
     private:
       static bool Init();
 
@@ -62,6 +64,7 @@ namespace Greet {
       static void CreateWindow(std::string title, uint width, uint height);
       static void DestroyWindow();
 
+      static void Close();
       static bool Closed();
 
       static void Render();
@@ -69,6 +72,7 @@ namespace Greet {
       static void Tick();
 
       static void GrabMouse(bool grab);
+      static bool IsMouseGrabbed() { return isMouseGrabbed; }
 
       // Screen: (-1, 1)
       // Window: (0, Window size)

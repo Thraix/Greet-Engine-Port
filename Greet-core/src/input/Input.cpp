@@ -14,7 +14,6 @@ namespace Greet
 
   void Input::SetMousePos(const Vec2& pos)
   {
-    mouseLastPos = mousePos;
     mousePos = pos;
   }
 
@@ -105,5 +104,6 @@ namespace Greet
     // Reset scroll amount
     mouseScrollX = 0;
     mouseScrollY = 0;
+    mouseLastPos = mousePos;
   }
 }
