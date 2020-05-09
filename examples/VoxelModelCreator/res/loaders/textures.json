@@ -1,9 +1,0 @@
-{
-  "basePath": "res/textures/",
-  "textures":
-  [
-    { "name": "cursor" },
-    { "name": "skybox", "type": "CubeMap" },
-    { "name": "mask", "filter": "linear", "wrap": "clampEdge", "format": "rgb" }
-  ]
-}

@@ -21,6 +21,8 @@ namespace Greet {
     const BufferStructure& structure = buffer->GetStructure();
     for(auto&& attribute : structure)
     {
+      if(attribute.location < 0)
+        continue;
       GLCall(glEnableVertexAttribArray(attribute.location));
       GLCall(glVertexAttribPointer(
             attribute.location,
@@ -28,7 +30,7 @@ namespace Greet {
             BufferAttributeToGLPrimitive(attribute.type),
             attribute.normalize ? GL_TRUE : GL_FALSE,
             structure.GetVertexSize(),
-            (const void*)attribute.offset
+            (void*)attribute.offset
             ));
     }
     buffers.push_back(buffer);

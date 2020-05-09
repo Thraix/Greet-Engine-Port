@@ -64,6 +64,8 @@ namespace Greet {
   Vec2& Vec2::Normalize()
   {
     float len = Length();
+    if(len == 0)
+      return *this;
     x /= len;
     y /= len;
     return *this;

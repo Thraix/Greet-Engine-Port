@@ -8,23 +8,14 @@
 namespace Greet {
 
   GUIScene::GUIScene(GUIRenderer* renderer)
-    : GUIScene{renderer, ShaderFactory::ShaderGUI()}
-  {}
-  GUIScene::GUIScene(GUIRenderer* renderer, const Ref<Shader>& shader)
-    : m_renderer(renderer), m_shader(shader), projectionMatrix(Mat3::OrthographicViewport())
+    : renderer(renderer), projectionMatrix(Mat3::OrthographicViewport())
   {
-    m_focused = nullptr;
+    focused = nullptr;
 
-    int texIDs[32];
-    for (int i = 0; i < 32; i++)
-    {
-      texIDs[i] = i;
-    }
-    m_shader->Enable();
-    m_shader->SetUniformMat3("projectionMatrix", projectionMatrix);
-    m_shader->SetUniform1iv("textures", 32, texIDs);
-    m_shader->Disable();
-  }
+    renderer->GetShader()->Enable();
+    renderer->GetShader()->SetUniformMat3("projectionMatrix", projectionMatrix);
+    renderer->GetShader()->Disable();
+}
 
   void GUIScene::OnEvent(Event& event)
   {
@@ -37,9 +28,9 @@ namespace Greet {
         OnMouseMoveEventHandler((MouseMoveEvent&)event);
       else if(EVENT_IS_TYPE(event, EventType::MOUSE_RELEASE))
         OnMouseReleaseEventHandler((MouseReleaseEvent&)event);
-      else if(m_focused)
+      else if(focused)
       {
-        m_focused->OnEventHandler(event, m_focused->GetPosition());
+        focused->OnEventHandler(event, focused->GetPosition());
         event.AddFlag(EVENT_HANDLED);
       }
     }
@@ -70,9 +61,9 @@ namespace Greet {
     Vec2 mouseDelta  = ~projectionMatrix * (event.GetPosition() + event.GetDeltaPosition()) - mousePos;
     MouseMoveEvent transformedEvent{mousePos, mouseDelta};
 
-    if (m_focused && m_focused->UsingMouse())
+    if (focused && focused->UsingMouse())
     {
-      m_focused->OnEventHandler(transformedEvent, m_focused->GetRealPosition());
+      focused->OnEventHandler(transformedEvent, focused->GetRealPosition());
       event.AddFlag(EVENT_HANDLED | transformedEvent.GetFlags());
       return;
     }
@@ -87,9 +78,9 @@ namespace Greet {
   {
     Vec2 mousePos = ~projectionMatrix * event.GetPosition();
     MouseReleaseEvent transformedEvent{mousePos, event.GetButton()};
-    if (m_focused)
+    if (focused)
     {
-      m_focused->OnEventHandler(transformedEvent, m_focused->GetRealPosition());
+      focused->OnEventHandler(transformedEvent, focused->GetRealPosition());
       event.AddFlag(EVENT_HANDLED | transformedEvent.GetFlags());
     }
   }
@@ -97,9 +88,9 @@ namespace Greet {
   void GUIScene::ViewportResize(ViewportResizeEvent& event)
   {
     projectionMatrix = Mat3::OrthographicViewport();
-    m_shader->Enable();
-    m_shader->SetUniformMat3("projectionMatrix", projectionMatrix);
-    m_shader->Disable();
+    renderer->GetShader()->Enable();
+    renderer->GetShader()->SetUniformMat3("projectionMatrix", projectionMatrix);
+    renderer->GetShader()->Disable();
     for (auto it = frames.begin(); it != frames.end(); ++it)
     {
       (*it)->OnViewportResize(event.GetWidth(), event.GetHeight());
@@ -108,25 +99,23 @@ namespace Greet {
 
   void GUIScene::PreRender()
   {
-    m_shader->Enable();
-    m_renderer->Begin();
+    renderer->Begin();
   }
 
   void GUIScene::Render() const
   {
     for (auto it = frames.begin(); it != frames.end(); ++it)
     {
-      (*it)->PreRender(m_renderer, Vec2(0,0));
-      (*it)->RenderHandle(m_renderer);
-      (*it)->PostRender(m_renderer);
+      (*it)->PreRender(renderer, Vec2(0,0));
+      (*it)->RenderHandle(renderer);
+      (*it)->PostRender(renderer);
     }
   }
 
   void GUIScene::PostRender()
   {
-    m_renderer->End();
-    m_renderer->Draw();
-    m_shader->Disable();
+    renderer->End();
+    renderer->Draw();
   }
 
   void GUIScene::Update(float timeElapsed)
@@ -141,19 +130,19 @@ namespace Greet {
   bool GUIScene::RequestFocus(Component* component)
   {
     // Unfocus the currently focused component
-    if(m_focused)
-      m_focused->OnUnfocused();
+    if(focused)
+      focused->OnUnfocused();
 
     // Focus the requested one
-    if(component && component != m_focused)
+    if(component && component != focused)
       component->OnFocused();
 
     // TODO: Maybe clean this code up.
-    Component* unfocused = m_focused;
-    Component* focused = component;
+    Component* unfocused = focused;
+    Component* tmp = component;
 
     uint unfocusedDepth = unfocused ? unfocused->GetComponentDepth() : 0;
-    uint focusedDepth = focused ? focused->GetComponentDepth() : 0;
+    uint focusedDepth = tmp ? tmp->GetComponentDepth() : 0;
 
     while(unfocusedDepth != focusedDepth)
     {
@@ -165,21 +154,21 @@ namespace Greet {
       }
       else
       {
-        focused->ChildChangedFocus(true);
-        focused = focused->GetParent();
+        tmp->ChildChangedFocus(true);
+        tmp = tmp->GetParent();
         --focusedDepth;
       }
     }
 
-    while(unfocused != focused)
+    while(unfocused != tmp)
     {
       unfocused->ChildChangedFocus(false);
       unfocused = unfocused->GetParent();
-      focused->ChildChangedFocus(true);
-      focused = focused->GetParent();
+      tmp->ChildChangedFocus(true);
+      tmp = tmp->GetParent();
     }
 
-    m_focused = component;
+    focused = component;
 
     return true;
   }

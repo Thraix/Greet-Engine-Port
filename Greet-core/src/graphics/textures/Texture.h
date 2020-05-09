@@ -56,29 +56,27 @@ namespace Greet {
   class Texture
   {
     protected:
-      std::unique_ptr<uint,TextureDeleter> texId;
+      uint texId;
       uint m_textureType;
     public:
       Texture(uint textureType, bool generateTexture = true);
       Texture(uint texId, uint textureType);
       Texture();
-
-      Texture(Texture&& texture) = default;
-      Texture& operator=(Texture&& texture) = default;
+      virtual ~Texture();
 
       virtual void Enable() const;
       virtual void Enable(uint index) const;
       virtual void Disable() const;
 
       uint GetTexId() const;
-      bool Invalid() const { return texId.get() == 0;};
+      bool Invalid() const { return texId == 0;};
       friend bool operator<(const Texture& tex1, const Texture& tex2)
       {
-        return *tex1.texId< *tex2.texId;
+        return tex1.texId< tex2.texId;
       }
       friend bool operator==(const Texture& tex1, const Texture& tex2)
       {
-        return *tex1.texId == *tex2.texId;
+        return tex1.texId == tex2.texId;
       }
   };
 

@@ -26,12 +26,43 @@ namespace Greet {
       return std::string(string.length(),'*');
     }
 
-    static bool is_number(const std::string& str)
+    static bool IsNumber(const std::string& str)
     {
-      return std::regex_match(str, std::regex("[-+]?[0-9]*\.?[0-9]*"));
+      return std::regex_match(str, std::regex("[-+]?[0-9]*\\.?[0-9]*"));
     }
 
-    static std::vector<std::string> split_string(const std::string &s, const std::string& delimiter)
+    static size_t GetTrimStartPos(const std::string& str)
+    {
+      size_t pos = 0;
+      while((str[pos] == ' ' || str[pos] == '\t') && pos < str.size())
+        pos++;
+
+      if(pos == str.size())
+        return std::string::npos;
+      return pos;
+    }
+
+    static size_t GetTrimEndPos(const std::string& str)
+    {
+      size_t pos = str.size() - 1;
+      while((str[pos] == ' ' || str[pos] == '\t') && pos >= str.size())
+        pos--;
+
+      if(pos == -1u)
+        return std::string::npos;
+      return pos;
+    }
+
+    static std::string_view Trim(const std::string& str)
+    {
+      size_t start = GetTrimStartPos(str);
+      size_t end = GetTrimEndPos(str);
+      if(start == std::string::npos)
+        return str;
+      return std::string_view(str.c_str() + start, end - start + 1);
+    }
+
+    static std::vector<std::string> SplitString(const std::string &s, const std::string& delimiter)
     {
       size_t start = 0;
       size_t end = s.find_first_of(delimiter);
@@ -51,7 +82,8 @@ namespace Greet {
 
       return output;
     }
-    static void replace_all(std::string& str, const std::string& from, const std::string& to)
+
+    static void ReplaceAll(std::string& str, const std::string& from, const std::string& to)
     {
       if (from.empty())
         return;
@@ -63,14 +95,14 @@ namespace Greet {
       }
     }
 
-    static bool starts_with(const std::string& s, const std::string& prefix)
+    static bool StartsWith(const std::string& s, const std::string& prefix)
     {
       return s.compare(0, prefix.size(), prefix) == 0;
     }
 
-    static bool ends_with(const std::string& s, const std::string& prefix)
+    static bool EndsWith(const std::string& s, const std::string& suffix)
     {
-      return s.compare(s.length()-prefix.length(), prefix.size(), prefix) == 0;
+      return s.compare(s.length()-suffix.length(), suffix.size(), suffix) == 0;
     }
 
     static bool IsWhiteSpace(char c)
@@ -101,23 +133,6 @@ namespace Greet {
       int endPos = startPos;
       while (endPos < string.length() && IsLetter(string[endPos])) endPos++;
       return string.substr(startPos, endPos - startPos);
-    }
-
-    static std::string StringTrim(const std::string& string, bool beginning = true, bool ending = true)
-    {
-      int start = 0;
-      if (beginning)
-      {
-        int start = 0;
-        while (start < string.length() && IsWhiteSpace(string[start])) start++;
-      }
-
-      int end = string.length() - 1;
-      if (ending)
-      {
-        while (end > start && IsWhiteSpace(string[end])) end--;
-      }
-      return string.substr(start, end - start);
     }
 
     static CharType GetCharType(char c)

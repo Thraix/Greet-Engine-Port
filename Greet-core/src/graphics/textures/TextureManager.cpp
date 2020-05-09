@@ -1,77 +1,153 @@
 #include "TextureManager.h"
 
 #include <utils/ErrorHandle.h>
+#include <utils/MetaFile.h>
+#include <graphics/textures/ImageFactory.h>
 
 namespace Greet{
 
-  std::map<std::string, CubeMap> TextureManager::m_cubeMaps;
-  std::map<std::string, Texture2D> TextureManager::m_texture2Ds;
+  std::map<std::string, Ref<Texture2D>> TextureManager::texture2Ds;
+  std::map<std::string, Ref<CubeMap>> TextureManager::cubeMaps;
 
-  Texture2D TextureManager::emptyTexture2D{};
-  CubeMap TextureManager::emptyCubeMap{};
-
-  const Texture2D& TextureManager::Add(const std::string& name, Texture2D&& texture)
+  void TextureManager::AddTexture2D(const std::string& id, const Ref<Texture2D>& texture)
   {
-    auto it = m_texture2Ds.find(name);
-    if(it != m_texture2Ds.end())
+    auto it = texture2Ds.find(id);
+    if(it != texture2Ds.end())
     {
-      ErrorHandle::SetErrorCode(GREET_ERROR_MANAGER_ADD);
-      Log::Error("Given texture name already exists: ", name);
+      Log::Warning("Texture2D already exists: ", id);
+      return;
+    }
+    texture2Ds.emplace(id, texture);
+  }
+
+  void TextureManager::AddCubeMap(const std::string& id, const Ref<CubeMap>& texture)
+  {
+    auto it = cubeMaps.find(id);
+    if(it != cubeMaps.end())
+    {
+      Log::Warning("CubeMap already exists: ", id);
+      return;
+    }
+    cubeMaps.emplace(id, texture);
+  }
+
+  TextureParams GetMetaParams(const MetaFileClass& file)
+  {
+    TextureParams params;
+    std::string filter = file.GetValue("filter", "linear");
+    if(filter == "none")
+      params.filter = TextureFilter::NONE;
+    else if(filter == "linear")
+      params.filter = TextureFilter::LINEAR;
+    else if(filter == "nearest")
+      params.filter = TextureFilter::NEAREST;
+
+    std::string wrap = file.GetValue("wrap", "clampEdge");
+    if(wrap == "none")
+      params.wrap = TextureWrap::NONE;
+    else if(wrap == "clampEdge")
+      params.wrap = TextureWrap::CLAMP_TO_EDGE;
+    else if(wrap == "clampBorder")
+      params.wrap = TextureWrap::CLAMP_TO_BORDER;
+    else if(wrap == "mirrorRepeat")
+      params.wrap = TextureWrap::MIRRORED_REPEAT;
+    else if(wrap == "repeat")
+      params.wrap = TextureWrap::REPEAT;
+    else if(wrap == "mirrorClampEdge")
+      params.wrap = TextureWrap::MIRROR_CLAMP_TO_EDGE;
+
+    std::string format = file.GetValue("format", "RGBA");
+    if(format == "depth")
+      params.internalFormat = TextureInternalFormat::DEPTH_COMPONENT;
+    else if(format == "stencil")
+      params.internalFormat = TextureInternalFormat::DEPTH_STENCIL;
+    else if(format == "red")
+      params.internalFormat = TextureInternalFormat::RED;
+    else if(format == "rgb")
+      params.internalFormat = TextureInternalFormat::RGB;
+    else if(format == "rgba")
+      params.internalFormat = TextureInternalFormat::RGBA;
+
+    return params;
+  }
+
+  Ref<CubeMap>& TextureManager::LoadCubeMap(const std::string& metaFile)
+  {
+    auto it = cubeMaps.find(metaFile);
+    if(it != cubeMaps.end())
+    {
       return it->second;
     }
-    return m_texture2Ds.emplace(name,std::move(texture)).first->second;
+
+    MetaFile meta{metaFile};
+    const std::vector<MetaFileClass>& metaClasses = meta.GetMetaClass("cubemap");
+
+    if(metaClasses.size() > 0)
+    {
+      if(metaClasses.size() > 1)
+      {
+        Log::Warning("Multiple textures defined in meta file: ", metaFile);
+      }
+      return cubeMaps.emplace(metaFile, new CubeMap(metaClasses[0].GetValue("filepath", metaFile))).first->second;
+    }
+    else
+    {
+      uint width, height;
+      auto data = ImageFactory::GetCantReadImage(&width, &height);
+      Log::Error("No texture found in meta file: ", metaFile);
+      static Ref<CubeMap> invalid{new CubeMap(data, width, height)};
+      return invalid;
+    }
   }
 
-  const CubeMap& TextureManager::Add(const std::string& name, CubeMap&& texture)
+  Ref<Texture2D>& TextureManager::LoadTexture2D(const std::string& metaFile)
   {
-    auto it = m_cubeMaps.find(name);
-    if(it != m_cubeMaps.end())
+    auto it = texture2Ds.find(metaFile);
+    if(it != texture2Ds.end())
     {
-      ErrorHandle::SetErrorCode(GREET_ERROR_MANAGER_ADD);
-      Log::Error("Given texture name already exists: ", name);
       return it->second;
     }
-    return m_cubeMaps.emplace(name,std::move(texture)).first->second;
-  }
 
-  const Texture2D& TextureManager::Get2D(const std::string& texturename)
-  {
-    auto it = m_texture2Ds.find(texturename);
-    if(it == m_texture2Ds.end())
+    MetaFile meta{metaFile};
+    const std::vector<MetaFileClass>& metaClasses = meta.GetMetaClass("texture2d");
+
+    if(metaClasses.size() > 0)
     {
-      ErrorHandle::SetErrorCode(GREET_ERROR_MANAGER_GET);
-      Log::Error("Could not find the given texture: ", texturename);
-      return emptyTexture2D;
+      if(metaClasses.size() > 1)
+      {
+        Log::Warning("Multiple textures defined in meta file: ", metaFile);
+      }
+      TextureParams params = GetMetaParams(metaClasses[0]);
+      return texture2Ds.emplace(metaFile, Texture2D::Create(metaClasses[0].GetValue("filepath", metaFile), params)).first->second;
     }
-    return it->second;
-  }
-
-  const CubeMap& TextureManager::Get3D(const std::string& texturename)
-  {
-    auto it = m_cubeMaps.find(texturename);
-    if(it == m_cubeMaps.end())
+    else
     {
-      ErrorHandle::SetErrorCode(GREET_ERROR_MANAGER_GET);
-      Log::Error("Could not find the given texture: ", texturename);
-      return emptyCubeMap;
+      Log::Error("No texture found in meta file: ", metaFile);
+      uint width, height;
+      auto data = ImageFactory::GetCantReadImage(&width, &height);
+      static Ref<Texture2D> invalid{Texture2D::Create(data, width, height)};
+      return invalid;
     }
-    return it->second;
   }
 
-  const Texture2D& TextureManager::GetEmptyTexture2D()
+  void TextureManager::CleanupUnused()
   {
-    return emptyTexture2D;
-  }
+    for(auto it = cubeMaps.begin(); it != cubeMaps.end();)
+    {
+      // Only used by the map
+      if(it->second.use_count() == 1)
+        it = cubeMaps.erase(it);
+      else
+        ++it;
+    }
 
-  const CubeMap& TextureManager::GetEmptyCubeMap()
-  {
-    return emptyCubeMap;
+    for(auto it = texture2Ds.begin(); it != texture2Ds.end();)
+    {
+      // Only used by the map
+      if(it->second.use_count() == 1)
+        it = texture2Ds.erase(it);
+      else
+        ++it;
+    }
   }
-
-  void TextureManager::Destroy()
-  {
-    m_texture2Ds.clear();
-    m_cubeMaps.clear();
-  }
-
 }

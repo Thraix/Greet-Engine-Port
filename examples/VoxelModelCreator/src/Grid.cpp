@@ -8,8 +8,8 @@ namespace vmc
 
   Grid::Grid()
     : Layer3D(
-        new TPCamera(90, 0.01f, 1000.0f,Vec3<float>(GRID_SIZE / 2+0.5f, GRID_SIZE / 2 + 0.5f, GRID_SIZE / 2 + 0.5f), 15, 0, 0, 1, 80, -0.8, 0.8f), 
-        new Skybox(TextureManager::Get3D("skybox"), Shader::FromFile("res/shaders/skybox.shader"))),
+        new TPCamera(90, 0.01f, 1000.0f,Vec3<float>(GRID_SIZE / 2+0.5f, GRID_SIZE / 2 + 0.5f, GRID_SIZE / 2 + 0.5f), 15, 0, 0, 1, 80, -0.8, 0.8f),
+        new Skybox(TextureManager::LoadCubeMap("res/textures/skybox.meta"))),
     toolBox(this), m_color{0xffffffff}
   {
     renderer = new GridRenderer3D();

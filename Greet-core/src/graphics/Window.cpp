@@ -3,7 +3,6 @@
 #include <input/InputDefines.h>
 #include <internal/GreetGL.h>
 #include <graphics/fonts/FontManager.h>
-#include <graphics/textures/TextureManager.h>
 #include <graphics/atlas/AtlasManager.h>
 #include <graphics/RenderCommand.h>
 #include <event/EventDispatcher.h>
@@ -27,6 +26,7 @@ namespace Greet {
   GLFWwindow *Window::window;
   bool Window::mouseButtonDown[MAX_MOUSEBUTTONS];
   bool Window::isMouseButtonDown;
+  bool Window::isMouseGrabbed = false;
 
 
   void Window::CreateWindow(std::string title, uint width, uint height)
@@ -55,7 +55,6 @@ namespace Greet {
   void Window::DestroyWindow()
   {
     FontManager::Destroy();
-    TextureManager::Destroy();
     AtlasManager::Destroy();
     ComponentFactory::Cleanup();
     FrameFactory::Cleanup();
@@ -68,7 +67,11 @@ namespace Greet {
     ASSERT(glfwInit(),"Failed to initialize GLFW!");
 
     glfwWindowHint(GLFW_SAMPLES, 4);
-    window = glfwCreateWindow(width, height, title.c_str(), NULL, NULL);
+    // Set the title to contain Greet-Engine in the initialization,
+    // so that WM_CLASS property contain the engine.
+    // Generally just to make i3 window managing work the same for all applications.
+    window = glfwCreateWindow(width, height, ("Greet-Engine - " + title).c_str(), NULL, NULL);
+    SetTitle(title);
     ASSERT(window,"Failed to initialize window!");
     //glfwSetInputMode(window,GLFW_CURSOR,GLFW_CURSOR_HIDDEN);
     //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -95,6 +98,11 @@ namespace Greet {
     return true;
   }
 
+  void Window::Close()
+  {
+    glfwSetWindowShouldClose(window, 1);
+  }
+
   bool Window::Closed()
   {
     return glfwWindowShouldClose(window) == 1;
@@ -107,6 +115,7 @@ namespace Greet {
 
   void Window::Update()
   {
+    glfwPollEvents();
     // Only update the joystick if we have focus.
     // Otherwise it will send events all the time
     if (focus)
@@ -118,11 +127,11 @@ namespace Greet {
   void Window::Render()
   {
     glfwSwapBuffers(window);
-    glfwPollEvents();
   }
 
   void Window::GrabMouse(bool grab)
   {
+    isMouseGrabbed = grab;
     if(grab)
       glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     else

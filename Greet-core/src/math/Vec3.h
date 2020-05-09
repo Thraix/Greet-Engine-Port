@@ -68,7 +68,10 @@ namespace Greet{
     // All These modifies the current vec3
     Vec3& Normalize()
     {
-      return Divide(Length());
+      float len = Length();
+      if(len == 0)
+        return *this;
+      return Divide(len);
     }
 
     template <typename std::enable_if<std::is_floating_point<Real>::value>* = nullptr>
@@ -94,8 +97,6 @@ namespace Greet{
       return *this;
     }
 
-    template <typename std::enable_if<!std::is_floating_point<Real>::value>* = nullptr>
-    Vec3<Real>& Rotate(const Real& angle, const Vec3& axis) = delete;
     Vec3& Add(const Vec3& other)
     {
       x += other.x;

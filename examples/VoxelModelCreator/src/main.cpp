@@ -39,10 +39,7 @@ namespace vmc
         guiScene = new GUIScene(new GUIRenderer());
         guiScene->AddFrame(FrameFactory::GetFrame("res/guis/editor.xml"));
 
-        Loaders::LoadTextures("res/loaders/textures.json");
-        // Load Textures and Fonts.
         FontManager::Add(new FontContainer("Anonymous Pro.ttf", "anonymous"));
-
 
         grid = new Grid();
         GlobalSceneManager::GetSceneManager().Add2DScene(guiScene, "GUIScene");

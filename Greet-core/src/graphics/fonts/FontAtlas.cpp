@@ -7,7 +7,8 @@ namespace Greet
 {
   FontAtlas::FontAtlas(const std::string& filename, uint width, uint height, uint fontSize)
     : yPos(0), xPos(0), nextYPos(0), width(width), height(height), fontSize(fontSize),
-    atlas{width, height,TextureParams(TextureFilter::LINEAR,TextureWrap::CLAMP_TO_EDGE,TextureInternalFormat::RGBA)},m_pixels(width*height*4)
+    atlas{Texture2D::Create(width, height, TextureParams(TextureFilter::LINEAR, TextureWrap::CLAMP_TO_EDGE, TextureInternalFormat::RGBA))},
+    m_pixels(width*height*4)
   {
     if(FT_Init_FreeType(&library))
     {
@@ -78,14 +79,14 @@ namespace Greet
     g.textureCoords = Vec4(yPos / (float)height, xPos / (float)width, (yPos+pixelHeight)/(float)height, (xPos+pixelWidth)/(float)width);
     xPos += pixelWidth + 1;
     std::pair<std::map<char,  Glyph>::iterator, bool> ret = glyphs.emplace(character, g);
-    atlas.SetPixels(m_pixels);
+    atlas->SetPixels(m_pixels);
     //Log::Info(g.width," ",g.kerning, " ", g.advanceX," ",g.advanceY, " ", g.height," ", g.ascending," ",g.descending);
     return ret.first->second;
   }
 
   uint FontAtlas::GetTextureId() const
   {
-    return atlas.GetTexId();
+    return atlas->GetTexId();
   }
 
   uint FontAtlas::GetBaselineOffset() const

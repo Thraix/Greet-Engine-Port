@@ -79,9 +79,7 @@ class Core : public App
       std::vector<float> noise = Noise::GenNoise(noiseS, noiseS, 4, 16, 16, 0.8f);
       std::vector<BYTE> image = ImageUtils::CreateHeightmapImage(noise, noiseS, noiseS);
 
-      Loaders::LoadTextures("res/loaders/textures.json");
-
-      TextureManager::Add("noise",Texture2D(image, noiseS, noiseS, TextureParams(TextureFilter::NEAREST, TextureWrap::CLAMP_TO_EDGE, TextureInternalFormat::RGBA)));
+      TextureManager::AddTexture2D("noise", Texture2D::Create(image, noiseS, noiseS, TextureParams(TextureFilter::NEAREST, TextureWrap::CLAMP_TO_EDGE, TextureInternalFormat::RGBA)));
 
       FontManager::Add(new FontContainer("res/fonts/NotoSansUI-Regular.ttf","noto"));
 
@@ -90,14 +88,15 @@ class Core : public App
 
       //camera = new TPCamera(vec3(-3.5, -7.8, 5.5), 18, 0.66, 38.5, 15, 80, 0, 0.8f); // Profile shot
       camera = new TPCamera(90, 0.01f,1000.0f, Vec3<float>(0, 0, 0), 15, 0, 0, 0, 80, -0.8f, 0.8f);
-      Skybox* skybox = new Skybox(TextureManager::Get3D("skybox"));
+
+      Skybox* skybox = new Skybox(TextureManager::LoadCubeMap("res/textures/skybox.meta"));
       renderer3d = new BatchRenderer3D();
       waterRenderer = new BatchRenderer3D();
 
 
       modelMaterial = new Material(Shader::FromFile("res/shaders/3dshader.shader"));
       flatMaterial = new Material(Shader::FromFile("res/shaders/flat3d.shader"));
-      stallMaterial = new Material(Shader::FromFile("res/shaders/3dshader.shader"), TextureManager::Get2D("stall"));
+      stallMaterial = new Material(Shader::FromFile("res/shaders/3dshader.shader"), TextureManager::LoadTexture2D("res/textures/stall.meta"));
       modelMaterial->SetSpecularStrength(0.25)->SetSpecularExponent(1)->SetDiffuseStrength(0.25);
 
       {
@@ -179,11 +178,11 @@ class Core : public App
       light->SetToUniform(flatShader, "light");
       flatShader->Disable();
 
-      uilayer = new Layer(new BatchRenderer(), ShaderFactory::Shader2D(), Mat3::OrthographicViewport());
+      uilayer = new Layer(new BatchRenderer(ShaderFactory::Shader2D()), Mat3::OrthographicViewport());
       Vec4 colorPink = ColorUtils::GetMaterialColorAsHSV(300 /360.0f, 3);
-      cursor = new Renderable2D(Vec2(0,0),Vec2(32,32),0xffffffff, Sprite(TextureManager::Get2D("cursor")), Sprite(TextureManager::Get2D("mask")));
+      cursor = new Renderable2D(Vec2(0,0),Vec2(32,32),0xffffffff, Sprite(TextureManager::LoadTexture2D("res/textures/cursor.meta")), Sprite(TextureManager::LoadTexture2D("res/textures/mask.meta")));
       uilayer->Add(cursor);
-      uilayer->Add(new Renderable2D(Vec2(0,0), Vec2(noiseS, noiseS), 0xffffffff, Sprite(TextureManager::Get2D("noise"))));
+      uilayer->Add(new Renderable2D(Vec2(0,0), Vec2(noiseS, noiseS), 0xffffffff, Sprite(TextureManager::LoadTexture2D("noise"))));
 
       renderer3d->Submit(new Portal({1.0f,1.0f,1.0f}));
       renderer3d->Submit(stall);

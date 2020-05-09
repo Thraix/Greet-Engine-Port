@@ -2,14 +2,13 @@
 
 #include <common/Types.h>
 
-#include <graphics/buffers/VertexArray.h>
-#include <graphics/renderers/Renderer2D.h>
 #include <graphics/Renderable2D.h>
 #include <graphics/RenderablePoly.h>
+#include <graphics/buffers/VertexArray.h>
+#include <graphics/renderers/Renderer2D.h>
 
 #include <vector>
 
-#define RENDERER_MAX_TEXTURES	32
 #define RENDERER_MAX_SPRITES	360000
 #define RENDERER_VERTEX_SIZE	sizeof(VertexData)
 #define RENDERER_SPRITE_SIZE	RENDERER_VERTEX_SIZE * 4
@@ -33,6 +32,7 @@ namespace Greet {
       Ref<VertexArray> vao;
       Ref<Buffer> ibo;
 
+      int maxTextures;
       uint m_iboSize;
       uint m_lastIndex;
       uint* indices;
@@ -41,7 +41,7 @@ namespace Greet {
       std::vector<uint> m_texSlots;
 
     public:
-      BatchRenderer();
+      BatchRenderer(const Ref<Shader>& shader);
       virtual ~BatchRenderer();
       void Begin() override;
       void Submit(const Renderable2D& renderable) override;
@@ -56,6 +56,7 @@ namespace Greet {
       void Draw(const Vec2& position, const Vec2& size, const Vec2& texPos, const Vec2& texSize, const uint textureSlot, const uint color, const uint& maskTexSlot, const Vec2& maskTexPos, const Vec2& maskTexSize);
       void Draw(const Vec2& position, const Vec2* vertices, const uint amount, const uint color);
       void DrawRect(const Vec2& position, const Vec2& size, const uint& color);
+      void DrawLine(const Vec2& pos1, const Vec2& pos2, float width, uint color);
       void FillRect(const Vec2& position, const Vec2& size, const uint& color);
       void FillRect(const Vec2& position, const Vec2& size, const uint& color, const Sprite* mask);
       void AppendVertexBuffer(const Vec2& position, const Vec2& texCoord, const uint& texID, const uint& color, const uint& maskTexId, const Vec2& maskTexCoord);

@@ -236,7 +236,9 @@ namespace Greet {
       else if (line == "//geometry")
         shader = GEOMETRY;
       else
+      {
         ss[shader] << line << std::endl;
+      }
     }
     return {ss[0].str(),ss[1].str(),ss[2].str()};
   }
@@ -521,6 +523,12 @@ namespace Greet {
   void Shader::Disable()
   {
     GLCall(glUseProgram(0));
+  }
+
+  int Shader::GetAttributeLocation(const std::string& name) const
+  {
+    GLCall(int location = glGetAttribLocation(m_shaderID, name.c_str()));
+    return location;
   }
 
   Ref<Shader> Shader::FromFile(const std::string& shaderPath)

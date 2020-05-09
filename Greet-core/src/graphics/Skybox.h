@@ -10,14 +10,15 @@ namespace Greet {
   class Skybox
   {
     private:
-      const CubeMap& m_map;
+      Ref<CubeMap> m_map;
       Ref<Shader> m_shader;
       Mesh* m_mesh;
     public:
-      Skybox(const CubeMap& map);
-      Skybox(const CubeMap& map, const Ref<Shader>& shader);
-      const CubeMap& GetCubeMap() const { return m_map; };
+      Skybox(const Ref<CubeMap>& map);
+      Skybox(const Ref<CubeMap>&, const Ref<Shader>& shader);
       virtual ~Skybox();
+
+      const Ref<CubeMap>& GetCubeMap() const { return m_map; };
       void Render(const Mat4& projectionMatrix, const Mat4& viewMatrix) const;
       void Render(const Camera& camera) const;
   };

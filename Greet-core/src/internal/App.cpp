@@ -84,7 +84,11 @@ namespace Greet {
       elapsed = m_timer->Elapsed();
       double timeToNext = fmin(frameCap - (elapsed - renderTimer),updateTick - (elapsed-updateTimer))*1000*0.5;
       if (timeToNext >= 1)
+      {
+        if(timeToNext > 100)
+          Log::Info("Sleeping for ", timeToNext, "milliseconds");
         std::this_thread::sleep_for(std::chrono::milliseconds((long long)timeToNext));
+      }
     }
     delete m_timer;
   }

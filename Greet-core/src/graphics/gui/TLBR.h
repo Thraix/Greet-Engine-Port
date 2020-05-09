@@ -25,7 +25,7 @@ namespace Greet
       {
         if (object.HasAttribute(prefix))
         {
-          std::vector<std::string> strings = StringUtils::split_string(object.GetAttribute(prefix)," ");
+          std::vector<std::string> strings = StringUtils::SplitString(object.GetAttribute(prefix)," ");
           if(strings.size() == 4)
           {
             top = atof(strings.at(0).c_str());

@@ -1,10 +1,12 @@
 #pragma once
 
 #include <stack>
-#include <math/Maths.h>
-#include <graphics/fonts/Font.h>
-#include <logging/Log.h>
+
 #include <graphics/Sprite.h>
+#include <graphics/fonts/Font.h>
+#include <graphics/shaders/Shader.h>
+#include <logging/Log.h>
+#include <math/Maths.h>
 
 namespace Greet{
 
@@ -17,8 +19,10 @@ namespace Greet{
     protected:
       std::stack<Mat3> m_transformationStack;
       const Mat3* m_transformationBack;
+      Ref<Shader> shader;
     public:
-      Renderer2D()
+      Renderer2D(const Ref<Shader>& shader)
+        : shader{shader}
       {
         m_transformationStack.push(Mat3::Identity());
         m_transformationBack = &m_transformationStack.top();
@@ -53,5 +57,7 @@ namespace Greet{
       {
         return *m_transformationBack;
       }
+
+      const Ref<Shader>& GetShader() const { return shader; }
   };
 }
