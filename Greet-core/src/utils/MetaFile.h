@@ -122,6 +122,7 @@ namespace Greet
             {
               stream << value.first << "=" << value.second << std::endl;
             }
+            stream << std::endl;
           }
         }
         return stream;
