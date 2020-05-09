@@ -23,14 +23,13 @@ namespace Greet
       typedef std::function<void(Component* c)> OnReleaseCallback;
 
     protected:
-      Style* currentStyle;
-
-      Style normalStyle;
-      Style hoverStyle;
-      Style pressStyle;
-
       std::string name;
 
+      Style* currentStyle;
+      std::string currentStylename;
+      std::map<std::string, Style> styles;
+
+    protected:
       GUIScene* guiScene;
       Component* parent;
 
@@ -119,13 +118,9 @@ namespace Greet
       // Faster to use since it sets all values and does a single remeasure.
       Component& SetSize(float width, float height, ComponentSize::Type widthType, ComponentSize::Type heightType, bool remeasure = true);
 
-      const Style& GetNormalStyle() const;
-      const Style& GetHoverStyle() const;
-      const Style& GetPressStyle() const;
-
-      Component& SetNormalStyle(const Style& style);
-      Component& SetHoverStyle(const Style& style);
-      Component& SetPressStyle(const Style& style);
+      const Style& GetStyle(const std::string& stylename) const;
+      Component& AddStyle(const std::string& stylename, const Style& style);
+      void SetCurrentStyle(const std::string& stylename);
 
       virtual bool IsMouseInside(const Vec2& parentMouse) const;
       virtual void SetPosition(const Vec2& pos);

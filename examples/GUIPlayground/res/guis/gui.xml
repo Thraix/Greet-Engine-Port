@@ -3,9 +3,9 @@
   width="fill_parent" height="fill_parent" minWidth="100" spacing="10"
   resizeTop="false" resizeLeft="false" resizeBottom="false" resizeRight="true"
   borderColor="#37474f"
-  backgroundColor="#263238">
-<Docker width="1w" height="1w" name="docker" backgroundColor="#110011">
-  <TabButton width="100" height="20" font="noto" fontSize="12" hoverbackgroundColor="#aaaaaa" backgroundColor="#ffffff"/>
+  backgroundColor="#ffffff">
+<Docker width="1w" height="1w" name="docker" backgroundColor="#ff00ff">
+  <TabButton width="100" height="20" font="noto" fontSize="12" hoverbackgroundColor="#ffffff" backgroundColor="#aaaaaa" activebackgroundColor="#dddddd"/>
   <DockerSplit>
     <DockerContainer>
       <DockerTab title="Settings">

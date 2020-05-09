@@ -27,12 +27,13 @@ namespace Greet
 
       }
 
-      void Load(const std::string& prefix, const XMLObject& object)
+      Style(const std::string& prefix, const XMLObject& object, Style const * inherit = nullptr)
+        : Style{}
       {
-        Load(prefix,object,nullptr);
+        Load(prefix, object, inherit);
       }
 
-      void Load(const std::string& prefix, const XMLObject& object, Style const * inherit);
+      void Load(const std::string& prefix, const XMLObject& object, Style const * inherit = nullptr);
 
       Style& SetMargin(const TLBR& margin);
       Style& SetPadding(const TLBR& padding);

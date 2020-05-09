@@ -7,7 +7,7 @@
 namespace Greet
 {
   DockerContainer::DockerContainer(const XMLObject& object, Docker* docker, DockerSplit* parent)
-    : DockerInterface{docker, parent}, currentTab{0}
+    : DockerInterface{docker, parent}, activeTab{0}
   {
     for(auto&& objectChild : object.GetObjects())
     {
@@ -21,14 +21,16 @@ namespace Greet
       }
     }
     button = new Button(docker->GetTabButton(), docker);
+    button->AddStyle("active", Style{"active", docker->GetTabButton()});
   }
 
   DockerContainer::DockerContainer(DockerTab* tab, Docker* docker, DockerSplit* parent)
-    : DockerInterface{docker, parent}, currentTab{0}
+    : DockerInterface{docker, parent}, activeTab{0}
   {
     children.push_back(tab);
     tab->SetContainer(this);
     button = new Button(docker->GetTabButton(), docker);
+    button->AddStyle("active", Style{"active", docker->GetTabButton()});
   }
 
   DockerContainer::~DockerContainer()
@@ -40,18 +42,24 @@ namespace Greet
 
   void DockerContainer::Render(GUIRenderer* renderer) const
   {
-    if(currentTab < 0 || currentTab >= children.size())
+    if(activeTab < 0 || activeTab >= children.size())
       return;
 
     renderer->PushViewport(position, size);
-    children[currentTab]->Render(renderer);
+    children[activeTab]->Render(renderer);
 
     renderer->PushTranslation(docker->GetPosition() + position);
     // #263238
-    renderer->SubmitRect({0.0f, 0.0f}, {size.w, button->GetHeight()}, {0.039,0.078,0.09,1}, false);
+    /* renderer->SubmitRect({0.0f, 0.0f}, {size.w, button->GetHeight()}, {0.039,0.078,0.09,1}, false); */
     for(int i = 0;i<children.size();i++)
     {
-      button->PreRender(renderer, {(float)i * ((float)button->GetWidth() + 1), 0.0f});
+      if(hover && i == hoverTab)
+        button->SetCurrentStyle("hover");
+      else if(i == activeTab)
+        button->SetCurrentStyle("active");
+      else
+        button->SetCurrentStyle("normal");
+      button->PreRender(renderer, {(float)i * (float)button->GetWidth(), 0.0f});
       button->SetText(children[i]->GetTitle());
       button->Render(renderer);
       button->PostRender(renderer);
@@ -70,7 +78,7 @@ namespace Greet
 
   void DockerContainer::OnEvent(Event& event, const Vec2& componentPos)
   {
-    if(currentTab < 0 || currentTab >= children.size())
+    if(activeTab < 0 || activeTab >= children.size())
       return;
     if(EVENT_IS_TYPE(event, EventType::MOUSE_PRESS))
     {
@@ -102,7 +110,7 @@ namespace Greet
         UnhoverTab();
       }
     }
-    children[currentTab]->OnEvent(event, componentPos);
+    children[activeTab]->OnEvent(event, componentPos);
   }
 
   bool DockerContainer::HandleDroppedTab(DockerTab* tab, MouseReleaseEvent& event, const Vec2& componentPos)
@@ -147,13 +155,13 @@ namespace Greet
   void DockerContainer::SelectTab(int i)
   {
     ASSERT(i >= 0 && i < children.size(), "Index out of bound");
-    currentTab = i;
+    activeTab = i;
   }
 
   void DockerContainer::ClampSelectedTab()
   {
-    if(currentTab >= children.size())
-      currentTab = children.size()-1;
+    if(activeTab >= children.size())
+      activeTab = children.size()-1;
   }
 
   void DockerContainer::HoverTab(int i)

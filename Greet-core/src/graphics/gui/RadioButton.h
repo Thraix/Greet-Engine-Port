@@ -15,7 +15,6 @@ namespace Greet
       // Simpler than doing dynamic cast whenever we need RadioGroup
       RadioGroup* radioParent;
       bool active;
-      Style activeStyle;
     public:
       RadioButton(const XMLObject& xmlObject, Component* component);
       void PostConstruction() override;

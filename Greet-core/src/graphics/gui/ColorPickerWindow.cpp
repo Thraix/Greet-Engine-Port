@@ -23,7 +23,7 @@ namespace Greet
       .SetPadding({10,10,10,10});
 
     SetVertical(false)
-      .SetNormalStyle(s)
+      .AddStyle("normal",s)
       .SetSize(1,1, ComponentSize::Type::WRAP, ComponentSize::Type::WRAP,false);
 
     svSlider = new SatValSlider("ColorPickerWindow#SatValSlider", this);
@@ -71,7 +71,7 @@ namespace Greet
           rTextBox->SetFont("noto")
             .SetFontSize(16)
             .SetSize(1,20, ComponentSize::Type::WEIGHT, ComponentSize::Type::PIXELS)
-            .SetNormalStyle(textBoxStyle);
+            .AddStyle("normal", textBoxStyle);
 
           rgbContainer->AddComponent(rTextBox);
         }
@@ -90,7 +90,7 @@ namespace Greet
           hTextBox->SetFont("noto")
             .SetFontSize(16)
             .SetSize(1,20, ComponentSize::Type::WEIGHT, ComponentSize::Type::PIXELS)
-            .SetNormalStyle(textBoxStyle);
+            .AddStyle("normal", textBoxStyle);
 
           hsvContainer->AddComponent(hTextBox);
         }
@@ -116,7 +116,7 @@ namespace Greet
           gTextBox->SetFont("noto")
             .SetFontSize(16)
             .SetSize(1,20, ComponentSize::Type::WEIGHT, ComponentSize::Type::PIXELS)
-            .SetNormalStyle(textBoxStyle);
+            .AddStyle("normal", textBoxStyle);
 
           rgbContainer->AddComponent(gTextBox);
         }
@@ -136,7 +136,7 @@ namespace Greet
         sTextBox->SetFont("noto")
           .SetFontSize(16)
           .SetSize(1,20, ComponentSize::Type::WEIGHT, ComponentSize::Type::PIXELS)
-          .SetNormalStyle(textBoxStyle);
+          .AddStyle("normal", textBoxStyle);
 
         hsvContainer->AddComponent(sTextBox);
       }
@@ -161,7 +161,7 @@ namespace Greet
           bTextBox->SetFont("noto")
             .SetFontSize(16)
             .SetSize(1,20, ComponentSize::Type::WEIGHT, ComponentSize::Type::PIXELS)
-            .SetNormalStyle(textBoxStyle);
+            .AddStyle("normal", textBoxStyle);
 
           rgbContainer->AddComponent(bTextBox);
         }
@@ -181,7 +181,7 @@ namespace Greet
         vTextBox->SetFont("noto")
           .SetFontSize(16)
           .SetSize(1,20, ComponentSize::Type::WEIGHT, ComponentSize::Type::PIXELS)
-          .SetNormalStyle(textBoxStyle);
+          .AddStyle("normal", textBoxStyle);
 
         hsvContainer->AddComponent(vTextBox);
       }
@@ -200,7 +200,7 @@ namespace Greet
       hexTextBox->SetFont("noto")
         .SetFontSize(16)
         .SetSize(1,20, ComponentSize::Type::WEIGHT, ComponentSize::Type::PIXELS)
-        .SetNormalStyle(textBoxStyle);
+        .AddStyle("normal", textBoxStyle);
 
       hexContainer->AddComponent(hexTextBox);
     }
@@ -209,7 +209,7 @@ namespace Greet
       .SetBorderColor(ColorUtils::ColorHexToVec4(0xff455a64))
       .SetBorder({1,1,1,1});
     colorDisplay->SetSize(1,1,ComponentSize::Type::WEIGHT, ComponentSize::Type::WEIGHT)
-      .SetNormalStyle(colorStyle);
+      .AddStyle("normal", colorStyle);
     textBoxContainer->AddComponent(colorDisplay);
 
     using namespace std::placeholders;
@@ -237,12 +237,12 @@ namespace Greet
 
   void ColorPickerWindow::UpdateColor(float hue, float sat, float val, InputChangeType type)
   {
-    Style s = colorDisplay->GetNormalStyle();
+    Style s = colorDisplay->GetStyle("normal");
     Vec3<float> prevRGB = color;
     Vec4 rgb = ColorUtils::HSVtoRGB(hue,sat,val,1);
     color = Vec3<float>(rgb);
     s.SetBackgroundColor(rgb);
-    colorDisplay->SetNormalStyle(s);
+    colorDisplay->AddStyle("normal", s);
     svSlider->SetHue(hue);
 
     if(type != InputChangeType::RGB_TEXTBOX)

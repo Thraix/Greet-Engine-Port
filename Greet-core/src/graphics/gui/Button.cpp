@@ -52,12 +52,11 @@ namespace Greet {
 
   void Button::MouseEntered()
   {
-    currentStyle = &hoverStyle;
-    Log::Info("test");
+    SetCurrentStyle("hover");
   }
 
   void Button::MouseExited()
   {
-    currentStyle = &normalStyle;
+    SetCurrentStyle("normal");
   }
 }

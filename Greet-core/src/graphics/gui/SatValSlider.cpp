@@ -16,7 +16,7 @@ namespace Greet
       .SetBorder(TLBR(2,2,2,2));
     Component* component = new Component{"SatValSliderComponent", this};
     component->SetSize(7,7,ComponentSize::Type::PIXELS, ComponentSize::Type::PIXELS, false)
-      .SetNormalStyle(normal);
+      .AddStyle("normal", normal);
     sliderComponent = component;
   }
 
@@ -31,7 +31,8 @@ namespace Greet
       Style normal{};
       normal.SetBackgroundColor(Vec4(1,1,1,1)).SetBorderColor(Vec4(0,0,0,1));
       Component* component = new Component{"SatValSliderComponent", this};
-      component->SetSize(7,7,ComponentSize::Type::PIXELS, ComponentSize::Type::PIXELS, false).SetNormalStyle(normal);
+      component->SetSize(7,7,ComponentSize::Type::PIXELS, ComponentSize::Type::PIXELS, false)
+        .AddStyle("normal", normal);
       sliderComponent = component;
     }
   }

@@ -10,7 +10,7 @@ namespace Greet
     : Component(xmlObject, parent), active(false), radioParent{nullptr}
   {
     m_isFocusable = true;
-    activeStyle.Load("active", xmlObject, &normalStyle);
+    AddStyle("active", Style{"active", xmlObject, &GetStyle("normal")});
   }
 
   void RadioButton::PostConstruction()
@@ -34,9 +34,9 @@ namespace Greet
   {
     active = select;
     if(active)
-      currentStyle = &activeStyle;
+      SetCurrentStyle("active");
     else
-      currentStyle = &normalStyle;
+      SetCurrentStyle("normal");
   }
 
   RadioGroup* RadioButton::FindRadioGroupParent() const

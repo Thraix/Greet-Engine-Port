@@ -21,7 +21,7 @@ namespace Greet
       .SetBorder(TLBR(2,2,2,2));
     sliderComponent = new Component(name+"#SliderComponent", this);
     sliderComponent->SetSize(7,1,ComponentSize::Type::PIXELS, ComponentSize::Type::WEIGHT)
-      .SetNormalStyle(normal);
+      .AddStyle("normal", normal);
 
     minValue = 0;
     maxValue = 100;

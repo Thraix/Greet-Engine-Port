@@ -18,16 +18,17 @@ namespace Greet
     : parent{parent}, size{},
     m_isFocusable{false},isFocused{false},isHovered{false}, pos{0,0}, pressed{false}, name{name}
   {
-    currentStyle = &normalStyle;
+    AddStyle("normal", Style{});
+    SetCurrentStyle("normal");
   }
 
   Component::Component(const XMLObject& xmlObject, Component* parent)
     : Component{GUIUtils::GetStringFromXML(xmlObject,"name", xmlObject.GetName() + "#" + LogUtils::DecToHex(UUID::GetInstance().GetUUID(),8)), parent}
   {
     size = GUIUtils::GetComponentSizeFromXML(xmlObject, "width", "height", {});
-    normalStyle.Load("",xmlObject);
-    hoverStyle.Load("hover",xmlObject,&normalStyle);
-    pressStyle.Load("press",xmlObject,&normalStyle);
+    AddStyle("normal", Style{"", xmlObject});
+    AddStyle("hover", Style{"hover", xmlObject});
+    AddStyle("press", Style{"press", xmlObject});
   }
 
   void Component::Measure()
@@ -335,42 +336,32 @@ namespace Greet
     guiScene = scene;
   }
 
-  const Style& Component::GetNormalStyle() const
+  const Style& Component::GetStyle(const std::string& stylename) const
   {
-    return normalStyle;
+    auto it = styles.find(stylename);
+    if(it != styles.end())
+      return it->second;
+    Log::Error("Style does not exist within component: ", name, ", ", stylename);
+    static Style style;
+    return style;
   }
 
-  const Style& Component::GetHoverStyle() const
+  Component& Component::AddStyle(const std::string& stylename, const Style& style)
   {
-    return hoverStyle;
-  }
-
-  const Style& Component::GetPressStyle() const
-  {
-    return pressStyle;
-  }
-
-  Component& Component::SetNormalStyle(const Style& style)
-  {
-    normalStyle = style;
-    if(currentStyle == &normalStyle)
-      Remeasure();
-    return *this;
-  }
-  Component& Component::SetHoverStyle(const Style& style)
-  {
-    hoverStyle = style;
-    if(currentStyle == &hoverStyle)
-      Remeasure();
+    styles[stylename] = style;
     return *this;
   }
 
-  Component& Component::SetPressStyle(const Style& style)
+  void Component::SetCurrentStyle(const std::string& stylename)
   {
-    pressStyle = style;
-    if(currentStyle == &pressStyle)
-      Remeasure();
-    return *this;
+    auto it = styles.find(stylename);
+    if(it != styles.end())
+    {
+      currentStylename = stylename;
+      currentStyle = &it->second;
+      return;
+    }
+    Log::Error("Style does not exist within component: ", name, ", ", stylename);
   }
 
   const Vec2& Component::GetSizeValue() const

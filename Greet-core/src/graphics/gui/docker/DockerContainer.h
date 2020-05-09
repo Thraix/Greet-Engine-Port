@@ -18,7 +18,7 @@ namespace Greet {
     protected:
       bool vertical;
       std::vector<DockerTab*> children;
-      uint currentTab = 0;
+      uint activeTab = 0;
 
       bool hover = false;
       uint hoverTab = 0;

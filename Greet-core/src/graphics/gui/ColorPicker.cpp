@@ -10,7 +10,7 @@ namespace Greet
     : Component{object, parent}
   {
     m_isFocusable = true;
-    picker  = new ColorPickerWindow(Vec2(0,0), Vec3<float>(GetNormalStyle().backgroundColor));
+    picker  = new ColorPickerWindow(Vec2(0,0), Vec3<float>(GetStyle("normal").backgroundColor));
     using namespace std::placeholders;
     picker->SetOnColorChangeCallback(std::bind(&ColorPicker::OnColorChanged, std::ref(*this), _1, _2));
   }
@@ -34,9 +34,9 @@ namespace Greet
 
   void ColorPicker::OnColorChanged(const Vec3<float>& previous, const Vec3<float>& current)
   {
-    Style s = normalStyle;
+    Style s = GetStyle("normal");
     s.SetBackgroundColor(Vec4(current.r,current.g,current.b,1));
-    SetNormalStyle(s);
+    AddStyle("normal", s);
     CallOnColorChangeCallback(previous,current);
   }
 
