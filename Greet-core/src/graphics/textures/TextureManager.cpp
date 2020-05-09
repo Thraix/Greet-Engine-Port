@@ -2,6 +2,7 @@
 
 #include <utils/ErrorHandle.h>
 #include <utils/MetaFile.h>
+#include <graphics/textures/ImageFactory.h>
 
 namespace Greet{
 
@@ -30,7 +31,7 @@ namespace Greet{
     cubeMaps.emplace(id, texture);
   }
 
-  TextureParams GetMetaParams(const MetaFile& file)
+  TextureParams GetMetaParams(const MetaFileClass& file)
   {
     TextureParams params;
     std::string filter = file.GetValue("filter", "linear");
@@ -79,7 +80,24 @@ namespace Greet{
     }
 
     MetaFile meta{metaFile};
-    return cubeMaps.emplace(metaFile, new CubeMap(meta.GetValue("filepath", metaFile))).first->second;
+    const std::vector<MetaFileClass>& metaClasses = meta.GetMetaClass("cubemap");
+
+    if(metaClasses.size() > 0)
+    {
+      if(metaClasses.size() > 1)
+      {
+        Log::Warning("Multiple textures defined in meta file: ", metaFile);
+      }
+      return cubeMaps.emplace(metaFile, new CubeMap(metaClasses[0].GetValue("filepath", metaFile))).first->second;
+    }
+    else
+    {
+      uint width, height;
+      auto data = ImageFactory::GetCantReadImage(&width, &height);
+      Log::Error("No texture found in meta file: ", metaFile);
+      static Ref<CubeMap> invalid{new CubeMap(data, width, height)};
+      return invalid;
+    }
   }
 
   Ref<Texture2D>& TextureManager::LoadTexture2D(const std::string& metaFile)
@@ -91,8 +109,25 @@ namespace Greet{
     }
 
     MetaFile meta{metaFile};
-    TextureParams params = GetMetaParams(meta);
-    return texture2Ds.emplace(metaFile, Texture2D::Create(meta.GetValue("filepath", metaFile), params)).first->second;
+    const std::vector<MetaFileClass>& metaClasses = meta.GetMetaClass("texture2d");
+
+    if(metaClasses.size() > 0)
+    {
+      if(metaClasses.size() > 1)
+      {
+        Log::Warning("Multiple textures defined in meta file: ", metaFile);
+      }
+      TextureParams params = GetMetaParams(metaClasses[0]);
+      return texture2Ds.emplace(metaFile, Texture2D::Create(metaClasses[0].GetValue("filepath", metaFile), params)).first->second;
+    }
+    else
+    {
+      Log::Error("No texture found in meta file: ", metaFile);
+      uint width, height;
+      auto data = ImageFactory::GetCantReadImage(&width, &height);
+      static Ref<Texture2D> invalid{Texture2D::Create(data, width, height)};
+      return invalid;
+    }
   }
 
   void TextureManager::CleanupUnused()

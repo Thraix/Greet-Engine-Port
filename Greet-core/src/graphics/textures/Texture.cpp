@@ -13,6 +13,7 @@ namespace Greet {
       uint id;
       glGenTextures(1, &id);
       texId = id;
+      Enable();
     }
   }
 
@@ -20,6 +21,7 @@ namespace Greet {
     : texId{texId}, m_textureType{textureType}
   {
     ASSERT(m_textureType == GL_TEXTURE_2D || m_textureType == GL_TEXTURE_CUBE_MAP, "Invalid texture enum");
+    Enable();
   }
 
   Texture::Texture()
