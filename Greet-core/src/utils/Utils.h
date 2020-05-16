@@ -8,6 +8,8 @@
 
 namespace Greet {
 
+  class Vec2;
+
   struct Utils
   {
     template<class T> struct ptr_less
@@ -117,5 +119,8 @@ namespace Greet {
       }
       return r;
     }
+
+    static bool IsInside(const Vec2& point, const Vec2& pos, const Vec2& size);
   };
+
 }

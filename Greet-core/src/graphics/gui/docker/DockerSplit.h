@@ -25,6 +25,7 @@ namespace Greet {
     public:
       DockerSplit(const XMLObject& object, Docker* docker, DockerSplit* parent);
       DockerSplit(DockerSplit* split, Docker* docker, DockerSplit* parent, bool vertical);
+      DockerSplit(const std::vector<DockerInterface*>& children, Docker* docker, DockerSplit* parent, bool vertical);
       virtual ~DockerSplit();
 
       void Render(GUIRenderer* renderer) const override;
@@ -33,8 +34,9 @@ namespace Greet {
 
       bool HandleDroppedTab(DockerTab* tab, MouseReleaseEvent& event, const Vec2& componentPos) override;
 
-      void AddContainer(int index, DockerContainer* container);
-      void RemoveDocker(int index);
+      void AddDocker(int index, DockerInterface* docker, bool fixSize = true);
+      void RemoveDocker(int index, bool shouldDelete = true, bool fixSize = true);
+      void MergeSimilarSplits();
 
       int GetDockerIndex(DockerInterface* interface);
       int GetDockerCount() const;

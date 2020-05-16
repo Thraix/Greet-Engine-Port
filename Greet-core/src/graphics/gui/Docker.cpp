@@ -7,7 +7,7 @@ namespace Greet
   REGISTER_COMPONENT_DEFINITION(Docker);
 
   Docker::Docker(const XMLObject& object, Component* parent)
-    : Component(object, parent), split{nullptr}, dockerTab{nullptr}, tabButton{}
+    : Component(object, parent), split{nullptr}, grabbedTab{nullptr}, tabButton{}
   {
     m_isFocusable = true;
     for(auto&& child : object.GetObjects())
@@ -36,6 +36,10 @@ namespace Greet
       {
         tabButton = child;
       }
+      else if(child.GetName() == "SplitIcon")
+      {
+        splitIconStyle = child;
+      }
       else
       {
         Log::Error("Unknown component in Docker. Component=", child.GetName());
@@ -50,7 +54,8 @@ namespace Greet
 
   void Docker::GrabDockerTab(DockerTab* tab)
   {
-    dockerTab = tab;
+    grabbedDistance = 0;
+    grabbedTab = tab;
   }
 
   const XMLObject& Docker::GetTabButton() const
@@ -58,11 +63,16 @@ namespace Greet
     return tabButton;
   }
 
+  const XMLObject& Docker::GetSplitIconStyle() const
+  {
+    return splitIconStyle;
+  }
+
   void Docker::HandleDroppedTab(MouseReleaseEvent& event, const Vec2& componentPos)
   {
     Vec2 mousePos = event.GetPosition() - componentPos;
-    DockerContainer* container = dockerTab->GetContainer();
-    int tabIndex = container->GetTabIndex(dockerTab);
+    DockerContainer* container = grabbedTab->GetContainer();
+    int tabIndex = container->GetTabIndex(grabbedTab);
 
     int splitLimit = 0;
     bool globalSplit = false;
@@ -100,25 +110,28 @@ namespace Greet
 
     if(globalSplit)
     {
-      DockerContainer* container = new DockerContainer(dockerTab, this, nullptr);
       if(split->IsVertical() != vertical)
       {
         split = new DockerSplit(split, this, nullptr, vertical);
         OnMeasured();
       }
-      split->AddContainer(front ? 0 : split->GetDockerCount(), container);
-      dockerTab = nullptr;
+      DockerContainer* container = new DockerContainer(grabbedTab, this, nullptr);
+      split->AddDocker(front ? 0 : split->GetDockerCount(), container);
+      grabbedTab = nullptr;
+      split->MergeSimilarSplits();
       return;
     }
 
     if(IsMouseInside(mousePos))
     {
-      if(split->HandleDroppedTab(dockerTab, event, componentPos))
+      if(split->HandleDroppedTab(grabbedTab, event, componentPos))
       {
         container->RemoveTab(tabIndex);
+        /* OnMeasured(); */
+        split->MergeSimilarSplits();
       }
     }
-    dockerTab = nullptr;
+    grabbedTab = nullptr;
 
   }
 
@@ -137,15 +150,29 @@ namespace Greet
     if(EVENT_IS_TYPE(event, EventType::MOUSE_RELEASE))
     {
       MouseReleaseEvent& e = static_cast<MouseReleaseEvent&>(event);
-      if(dockerTab != nullptr)
+      if(IsHoldingTab())
       {
         if(e.GetButton() == GREET_MOUSE_1)
         {
           HandleDroppedTab(e, componentPos);
+          split->SetSize(GetSize());
         }
         return;
       }
+      else if(grabbedTab != nullptr)
+      {
+        grabbedTab = nullptr;
+        return;
+      }
       split->OnEvent(event, componentPos);
+    }
+    else if(EVENT_IS_TYPE(event, EventType::MOUSE_MOVE))
+    {
+      if(grabbedTab != nullptr)
+      {
+        MouseMoveEvent& e = static_cast<MouseMoveEvent&>(event);
+        grabbedDistance += e.GetDeltaPosition().Length();
+      }
     }
     split->OnEvent(event, componentPos);
   }
@@ -169,5 +196,10 @@ namespace Greet
   {
     guiScene = scene;
     split->SetGUIScene(scene);
+  }
+
+  bool Docker::IsHoldingTab() const
+  {
+    return grabbedTab != nullptr && grabbedDistance > 20;
   }
 }

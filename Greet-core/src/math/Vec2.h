@@ -26,12 +26,13 @@ namespace Greet{
         };
       };
       Vec2();
+      Vec2(float f);
       Vec2(float x, float y);
       Vec2(const Vec3<float>& vec3);
       Vec2(const Vec4& vec4);
 
-      float Length();
-      float LengthSQ();
+      float Length() const;
+      float LengthSQ() const;
       float Dot(const Vec2& vec) const;
       float Cross(const Vec2& vec) const;
       Vec2& Abs();

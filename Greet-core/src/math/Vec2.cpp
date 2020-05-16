@@ -6,22 +6,20 @@
 namespace Greet {
 
   Vec2::Vec2()
-  {
-    this->x = 0;
-    this->y = 0;
-  }
+    : x{0}, y{0}
+  {}
+
+  Vec2::Vec2(float f)
+    : x{f}, y{f}
+  {}
 
   Vec2::Vec2(float x, float y)
-  {
-    this->x = x;
-    this->y = y;
-  }
+    : x{x}, y{y}
+  {}
 
   Vec2::Vec2(const Vec3<float>& vec3)
     : x(vec3.x), y(vec3.y)
-  {
-
-  }
+  {}
 
   Vec2::Vec2(const Vec4& vec4)
     : x(vec4.x), y(vec4.y)
@@ -29,12 +27,12 @@ namespace Greet {
 
   }
 
-  float Vec2::Length()
+  float Vec2::Length() const
   {
     return sqrt(x*x + y*y);
   }
 
-  float Vec2::LengthSQ()
+  float Vec2::LengthSQ() const
   {
     return x*x + y*y;
   }

@@ -1,6 +1,7 @@
 #include "Utils.h"
 
 #include <internal/GreetGL.h>
+#include <math/Vec2.h>
 
 namespace Greet {
   void Utils::Screenshot(uint width, uint height, std::string filename)
@@ -17,5 +18,10 @@ namespace Greet {
     FreeImage_Save(FIF_PNG, image, filename.c_str(), 0);
     FreeImage_Unload(image);
     delete[] pixels;
+  }
+
+  bool Utils::IsInside(const Vec2& point, const Vec2& pos, const Vec2& size)
+  {
+    return point.x >= pos.x && point.x < pos.x + size.w && point.y >= pos.y && point.y < pos.y + size.h;
   }
 }

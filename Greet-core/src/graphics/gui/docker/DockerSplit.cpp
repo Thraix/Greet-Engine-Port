@@ -31,6 +31,15 @@ namespace Greet
     split->SetParent(this);
   }
 
+  DockerSplit::DockerSplit(const std::vector<DockerInterface*>& children, Docker* docker, DockerSplit* parent, bool vertical)
+    : DockerInterface{docker, parent}, children{children}, vertical{vertical}
+  {
+    for(auto child : children)
+    {
+      child->SetParent(this);
+    }
+  }
+
   DockerSplit::~DockerSplit()
   {
     for(auto&& child : children)
@@ -193,59 +202,95 @@ namespace Greet
     return false;
   }
 
-  void DockerSplit::AddContainer(int index, DockerContainer* container)
+  void DockerSplit::AddDocker(int index, DockerInterface* docker, bool fixSize)
   {
-    children.insert(children.begin() + index, container);
-    container->SetWeight(1.0f);
+    children.insert(children.begin() + index, docker);
+    docker->SetParent(this);
 
-    int vecIndex = vertical ? 1 : 0;
-
-    Vec2 containerSize = size;
-    container->SetParent(this);
-    container->SetSize(containerSize);
-    SetSize(size);
-    SetPosition(position);
+    if(fixSize)
+    {
+      docker->SetWeight(1.0f);
+      docker->SetSize(size);
+      SetSize(size);
+      SetPosition(position);
+    }
   }
 
-  void DockerSplit::RemoveDocker(int index)
+  void DockerSplit::RemoveDocker(int index, bool shouldDelete, bool fixSize)
   {
     ASSERT(index >= 0 && index < children.size(), "Index out of bound");
     DockerInterface* interface = *(children.begin() + index);
     children.erase(children.begin() + index);
 
-    float weight = interface->GetWeight();
-    delete interface;
-
-    if(children.size() == 0)
+    if(fixSize)
     {
-      if(parent != nullptr)
-      {
-        DockerSplit* split = static_cast<DockerSplit*>(parent);
-        static_cast<DockerSplit*>(split)->RemoveDocker(split->GetDockerIndex(this));
-      }
-    }
-    else
-    {
+      float weight = interface->GetWeight();
+      if(shouldDelete)
+        delete interface;
 
-      float totalWeight = children.size() + 1 - weight;
-      if(totalWeight != 0)
+      if(children.size() == 0)
       {
-        float upscale = children.size() / totalWeight;
-        for(auto&& child : children)
+        if(parent != nullptr)
         {
-          child->SetWeight(child->GetWeight() * upscale);
+          DockerSplit* split = static_cast<DockerSplit*>(parent);
+          static_cast<DockerSplit*>(split)->RemoveDocker(split->GetDockerIndex(this));
         }
       }
       else
       {
-        for(auto&& child : children)
+        float totalWeight = children.size() + 1 - weight;
+        if(totalWeight != 0)
         {
-          child->SetWeight(1.0f);
+          float upscale = children.size() / totalWeight;
+          for(auto&& child : children)
+          {
+            child->SetWeight(child->GetWeight() * upscale);
+          }
+        }
+        else
+        {
+          for(auto&& child : children)
+          {
+            child->SetWeight(1.0f);
+          }
+        }
+        // Resize other components
+        SetSize(size);
+        SetPosition(position);
+      }
+    }
+  }
+
+  void DockerSplit::MergeSimilarSplits()
+  {
+    for(auto it = children.begin(); it != children.end();)
+    {
+      DockerSplit* split = dynamic_cast<DockerSplit*>(*it);
+      if(split)
+      {
+        split->MergeSimilarSplits();
+        if(vertical == split->vertical)
+        {
+          for(auto itS = split->children.begin(); itS != split->children.end(); ++itS)
+          {
+            it = children.insert(it, *itS);
+            (*it)->SetWeight(split->GetWeight() / split->children.size());
+            (*it)->SetParent(this);
+            it++;
+          }
+          split->children.clear();
+          it = children.erase(it);
+          delete split;
+          continue;
         }
       }
-      // Resize other components
-      SetSize(size);
-      SetPosition(position);
+      ++it;
+    }
+
+    int vecIndex = vertical ? 1 : 0;
+    for(auto child : children)
+    {
+      child->SetWeight(child->GetSize()[vecIndex] / (size[vecIndex] - docker->edgeWidth * (children.size() - 1)) * children.size());
     }
   }
 

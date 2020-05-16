@@ -7,24 +7,25 @@
 namespace Greet{
 
   Vec4::Vec4()
-  {
-    this->x = 0;
-    this->y = 0;
-    this->z = 0;
-    this->w = 0;
-  }
+    : x{0}, y{0}, z{0}, w{0}
+  {}
+
+  Vec4::Vec4(float f)
+    : x{f}, y{f}, z{f}, w{f}
+  {}
 
   Vec4::Vec4(float x, float y, float z, float w)
-  {
-    this->x = x;
-    this->y = y;
-    this->z = z;
-    this->w = w;
-  }
+    : x{x}, y{y}, z{z}, w{w}
+  {}
 
-  float Vec4::Length()
+  float Vec4::Length() const
   {
     return sqrt(x*x + y*y + z*z+ w*w);
+  }
+
+  float Vec4::LengthSQ() const
+  {
+    return x*x + y*y + z*z+ w*w;
   }
 
   Vec4& Vec4::Add(const Vec4& other)

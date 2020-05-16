@@ -2,7 +2,7 @@
 
 #include <graphics/fonts/FontManager.h>
 #include <graphics/gui/Docker.h>
-#include <input/InputDefines.h>
+#include <input/Input.h>
 
 namespace Greet
 {
@@ -20,8 +20,10 @@ namespace Greet
         Log::Error("Unknown component in DockerContainer. Component=", objectChild.GetName());
       }
     }
-    button = new Button(docker->GetTabButton(), docker);
+    button = new Button(docker->GetTabButton(), nullptr);
     button->AddStyle("active", Style{"active", docker->GetTabButton()});
+    splitIcon = new Component(docker->GetSplitIconStyle(), nullptr);
+    splitIcon->Remeasure();
   }
 
   DockerContainer::DockerContainer(DockerTab* tab, Docker* docker, DockerSplit* parent)
@@ -29,8 +31,10 @@ namespace Greet
   {
     children.push_back(tab);
     tab->SetContainer(this);
-    button = new Button(docker->GetTabButton(), docker);
+    button = new Button(docker->GetTabButton(), nullptr);
     button->AddStyle("active", Style{"active", docker->GetTabButton()});
+    splitIcon = new Component(docker->GetSplitIconStyle(), nullptr);
+    splitIcon->Remeasure();
   }
 
   DockerContainer::~DockerContainer()
@@ -38,6 +42,7 @@ namespace Greet
     for(auto&& child : children)
       delete child;
     delete button;
+    delete splitIcon;
   }
 
   void DockerContainer::Render(GUIRenderer* renderer) const
@@ -63,6 +68,21 @@ namespace Greet
       button->SetText(children[i]->GetTitle());
       button->Render(renderer);
       button->PostRender(renderer);
+    }
+    if(docker->IsHoldingTab() && Utils::IsInside(Input::GetMousePosPixel(), position, size))
+    {
+      splitIcon->PreRender(renderer, GetTopSplitPos());
+      splitIcon->Render(renderer);
+      splitIcon->PostRender(renderer);
+      splitIcon->PreRender(renderer, GetBottomSplitPos());
+      splitIcon->Render(renderer);
+      splitIcon->PostRender(renderer);
+      splitIcon->PreRender(renderer, GetLeftSplitPos());
+      splitIcon->Render(renderer);
+      splitIcon->PostRender(renderer);
+      splitIcon->PreRender(renderer, GetRightSplitPos());
+      splitIcon->Render(renderer);
+      splitIcon->PostRender(renderer);
     }
     renderer->PopTranslation();
     renderer->PopViewport();
@@ -115,6 +135,57 @@ namespace Greet
 
   bool DockerContainer::HandleDroppedTab(DockerTab* tab, MouseReleaseEvent& event, const Vec2& componentPos)
   {
+    Vec2 mousePos = event.GetPosition() - position;
+    DockerSplit* split = static_cast<DockerSplit*>(parent);
+    int index = split->GetDockerIndex(this);
+    bool splitContainer = false;
+    bool vertical = false;
+    bool before = false;
+    if(Utils::IsInside(mousePos, GetTopSplitPos(), GetSplitSize()))
+    {
+      splitContainer = true;
+      before = true;
+      vertical = true;
+    }
+    else if(Utils::IsInside(mousePos, GetBottomSplitPos(), GetSplitSize()))
+    {
+      splitContainer = true;
+      before = false;
+      vertical = true;
+    }
+    else if(Utils::IsInside(mousePos, GetLeftSplitPos(), GetSplitSize()))
+    {
+      splitContainer = true;
+      before = true;
+      vertical = false;
+    }
+    else if(Utils::IsInside(mousePos, GetRightSplitPos(), GetSplitSize()))
+    {
+      splitContainer = true;
+      before = false;
+      vertical = false;
+    }
+    if(splitContainer)
+    {
+      if(tab->GetContainer() == this && children.size() == 1)
+      {
+        return false;
+      }
+      DockerSplit* newSplit;
+      DockerContainer* container = new DockerContainer(tab, docker, split);
+      if(before)
+        newSplit = new DockerSplit({container, this}, docker, split, vertical);
+      else
+        newSplit = new DockerSplit({this, container}, docker, split, vertical);
+
+      container->SetWeight(1);
+      SetWeight(1);
+      newSplit->SetSize(size);
+      newSplit->SetWeight(weight);
+      split->AddDocker(index, newSplit, false);
+      split->RemoveDocker(index+1, false, false);
+      return true;
+    }
     // Only move inside the current container
     if(tab->GetContainer() == this)
     {
@@ -259,5 +330,56 @@ namespace Greet
     }
     button->Measure();
     button->MeasureFill(size, {1.0f,1.0f});
+  }
+
+  const Vec2& DockerContainer::GetTopSplitPos() const
+  {
+    // TODO: Store all this in a variable
+    Vec2 center = size*0.5;
+    const Vec2& dockerSize = GetSplitSize();
+    float spacing = 10;
+    static Vec2 pos;
+    pos = center - dockerSize*0.5 - Vec2{0, dockerSize.h + spacing};
+    return pos;
+  }
+
+  const Vec2& DockerContainer::GetBottomSplitPos() const
+  {
+    // TODO: Store all this in a variable
+    Vec2 center = size*0.5;
+    const Vec2& dockerSize = GetSplitSize();
+    float spacing = 10;
+    static Vec2 pos;
+    pos = center - dockerSize*0.5 + Vec2{0, dockerSize.h + spacing};
+    return pos;
+  }
+
+  const Vec2& DockerContainer::GetLeftSplitPos() const
+  {
+    // TODO: Store all this in a variable
+    Vec2 center = size*0.5;
+    const Vec2& dockerSize = GetSplitSize();
+    float spacing = 10;
+    static Vec2 pos;
+    pos = center - dockerSize*0.5 - Vec2{dockerSize.w + spacing, 0};
+    return pos;
+  }
+
+  const Vec2& DockerContainer::GetRightSplitPos() const
+  {
+    // TODO: Store all this in a variable
+    Vec2 center = size*0.5;
+    const Vec2& dockerSize = GetSplitSize();
+    float spacing = 10;
+    static Vec2 pos;
+    pos = center - dockerSize*0.5 + Vec2{dockerSize.w + spacing, 0};
+    return pos;
+  }
+
+  const Vec2& DockerContainer::GetSplitSize() const
+  {
+    // TODO: Store all this in a variable
+    static Vec2 splitSize = {30,30};
+    return splitSize;
   }
 }

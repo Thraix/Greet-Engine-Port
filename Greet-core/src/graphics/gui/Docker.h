@@ -15,8 +15,10 @@ namespace Greet {
 
     protected:
       DockerSplit* split;
-      DockerTab* dockerTab;
+      DockerTab* grabbedTab;
+      float grabbedDistance = 0;
       XMLObject tabButton;
+      XMLObject splitIconStyle;
     public:
       const int edgeWidth = 10;
 
@@ -27,6 +29,7 @@ namespace Greet {
       void HandleDroppedTab(MouseReleaseEvent& event, const Vec2& componentPos);
 
       const XMLObject& GetTabButton() const;
+      const XMLObject& GetSplitIconStyle() const;
 
       // Overrided functions
       void Render(GUIRenderer* renderer) const override;
@@ -35,5 +38,7 @@ namespace Greet {
       void OnMeasured() override;
       Component* GetComponentByNameNoCast(const std::string& name) override;
       void SetGUIScene(GUIScene* scene) override;
+
+      bool IsHoldingTab() const;
   };
 }

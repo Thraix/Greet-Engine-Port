@@ -19,11 +19,15 @@ static void GLClearError()
 
 static void GLLogError(const char* glCall, const char* file, int line, bool assert)
 {
+  bool hasError = false;
   GLenum err;
   while ((err = glGetError()) != GL_NO_ERROR)
   {
     Greet::Log::Error("OpenGL error(0x", Greet::LogUtils::DecToHex(err), ")", " at ", file, ":", line, " using ", glCall);
+    hasError = true;
   }
+  if(hasError)
+    abort();
 }
 
 #if defined _DEBUG

@@ -28,9 +28,11 @@ namespace Greet{
     };
     Vec4();
     //Vec4(const Vec4& copy);
+    Vec4(float f);
     Vec4(float x, float y, float z, float w);
 
-    float Length();
+    float Length() const;
+    float LengthSQ() const;
 
     Vec4& Add(const Vec4& other);
     Vec4& Subtract(const Vec4& other);

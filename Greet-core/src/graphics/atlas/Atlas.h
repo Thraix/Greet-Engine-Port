@@ -40,6 +40,8 @@ namespace Greet{
 
       void Enable(int index = 0) const;
       void Disable() const;
+
+      Ref<Texture2D> GetAtlasTexture() const { return texture; }
     private:
       void GenTexture(byte* bits);
   };

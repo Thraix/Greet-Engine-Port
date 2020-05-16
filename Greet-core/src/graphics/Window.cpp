@@ -115,7 +115,9 @@ namespace Greet {
 
   void Window::Update()
   {
+    Log::Info("Polling");
     glfwPollEvents();
+    Log::Info("Joystick");
     // Only update the joystick if we have focus.
     // Otherwise it will send events all the time
     if (focus)

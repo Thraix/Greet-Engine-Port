@@ -23,6 +23,7 @@ namespace Greet {
       bool hover = false;
       uint hoverTab = 0;
       Button* button;
+      Component* splitIcon;
 
     public:
       DockerContainer(const XMLObject& object, Docker* docker, DockerSplit* parentSplit);
@@ -45,7 +46,7 @@ namespace Greet {
       void Update(float timeElapsed) override;
       void OnEvent(Event& event, const Vec2& componentPos) override;
 
-       bool HandleDroppedTab(DockerTab* tab, MouseReleaseEvent& event, const Vec2& componentPos) override;
+      bool HandleDroppedTab(DockerTab* tab, MouseReleaseEvent& event, const Vec2& componentPos) override;
 
       Component* GetComponentByNameNoCast(const std::string& name) override;
       Vec2 GetMinSize() const override;
@@ -53,5 +54,12 @@ namespace Greet {
       void SetGUIScene(GUIScene* scene) override;
       void SetPosition(const Vec2& position) override;
       void SetSize(const Vec2& size) override;
+
+    private:
+      const Vec2& GetTopSplitPos() const;
+      const Vec2& GetBottomSplitPos() const;
+      const Vec2& GetLeftSplitPos() const;
+      const Vec2& GetRightSplitPos() const;
+      const Vec2& GetSplitSize() const;
   };
 }
