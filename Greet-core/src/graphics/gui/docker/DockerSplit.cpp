@@ -48,6 +48,22 @@ namespace Greet
 
   void DockerSplit::Render(GUIRenderer* renderer) const
   {
+    for(int i = 0; i < children.size()-1;++i)
+    {
+      int vecIndex = vertical ? 1 : 0;
+      Vec2 edgePos = docker->GetPosition() + position;
+      Vec2 edgeSize = size;
+      edgePos[vecIndex] = children[i]->GetPosition()[vecIndex] + children[i]->GetSize()[vecIndex];
+      edgeSize[vecIndex] = docker->edgeWidth;
+
+      renderer->SubmitRect(edgePos, edgeSize, docker->edgeBorderColor, false);
+      edgePos[1-vecIndex] -= docker->edgeBorderSize;
+      edgePos[vecIndex] += docker->edgeBorderSize;
+
+      edgeSize[1-vecIndex] += 2*docker->edgeBorderSize;
+      edgeSize[vecIndex] -= 2*docker->edgeBorderSize;
+      renderer->SubmitRect(edgePos, edgeSize, docker->edgeColor, false);
+    }
     for(auto&& child : children)
     {
       child->Render(renderer);

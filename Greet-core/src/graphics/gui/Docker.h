@@ -20,7 +20,10 @@ namespace Greet {
       XMLObject tabButton;
       XMLObject splitIconStyle;
     public:
-      const int edgeWidth = 10;
+      Vec4 edgeColor;
+      int edgeWidth;
+      int edgeBorderSize;
+      Vec4 edgeBorderColor;
 
     public:
       Docker(const XMLObject& object, Component* parent);

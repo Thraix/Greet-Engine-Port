@@ -58,10 +58,10 @@ namespace Greet
     /* renderer->SubmitRect({0.0f, 0.0f}, {size.w, button->GetHeight()}, {0.039,0.078,0.09,1}, false); */
     for(int i = 0;i<children.size();i++)
     {
-      if(hover && i == hoverTab)
-        button->SetCurrentStyle("hover");
-      else if(i == activeTab)
+      if(i == activeTab)
         button->SetCurrentStyle("active");
+      else if(hover && i == hoverTab)
+        button->SetCurrentStyle("hover");
       else
         button->SetCurrentStyle("normal");
       button->PreRender(renderer, {(float)i * (float)button->GetWidth(), 0.0f});
