@@ -30,6 +30,7 @@ class Core : public App
 
       guiScene->AddFrame(FrameFactory::GetFrame("res/guis/gui.xml"));
 
+#if 1
       Frame* frame = guiScene->GetFrame("LeftComponent");
       if(frame != nullptr)
       {
@@ -62,6 +63,7 @@ class Core : public App
         frame->GetComponentByName<Button>("button")
           ->SetOnClickCallback(std::bind(&Core::OnButtonPressCallback, std::ref(*this), _1));
         }
+#endif
       GlobalSceneManager::GetSceneManager().Add2DScene(guiScene, "GUIScene");
     }
 

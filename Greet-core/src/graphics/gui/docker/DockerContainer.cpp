@@ -171,8 +171,8 @@ namespace Greet
       {
         return false;
       }
-      DockerSplit* newSplit;
       DockerContainer* container = new DockerContainer(tab, docker, split);
+      DockerSplit* newSplit;
       if(before)
         newSplit = new DockerSplit({container, this}, docker, split, vertical);
       else
@@ -180,6 +180,7 @@ namespace Greet
 
       container->SetWeight(1);
       SetWeight(1);
+      newSplit->SetPosition(position);
       newSplit->SetSize(size);
       newSplit->SetWeight(weight);
       split->AddDocker(index, newSplit, false);

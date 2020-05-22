@@ -13,6 +13,7 @@ namespace Greet {
 
   class DockerSplit : public DockerInterface
   {
+    friend class DockerContainer;
     protected:
       bool vertical;
       std::vector<DockerInterface*> children;
@@ -48,5 +49,7 @@ namespace Greet {
       void SetPosition(const Vec2& _size) override;
       void SetSize(const Vec2& _size) override;
       void SetGUIScene(GUIScene* scene) override;
+
+      void UpdateWeights();
   };
 }

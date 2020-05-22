@@ -236,27 +236,42 @@ namespace Greet
           static_cast<DockerSplit*>(split)->RemoveDocker(split->GetDockerIndex(this));
         }
       }
+      else if(children.size() == 1)
+      {
+        DockerSplit* split = static_cast<DockerSplit*>(parent);
+        int index = split->GetDockerIndex(this);
+        split->AddDocker(index, children[0], false);
+        split->RemoveDocker(index+1, false, false);
+      }
       else
       {
-        float totalWeight = children.size() + 1 - weight;
-        if(totalWeight != 0)
+        int vecIndex = vertical ? 1 : 0;
+        DockerInterface* resizeDocker;
+        if(index > 0)
+          resizeDocker = children[index-1];
+        else
+          resizeDocker = children[0];
+
+        float leftPos = position[vecIndex];
+        float rightPos = position[vecIndex] + size[vecIndex];
+
+        Vec2 newSize = resizeDocker->GetSize();
+
+        if(index > 0)
         {
-          float upscale = children.size() / totalWeight;
-          for(auto&& child : children)
-          {
-            child->SetWeight(child->GetWeight() * upscale);
-          }
+          leftPos = children[index-1]->GetPosition()[vecIndex];
+          if(index < children.size())
+            rightPos = children[index]->GetPosition()[vecIndex] - docker->edgeWidth;
         }
         else
         {
-          for(auto&& child : children)
-          {
-            child->SetWeight(1.0f);
-          }
+          if(index < children.size()-1)
+            rightPos = children[index+1]->GetPosition()[vecIndex] - docker->edgeWidth;
         }
-        // Resize other components
-        SetSize(size);
-        SetPosition(position);
+
+        newSize[vecIndex] = rightPos - leftPos;
+        resizeDocker->SetSize(newSize);
+        UpdateWeights();
       }
     }
   }
@@ -269,12 +284,14 @@ namespace Greet
       if(split)
       {
         split->MergeSimilarSplits();
-        if(vertical == split->vertical)
+        if(vertical == split->vertical || children.size() == 1)
         {
+          if(children.size() == 1)
+            vertical = !vertical;
+
           for(auto itS = split->children.begin(); itS != split->children.end(); ++itS)
           {
             it = children.insert(it, *itS);
-            (*it)->SetWeight(split->GetWeight() / split->children.size());
             (*it)->SetParent(this);
             it++;
           }
@@ -286,12 +303,7 @@ namespace Greet
       }
       ++it;
     }
-
-    int vecIndex = vertical ? 1 : 0;
-    for(auto child : children)
-    {
-      child->SetWeight(child->GetSize()[vecIndex] / (size[vecIndex] - docker->edgeWidth * (children.size() - 1)) * children.size());
-    }
+    UpdateWeights();
   }
 
   int DockerSplit::GetDockerIndex(DockerInterface* interface)
@@ -372,7 +384,7 @@ namespace Greet
     for(auto&& child : children)
     {
       Vec2 childSize = _size;
-      childSize[vecIndex] = floor((_size[vecIndex] - edgeWidths) * child->GetWeight() / totalWeight);
+      childSize[vecIndex] = round((_size[vecIndex] - edgeWidths) * child->GetWeight() / totalWeight);
       child->SetSize(childSize);
       child->SetPosition(pos);
       usedSize += childSize[vecIndex] + docker->edgeWidth;
@@ -385,5 +397,19 @@ namespace Greet
     Vec2 childSize = last->GetSize();
     childSize[vecIndex] += size[vecIndex] - usedSize;
     last->SetSize(childSize);
+  }
+
+
+  void DockerSplit::UpdateWeights()
+  {
+    int vecIndex = vertical ? 1 : 0;
+
+    float size = this->GetSize()[vecIndex] - docker->edgeWidth * (children.size() - 1);
+
+    float totalWeight = children.size();
+    for(auto child : children)
+    {
+      child->SetWeight(child->GetSize()[vecIndex] / size * totalWeight);
+    }
   }
 }

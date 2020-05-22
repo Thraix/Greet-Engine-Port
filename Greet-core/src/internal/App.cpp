@@ -51,16 +51,12 @@ namespace Greet {
       if (elapsed - updateTimer >= updateTick)
       {
         DriverDispatcher::Update(updateTick);
-        Log::Info("here");
         Window::Update();
-        Log::Info("here2");
         GlobalSceneManager::GetSceneManager().Update(elapsed - updateTimer);
         Update(elapsed - updateTimer);
         updates++;
         updateTimer = elapsed;
-        Log::Info("here3");
         Input::Update();
-        Log::Info("here4");
       }
 
       if (elapsed - renderTimer >= frameCap)

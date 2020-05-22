@@ -127,12 +127,10 @@ namespace Greet
       if(split->HandleDroppedTab(grabbedTab, event, componentPos))
       {
         container->RemoveTab(tabIndex);
-        /* OnMeasured(); */
         split->MergeSimilarSplits();
       }
     }
     grabbedTab = nullptr;
-
   }
 
   void Docker::Render(GUIRenderer* renderer) const
