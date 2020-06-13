@@ -17,8 +17,6 @@ namespace Greet {
     protected:
       Docker* docker;
       DockerContainer* parentContainer;
-      Vec2 position;
-      Vec2 size;
 
       std::string title;
       Component* component;

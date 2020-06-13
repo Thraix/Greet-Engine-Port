@@ -202,7 +202,7 @@ namespace Greet
     }
   }
 
-  bool DockerSplit::HandleDroppedTab(DockerTab* tab, MouseReleaseEvent& event, const Vec2& componentPos)
+  void DockerSplit::HandleDroppedTab(DockerTab* tab, MouseReleaseEvent& event, const Vec2& componentPos)
   {
     Vec2 mousePos = event.GetPosition() - componentPos;
     Vec2 position = {0,0};
@@ -210,115 +210,95 @@ namespace Greet
     {
       if(mousePos.x >= position.x && mousePos.y >= position.y && mousePos.x < position.x + child->GetSize().x && mousePos.y < position.y + child->GetSize().y)
       {
-        return child->HandleDroppedTab(tab, event, componentPos + position);
+        child->HandleDroppedTab(tab, event, componentPos + position);
+        return;
       }
       int vecIndex = vertical ? 1 : 0;
       position[vecIndex] += child->GetSize()[vecIndex];
     }
-    return false;
   }
 
-  void DockerSplit::AddDocker(int index, DockerInterface* docker, bool fixSize)
+  void DockerSplit::AddDocker(int index, DockerInterface* interface)
   {
-    children.insert(children.begin() + index, docker);
-    docker->SetParent(this);
-
-    if(fixSize)
-    {
-      docker->SetWeight(1.0f);
-      docker->SetSize(size);
-      SetSize(size);
-      SetPosition(position);
-    }
+    ASSERT(index >= 0 && index <= children.size(), "Index out of bound");
+    children.insert(children.begin() + index, interface);
+    interface->SetParent(this);
+    docker->MarkDirty();
   }
 
-  void DockerSplit::RemoveDocker(int index, bool shouldDelete, bool fixSize)
+  DockerInterface* DockerSplit::RemoveDocker(int index)
   {
     ASSERT(index >= 0 && index < children.size(), "Index out of bound");
     DockerInterface* interface = *(children.begin() + index);
     children.erase(children.begin() + index);
-
-    if(fixSize)
-    {
-      float weight = interface->GetWeight();
-      if(shouldDelete)
-        delete interface;
-
-      if(children.size() == 0)
-      {
-        if(parent != nullptr)
-        {
-          DockerSplit* split = static_cast<DockerSplit*>(parent);
-          static_cast<DockerSplit*>(split)->RemoveDocker(split->GetDockerIndex(this));
-        }
-      }
-      else if(children.size() == 1)
-      {
-        DockerSplit* split = static_cast<DockerSplit*>(parent);
-        int index = split->GetDockerIndex(this);
-        split->AddDocker(index, children[0], false);
-        split->RemoveDocker(index+1, false, false);
-      }
-      else
-      {
-        int vecIndex = vertical ? 1 : 0;
-        DockerInterface* resizeDocker;
-        if(index > 0)
-          resizeDocker = children[index-1];
-        else
-          resizeDocker = children[0];
-
-        float leftPos = position[vecIndex];
-        float rightPos = position[vecIndex] + size[vecIndex];
-
-        Vec2 newSize = resizeDocker->GetSize();
-
-        if(index > 0)
-        {
-          leftPos = children[index-1]->GetPosition()[vecIndex];
-          if(index < children.size())
-            rightPos = children[index]->GetPosition()[vecIndex] - docker->edgeWidth;
-        }
-        else
-        {
-          if(index < children.size()-1)
-            rightPos = children[index+1]->GetPosition()[vecIndex] - docker->edgeWidth;
-        }
-
-        newSize[vecIndex] = rightPos - leftPos;
-        resizeDocker->SetSize(newSize);
-        UpdateWeights();
-      }
-    }
+    docker->MarkDirty();
+    return interface;
   }
 
   void DockerSplit::MergeSimilarSplits()
   {
-    for(auto it = children.begin(); it != children.end();)
+    // It is probably possible to merge these two for loops into a single one
+    // But the readability might get compicated.
+
+
+    // Remove unnecessary Splits and empty Containers
+    for(int i = 0;i<children.size();++i)
     {
-      DockerSplit* split = dynamic_cast<DockerSplit*>(*it);
-      if(split)
+      DockerInterface* dock = children[i];
+      if(DockerSplit* split = dynamic_cast<DockerSplit*>(dock))
       {
         split->MergeSimilarSplits();
-        if(vertical == split->vertical || children.size() == 1)
+        if(vertical == split->vertical || split->children.size() == 1)
         {
-          if(children.size() == 1)
-            vertical = !vertical;
-
-          for(auto itS = split->children.begin(); itS != split->children.end(); ++itS)
+          for(int j = 0;j<split->children.size();++j)
           {
-            it = children.insert(it, *itS);
-            (*it)->SetParent(this);
-            it++;
+            AddDocker(i+j+1, split->children[j]);
           }
           split->children.clear();
-          it = children.erase(it);
-          delete split;
-          continue;
+          delete RemoveDocker(i);
+          --i;
         }
       }
-      ++it;
+      else if(DockerContainer* container = dynamic_cast<DockerContainer*>(dock))
+      {
+        if(container->GetTabCount() == 0)
+        {
+          delete RemoveDocker(i);
+          --i;
+        }
+      }
     }
+
+    // Fix positions and sizes
+    for(int i = 0;i<children.size();++i)
+    {
+      int vecIndex = vertical ? 1 : 0;
+      Vec2 p = children[i]->GetPosition();
+      Vec2 s = children[i]->GetSize();
+      p[1-vecIndex] = GetPosition()[1-vecIndex];
+      s[1-vecIndex] = GetSize()[1-vecIndex];
+
+      if(i == 0)
+      {
+        // Move back if first element was removed
+        s[vecIndex] += p[vecIndex] - GetPosition()[vecIndex];
+        p[vecIndex] = GetPosition()[vecIndex];
+      }
+      if(i+1 < children.size())
+      {
+        // Increase the size to match the next dockers position
+        Vec2 p2 = children[i+1]->GetPosition();
+        s[vecIndex] = p2[vecIndex] - p[vecIndex] - docker->edgeWidth;
+      }
+      else
+      {
+        // Increase the size to match the end of the this dockers pos+size
+        s[vecIndex] = GetPosition()[vecIndex] + GetSize()[vecIndex] - p[vecIndex];
+      }
+      children[i]->SetPosition(p);
+      children[i]->SetSize(s);
+    }
+
     UpdateWeights();
   }
 
@@ -420,7 +400,7 @@ namespace Greet
   {
     int vecIndex = vertical ? 1 : 0;
 
-    float size = this->GetSize()[vecIndex] - docker->edgeWidth * (children.size() - 1);
+    float size = GetSize()[vecIndex] - docker->edgeWidth * (children.size() - 1);
 
     float totalWeight = children.size();
     for(auto child : children)

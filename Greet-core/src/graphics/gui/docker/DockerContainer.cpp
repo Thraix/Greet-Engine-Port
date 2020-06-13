@@ -54,8 +54,6 @@ namespace Greet
     children[activeTab]->Render(renderer);
 
     renderer->PushTranslation(docker->GetPosition() + position);
-    // #263238
-    /* renderer->SubmitRect({0.0f, 0.0f}, {size.w, button->GetHeight()}, {0.039,0.078,0.09,1}, false); */
     for(int i = 0;i<children.size();i++)
     {
       if(i == activeTab)
@@ -133,7 +131,7 @@ namespace Greet
     children[activeTab]->OnEvent(event, componentPos);
   }
 
-  bool DockerContainer::HandleDroppedTab(DockerTab* tab, MouseReleaseEvent& event, const Vec2& componentPos)
+  void DockerContainer::HandleDroppedTab(DockerTab* tab, MouseReleaseEvent& event, const Vec2& componentPos)
   {
     Vec2 mousePos = event.GetPosition() - position;
     DockerSplit* split = static_cast<DockerSplit*>(parent);
@@ -143,49 +141,23 @@ namespace Greet
     bool before = false;
     if(Utils::IsInside(mousePos, GetTopSplitPos(), GetSplitSize()))
     {
-      splitContainer = true;
-      before = true;
-      vertical = true;
+      AddSplitAbove(tab);
+      return;
     }
     else if(Utils::IsInside(mousePos, GetBottomSplitPos(), GetSplitSize()))
     {
-      splitContainer = true;
-      before = false;
-      vertical = true;
+      AddSplitBelow(tab);
+      return;
     }
     else if(Utils::IsInside(mousePos, GetLeftSplitPos(), GetSplitSize()))
     {
-      splitContainer = true;
-      before = true;
-      vertical = false;
+      AddSplitLeft(tab);
+      return;
     }
     else if(Utils::IsInside(mousePos, GetRightSplitPos(), GetSplitSize()))
     {
-      splitContainer = true;
-      before = false;
-      vertical = false;
-    }
-    if(splitContainer)
-    {
-      if(tab->GetContainer() == this && children.size() == 1)
-      {
-        return false;
-      }
-      DockerContainer* container = new DockerContainer(tab, docker, split);
-      DockerSplit* newSplit;
-      if(before)
-        newSplit = new DockerSplit({container, this}, docker, split, vertical);
-      else
-        newSplit = new DockerSplit({this, container}, docker, split, vertical);
-
-      container->SetWeight(1);
-      SetWeight(1);
-      newSplit->SetPosition(position);
-      newSplit->SetSize(size);
-      newSplit->SetWeight(weight);
-      split->AddDocker(index, newSplit, false);
-      split->RemoveDocker(index+1, false, false);
-      return true;
+      AddSplitRight(tab);
+      return;
     }
     // Only move inside the current container
     if(tab->GetContainer() == this)
@@ -195,16 +167,16 @@ namespace Greet
       {
         int current = GetTabIndex(tab);
         if(current == tabIndex)
-          return false;
+          return;
         if(current > tabIndex)
           std::rotate(children.begin()+tabIndex, children.begin() + current, children.begin() + current+1);
         else
           std::rotate(children.begin()+current, children.begin() + 1, children.begin() + tabIndex+1);
         UnhoverTab();
         SelectTab(tabIndex);
-        return false;
+        return;
       }
-      return false;
+      return;
     }
     else
     {
@@ -212,15 +184,13 @@ namespace Greet
 
       int tabIndex = GetTab(event.GetPosition() - componentPos);
       int tabIndexContainer = tabContainer->GetTabIndex(tab);
+      AddTab(tabIndex, tab);
 
       // Fix this container
-      children.insert(children.begin() + tabIndex, tab);
-      tab->SetPosition(position);
-      tab->SetSize(size);
+      tab->GetContainer()->RemoveTab(tab);
       tab->SetContainer(this);
       SelectTab(tabIndex);
-
-      return true;
+      return;
     }
   }
 
@@ -248,16 +218,29 @@ namespace Greet
     hover = false;
   }
 
+  void DockerContainer::AddTab(int index, DockerTab* tab)
+  {
+    ASSERT(index >= 0 && index <= children.size(), "Index out of bound");
+    children.insert(children.begin() + index, tab);
+    tab->SetPosition(position + GetTabOffset());
+    tab->SetSize(size - GetTabOffset());
+  }
+
   void DockerContainer::RemoveTab(int i)
   {
     ASSERT(i >= 0 && i < children.size(), "Index out of bound");
     children.erase(children.begin() + i);
 
     DockerSplit* split = static_cast<DockerSplit*>(parent);
+    ClampSelectedTab();
     if(children.size() == 0)
-      split->RemoveDocker(split->GetDockerIndex(this));
-    else
-      ClampSelectedTab();
+      docker->MarkDirty();
+  }
+
+
+  void DockerContainer::RemoveTab(DockerTab* tab)
+  {
+    RemoveTab(GetTabIndex(tab));
   }
 
   Component* DockerContainer::GetComponentByNameNoCast(const std::string& name)
@@ -318,7 +301,7 @@ namespace Greet
     position = _position;
     for(auto&& child : children)
     {
-      child->SetPosition(_position + Vec2{0.0f, button->GetHeight()});
+      child->SetPosition(_position + GetTabOffset());
     }
   }
 
@@ -327,7 +310,7 @@ namespace Greet
     size = _size;
     for(auto&& child : children)
     {
-      child->SetSize(_size);
+      child->SetSize(_size - GetTabOffset());
     }
     button->Measure();
     button->MeasureFill(size, {1.0f,1.0f});
@@ -382,5 +365,59 @@ namespace Greet
     // TODO: Store all this in a variable
     static Vec2 splitSize = {30,30};
     return splitSize;
+  }
+
+  const Vec2& DockerContainer::GetTabOffset() const
+  {
+    static Vec2 offset = {0, button->GetHeight()};
+    return offset;
+  }
+
+  void DockerContainer::AddSplitLeft(DockerTab* tab)
+  {
+    AddSplit(tab, false, true);
+  }
+
+  void DockerContainer::AddSplitRight(DockerTab* tab)
+  {
+    AddSplit(tab, false, false);
+  }
+
+  void DockerContainer::AddSplitAbove(DockerTab* tab)
+  {
+    AddSplit(tab, true, true);
+  }
+
+  void DockerContainer::AddSplitBelow(DockerTab* tab)
+  {
+    AddSplit(tab, true, false);
+  }
+
+  void DockerContainer::AddSplit(DockerTab* tab, bool vertical, bool before)
+  {
+    DockerSplit* split = static_cast<DockerSplit*>(parent);
+    int index = split->GetDockerIndex(this);
+
+    if(tab->GetContainer() == this && children.size() == 1)
+    {
+      return;
+    }
+    if(tab->GetContainer() != nullptr)
+      tab->GetContainer()->RemoveTab(tab);
+
+    DockerContainer* container = new DockerContainer(tab, docker, split);
+    DockerSplit* newSplit;
+    if(before)
+      newSplit = new DockerSplit({container, this}, docker, split, vertical);
+    else
+      newSplit = new DockerSplit({this, container}, docker, split, vertical);
+
+    container->SetWeight(1);
+    SetWeight(1);
+    newSplit->SetPosition(position);
+    newSplit->SetSize(size);
+    newSplit->SetWeight(weight);
+    split->AddDocker(index, newSplit);
+    split->RemoveDocker(index+1);
   }
 }

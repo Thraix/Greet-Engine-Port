@@ -75,64 +75,28 @@ namespace Greet
   void Docker::HandleDroppedTab(MouseReleaseEvent& event, const Vec2& componentPos)
   {
     Vec2 mousePos = event.GetPosition() - componentPos;
-    DockerContainer* container = grabbedTab->GetContainer();
-    int tabIndex = container->GetTabIndex(grabbedTab);
 
     int splitLimit = 0;
-    bool globalSplit = false;
-    bool vertical = false;
-    bool front = true;
 
     if(mousePos.x < splitLimit)
     {
-      container->RemoveTab(tabIndex);
-      vertical = false;
-      globalSplit = true;
-      front = true;
+      AddSplitLeft(grabbedTab);
     }
     else if(mousePos.x >= GetSize().w - splitLimit)
     {
-      container->RemoveTab(tabIndex);
-      vertical = false;
-      globalSplit = true;
-      front = false;
+      AddSplitRight(grabbedTab);
     }
     else if(mousePos.y < splitLimit)
     {
-      container->RemoveTab(tabIndex);
-      vertical = true;
-      globalSplit = true;
-      front = true;
+      AddSplitAbove(grabbedTab);
     }
     else if(mousePos.y >= GetSize().h - splitLimit)
     {
-      container->RemoveTab(tabIndex);
-      vertical = true;
-      globalSplit = true;
-      front = false;
+      AddSplitBelow(grabbedTab);
     }
-
-    if(globalSplit)
+    else if(IsMouseInside(mousePos))
     {
-      if(split->IsVertical() != vertical)
-      {
-        split = new DockerSplit(split, this, nullptr, vertical);
-        OnMeasured();
-      }
-      DockerContainer* container = new DockerContainer(grabbedTab, this, nullptr);
-      split->AddDocker(front ? 0 : split->GetDockerCount(), container);
-      grabbedTab = nullptr;
-      split->MergeSimilarSplits();
-      return;
-    }
-
-    if(IsMouseInside(mousePos))
-    {
-      if(split->HandleDroppedTab(grabbedTab, event, componentPos))
-      {
-        container->RemoveTab(tabIndex);
-        split->MergeSimilarSplits();
-      }
+      split->HandleDroppedTab(grabbedTab, event, componentPos);
     }
     grabbedTab = nullptr;
   }
@@ -144,6 +108,12 @@ namespace Greet
 
   void Docker::Update(float timeElapsed)
   {
+    if(childrenChanged)
+    {
+      split->MergeSimilarSplits();
+      /* split->DebugPrint(0); */
+      childrenChanged = false;
+    }
     split->Update(timeElapsed);
   }
 
@@ -157,7 +127,6 @@ namespace Greet
         if(e.GetButton() == GREET_MOUSE_1)
         {
           HandleDroppedTab(e, componentPos);
-          split->SetSize(GetSize());
         }
         return;
       }
@@ -203,5 +172,45 @@ namespace Greet
   bool Docker::IsHoldingTab() const
   {
     return grabbedTab != nullptr && grabbedDistance > 20;
+  }
+
+  void Docker::MarkDirty()
+  {
+    childrenChanged = true;
+  }
+
+  void Docker::AddSplitLeft(DockerTab* tab)
+  {
+    Split(tab, false, true);
+  }
+
+  void Docker::AddSplitRight(DockerTab* tab)
+  {
+    Split(tab, false, false);
+  }
+
+  void Docker::AddSplitAbove(DockerTab* tab)
+  {
+    Split(tab, true, true);
+  }
+
+  void Docker::AddSplitBelow(DockerTab* tab)
+  {
+    Split(tab, true, false);
+  }
+
+  void Docker::Split(DockerTab* tab, bool vertical, bool before)
+  {
+    if(tab->GetContainer() != nullptr)
+      tab->GetContainer()->RemoveTab(tab);
+
+    if(split->IsVertical() != vertical)
+    {
+      split = new DockerSplit(split, this, nullptr, vertical);
+    }
+
+    DockerContainer* container = new DockerContainer(grabbedTab, this, nullptr);
+    split->AddDocker(before ? 0 : split->GetDockerCount(), container);
+    OnMeasured();
   }
 }

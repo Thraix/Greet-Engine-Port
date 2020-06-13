@@ -19,6 +19,7 @@ namespace Greet {
       float grabbedDistance = 0;
       XMLObject tabButton;
       XMLObject splitIconStyle;
+      bool childrenChanged;
     public:
       Vec4 edgeColor;
       int edgeWidth;
@@ -43,5 +44,15 @@ namespace Greet {
       void SetGUIScene(GUIScene* scene) override;
 
       bool IsHoldingTab() const;
+
+      void MarkDirty();
+
+      inline void AddSplitLeft(DockerTab* tab);
+      inline void AddSplitRight(DockerTab* tab);
+      inline void AddSplitAbove(DockerTab* tab);
+      inline void AddSplitBelow(DockerTab* tab);
+
+    private:
+      void Split(DockerTab* tab, bool vertical, bool before);
   };
 }

@@ -33,10 +33,10 @@ namespace Greet {
       void Update(float timeElapsed) override;
       void OnEvent(Event& event, const Vec2& componentPos) override;
 
-      bool HandleDroppedTab(DockerTab* tab, MouseReleaseEvent& event, const Vec2& componentPos) override;
+      void HandleDroppedTab(DockerTab* tab, MouseReleaseEvent& event, const Vec2& componentPos) override;
 
-      void AddDocker(int index, DockerInterface* docker, bool fixSize = true);
-      void RemoveDocker(int index, bool shouldDelete = true, bool fixSize = true);
+      void AddDocker(int index, DockerInterface* docker);
+      DockerInterface* RemoveDocker(int index);
       void MergeSimilarSplits();
 
       int GetDockerIndex(DockerInterface* interface);
@@ -51,5 +51,24 @@ namespace Greet {
       void SetGUIScene(GUIScene* scene) override;
 
       void UpdateWeights();
+
+      void DebugPrint(int indent) override
+      {
+        std::stringstream ss;
+        for(int i = 0;i<indent;i++)
+        {
+          ss << "-";
+        }
+        if(vertical)
+          ss << "[vertical]";
+        else
+          ss << "[horizontal]";
+        ss << " w=" << weight;
+        Log::Info(ss.str());
+        for(auto it = children.begin(); it != children.end();++it)
+        {
+          (*it)->DebugPrint(indent+1);
+        }
+      }
   };
 }

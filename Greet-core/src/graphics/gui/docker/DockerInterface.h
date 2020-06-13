@@ -40,8 +40,7 @@ namespace Greet
       virtual void Update(float timeElapsed) = 0;
       virtual void OnEvent(Event& event, const Vec2& translation) = 0;
 
-      // Returns true if the tab should be removed from its current container
-      virtual bool HandleDroppedTab(DockerTab* tab, MouseReleaseEvent& event, const Vec2& componentPos) = 0;
+      virtual void HandleDroppedTab(DockerTab* tab, MouseReleaseEvent& event, const Vec2& componentPos) = 0;
 
       virtual Component* GetComponentByNameNoCast(const std::string& name) = 0;
       virtual Vec2 GetMinSize() const = 0;
@@ -50,6 +49,7 @@ namespace Greet
       virtual void SetSize(const Vec2& position) = 0;
       virtual void SetGUIScene(GUIScene* scene) = 0;
 
+      virtual void DebugPrint(int indent) = 0;
   };
 }
 

@@ -42,7 +42,7 @@ namespace Greet
 
   void DockerTab::OnEvent(Event& event, const Vec2& componentPos)
   {
-    component->OnEventHandler(event, componentPos + position + Vec2{0.0f, 0.0f});
+    component->OnEventHandler(event, componentPos + Vec2{0.0f, 0.0f});
   }
 
   Component* DockerTab::GetComponentByNameNoCast(const std::string& name)
@@ -72,14 +72,12 @@ namespace Greet
 
   void DockerTab::SetPosition(const Vec2& _position)
   {
-    position = _position;
-    component->SetPosition(position);
+    component->SetPosition(_position);
   }
 
   void DockerTab::SetSize(const Vec2& _size)
   {
-    size = _size;
     component->Measure();
-    component->MeasureFill(size, {1, 1});
+    component->MeasureFill(_size, {1, 1});
   }
 }
