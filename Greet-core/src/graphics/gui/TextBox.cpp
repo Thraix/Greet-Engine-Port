@@ -62,7 +62,7 @@ namespace Greet
 
   void TextBox::Render(GUIRenderer* renderer) const
   {
-    renderer->PushViewport(pos+GetTotalPadding(), GetContentSize(), true);
+    renderer->PushViewport(pos+GetTotalPadding(), GetContentSize());
     if(text->GetText().length() == 0)
     {
       Vec2 p = pos + GetTotalPadding() +  Vec2(-textOffset, 0);

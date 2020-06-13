@@ -32,9 +32,12 @@ namespace Greet {
   {
     Vec2 p = pos + GetTotalPadding() +  Vec2(
         (GetContentSize().w-label->GetWidth())/2, 0);
+    renderer->PushViewport(pos+GetTotalPadding(), GetContentSize());
     renderer->PushTranslation(p);
     label->Render(renderer);
     renderer->PopTranslation();
+    renderer->PopViewport();
+
   }
 
   void Button::SetText(const std::string& text)
