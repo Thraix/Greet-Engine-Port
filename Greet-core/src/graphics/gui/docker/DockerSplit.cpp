@@ -8,6 +8,7 @@ namespace Greet
     : DockerInterface{docker, parent}
   {
     vertical = GUIUtils::GetBooleanFromXML(object, "vertical", false);
+    weight = GUIUtils::GetFloatFromXML(object, "weight", 1.0);
     for(auto&& objectChild : object.GetObjects())
     {
       if(objectChild.GetName() == "DockerSplit")
@@ -23,12 +24,14 @@ namespace Greet
         Log::Error("Unknown component in DockerSplit. Component=", objectChild.GetName());
       }
     }
+    NormalizeWeights();
   }
 
   DockerSplit::DockerSplit(DockerSplit* split, Docker* docker, DockerSplit* parent, bool vertical)
     : DockerInterface{docker, parent}, children{split}, vertical{vertical}
   {
     split->SetParent(this);
+    NormalizeWeights();
   }
 
   DockerSplit::DockerSplit(const std::vector<DockerInterface*>& children, Docker* docker, DockerSplit* parent, bool vertical)
@@ -38,6 +41,7 @@ namespace Greet
     {
       child->SetParent(this);
     }
+    NormalizeWeights();
   }
 
   DockerSplit::~DockerSplit()
@@ -406,6 +410,20 @@ namespace Greet
     for(auto child : children)
     {
       child->SetWeight(child->GetSize()[vecIndex] / size * totalWeight);
+    }
+  }
+
+  void DockerSplit::NormalizeWeights()
+  {
+    float totalWeight = 0.0f;
+    for(auto&& child : children)
+    {
+      totalWeight += child->GetWeight();
+    }
+    float weightScale = children.size() / totalWeight;
+    for(auto&& child : children)
+    {
+      child->SetWeight(child->GetWeight() * weightScale);
     }
   }
 }

@@ -9,6 +9,7 @@ namespace Greet
   DockerContainer::DockerContainer(const XMLObject& object, Docker* docker, DockerSplit* parent)
     : DockerInterface{docker, parent}, activeTab{0}
   {
+    weight = GUIUtils::GetFloatFromXML(object, "weight", 1.0);
     for(auto&& objectChild : object.GetObjects())
     {
       if(objectChild.GetName() == "DockerTab")

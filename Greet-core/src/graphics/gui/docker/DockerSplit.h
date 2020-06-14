@@ -51,6 +51,7 @@ namespace Greet {
       void SetGUIScene(GUIScene* scene) override;
 
       void UpdateWeights();
+      void NormalizeWeights();
 
       void DebugPrint(int indent) override
       {
