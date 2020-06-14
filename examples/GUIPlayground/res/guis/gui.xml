@@ -8,7 +8,7 @@
   <TabButton width="100" height="25" font="noto" fontSize="12" color="#ffffff" hoverbackgroundColor="#424242" backgroundColor="#323232" activebackgroundColor="#424242" activeborder="0 0 2 0" activeborderColor="#4CAF50"/>
   <SplitIcon width="30" height="30" backgroundColor="#424242" border="5 2 2 2" borderColor="#626262"/>
   <DockerSplit>
-    <DockerContainer weight="0.5">
+    <DockerContainer weight="0.35">
       <DockerTab title="Settings">
         <Container name="container" width="fill_parent" height="fill_parent" backgroundColor="#424242" padding="10">
           <Label

@@ -131,7 +131,7 @@ namespace Greet
         UnhoverTab();
       }
     }
-    children[activeTab]->OnEvent(event, componentPos);
+    children[activeTab]->OnEvent(event, componentPos + GetTabOffset());
   }
 
   void DockerContainer::HandleDroppedTab(DockerTab* tab, MouseReleaseEvent& event, const Vec2& componentPos)
