@@ -12,14 +12,22 @@ namespace Greet {
   class Docker;
   class DockerContainer;
 
+
   class DockerTab
   {
+    public:
+      friend class DockerContainer;
+      typedef std::function<void(Docker* c, DockerTab* tab)> OnTabChangeCallback;
+
     protected:
+      OnTabChangeCallback onTabShowCallback;
+      OnTabChangeCallback onTabHideCallback;
       Docker* docker;
       DockerContainer* parentContainer;
 
       std::string title;
       Component* component;
+      bool shown = false;
 
     public:
       DockerTab(const XMLObject& object, Docker* docker, DockerContainer* parent);
@@ -32,11 +40,18 @@ namespace Greet {
       void OnEvent(Event& event, const Vec2& componentPos);
 
       Component* GetComponentByNameNoCast(const std::string& name);
-      DockerContainer* GetContainer();
+      DockerContainer* GetContainer() const;
+
+      void SetOnTabShowCallback(OnTabChangeCallback callback);
+      void SetOnTabHideCallback(OnTabChangeCallback callback);
 
       void SetContainer(DockerContainer* parentContainer);
       void SetGUIScene(GUIScene* scene);
       void SetPosition(const Vec2& position);
       void SetSize(const Vec2& position);
+
+    protected:
+      void ShowTab();
+      void HideTab();
   };
 }

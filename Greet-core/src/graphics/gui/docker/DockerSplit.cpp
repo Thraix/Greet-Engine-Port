@@ -347,6 +347,17 @@ namespace Greet
     return minSize;
   }
 
+  DockerTab* DockerSplit::GetTab(const std::string& tabName) const
+  {
+    for(auto&& child : children)
+    {
+      DockerTab* tab = child->GetTab(tabName);
+      if(tab != nullptr)
+        return tab;
+    }
+    return nullptr;
+  }
+
   bool DockerSplit::IsVertical() const
   {
     return vertical;

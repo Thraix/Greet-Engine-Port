@@ -56,6 +56,8 @@ namespace Greet {
       void SetPosition(const Vec2& position) override;
       void SetSize(const Vec2& size) override;
 
+      DockerTab* GetTab(const std::string& tabName) const override;
+
       inline void AddSplitLeft(DockerTab* tab);
       inline void AddSplitRight(DockerTab* tab);
       inline void AddSplitAbove(DockerTab* tab);

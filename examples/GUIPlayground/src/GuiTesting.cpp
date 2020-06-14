@@ -62,7 +62,25 @@ class Core : public App
           ->SetOnColorChangeCallback(std::bind(&Core::OnColorChangeCallback, std::ref(*this), _1, _2, _3));
         frame->GetComponentByName<Button>("button")
           ->SetOnClickCallback(std::bind(&Core::OnButtonPressCallback, std::ref(*this), _1));
+        Docker* docker = frame->GetComponentByName<Docker>("docker");
+        if(docker)
+        {
+          DockerTab* tab = docker->GetTab("Settings");
+          if(tab)
+          {
+            tab->SetOnTabShowCallback(
+                [](Docker* docker, DockerTab* tab)
+                {
+                  Log::Info("Show");
+                });
+            tab->SetOnTabHideCallback(
+                [](Docker* docker, DockerTab* tab)
+                {
+                  Log::Info("Hide");
+                });
+          }
         }
+      }
 #endif
       GlobalSceneManager::GetSceneManager().Add2DScene(guiScene, "GUIScene");
     }

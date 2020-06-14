@@ -50,6 +50,8 @@ namespace Greet
       virtual void SetGUIScene(GUIScene* scene) = 0;
 
       virtual void DebugPrint(int indent) = 0;
+
+      virtual DockerTab* GetTab(const std::string& tabName) const = 0;
   };
 }
 

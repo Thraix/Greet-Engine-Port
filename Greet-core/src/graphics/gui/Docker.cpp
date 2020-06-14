@@ -174,6 +174,11 @@ namespace Greet
     return grabbedTab != nullptr && grabbedDistance > 20;
   }
 
+  DockerTab* Docker::GetTab(const std::string& tabName) const
+  {
+    return split->GetTab(tabName);
+  }
+
   void Docker::MarkDirty()
   {
     childrenChanged = true;

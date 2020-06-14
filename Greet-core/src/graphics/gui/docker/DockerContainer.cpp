@@ -21,6 +21,8 @@ namespace Greet
         Log::Error("Unknown component in DockerContainer. Component=", objectChild.GetName());
       }
     }
+    if(children.size() > 0)
+      children[0]->ShowTab();
     button = new Button(docker->GetTabButton(), nullptr);
     button->AddStyle("active", Style{"active", docker->GetTabButton()});
     splitIcon = new Component(docker->GetSplitIconStyle(), nullptr);
@@ -198,13 +200,21 @@ namespace Greet
   void DockerContainer::SelectTab(int i)
   {
     ASSERT(i >= 0 && i < children.size(), "Index out of bound");
+    if(i != activeTab)
+    {
+      if(activeTab >= 0 && activeTab < children.size())
+        children[activeTab]->HideTab();
+      children[i]->ShowTab();
+    }
     activeTab = i;
   }
 
   void DockerContainer::ClampSelectedTab()
   {
     if(activeTab >= children.size())
-      activeTab = children.size()-1;
+    {
+      SelectTab(children.size() - 1);
+    }
   }
 
   void DockerContainer::HoverTab(int i)
@@ -233,9 +243,10 @@ namespace Greet
     children.erase(children.begin() + i);
 
     DockerSplit* split = static_cast<DockerSplit*>(parent);
-    ClampSelectedTab();
     if(children.size() == 0)
       docker->MarkDirty();
+    else
+      ClampSelectedTab();
   }
 
 
@@ -315,6 +326,16 @@ namespace Greet
     }
     button->Measure();
     button->MeasureFill(size, {1.0f,1.0f});
+  }
+
+  DockerTab* DockerContainer::GetTab(const std::string& tabName) const
+  {
+    for(auto&& child : children)
+    {
+      if(child->GetTitle() == tabName)
+        return child;
+    }
+    return nullptr;
   }
 
   const Vec2& DockerContainer::GetTopSplitPos() const

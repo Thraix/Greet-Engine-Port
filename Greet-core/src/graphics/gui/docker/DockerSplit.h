@@ -45,6 +45,7 @@ namespace Greet {
 
       Component* GetComponentByNameNoCast(const std::string& name) override;
       Vec2 GetMinSize() const override;
+      DockerTab* GetTab(const std::string& tabName) const override;
 
       void SetPosition(const Vec2& _size) override;
       void SetSize(const Vec2& _size) override;

@@ -52,6 +52,8 @@ namespace Greet {
       inline void AddSplitAbove(DockerTab* tab);
       inline void AddSplitBelow(DockerTab* tab);
 
+      DockerTab* GetTab(const std::string& tabName) const;
+
     private:
       void Split(DockerTab* tab, bool vertical, bool before);
   };

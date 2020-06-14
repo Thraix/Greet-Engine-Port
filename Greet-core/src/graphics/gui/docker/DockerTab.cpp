@@ -55,7 +55,7 @@ namespace Greet
     return title;
   }
 
-  DockerContainer* DockerTab::GetContainer()
+  DockerContainer* DockerTab::GetContainer() const
   {
     return parentContainer;
   }
@@ -79,5 +79,36 @@ namespace Greet
   {
     component->Measure();
     component->MeasureFill(_size, {1, 1});
+  }
+
+  void DockerTab::SetOnTabShowCallback(OnTabChangeCallback callback)
+  {
+    onTabShowCallback = callback;
+    // Call the callback if the tab is already shown
+    // This is done to solve problems with the callback not being called
+    // for the initial setup
+    if(shown)
+      onTabShowCallback(docker, this);
+  }
+
+  void DockerTab::SetOnTabHideCallback(OnTabChangeCallback callback)
+  {
+    onTabHideCallback = callback;
+    // Do not call the callback as with the SetOnTabShowCallback
+    // As this doesn't have the same problem with initialization
+  }
+
+  void DockerTab::ShowTab()
+  {
+    if(!shown && onTabShowCallback)
+      onTabShowCallback(docker, this);
+    shown = true;
+  }
+
+  void DockerTab::HideTab()
+  {
+    if(shown && onTabHideCallback)
+      onTabHideCallback(docker, this);
+    shown = false;
   }
 }
