@@ -150,9 +150,9 @@ namespace Greet
 
   void Docker::OnMeasured()
   {
-    split->SetSize(GetSize());
+    split->SetSize(GetContentSize());
     // Update positions of child dockers
-    split->SetPosition({0,0});
+    split->SetPosition(GetTotalPadding());
   }
 
   Component* Docker::GetComponentByNameNoCast(const std::string& name)

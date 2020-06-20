@@ -4,7 +4,7 @@
   resizeTop="false" resizeLeft="false" resizeBottom="false" resizeRight="true"
   borderColor="#37474f"
   backgroundColor="#ffffff">
-<Docker width="1w" height="1w" name="docker" backgroundColor="#323232" edgeColor="#323232" edgeSize="10" edgeBorder="2" edgeBorderColor="#626262">
+<Docker width="1w" height="1w" name="docker" backgroundColor="#323232" edgeColor="#323232" edgeSize="10" edgeBorder="2" edgeBorderColor="#626262" border="2" borderColor="#626262">
   <TabButton width="100" height="25" font="noto" fontSize="12" color="#ffffff" hoverbackgroundColor="#424242" backgroundColor="#323232" activebackgroundColor="#424242" activeborder="0 0 2 0" activeborderColor="#4CAF50"/>
   <SplitIcon width="30" height="30" backgroundColor="#424242" border="5 2 2 2" borderColor="#626262"/>
   <DockerSplit>
@@ -43,9 +43,7 @@
           <Button width="fill_parent" height="30" name="button"
             backgroundColor="#4CAF50"
             borderColor="#1B5E20"
-            hoverbackgroundColor="#4CAF50"
-            border="0 0 2 0"
-            hoverborder="2 0 0 0"
+            hoverbackgroundColor="#4b994e"
             color="#ffffff" fontSize="16" font="noto">Button!</Button>
 
           <TextBox
