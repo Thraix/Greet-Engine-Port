@@ -235,6 +235,8 @@ namespace Greet
     children.insert(children.begin() + index, tab);
     tab->SetPosition(position + GetTabOffset());
     tab->SetSize(size - GetTabOffset());
+    tab->docker = docker;
+    tab->SetContainer(this);
   }
 
   void DockerContainer::RemoveTab(int i)

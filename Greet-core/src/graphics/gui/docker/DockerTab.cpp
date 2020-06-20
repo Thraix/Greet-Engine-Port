@@ -4,6 +4,11 @@
 
 namespace Greet
 {
+  DockerTab::DockerTab(const std::string& title, Component* component)
+    : title{title}, docker{nullptr}, parentContainer{nullptr}, component{component}
+  {
+  }
+
   DockerTab::DockerTab(const XMLObject& object, Docker* docker, DockerContainer* parentContainer)
     : docker{docker}, parentContainer{parentContainer}, component{nullptr}
   {

@@ -16,7 +16,9 @@ namespace Greet {
   class DockerTab
   {
     public:
+      friend class Docker;
       friend class DockerContainer;
+      friend class DockerSplit;
       typedef std::function<void(Docker* c, DockerTab* tab)> OnTabChangeCallback;
 
     protected:
@@ -30,6 +32,7 @@ namespace Greet {
       bool shown = false;
 
     public:
+      DockerTab(const std::string& title, Component* component);
       DockerTab(const XMLObject& object, Docker* docker, DockerContainer* parent);
       virtual ~DockerTab();
 
@@ -49,6 +52,9 @@ namespace Greet {
       void SetGUIScene(GUIScene* scene);
       void SetPosition(const Vec2& position);
       void SetSize(const Vec2& position);
+
+      Docker* GetDocker() const;
+      void SetDocker(Docker* docker);
 
     protected:
       void ShowTab();

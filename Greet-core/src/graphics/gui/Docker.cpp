@@ -74,7 +74,7 @@ namespace Greet
 
   void Docker::HandleDroppedTab(MouseReleaseEvent& event, const Vec2& componentPos)
   {
-    Vec2 mousePos = event.GetPosition() - componentPos;
+    Vec2 mousePos = event.GetPosition() - componentPos - GetTotalPadding();
 
     int splitLimit = 0;
 
@@ -82,7 +82,7 @@ namespace Greet
     {
       AddSplitLeft(grabbedTab);
     }
-    else if(mousePos.x >= GetSize().w - splitLimit)
+    else if(mousePos.x >= GetContentSize().w - splitLimit)
     {
       AddSplitRight(grabbedTab);
     }
@@ -90,7 +90,7 @@ namespace Greet
     {
       AddSplitAbove(grabbedTab);
     }
-    else if(mousePos.y >= GetSize().h - splitLimit)
+    else if(mousePos.y >= GetContentSize().h - splitLimit)
     {
       AddSplitBelow(grabbedTab);
     }
@@ -208,13 +208,14 @@ namespace Greet
   {
     if(tab->GetContainer() != nullptr)
       tab->GetContainer()->RemoveTab(tab);
+    tab->docker = this;
 
     if(split->IsVertical() != vertical)
     {
       split = new DockerSplit(split, this, nullptr, vertical);
     }
 
-    DockerContainer* container = new DockerContainer(grabbedTab, this, nullptr);
+    DockerContainer* container = new DockerContainer(tab, this, nullptr);
     split->AddDocker(before ? 0 : split->GetDockerCount(), container);
     OnMeasured();
   }

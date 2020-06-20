@@ -61,10 +61,12 @@ namespace Greet
       edgeSize[vecIndex] = docker->edgeWidth;
 
       renderer->SubmitRect(edgePos, edgeSize, docker->edgeBorderColor, false);
-      edgePos[1-vecIndex] -= docker->edgeBorderSize;
+      if(parent != nullptr)
+        edgePos[1-vecIndex] -= docker->edgeBorderSize;
       edgePos[vecIndex] += docker->edgeBorderSize;
 
-      edgeSize[1-vecIndex] += 2*docker->edgeBorderSize;
+      if(parent != nullptr)
+        edgeSize[1-vecIndex] += 2*docker->edgeBorderSize;
       edgeSize[vecIndex] -= 2*docker->edgeBorderSize;
       renderer->SubmitRect(edgePos, edgeSize, docker->edgeColor, false);
     }
