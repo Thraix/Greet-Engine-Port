@@ -1,5 +1,6 @@
 #pragma once
 
+#include <common/Types.h>
 #include <common/Memory.h>
 
 namespace Greet {
