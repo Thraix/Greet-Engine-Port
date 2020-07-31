@@ -17,8 +17,17 @@ namespace Greet
       float bottom;
       float right;
 
+      TLBR()
+        : top{0}, left{0}, bottom{0},right{0}
+      {}
+
+      TLBR(const std::string& prefix, const XMLObject& object)
+      {
+        Load(prefix, object);
+      }
+
       TLBR(float top, float left, float bottom, float right)
-        : top(top), left(left), bottom(bottom),right(right)
+        : top{top}, left{left}, bottom{bottom},right{right}
       {}
 
       void Load(const std::string& prefix, const XMLObject& object)

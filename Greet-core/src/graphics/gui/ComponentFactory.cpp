@@ -19,7 +19,9 @@ namespace Greet
       XMLObject o("Failed", std::map<std::string, std::string>(), "");
       return new Component(o,parent); // Return plain content to avoid crash.
     }
-    return it->second(xmlObject, parent);
+    Component* component = it->second(xmlObject, parent);
+    component->LoadStyles(xmlObject);
+    return component;
   }
 
   Frame* FrameFactory::GetFrame(const std::string& filePath)
@@ -45,6 +47,8 @@ namespace Greet
       XMLObject o("Failed", std::map<std::string, std::string>(), "");
       return new Frame(o); // Return plain content to avoid crash.
     }
-    return it->second(xmlObject);
+    Frame* frame = it->second(xmlObject);
+    frame->LoadStyles(xmlObject);
+    return frame;
   }
 }

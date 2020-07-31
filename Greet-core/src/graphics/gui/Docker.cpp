@@ -50,7 +50,7 @@ namespace Greet
       Log::Error("No DockerSplit found in Docker");
       split = new DockerSplit({"DockerSplit",{},""}, this, nullptr);
     }
-    edgeColor = GUIUtils::GetColorFromXML(object, "edgeColor", currentStyle->backgroundColor);
+    edgeColor = GUIUtils::GetColorFromXML(object, "edgeColor", backgroundColor);
     edgeWidth = GUIUtils::GetIntFromXML(object, "edgeSize", 10);
     edgeBorderSize  = GUIUtils::GetIntFromXML(object, "edgeBorder", 0);
     edgeBorderColor = GUIUtils::GetColorFromXML(object, "edgeBorderColor", Vec4{1,1,1,1});

@@ -9,6 +9,7 @@ namespace Greet
   ProgressBar::ProgressBar(const XMLObject& object, Component* parent)
     : Component(object,parent), min(0), max(1), value(0), valueReference(nullptr), vertical(false), reverse(false)
   {
+    AddStyleVariables({.colors= {{"progressColor", &progressColor}}});
     m_isFocusable = true;
     if(object.HasAttribute("minValue"))
       min = atof(object.GetAttribute("minValue").c_str());
@@ -17,7 +18,6 @@ namespace Greet
 
     vertical = GUIUtils::GetBooleanFromXML(object,"vertical", false);
     reverse = GUIUtils::GetBooleanFromXML(object,"reverseProgress", false);
-    progressColor = GUIUtils::GetColorFromXML(object, "progressColor", Vec4(1,1,1,1));
   }
 
   void ProgressBar::Render(GUIRenderer* renderer) const
@@ -32,9 +32,9 @@ namespace Greet
     Vec2 progressPos = pos + GetBorder().LeftTop() + GetPadding().LeftTop();
 
     if(reverse)
-      renderer->SubmitRoundedRect(progressPos + (GetContentSize() - localSize), localSize, progressColor, currentStyle->radius,currentStyle->roundedPrecision,false);
+      renderer->SubmitRoundedRect(progressPos + (GetContentSize() - localSize), localSize, progressColor, backgroundRadius,backgroundRoundedPrecision,false);
     else
-      renderer->SubmitRoundedRect(progressPos,  localSize, progressColor, currentStyle->radius,currentStyle->roundedPrecision,false);
+      renderer->SubmitRoundedRect(progressPos,  localSize, progressColor, backgroundRadius,backgroundRoundedPrecision,false);
   }
 
   void ProgressBar::Update(float timeElapsed)

@@ -16,7 +16,7 @@ namespace Greet
       bool vertical;
       bool reverse;
 
-      Vec4 progressColor;
+      Vec4 progressColor = {1,1,1,1};
 
     public:
       ProgressBar(const XMLObject& object, Component* parent);

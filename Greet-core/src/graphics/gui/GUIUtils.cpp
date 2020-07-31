@@ -54,14 +54,7 @@ namespace Greet
   float GUIUtils::GetFloatFromXML(const XMLObject& object, const std::string& key, float defaultValue)
   {
     if(object.HasAttribute(key))
-    {
-      const std::string& str = object.GetAttribute(key);
-      char* endPos;
-      float value = std::strtof(str.c_str(), &endPos);
-      if(endPos != &*str.end())
-        Log::Warning("Invalid string in float property \"",key,"\"=\"", str, "\"");
-      return value;
-    }
+      return GetFloat(object.GetAttribute(key));
     return defaultValue;
   }
 
@@ -92,6 +85,24 @@ namespace Greet
     }
     Log::Error("Invalid starting character for color: ", str);
     return Vec4(1, 0, 1, 1); // Invalid color pink since its very visible
+  }
+
+  float GUIUtils::GetFloat(const std::string& str)
+  {
+    char* endPos;
+    float value = std::strtof(str.c_str(), &endPos);
+    if(endPos != &*str.end())
+      Log::Warning("Invalid string in float property: ", str);
+    return value;
+  }
+
+  int GUIUtils::GetInt(const std::string& str)
+  {
+    char* endPos;
+    int value = std::strtol(str.c_str(), &endPos, 10);
+    if(endPos != &*str.end())
+      Log::Warning("Invalid string in int property: ", str);
+    return value;
   }
 
   void GUIUtils::GetComponentSize(const std::string& size, float* retValue, ComponentSize::Type* retType)

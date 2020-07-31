@@ -24,7 +24,8 @@ namespace Greet
     if(children.size() > 0)
       children[0]->ShowTab();
     button = new Button(docker->GetTabButton(), nullptr);
-    button->AddStyle("active", Style{"active", docker->GetTabButton()});
+    button->AddStyle("active", "normal");
+    button->LoadStyles(docker->GetTabButton());
     splitIcon = new Component(docker->GetSplitIconStyle(), nullptr);
     splitIcon->Remeasure();
   }
@@ -35,7 +36,8 @@ namespace Greet
     children.push_back(tab);
     tab->SetContainer(this);
     button = new Button(docker->GetTabButton(), nullptr);
-    button->AddStyle("active", Style{"active", docker->GetTabButton()});
+    button->AddStyle("active", "normal");
+    button->LoadStyles(docker->GetTabButton());
     splitIcon = new Component(docker->GetSplitIconStyle(), nullptr);
     splitIcon->Remeasure();
   }

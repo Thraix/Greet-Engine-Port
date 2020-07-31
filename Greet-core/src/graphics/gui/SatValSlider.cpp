@@ -10,13 +10,18 @@ namespace Greet
     : Component{name, parent}, hue{0}, sat{0.5}, val{0.5}
   {
     m_isFocusable = true;
-    Style normal{};
-    normal.SetBackgroundColor(Vec4(1,1,1,1))
-      .SetBorderColor(Vec4(0,0,0,1))
-      .SetBorder(TLBR(2,2,2,2));
+    Styling normal
+    {
+      .colors = {
+        {"backgroundColor", {1,1,1,1}},
+        {"borderColor", {0,0,0,1}},
+      },
+      .tlbrs = {{"border", {2,2,2,2}}}
+    };
+
     Component* component = new Component{"SatValSliderComponent", this};
     component->SetSize(7,7,ComponentSize::Type::PIXELS, ComponentSize::Type::PIXELS, false)
-      .AddStyle("normal", normal);
+      .LoadStyle("normal", normal);
     sliderComponent = component;
   }
 
@@ -28,11 +33,17 @@ namespace Greet
       sliderComponent = ComponentFactory::GetComponent(xmlObject.GetObject(0), this);
     else
     {
-      Style normal{};
-      normal.SetBackgroundColor(Vec4(1,1,1,1)).SetBorderColor(Vec4(0,0,0,1));
+    Styling normal
+    {
+      .colors = {
+        {"backgroundColor", {1,1,1,1}},
+        {"borderColor", {0,0,0,1}},
+      },
+      .tlbrs = {{"border", {2,2,2,2}}}
+    };
       Component* component = new Component{"SatValSliderComponent", this};
       component->SetSize(7,7,ComponentSize::Type::PIXELS, ComponentSize::Type::PIXELS, false)
-        .AddStyle("normal", normal);
+        .LoadStyle("normal", normal);
       sliderComponent = component;
     }
   }

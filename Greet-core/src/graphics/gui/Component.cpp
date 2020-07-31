@@ -15,20 +15,43 @@ namespace Greet
   REGISTER_COMPONENT_DEFINITION(Component);
 
   Component::Component(const std::string& name, Component* parent)
-    : parent{parent}, size{},
-    m_isFocusable{false},isFocused{false},isHovered{false}, pos{0,0}, pressed{false}, name{name}
+    : parent{parent}, size{}, m_isFocusable{false}, isFocused{false}, isHovered{false}, pos{0,0}, pressed{false}, name{name}
   {
-    AddStyle("normal", Style{});
+    AddStyleVariables({
+      .colors=
+      {
+        {"backgroundColor", &backgroundColor},
+        {"borderColor", &borderColor}
+      },
+      .tlbrs =
+      {
+        {"border", &border},
+        {"margin", &margin},
+        {"padding", &padding}
+      },
+      .floats =
+      {
+        {"radius", &backgroundRadius},
+        {"borderRadius", &borderRadius}
+      },
+      .ints =
+      {
+        {"backgroundRoundedPrecision", &backgroundRoundedPrecision},
+        {"borderRoundedPrecision", &borderRoundedPrecision}
+      }
+    });
+
+    AddStyle("normal");
+    AddStyle("hover", "normal");
+    AddStyle("press", "normal");
     SetCurrentStyle("normal");
   }
+
 
   Component::Component(const XMLObject& xmlObject, Component* parent)
     : Component{GUIUtils::GetStringFromXML(xmlObject,"name", xmlObject.GetName() + "#" + LogUtils::DecToHex(UUID::GetInstance().GetUUID(),8)), parent}
   {
     size = GUIUtils::GetComponentSizeFromXML(xmlObject, "width", "height", {});
-    AddStyle("normal", Style{"", xmlObject});
-    AddStyle("hover", Style{"hover", xmlObject});
-    AddStyle("press", Style{"press", xmlObject});
   }
 
   void Component::Measure()
@@ -93,13 +116,13 @@ namespace Greet
     renderer->PushTranslation(translation);
 
     // Border around Component
-    if (currentStyle->hasBorderColor)
+    if(borderColor.a != 0.0)
       //renderer->SubmitRect(pos + Vec2(0,0), size, currentStyle->borderColor, false);
-      renderer->SubmitRoundedRect(pos+Vec2(0,0),size.size, currentStyle->borderColor, currentStyle->borderRadius, currentStyle->roundedPrecision, false);
+      renderer->SubmitRoundedRect(pos+Vec2(0,0),size.size, borderColor, borderRadius, borderRoundedPrecision, false);
 
     // Component background
-    if (currentStyle->hasBackgroundColor)
-      renderer->SubmitRoundedRect(pos + currentStyle->border.LeftTop(), size.size-GetBorder().LeftTop()-GetBorder().RightBottom(), currentStyle->backgroundColor, currentStyle->radius,currentStyle->roundedPrecision,false);
+    if (backgroundColor.a != 0.0)
+      renderer->SubmitRoundedRect(pos + border.LeftTop(), size.size-GetBorder().LeftTop()-GetBorder().RightBottom(), backgroundColor, backgroundRadius, backgroundRoundedPrecision, false);
   }
 
   // Render component
@@ -336,19 +359,66 @@ namespace Greet
     guiScene = scene;
   }
 
-  const Style& Component::GetStyle(const std::string& stylename) const
+  const ComponentStyle& Component::GetStyle(const std::string& stylename) const
   {
     auto it = styles.find(stylename);
     if(it != styles.end())
       return it->second;
     Log::Error("Style does not exist within component: ", name, ", ", stylename);
-    static Style style;
-    return style;
+    return styles.find("normal")->second;
   }
 
-  Component& Component::AddStyle(const std::string& stylename, const Style& style)
+  ComponentStyle& Component::GetStyle(const std::string& stylename)
   {
-    styles[stylename] = style;
+    auto it = styles.find(stylename);
+    if(it != styles.end())
+      return it->second;
+    Log::Error("Style does not exist within component: ", name, ", ", stylename);
+    return styles.find("normal")->second;
+  }
+
+  Component& Component::AddStyle(const std::string& stylename, const std::string& inherit)
+  {
+    auto it = styles.find(stylename);
+    if(it != styles.end())
+    {
+      Log::Error("Style already exist: ", stylename, " in ", name);
+      return *this;
+    }
+    ComponentStyle* inheritStyle = nullptr;
+    if(inherit != "")
+      inheritStyle = &GetStyle(inherit);
+    it = styles.emplace(stylename, ComponentStyle{styleVariables, inheritStyle}).first;
+    return *this;
+  }
+
+  Component& Component::AddStyleVariables(const StylingVariables& variables)
+  {
+    styleVariables.Merge(variables);
+    for(auto&& style : styles)
+    {
+      style.second.AddVariables(variables);
+    }
+    return *this;
+  }
+
+  void Component::LoadStyles(const XMLObject& xmlObject)
+  {
+    for(auto&& style : styles)
+    {
+      style.second.Load(style.first, xmlObject);
+    }
+  }
+
+  Component& Component::LoadStyle(const std::string& stylename, const Styling& styling)
+  {
+    auto it = styles.find(stylename);
+    if(it == styles.end())
+    {
+      Log::Error("Style does not exist within component: ", name, ", ", stylename);
+      return *this;
+    }
+    it->second.Load(styling);
     return *this;
   }
 
@@ -359,6 +429,7 @@ namespace Greet
     {
       currentStylename = stylename;
       currentStyle = &it->second;
+      currentStyle->SetStyling();
       return;
     }
     Log::Error("Style does not exist within component: ", name, ", ", stylename);
@@ -418,16 +489,16 @@ namespace Greet
 
   const TLBR& Component::GetMargin() const
   {
-    return currentStyle->margin;
+    return margin;
   }
 
   const TLBR& Component::GetPadding() const
   {
-    return currentStyle->padding;
+    return padding;
   }
 
   const TLBR& Component::GetBorder() const
   {
-    return currentStyle->border;
+    return border;
   }
 }

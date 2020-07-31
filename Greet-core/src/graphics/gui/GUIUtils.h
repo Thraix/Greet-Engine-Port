@@ -34,9 +34,11 @@ namespace Greet {
       static float GetFloatFromXML(const XMLObject& object, const std::string& key, float defaultValue);
 
     private:
-      static bool GetBoolean(const std::string& str);
       static void GetComponentSize(const std::string& size, float* retValue, ComponentSize::Type* retType);
     public:
       static Vec4 GetColor(const std::string& str);
+      static float GetFloat(const std::string& str);
+      static int GetInt(const std::string& str);
+      static bool GetBoolean(const std::string& str);
   };
 }

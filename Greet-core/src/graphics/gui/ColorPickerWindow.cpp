@@ -17,13 +17,20 @@ namespace Greet
 
     Vec3<float> hsv(ColorUtils::RGBtoHSV(Vec4(color.r,color.g,color.b,1)));
 
-    Style s = Style{}.SetBackgroundColor(ColorUtils::ColorHexToVec4(0xff263238))
-      .SetBorderColor(ColorUtils::ColorHexToVec4(0xff37474f))
-      .SetBorder({1,1,1,1})
-      .SetPadding({10,10,10,10});
-
+    Styling s{
+      .colors =
+      {
+        {"backgroundColor", ColorUtils::ColorHexToVec4(0xff263238)},
+        {"borderColor", ColorUtils::ColorHexToVec4(0xff37474f)}
+      },
+      .tlbrs =
+      {
+        {"border", {1, 1, 1, 1}},
+        {"padding", {10, 10, 10, 10}}
+      }
+    };
     SetVertical(false)
-      .AddStyle("normal",s)
+      .LoadStyle("normal", s)
       .SetSize(1,1, ComponentSize::Type::WRAP, ComponentSize::Type::WRAP,false);
 
     svSlider = new SatValSlider("ColorPickerWindow#SatValSlider", this);
@@ -44,12 +51,23 @@ namespace Greet
     textBoxContainer->SetSize(110,1,ComponentSize::Type::PIXELS, ComponentSize::Type::WEIGHT);
     AddComponent(textBoxContainer);
 
-    Style textBoxStyle = Style{}.SetPadding({0, 5, 0, 5})
-      .SetRadius(3)
-      .SetBorder({1,1,1,1})
-      .SetBorderRadius(4)
-      .SetBackgroundColor(ColorUtils::ColorHexToVec4(0xff37474f))
-      .SetBorderColor(ColorUtils::ColorHexToVec4(0xff455a64));
+    Styling textBoxStyle{
+      .colors =
+      {
+        {"backgroundColor", ColorUtils::ColorHexToVec4(0xff37474f)},
+        {"borderColor", ColorUtils::ColorHexToVec4(0xff455a64)}
+      },
+      .tlbrs =
+      {
+        {"border", {1, 1, 1, 1}},
+        {"padding", {0, 5, 0, 5}}
+      },
+      .floats
+      {
+        {"radius", 3.0f},
+        {"borderRadius", 4.0f}
+      },
+    };
 
     {
       Container* rgbhsvContainer = new Container("ColorPickerWindow#RHTextBoxContainer",this);
@@ -71,7 +89,7 @@ namespace Greet
           rTextBox->SetFont("noto")
             .SetFontSize(16)
             .SetSize(1,20, ComponentSize::Type::WEIGHT, ComponentSize::Type::PIXELS)
-            .AddStyle("normal", textBoxStyle);
+            .LoadStyle("normal", textBoxStyle);
 
           rgbContainer->AddComponent(rTextBox);
         }
@@ -90,7 +108,7 @@ namespace Greet
           hTextBox->SetFont("noto")
             .SetFontSize(16)
             .SetSize(1,20, ComponentSize::Type::WEIGHT, ComponentSize::Type::PIXELS)
-            .AddStyle("normal", textBoxStyle);
+            .LoadStyle("normal", textBoxStyle);
 
           hsvContainer->AddComponent(hTextBox);
         }
@@ -116,7 +134,7 @@ namespace Greet
           gTextBox->SetFont("noto")
             .SetFontSize(16)
             .SetSize(1,20, ComponentSize::Type::WEIGHT, ComponentSize::Type::PIXELS)
-            .AddStyle("normal", textBoxStyle);
+            .LoadStyle("normal", textBoxStyle);
 
           rgbContainer->AddComponent(gTextBox);
         }
@@ -136,7 +154,7 @@ namespace Greet
         sTextBox->SetFont("noto")
           .SetFontSize(16)
           .SetSize(1,20, ComponentSize::Type::WEIGHT, ComponentSize::Type::PIXELS)
-          .AddStyle("normal", textBoxStyle);
+          .LoadStyle("normal", textBoxStyle);
 
         hsvContainer->AddComponent(sTextBox);
       }
@@ -161,7 +179,7 @@ namespace Greet
           bTextBox->SetFont("noto")
             .SetFontSize(16)
             .SetSize(1,20, ComponentSize::Type::WEIGHT, ComponentSize::Type::PIXELS)
-            .AddStyle("normal", textBoxStyle);
+            .LoadStyle("normal", textBoxStyle);
 
           rgbContainer->AddComponent(bTextBox);
         }
@@ -181,7 +199,7 @@ namespace Greet
         vTextBox->SetFont("noto")
           .SetFontSize(16)
           .SetSize(1,20, ComponentSize::Type::WEIGHT, ComponentSize::Type::PIXELS)
-          .AddStyle("normal", textBoxStyle);
+          .LoadStyle("normal", textBoxStyle);
 
         hsvContainer->AddComponent(vTextBox);
       }
@@ -200,16 +218,27 @@ namespace Greet
       hexTextBox->SetFont("noto")
         .SetFontSize(16)
         .SetSize(1,20, ComponentSize::Type::WEIGHT, ComponentSize::Type::PIXELS)
-        .AddStyle("normal", textBoxStyle);
+        .LoadStyle("normal", textBoxStyle);
 
       hexContainer->AddComponent(hexTextBox);
     }
     colorDisplay = new Component("ColorPickerWindow#ColorDisplay",this);
-    Style colorStyle = Style{}.SetBackgroundColor(ColorUtils::ColorHexToVec4(0xff37474f))
-      .SetBorderColor(ColorUtils::ColorHexToVec4(0xff455a64))
-      .SetBorder({1,1,1,1});
+
+    Styling colorStyle
+    {
+      .colors =
+      {
+        {"backgroundColor", ColorUtils::ColorHexToVec4(0xff37474f)},
+        {"borderColor", ColorUtils::ColorHexToVec4(0xff455a64)}
+      },
+      .tlbrs =
+      {
+        {"border", {1, 1, 1, 1}},
+      }
+    };
+
     colorDisplay->SetSize(1,1,ComponentSize::Type::WEIGHT, ComponentSize::Type::WEIGHT)
-      .AddStyle("normal", colorStyle);
+      .LoadStyle("normal", colorStyle);
     textBoxContainer->AddComponent(colorDisplay);
 
     using namespace std::placeholders;
@@ -237,12 +266,11 @@ namespace Greet
 
   void ColorPickerWindow::UpdateColor(float hue, float sat, float val, InputChangeType type)
   {
-    Style s = colorDisplay->GetStyle("normal");
+    ComponentStyle& s = colorDisplay->GetStyle("normal");
     Vec3<float> prevRGB = color;
     Vec4 rgb = ColorUtils::HSVtoRGB(hue,sat,val,1);
     color = Vec3<float>(rgb);
-    s.SetBackgroundColor(rgb);
-    colorDisplay->AddStyle("normal", s);
+    s.SetColor("backgroundColor", rgb);
     svSlider->SetHue(hue);
 
     if(type != InputChangeType::RGB_TEXTBOX)

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <unordered_map>
+
 #include <graphics/gui/Style.h>
 #include <graphics/renderers/GUIRenderer.h>
 #include <event/MouseEvent.h>
@@ -22,12 +24,29 @@ namespace Greet
       typedef std::function<void(Component* c)> OnPressCallback;
       typedef std::function<void(Component* c)> OnReleaseCallback;
 
+    private:
+      StylingVariables styleVariables;
+
     protected:
       std::string name;
 
-      Style* currentStyle;
+      //////////////////
+      // Styles
+      ComponentStyle* currentStyle;
       std::string currentStylename;
-      std::map<std::string, Style> styles;
+      std::unordered_map<std::string, ComponentStyle> styles;
+
+      //////////////////
+      // Style variables
+      Vec4 backgroundColor{0};
+      float backgroundRadius = 0;
+      int backgroundRoundedPrecision = 3;
+      Vec4 borderColor = {0};
+      float borderRadius = 0;
+      int borderRoundedPrecision = 3;
+      TLBR border = {0, 0, 0, 0};
+      TLBR margin = {0, 0, 0, 0};
+      TLBR padding = {0, 0, 0, 0};
 
     protected:
       GUIScene* guiScene;
@@ -118,8 +137,12 @@ namespace Greet
       // Faster to use since it sets all values and does a single remeasure.
       Component& SetSize(float width, float height, ComponentSize::Type widthType, ComponentSize::Type heightType, bool remeasure = true);
 
-      const Style& GetStyle(const std::string& stylename) const;
-      Component& AddStyle(const std::string& stylename, const Style& style);
+      ComponentStyle& GetStyle(const std::string& stylename);
+      const ComponentStyle& GetStyle(const std::string& stylename) const;
+      Component& AddStyle(const std::string& stylename, const std::string& inherit = "");
+      Component& AddStyleVariables(const StylingVariables& variables);
+      void LoadStyles(const XMLObject& xmlObject);
+      Component& LoadStyle(const std::string& stylename, const Styling& styling);
       void SetCurrentStyle(const std::string& stylename);
 
       virtual bool IsMouseInside(const Vec2& parentMouse) const;
@@ -165,6 +188,59 @@ namespace Greet
       {
         return stream << component.GetName();
       }
+
+      ComponentStyle GetDefaultStyle(const std::string& inherit = "")
+      {
+        ComponentStyle* styleInherit = nullptr;
+        if(inherit != "")
+        {
+          styleInherit = &GetStyle(inherit);
+        }
+        return ComponentStyle{StylingVariables{.colors = GetColors(), .tlbrs = GetTLBRs(), .floats = GetFloats(), .ints = GetInts(), .bools = GetBools()}, styleInherit};
+      }
+
+      virtual std::unordered_map<std::string, Greet::Vec4*> GetColors()
+      {
+        return
+        {
+          {"backgroundColor", &backgroundColor},
+          {"borderColor", &borderColor}
+        };
+      }
+
+      virtual std::unordered_map<std::string, TLBR*> GetTLBRs()
+      {
+        return
+        {
+          {"border", &border},
+          {"margin", &margin},
+          {"padding", &padding}
+        };
+      }
+
+      virtual std::unordered_map<std::string, float*> GetFloats()
+      {
+        return
+        {
+          {"radius", &backgroundRadius},
+          {"borderRadius", &borderRadius}
+        };
+      }
+
+      virtual std::unordered_map<std::string, int*> GetInts()
+      {
+        return
+        {
+          {"backgroundRoundedPrecision", &backgroundRoundedPrecision},
+          {"borderRoundedPrecision", &borderRoundedPrecision}
+        };
+      }
+
+      virtual std::unordered_map<std::string, bool*> GetBools()
+      {
+        return {};
+      }
+
 
     protected:
       virtual void CallOnClickCallback();

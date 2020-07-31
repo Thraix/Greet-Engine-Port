@@ -15,13 +15,18 @@ namespace Greet
     : Component{name, parent}, flags{0}
   {
     m_isFocusable = true;
-    Style normal{};
-    normal.SetBackgroundColor(Vec4(1,1,1,1))
-      .SetBorderColor(Vec4(0,0,0,1))
-      .SetBorder(TLBR(2,2,2,2));
+    Styling normal
+    {
+      .colors = {
+        {"backgroundColor", {1,1,1,1}},
+        {"borderColor", {0,0,0,1}},
+      },
+      .tlbrs = {{"border", {2,2,2,2}}}
+    };
+
     sliderComponent = new Component(name+"#SliderComponent", this);
     sliderComponent->SetSize(7,1,ComponentSize::Type::PIXELS, ComponentSize::Type::WEIGHT)
-      .AddStyle("normal", normal);
+      .LoadStyle("normal", normal);
 
     minValue = 0;
     maxValue = 100;
