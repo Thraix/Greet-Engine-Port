@@ -56,21 +56,15 @@ namespace Greet
 
   void Component::Measure()
   {
-    if(size.widthType != ComponentSize::Type::WEIGHT)
-    {
-      if(size.widthType == ComponentSize::Type::WRAP)
-        size.size.w = GetWrapSize().w;
-      else
-        size.size.w = size.value.w;
-    }
+    if(size.widthType == ComponentSize::Type::WRAP)
+      size.size.w = GetWrapSize().w;
+    else if(size.widthType == ComponentSize::Type::PIXELS)
+      size.size.w = size.value.w;
 
-    if(size.heightType != ComponentSize::Type::WEIGHT)
-    {
-      if(size.heightType == ComponentSize::Type::WRAP)
-        size.size.h = GetWrapSize().h;
-      else
-        size.size.h = size.value.h;
-    }
+    if(size.heightType == ComponentSize::Type::WRAP)
+      size.size.h = GetWrapSize().h;
+    else if(size.heightType == ComponentSize::Type::PIXELS)
+      size.size.h = size.value.h;
   }
 
   void Component::MeasureFill()
@@ -99,6 +93,7 @@ namespace Greet
 
   void Component::Remeasure()
   {
+    remeasure = false;
     if(!parent)
     {
       Measure();
@@ -277,7 +272,7 @@ namespace Greet
 
   Vec2 Component::GetWrapSize() const
   {
-    return Vec2(100,100);
+    return GetSize();
   }
 
   Component* Component::GetParent() const
@@ -318,28 +313,28 @@ namespace Greet
   Component& Component::SetWidth(float width)
   {
     size.value.w = width;
-    Remeasure();
+    remeasure = true;
     return *this;
   }
 
   Component& Component::SetHeight(float height)
   {
     size.value.h = height;
-    Remeasure();
+    remeasure = true;
     return *this;
   }
 
   Component& Component::SetWidthSizeType(ComponentSize::Type width)
   {
     size.widthType = width;
-    Remeasure();
+    remeasure = true;
     return *this;
   }
 
   Component& Component::SetHeightSizeType(ComponentSize::Type height)
   {
     size.heightType = height;
-    Remeasure();
+    remeasure = true;
     return *this;
   }
 
@@ -350,7 +345,7 @@ namespace Greet
     size.widthType = widthType;
     size.heightType = heightType;
     if(remeasure)
-      Remeasure();
+      remeasure = true;
     return *this;
   }
 
@@ -427,9 +422,7 @@ namespace Greet
     auto it = styles.find(stylename);
     if(it != styles.end())
     {
-      currentStylename = stylename;
-      currentStyle = &it->second;
-      currentStyle->SetStyling();
+      it->second.SetStyling();
       return;
     }
     Log::Error("Style does not exist within component: ", name, ", ", stylename);

@@ -122,6 +122,10 @@ namespace Greet {
   {
     for (auto it = frames.begin(); it != frames.end(); ++it)
     {
+      if((*it)->remeasure)
+      {
+        (*it)->Remeasure();
+      }
       (*it)->UpdateHandle(timeElapsed);
     }
   }

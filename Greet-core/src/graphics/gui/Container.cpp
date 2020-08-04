@@ -25,7 +25,7 @@ namespace Greet
   Container::Container(const XMLObject& object, Component* parent)
     : Component(object, parent), vertical(true)
   {
-    vertical = GUIUtils::GetBooleanFromXML(object,"verticalAlign",true);
+    vertical = GUIUtils::GetBooleanFromXML(object,"vertical",true);
     spacing = GUIUtils::GetFloatFromXML(object, "spacing", 10);
     for (uint i = 0;i < object.GetObjectCount();i++)
     {
@@ -235,15 +235,21 @@ namespace Greet
     {
       if(vertical)
       {
-        if(wrapSize.w < comp->GetSize().w)
-          wrapSize.w = comp->GetSize().w;
-        wrapSize.h += comp->GetSize().h + comp->GetMargin().top + spacing;
+        if(wrapSize.w < comp->GetWrapSize().w && comp->GetWidthSizeType() != ComponentSize::Type::WEIGHT)
+          wrapSize.w = fmax(wrapSize.w, comp->GetWrapSize().w);
+        if(comp->GetHeightSizeType() != ComponentSize::Type::WEIGHT)
+          wrapSize.h += comp->GetWrapSize().h + comp->GetMargin().top + spacing;
+        else
+          wrapSize.h += comp->GetMargin().top + spacing;
       }
       else
       {
-        if(wrapSize.h < comp->GetSize().h)
-          wrapSize.h = comp->GetSize().h;
-        wrapSize.w += comp->GetSize().w + comp->GetMargin().left + spacing + GetPadding().GetWidth();
+        if(wrapSize.h < comp->GetWrapSize().h && comp->GetHeightSizeType() != ComponentSize::Type::WEIGHT)
+          wrapSize.h = fmax(wrapSize.h, comp->GetWrapSize().h);
+        if(comp->GetWidthSizeType() != ComponentSize::Type::WEIGHT)
+          wrapSize.w += comp->GetWrapSize().w + comp->GetMargin().left + spacing;
+        else
+          wrapSize.w += comp->GetMargin().left + spacing + GetPadding().GetWidth();
       }
     }
     if(vertical && wrapSize.h > 0)

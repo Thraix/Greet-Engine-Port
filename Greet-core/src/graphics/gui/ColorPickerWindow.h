@@ -18,6 +18,7 @@ namespace Greet
       typedef std::function<void(const Vec3<float>& previous, const Vec3<float>& current)> OnColorChangeCallback;
 
     protected:
+      static XMLObject frameLook;
       Vec3<float> color;
       HueSlider* hSlider;
       SatValSlider* svSlider;

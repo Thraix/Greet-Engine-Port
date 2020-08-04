@@ -43,8 +43,6 @@ namespace Greet
     : Component(xmlObject, parent), flags{0}
   {
     m_isFocusable = true;
-    if(xmlObject.GetObjectCount() > 0)
-      sliderComponent = ComponentFactory::GetComponent(xmlObject.GetObject(0), this);
 
     minValue = GUIUtils::GetFloatFromXML(xmlObject, "minValue", 0.0f);
     maxValue = GUIUtils::GetFloatFromXML(xmlObject, "maxValue", 100.0f);
@@ -76,6 +74,28 @@ namespace Greet
     // Bit of a hack to make the initial value correct
     minPos = 0;
     maxPos = 1;
+
+    if(xmlObject.GetObjectCount() > 0)
+      sliderComponent = ComponentFactory::GetComponent(xmlObject.GetObject(0), this);
+    else
+    {
+      Styling normal
+      {
+        .colors = {
+          {"backgroundColor", {1,1,1,1}},
+          {"borderColor", {0,0,0,1}},
+        },
+        .tlbrs = {{"border", {2,2,2,2}}}
+      };
+
+      sliderComponent = new Component(name+"#SliderComponent", this);
+      if(flags & SLIDER_FLAG_VERTICAL)
+        sliderComponent->SetSize(1,7,ComponentSize::Type::WEIGHT, ComponentSize::Type::PIXELS);
+      else
+        sliderComponent->SetSize(7,1,ComponentSize::Type::PIXELS, ComponentSize::Type::WEIGHT);
+      sliderComponent->LoadStyle("normal", normal);
+    }
+
     // Default defaultValue should be in the middle
     SetValue(GUIUtils::GetFloatFromXML(xmlObject, "defaultValue", (maxValue-minValue)/2.0f));
   }

@@ -15,14 +15,6 @@
 #define REGISTER_FRAME_DEFINITION(FRAME_NAME) \
   FrameRegistry<FRAME_NAME> FRAME_NAME::reg(#FRAME_NAME)
 
-#define REGISTER_COMPONENT_COLOR_STYLES(InheritedComponent, Styles)\
-  std::unordered_map<std::string, Greet::Vec4*> GetColors() override\
-{\
-  auto map = InheritedComponent::GetColors();\
-  map.insert(Styles);\
-  return map;\
-}
-
 namespace Greet
 {
   class Component;

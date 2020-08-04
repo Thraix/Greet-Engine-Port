@@ -1,0 +1,35 @@
+R"(
+<Frame name="ColorPickerWindow" width="wrap_content" height="wrap_content" vertical="false" backgroundColor="#424242" borderColor="#626262" border="2" padding="10">
+  <SatValSlider name="ColorPickerWindow#SatValSlider" width="200" height="200"/>
+  <HueSlider name="ColorPickerWindow#HueSlider" vertical="true" width="20" height="1w"/>
+  <Container name="ColorPickerWindow#TextBoxContainer" width="wrap_content" height="1w">
+
+    <Container name="ColorPickerWindow#RHTextBoxContainer" width="wrap_content" height="wrap_content" vertical="false" spacing="5">
+      <Label name="ColorPickerWindow#RLabel" font="noto" fontSize="12" width="10" height="1w" color="#E0E0E0">R</Label>
+      <TextBox name="ColorPickerWindow#RTextBox" width="50" height="20" backgroundColor="#424242" borderColor="#4CAF50" border="0 0 1 0" font="noto" fontSize="12" color="#E0E0E0" hintColor="#757575" padding="0 0"/>
+      <Label name="ColorPickerWindow#HLabel" font="noto" fontSize="12" width="10" height="1w" color="#E0E0E0">H</Label>
+      <TextBox name="ColorPickerWindow#HTextBox" width="50" height="20" backgroundColor="#424242" borderColor="#4CAF50" border="0 0 1 0" font="noto" fontSize="12" color="#E0E0E0" hintColor="#757575" padding="0 0"/>
+    </Container>
+
+    <Container name="ColorPickerWindow#GSTextBoxContainer" width="wrap_content" height="wrap_content" vertical="false" spacing="5">
+        <Label name="ColorPickerWindow#TLabel" font="noto" fontSize="12" width="10" height="1w" color="#E0E0E0">G</Label>
+        <TextBox name="ColorPickerWindow#GTextBox" width="50" height="20" backgroundColor="#424242" borderColor="#4CAF50" border="0 0 1 0" font="noto" fontSize="12" color="#E0E0E0" hintColor="#757575" padding="0 0"/>
+        <Label name="ColorPickerWindow#SLabel" font="noto" fontSize="12" width="10" height="1w" color="#E0E0E0">S</Label>
+        <TextBox name="ColorPickerWindow#STextBox" width="50" height="20" backgroundColor="#424242" borderColor="#4CAF50" border="0 0 1 0" font="noto" fontSize="12" color="#E0E0E0" hintColor="#757575" padding="0 0"/>
+    </Container>
+
+    <Container name="ColorPickerWindow#BVTextBoxContainer" width="wrap_content" height="wrap_content" vertical="false" spacing="5">
+        <Label name="ColorPickerWindow#BLabel" font="noto" fontSize="12" width="10" height="1w" color="#E0E0E0">B</Label>
+        <TextBox name="ColorPickerWindow#BTextBox" width="50" height="20" backgroundColor="#424242" borderColor="#4CAF50" border="0 0 1 0" font="noto" fontSize="12" color="#E0E0E0" hintColor="#757575" padding="0 0"/>
+        <Label name="ColorPickerWindow#VLabel" font="noto" fontSize="12" width="10" height="1w" color="#E0E0E0">V</Label>
+        <TextBox name="ColorPickerWindow#VTextBox" width="50" height="20" backgroundColor="#424242" borderColor="#4CAF50" border="0 0 1 0" font="noto" fontSize="12" color="#E0E0E0" hintColor="#757575" padding="0 0"/>
+    </Container>
+
+    <Container name="ColorPickerWindow#HexTextBoxContainer" width="1w" height="wrap_content" vertical="false" spacing="5">
+      <Label name="ColorPickerWindow#HexLabel" font="noto" fontSize="12" width="10" height="1w" color="#E0E0E0">#</Label>
+      <TextBox name="ColorPickerWindow#HexTextBox" width="1w" height="20" backgroundColor="#424242" borderColor="#4CAF50" border="0 0 1 0" font="noto" fontSize="12" color="#E0E0E0" hintColor="#757575" padding="0 0"/>
+    </Container>
+    <Component name="ColorPickerWindow#ColorDisplay" width="1w" height="1w" borderColor="#626262" border="2"/>
+  </Container>
+</Frame>
+  )"

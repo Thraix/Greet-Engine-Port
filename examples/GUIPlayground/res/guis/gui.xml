@@ -1,5 +1,5 @@
 <Frame
-  name="LeftComponent"
+  name="Main"
   width="fill_parent" height="fill_parent" minWidth="100" spacing="10"
   resizeTop="false" resizeLeft="false" resizeBottom="false" resizeRight="true"
   borderColor="#37474f"
@@ -17,7 +17,7 @@
           <Label color="#E0E0E0" font="noto" fontSize="16">Radio Buttons</Label>
 
           <RadioGroup name="Radio" width="fill_parent" height="wrap_content" margin="0" spacing="10">
-            <Container verticalAlign="false">
+            <Container vertical="false">
               <RadioButton width="16" height="16"
                 radius="6" borderRadius="8"
                 active-radius="8"
@@ -25,7 +25,7 @@
                 active-backgroundColor="#4CAF50" active-borderColor="#00000000" active-border="0"/>
               <Label color="#E0E0E0" font="noto" fontSize="12">Yes</Label>
             </Container>
-            <Container verticalAlign="false">
+            <Container vertical="false">
               <RadioButton width="16" height="16"
                 radius="6" borderRadius="8"
                 active-radius="8"
@@ -33,7 +33,7 @@
                 active-backgroundColor="#4CAF50" active-borderColor="#00000000" active-border="0"/>
               <Label color="#E0E0E0" font="noto" fontSize="12">No</Label>
             </Container>
-            <Container verticalAlign="false">
+            <Container vertical="false">
               <RadioButton width="16" height="16"
                 radius="6" borderRadius="8"
                 active-radius="8"
@@ -82,7 +82,7 @@
         <Container
           width="fill_parent"
           height="100"
-          verticalAlign="false" padding="0">
+          vertical="false" padding="0">
 
         <ProgressBar
           width="12" height="fill_parent" name="progressBarVertical"
@@ -130,7 +130,7 @@
       radius="6"
       minValue="0.25" maxValue="1.25" reverseProgress="true"/>
 
-    <Container width="fill_parent" verticalAlign="false">
+    <Container width="fill_parent" vertical="false">
       <Label width="wrap_content" height="fill_parent" fontSize="16" font="noto" color="#E0E0E0">Background Color: </Label>
 
       <ColorPicker
@@ -150,7 +150,7 @@
   <DockerSplit>
     <DockerContainer>
       <DockerTab title="Editor">
-        <Component width="fill_parent" height="fill_parent" backgroundColor="#424242"/>
+        <Component name="EditorContainer" width="fill_parent" height="fill_parent" backgroundColor="#424242"/>
       </DockerTab>
     </DockerContainer>
     <DockerContainer>

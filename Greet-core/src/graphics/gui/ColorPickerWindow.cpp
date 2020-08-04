@@ -7,239 +7,33 @@
 
 namespace Greet
 {
-  ColorPickerWindow::ColorPickerWindow(const Vec2& pos, const Vec3<float>& color)
+  XMLObject ColorPickerWindow::frameLook = XMLObject
   {
-    name = "ColorPickerWindow";
+#include "ColorPickerLook.xml"
+  };
+  ColorPickerWindow::ColorPickerWindow(const Vec2& pos, const Vec3<float>& color)
+    : Frame(frameLook)
+  {
     shouldCloseUnfocus = true;
-    // Would be easier to create an XMLObject for this.
-    // However that would need to be integrated with the engine and
-    // I have no idea how to do this.
+    LoadStyles(frameLook);
 
     Vec3<float> hsv(ColorUtils::RGBtoHSV(Vec4(color.r,color.g,color.b,1)));
-
-    Styling s{
-      .colors =
-      {
-        {"backgroundColor", ColorUtils::ColorHexToVec4(0xff263238)},
-        {"borderColor", ColorUtils::ColorHexToVec4(0xff37474f)}
-      },
-      .tlbrs =
-      {
-        {"border", {1, 1, 1, 1}},
-        {"padding", {10, 10, 10, 10}}
-      }
-    };
-    SetVertical(false)
-      .LoadStyle("normal", s)
-      .SetSize(1,1, ComponentSize::Type::WRAP, ComponentSize::Type::WRAP,false);
-
-    svSlider = new SatValSlider("ColorPickerWindow#SatValSlider", this);
-    svSlider->SetSize(200,200,ComponentSize::Type::PIXELS,ComponentSize::Type::PIXELS,false);
+    svSlider = GetComponentByName<SatValSlider>("ColorPickerWindow#SatValSlider");
     svSlider->SetHue(hsv.h);
     svSlider->SetSat(hsv.s);
     svSlider->SetVal(hsv.v);
-    AddComponent(svSlider);
 
-    hSlider = new HueSlider("ColorPickerWindow#HueSlider", this);
-    hSlider->SetVertical(true)
-      .SetSize(20,1, ComponentSize::Type::PIXELS, ComponentSize::Type::WEIGHT, false);
+    hSlider = GetComponentByName<HueSlider>("ColorPickerWindow#HueSlider");
     hSlider->GetSliderComponent()->SetSize(1,7,ComponentSize::Type::WEIGHT, ComponentSize::Type::PIXELS);
     hSlider->SetValue(hsv.h);
-    AddComponent(hSlider);
-
-    Container* textBoxContainer = new Container("ColorPickerWindow#TextBoxContainer",this);
-    textBoxContainer->SetSize(110,1,ComponentSize::Type::PIXELS, ComponentSize::Type::WEIGHT);
-    AddComponent(textBoxContainer);
-
-    Styling textBoxStyle{
-      .colors =
-      {
-        {"backgroundColor", ColorUtils::ColorHexToVec4(0xff37474f)},
-        {"borderColor", ColorUtils::ColorHexToVec4(0xff455a64)}
-      },
-      .tlbrs =
-      {
-        {"border", {1, 1, 1, 1}},
-        {"padding", {0, 5, 0, 5}}
-      },
-      .floats
-      {
-        {"radius", 3.0f},
-        {"borderRadius", 4.0f}
-      },
-    };
-
-    {
-      Container* rgbhsvContainer = new Container("ColorPickerWindow#RHTextBoxContainer",this);
-      rgbhsvContainer->SetVertical(false).SetSize(1,1,ComponentSize::Type::WEIGHT, ComponentSize::Type::WRAP);
-      textBoxContainer->AddComponent(rgbhsvContainer);
-
-      {
-        Container* rgbContainer = new Container("ColorPickerWindow#RTextBoxContainer",this);
-        rgbContainer->SetSpacing(5).SetVertical(false).SetSize(1,1,ComponentSize::Type::WEIGHT, ComponentSize::Type::WRAP);
-        rgbhsvContainer->AddComponent(rgbContainer);
-
-        {
-          Label* text = new Label("ColorPickerWindow#RLabel",this, "R", "noto",16);
-          text->SetSize(1,1,ComponentSize::Type::WRAP, ComponentSize::Type::WEIGHT);
-          rgbContainer->AddComponent(text);
-
-          rTextBox = new TextBox("ColorPickerWindow#RTextBox",this);
-
-          rTextBox->SetFont("noto")
-            .SetFontSize(16)
-            .SetSize(1,20, ComponentSize::Type::WEIGHT, ComponentSize::Type::PIXELS)
-            .LoadStyle("normal", textBoxStyle);
-
-          rgbContainer->AddComponent(rTextBox);
-        }
-      }
-      {
-        Container* hsvContainer = new Container("ColorPickerWindow#HTextBoxContainer",this);
-        hsvContainer->SetSpacing(5).SetVertical(false).SetSize(1,1,ComponentSize::Type::WEIGHT, ComponentSize::Type::WRAP);
-        rgbhsvContainer->AddComponent(hsvContainer);
-        {
-          Label* text = new Label("ColorPickerWindow#HLabel",this, "H", "noto",16);
-          text->SetSize(1,1,ComponentSize::Type::WRAP, ComponentSize::Type::WEIGHT);
-          hsvContainer->AddComponent(text);
-
-          hTextBox = new TextBox("ColorPickerWindow#HTextBox",this);
-
-          hTextBox->SetFont("noto")
-            .SetFontSize(16)
-            .SetSize(1,20, ComponentSize::Type::WEIGHT, ComponentSize::Type::PIXELS)
-            .LoadStyle("normal", textBoxStyle);
-
-          hsvContainer->AddComponent(hTextBox);
-        }
-      }
-    }
-    {
-      Container* rgbhsvContainer = new Container("ColorPickerWindow#GSTextBoxContainer",this);
-      rgbhsvContainer->SetVertical(false).SetSize(1,1,ComponentSize::Type::WEIGHT, ComponentSize::Type::WRAP);
-      textBoxContainer->AddComponent(rgbhsvContainer);
-
-      {
-        Container* rgbContainer = new Container("ColorPickerWindow#GTextBoxContainer",this);
-        rgbContainer->SetSpacing(5).SetVertical(false).SetSize(1,1,ComponentSize::Type::WEIGHT, ComponentSize::Type::WRAP);
-        rgbhsvContainer->AddComponent(rgbContainer);
-
-        {
-          Label* text = new Label("ColorPickerWindow#GLabel",this, "G", "noto",16);
-          text->SetSize(1,1,ComponentSize::Type::WRAP, ComponentSize::Type::WEIGHT);
-          rgbContainer->AddComponent(text);
-
-          gTextBox = new TextBox("ColorPickerWindow#GTextBox",this);
-
-          gTextBox->SetFont("noto")
-            .SetFontSize(16)
-            .SetSize(1,20, ComponentSize::Type::WEIGHT, ComponentSize::Type::PIXELS)
-            .LoadStyle("normal", textBoxStyle);
-
-          rgbContainer->AddComponent(gTextBox);
-        }
-
-      }
-
-      Container* hsvContainer = new Container("ColorPickerWindow#STextBoxContainer",this);
-      hsvContainer->SetSpacing(5).SetVertical(false).SetSize(1,1,ComponentSize::Type::WEIGHT, ComponentSize::Type::WRAP);
-      rgbhsvContainer->AddComponent(hsvContainer);
-      {
-        Label* text = new Label("ColorPickerWindow#SLabel",this, "S", "noto",16);
-        text->SetSize(1,1,ComponentSize::Type::WRAP, ComponentSize::Type::WEIGHT);
-        hsvContainer->AddComponent(text);
-
-        sTextBox = new TextBox("ColorPickerWindow#STextBox",this);
-
-        sTextBox->SetFont("noto")
-          .SetFontSize(16)
-          .SetSize(1,20, ComponentSize::Type::WEIGHT, ComponentSize::Type::PIXELS)
-          .LoadStyle("normal", textBoxStyle);
-
-        hsvContainer->AddComponent(sTextBox);
-      }
-    }
-    {
-      Container* rgbhsvContainer = new Container("ColorPickerWindow#BVTextBoxContainer",this);
-      rgbhsvContainer->SetVertical(false).SetSize(1,1,ComponentSize::Type::WEIGHT, ComponentSize::Type::WRAP);
-      textBoxContainer->AddComponent(rgbhsvContainer);
-
-      {
-        Container* rgbContainer = new Container("ColorPickerWindow#BTextBoxContainer",this);
-        rgbContainer->SetSpacing(5).SetVertical(false).SetSize(1,1,ComponentSize::Type::WEIGHT, ComponentSize::Type::WRAP);
-        rgbhsvContainer->AddComponent(rgbContainer);
-
-        {
-        Label* text = new Label("ColorPickerWindow#BLabel",this, "B", "noto",16);
-        text->SetSize(1,1,ComponentSize::Type::WRAP, ComponentSize::Type::WEIGHT);
-          rgbContainer->AddComponent(text);
-
-          bTextBox = new TextBox("ColorPickerWindow#BTextBox",this);
-
-          bTextBox->SetFont("noto")
-            .SetFontSize(16)
-            .SetSize(1,20, ComponentSize::Type::WEIGHT, ComponentSize::Type::PIXELS)
-            .LoadStyle("normal", textBoxStyle);
-
-          rgbContainer->AddComponent(bTextBox);
-        }
-
-      }
-
-      Container* hsvContainer = new Container("ColorPickerWindow#VTextBoxContainer",this);
-      hsvContainer->SetSpacing(5).SetVertical(false).SetSize(1,1,ComponentSize::Type::WEIGHT, ComponentSize::Type::WRAP);
-      rgbhsvContainer->AddComponent(hsvContainer);
-      {
-        Label* text = new Label("ColorPickerWindow#VLabel",this, "V", "noto",16);
-        text->SetSize(1,1,ComponentSize::Type::WRAP, ComponentSize::Type::WEIGHT);
-        hsvContainer->AddComponent(text);
-
-        vTextBox = new TextBox("ColorPickerWindow#VTextBox",this);
-
-        vTextBox->SetFont("noto")
-          .SetFontSize(16)
-          .SetSize(1,20, ComponentSize::Type::WEIGHT, ComponentSize::Type::PIXELS)
-          .LoadStyle("normal", textBoxStyle);
-
-        hsvContainer->AddComponent(vTextBox);
-      }
-    }
-
-    Container* hexContainer = new Container("ColorPickerWindow#HexTextBoxContainer",this);
-    hexContainer->SetSpacing(5).SetVertical(false).SetSize(1,1,ComponentSize::Type::WEIGHT, ComponentSize::Type::WRAP);
-    textBoxContainer->AddComponent(hexContainer);
-    {
-      Label* text = new Label("ColorPickerWindow#HexLabel",this, "#", "noto",16);
-      text->SetSize(1,1,ComponentSize::Type::WRAP, ComponentSize::Type::WEIGHT);
-      hexContainer->AddComponent(text);
-
-      hexTextBox = new TextBox("ColorPickerWindow#HexTextBox",this);
-
-      hexTextBox->SetFont("noto")
-        .SetFontSize(16)
-        .SetSize(1,20, ComponentSize::Type::WEIGHT, ComponentSize::Type::PIXELS)
-        .LoadStyle("normal", textBoxStyle);
-
-      hexContainer->AddComponent(hexTextBox);
-    }
-    colorDisplay = new Component("ColorPickerWindow#ColorDisplay",this);
-
-    Styling colorStyle
-    {
-      .colors =
-      {
-        {"backgroundColor", ColorUtils::ColorHexToVec4(0xff37474f)},
-        {"borderColor", ColorUtils::ColorHexToVec4(0xff455a64)}
-      },
-      .tlbrs =
-      {
-        {"border", {1, 1, 1, 1}},
-      }
-    };
-
-    colorDisplay->SetSize(1,1,ComponentSize::Type::WEIGHT, ComponentSize::Type::WEIGHT)
-      .LoadStyle("normal", colorStyle);
-    textBoxContainer->AddComponent(colorDisplay);
+    rTextBox = GetComponentByName<TextBox>("ColorPickerWindow#RTextBox");
+    gTextBox = GetComponentByName<TextBox>("ColorPickerWindow#GTextBox");
+    bTextBox = GetComponentByName<TextBox>("ColorPickerWindow#BTextBox");
+    hTextBox = GetComponentByName<TextBox>("ColorPickerWindow#HTextBox");
+    sTextBox = GetComponentByName<TextBox>("ColorPickerWindow#STextBox");
+    vTextBox = GetComponentByName<TextBox>("ColorPickerWindow#VTextBox");
+    hexTextBox = GetComponentByName<TextBox>("ColorPickerWindow#HexTextBox");
+    colorDisplay = GetComponentByName<Component>("ColorPickerWindow#ColorDisplay");
 
     using namespace std::placeholders;
 

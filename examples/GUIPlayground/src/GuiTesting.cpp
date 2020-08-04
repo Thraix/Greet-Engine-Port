@@ -31,7 +31,7 @@ class Core : public App
       guiScene->AddFrame(FrameFactory::GetFrame("res/guis/gui.xml"));
 
 #if 1
-      Frame* frame = guiScene->GetFrame("LeftComponent");
+      Frame* frame = guiScene->GetFrame("Main");
       if(frame != nullptr)
       {
         using namespace std::placeholders;
@@ -102,7 +102,10 @@ class Core : public App
 
     void OnColorChangeCallback(Component* component, const Vec3<float>& oldValue, const Vec3<float>& current)
     {
+      Vec4 color = {current.r, current.g, current.b, 1.0};
       RenderCommand::SetClearColor(Vec4(current.r,current.g,current.b,1));
+      Component* editorContainer = guiScene->GetFrame("Main")->GetComponentByName<Component>("EditorContainer");
+      editorContainer->LoadStyle("normal", Styling{.colors={{"backgroundColor", color}}});
     }
 
     void OnClickCallback(Component* component)

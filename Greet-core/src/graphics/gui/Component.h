@@ -32,8 +32,6 @@ namespace Greet
 
       //////////////////
       // Styles
-      ComponentStyle* currentStyle;
-      std::string currentStylename;
       std::unordered_map<std::string, ComponentStyle> styles;
 
       //////////////////
@@ -51,6 +49,7 @@ namespace Greet
     protected:
       GUIScene* guiScene;
       Component* parent;
+      bool remeasure = true;
 
       Vec2 pos;
       ComponentSize size;
@@ -187,58 +186,6 @@ namespace Greet
       friend std::ostream& operator<<(std::ostream& stream, const Component& component)
       {
         return stream << component.GetName();
-      }
-
-      ComponentStyle GetDefaultStyle(const std::string& inherit = "")
-      {
-        ComponentStyle* styleInherit = nullptr;
-        if(inherit != "")
-        {
-          styleInherit = &GetStyle(inherit);
-        }
-        return ComponentStyle{StylingVariables{.colors = GetColors(), .tlbrs = GetTLBRs(), .floats = GetFloats(), .ints = GetInts(), .bools = GetBools()}, styleInherit};
-      }
-
-      virtual std::unordered_map<std::string, Greet::Vec4*> GetColors()
-      {
-        return
-        {
-          {"backgroundColor", &backgroundColor},
-          {"borderColor", &borderColor}
-        };
-      }
-
-      virtual std::unordered_map<std::string, TLBR*> GetTLBRs()
-      {
-        return
-        {
-          {"border", &border},
-          {"margin", &margin},
-          {"padding", &padding}
-        };
-      }
-
-      virtual std::unordered_map<std::string, float*> GetFloats()
-      {
-        return
-        {
-          {"radius", &backgroundRadius},
-          {"borderRadius", &borderRadius}
-        };
-      }
-
-      virtual std::unordered_map<std::string, int*> GetInts()
-      {
-        return
-        {
-          {"backgroundRoundedPrecision", &backgroundRoundedPrecision},
-          {"borderRoundedPrecision", &borderRoundedPrecision}
-        };
-      }
-
-      virtual std::unordered_map<std::string, bool*> GetBools()
-      {
-        return {};
       }
 
 
