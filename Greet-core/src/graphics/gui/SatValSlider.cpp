@@ -9,7 +9,6 @@ namespace Greet
   SatValSlider::SatValSlider(const std::string& name, Component* parent)
     : Component{name, parent}, hue{0}, sat{0.5}, val{0.5}
   {
-    m_isFocusable = true;
     Styling normal
     {
       .colors = {
@@ -28,7 +27,6 @@ namespace Greet
   SatValSlider::SatValSlider(const XMLObject& xmlObject, Component* parent)
     : Component(xmlObject, parent)
   {
-    m_isFocusable = true;
     if(xmlObject.GetObjectCount() > 0)
       sliderComponent = ComponentFactory::GetComponent(xmlObject.GetObject(0), this);
     else

@@ -10,7 +10,6 @@ namespace Greet
     : Component(object,parent), min(0), max(1), value(0), valueReference(nullptr), vertical(false), reverse(false)
   {
     AddStyleVariables({.colors= {{"progressColor", &progressColor}}});
-    m_isFocusable = true;
     if(object.HasAttribute("minValue"))
       min = atof(object.GetAttribute("minValue").c_str());
     if(object.HasAttribute("maxValue"))

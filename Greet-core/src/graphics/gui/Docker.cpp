@@ -9,7 +9,6 @@ namespace Greet
   Docker::Docker(const XMLObject& object, Component* parent)
     : Component(object, parent), split{nullptr}, grabbedTab{nullptr}, tabButton{}
   {
-    m_isFocusable = true;
     for(auto&& child : object.GetObjects())
     {
       if(child.GetName() == "DockerSplit")

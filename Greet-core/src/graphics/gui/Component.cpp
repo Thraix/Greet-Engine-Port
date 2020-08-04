@@ -15,7 +15,7 @@ namespace Greet
   REGISTER_COMPONENT_DEFINITION(Component);
 
   Component::Component(const std::string& name, Component* parent)
-    : parent{parent}, size{}, m_isFocusable{false}, isFocused{false}, isHovered{false}, pos{0,0}, pressed{false}, name{name}
+    : parent{parent}, size{}, isFocused{false}, isHovered{false}, pos{0,0}, pressed{false}, name{name}
   {
     AddStyleVariables({
       .colors=
@@ -159,39 +159,39 @@ namespace Greet
 
   void Component::OnMousePressEventHandler(MousePressEvent& event, const Vec2& componentPos)
   {
-    if(m_isFocusable)
+    if(!guiScene)
+      Log::Error("GuiScene not initialized");
+    if(!isFocused)
+      guiScene->RequestFocus(this);
+    if(event.GetButton() == GREET_MOUSE_1)
     {
-      if(!guiScene)
-        Log::Error("GuiScene not initialized");
-      if(!isFocused)
-        guiScene->RequestFocus(this);
-      if(event.GetButton() == GREET_MOUSE_1)
-      {
-        pressed = true;
-        CallOnPressCallback();
-      }
-      OnEvent(event, componentPos);
+      pressed = true;
+      if(currentStyle == "hover")
+        SetCurrentStyle("press");
+      CallOnPressCallback();
     }
+    OnEvent(event, componentPos);
   }
 
   void Component::OnMouseMoveEventHandler(MouseMoveEvent& event, const Vec2& componentPos)
   {
-    if(m_isFocusable)
+    if(IsMouseInside(event.GetPosition() - componentPos) || UsingMouse())
     {
-      if(IsMouseInside(event.GetPosition() - componentPos) || UsingMouse())
+      if(!isHovered)
       {
-        if(!isHovered)
-        {
-          isHovered = true;
-          MouseEntered();
-        }
-        OnEvent(event, componentPos);
+        if(currentStyle == "normal")
+          SetCurrentStyle("hover");
+        isHovered = true;
+        MouseEntered();
       }
-      else if(isHovered)
-      {
-        isHovered = false;
-        MouseExited();
-      }
+      OnEvent(event, componentPos);
+    }
+    else if(isHovered)
+    {
+      isHovered = false;
+      MouseExited();
+      if(currentStyle == "hover")
+        SetCurrentStyle("normal");
     }
   }
 
@@ -202,7 +202,13 @@ namespace Greet
       if(pressed)
       {
         if(IsMouseInside(event.GetPosition() - componentPos))
+        {
+          if(currentStyle == "press")
+            SetCurrentStyle("hover");
           CallOnClickCallback();
+        }
+        else if(currentStyle == "press")
+          SetCurrentStyle("normal");
         CallOnReleaseCallback();
         OnEvent(event, componentPos);
         pressed = false;
@@ -422,6 +428,7 @@ namespace Greet
     auto it = styles.find(stylename);
     if(it != styles.end())
     {
+      currentStyle = stylename;
       it->second.SetStyling();
       return;
     }

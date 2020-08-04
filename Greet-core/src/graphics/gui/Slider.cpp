@@ -14,7 +14,6 @@ namespace Greet
   Slider::Slider(const std::string& name, Component* parent)
     : Component{name, parent}, flags{0}
   {
-    m_isFocusable = true;
     Styling normal
     {
       .colors = {
@@ -42,8 +41,6 @@ namespace Greet
   Slider::Slider(const XMLObject& xmlObject, Component* parent)
     : Component(xmlObject, parent), flags{0}
   {
-    m_isFocusable = true;
-
     minValue = GUIUtils::GetFloatFromXML(xmlObject, "minValue", 0.0f);
     maxValue = GUIUtils::GetFloatFromXML(xmlObject, "maxValue", 100.0f);
     stepSize = GUIUtils::GetFloatFromXML(xmlObject, "stepSize", 0.0f);

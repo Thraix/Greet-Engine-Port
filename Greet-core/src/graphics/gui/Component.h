@@ -33,6 +33,7 @@ namespace Greet
       //////////////////
       // Styles
       std::unordered_map<std::string, ComponentStyle> styles;
+      std::string currentStyle;
 
       //////////////////
       // Style variables
@@ -54,7 +55,6 @@ namespace Greet
       Vec2 pos;
       ComponentSize size;
 
-      bool m_isFocusable;
       bool isFocused;
       bool isHovered;
       bool pressed;

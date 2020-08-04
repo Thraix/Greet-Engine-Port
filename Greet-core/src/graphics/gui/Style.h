@@ -298,42 +298,41 @@ namespace Greet
       const TLBR& GetTLBR(const std::string& name) const
       {
         auto it = tlbrs.find(name);
-        if(it == tlbrs.end() && inherit)
+        if(!it->second.mbSetVariable && inherit)
           return inherit->GetTLBR(name);
-        return *it->second.mpVariable;
+        return it->second.mVariable;
       }
 
       bool GetBool(const std::string& name) const
       {
         auto it = bools.find(name);
-        if(it == bools.end() && inherit)
+        if(!it->second.mbSetVariable && inherit)
           return inherit->GetBool(name);
-        return *it->second.mpVariable;
+        return it->second.mVariable;
       }
 
       const Vec4& GetColor(const std::string& name)
       {
         auto it = colors.find(name);
-        if(it == colors.end() && inherit)
+        if(!it->second.mbSetVariable && inherit)
           return inherit->GetColor(name);
-        Log::Info(name, ": ", it == colors.end(), " ", colors.size());
-        return *it->second.mpVariable;
+        return it->second.mVariable;
       }
 
       float GetFloat(const std::string& name)
       {
         auto it = floats.find(name);
-        if(it == floats.end() && inherit)
+        if(!it->second.mbSetVariable && inherit)
           return inherit->GetFloat(name);
-        return *it->second.mpVariable;
+        return it->second.mVariable;
       }
 
       int GetInt(const std::string& name) const
       {
         auto it = ints.find(name);
-        if(it == ints.end() && inherit)
+        if(!it->second.mbSetVariable && inherit)
           return inherit->GetInt(name);
-        return *it->second.mpVariable;
+        return it->second.mVariable;
       }
 
       ComponentStyle& SetColor(const std::string& name, const Vec4& color)
@@ -410,23 +409,23 @@ namespace Greet
       {
         for(auto&& color : colors)
         {
-          *color.second.mpVariable = color.second.mVariable;
+          *color.second.mpVariable = GetColor(color.first);
         }
         for(auto&& tlbr : tlbrs)
         {
-          *tlbr.second.mpVariable = tlbr.second.mVariable;
+          *tlbr.second.mpVariable = GetTLBR(tlbr.first);
         }
         for(auto&& f : floats)
         {
-          *f.second.mpVariable = f.second.mVariable;
+          *f.second.mpVariable = GetFloat(f.first);
         }
         for(auto&& i : ints)
         {
-          *i.second.mpVariable = i.second.mVariable;
+          *i.second.mpVariable = GetInt(i.first);
         }
         for(auto&& b : bools)
         {
-          *b.second.mpVariable = b.second.mVariable;
+          *b.second.mpVariable = GetBool(b.first);
         }
       }
   };

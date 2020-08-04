@@ -9,7 +9,6 @@ namespace Greet
   ColorPicker::ColorPicker(const XMLObject& object, Component* parent)
     : Component{object, parent}
   {
-    m_isFocusable = true;
     picker  = new ColorPickerWindow(Vec2(0,0), Vec3<float>{GUIUtils::GetColorFromXML(object, "backgroundColor", Vec4{1,1,1,1})});
     using namespace std::placeholders;
     picker->SetOnColorChangeCallback(std::bind(&ColorPicker::OnColorChanged, std::ref(*this), _1, _2));

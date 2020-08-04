@@ -8,72 +8,39 @@ namespace Greet
   REGISTER_COMPONENT_DEFINITION(TextBox);
 
   TextBox::TextBox(const std::string& name, Component* parent)
-    : Component(name,parent), cursorPos(0), selectionPos(0), cursorBlinkTimer(0), textOffset{0}, password{false}, ctrlDown{false}, shiftDown{false}
-  {
-    m_isFocusable = true;
-
-    text = new Label("Label", this, "", "noto", 20);
-
-    text->SetColor(Vec4(0,0,0,1))
-      .SetSize(1,1,ComponentSize::Type::WEIGHT, ComponentSize::Type::WEIGHT);
-
-    hintText = new Label("HintLabel", this, "", "noto",20);
-    hintText->SetColor(Vec4(0,0,0,1))
-      .SetSize(1,1,ComponentSize::Type::WEIGHT, ComponentSize::Type::WEIGHT);
-  }
+    : Component(name,parent), cursorPos(0), selectionPos(0), cursorBlinkTimer(0), textOffset{0}, password{false}, ctrlDown{false}, shiftDown{false}, text{"", "noto", 20}, hintText{"", "noto", 20}
+  {}
 
   TextBox::TextBox(const XMLObject& object, Component* parent)
-    : Component(object,parent), cursorPos(0), selectionPos(0), cursorBlinkTimer(0), textOffset{0}, ctrlDown{false}, shiftDown{false}
+    : Component(object,parent), cursorPos(0), selectionPos(0), cursorBlinkTimer(0), textOffset{0}, ctrlDown{false}, shiftDown{false}, text{object.GetText(), GUIUtils::GetStringFromXML(object, "font",""),GUIUtils::GetFloatFromXML(object,"fontSize", 20)}, hintText{GUIUtils::GetStringFromXML(object, "hintText", ""), GUIUtils::GetStringFromXML(object, "font",""),GUIUtils::GetFloatFromXML(object,"fontSize", 20)}
   {
-    m_isFocusable = true;
-
-    text = new Label("Label",this,
-        object.GetText(),
-        GUIUtils::GetStringFromXML(object, "font",""),
-        GUIUtils::GetFloatFromXML(object,"fontSize",20));
-
-    text->SetColor(GUIUtils::GetColorFromXML(object, "color", Vec4(0,0,0,1)))
-      .SetSize(1,1,ComponentSize::Type::WEIGHT, ComponentSize::Type::WEIGHT);
-
-    hintText = new Label("HintLabel", this,
-        GUIUtils::GetStringFromXML(object, "hintText", ""),
-        GUIUtils::GetStringFromXML(object, "font",text->GetFont()->GetFontContainer()->GetName()),
-        GUIUtils::GetFloatFromXML(object,"fontSize",text->GetFontSize()));
-
-    hintText->SetColor(GUIUtils::GetColorFromXML(object, "hintColor", text->GetColor()))
-      .SetSize(1,1,ComponentSize::Type::WEIGHT, ComponentSize::Type::WEIGHT);
+    AddStyleVariables(
+      StylingVariables{
+        .colors =
+        {
+          {"textColor", &text.color},
+          {"hintTextColor", &hintText.color}
+        }
+      }
+    );
 
     password = GUIUtils::GetBooleanFromXML(object, "password", false);
-  }
-
-  TextBox::~TextBox()
-  {
-    delete text;
-    delete hintText;
-  }
-
-  void TextBox::OnMeasured()
-  {
-    text->Measure();
-    hintText->Measure();
-    text->MeasureFill(GetContentSize(), {1, 1});
-    hintText->MeasureFill(GetContentSize(), {1, 1});
   }
 
   void TextBox::Render(GUIRenderer* renderer) const
   {
     renderer->PushViewport(pos+GetTotalPadding(), GetContentSize());
-    if(text->GetText().length() == 0)
+    if(text.str.length() == 0)
     {
       Vec2 p = pos + GetTotalPadding() +  Vec2(-textOffset, 0);
       renderer->PushTranslation(p);
-      hintText->Render(renderer);
+      hintText.Render(renderer, GetContentSize());
     }
     else
     {
       Vec2 p = pos + GetTotalPadding() +  Vec2(-textOffset, 0);
       renderer->PushTranslation(p);
-      text->Render(renderer);
+      text.Render(renderer, GetContentSize());
     }
 
     renderer->PopViewport();
@@ -81,9 +48,9 @@ namespace Greet
 
     if(isFocused && cursorBlinkTimer < 0.5)
     {
-      float p = text->GetFont()->GetWidthOfText(text->GetText(),0, cursorPos)-textOffset;
-      Vec2 curPos = pos + GetTotalPadding() + Vec2(p, (GetContentSize().h - text->GetHeight())/2);
-      renderer->SubmitRect(curPos,Vec2(1,text->GetHeight()),text->GetColor(),false);
+      float p = text.font->GetWidthOfText(text.str,0, cursorPos)-textOffset;
+      Vec2 curPos = pos + GetTotalPadding() + Vec2(p, (GetContentSize().h - text.font->GetSize())/2);
+      renderer->SubmitRect(curPos,Vec2(1,text.font->GetSize()),text.color,false);
     }
   }
 
@@ -104,7 +71,7 @@ namespace Greet
         Vec2 translatedPos = e.GetPosition() - componentPos;
         // TODO: In the future we probably want to do some smart, average character length
         // to determain around where the cursor should be.
-        std::vector<float> widths{text->GetFont()->GetPartialWidths(str)};
+        std::vector<float> widths{text.font->GetPartialWidths(str)};
         auto it{widths.begin()};
         float w = -textOffset + GetTotalPadding().w;
         uint index = 0;
@@ -210,7 +177,7 @@ namespace Greet
     }
     else if(event.GetButton() == GREET_KEY_END)
     {
-      MoveCursor(text->GetText().length()-cursorPos);
+      MoveCursor(text.str.length()-cursorPos);
     }
     else if(event.GetButton() == GREET_KEY_PAGE_UP)
     {
@@ -220,46 +187,46 @@ namespace Greet
     else if(event.GetButton() == GREET_KEY_PAGE_DOWN)
     {
       // TODO: When multiline is implemented move to bottom of page
-      MoveCursor(text->GetText().length()-cursorPos);
+      MoveCursor(text.str.length()-cursorPos);
     }
   }
 
   const std::string& TextBox::GetText() const
   {
-    return text->GetText();
+    return text.str;
   }
 
   TextBox& TextBox::SetText(const std::string& text)
   {
     if(password)
-      this->text->SetText(StringUtils::Passwordify(text));
+      this->text.str = StringUtils::Passwordify(text);
     else
-      this->text->SetText(text);
+      this->text.str = text;
     str = text;
     return *this;
   }
 
   TextBox& TextBox::SetFont(const std::string& fontName)
   {
-    text->SetFont(fontName);
+    text.SetFont(fontName);
     return *this;
   }
 
   TextBox& TextBox::SetFontSize(float fontSize)
   {
-    text->SetFontSize(fontSize);
+    text.SetFontSize(fontSize);
     return *this;
   }
 
   TextBox& TextBox::SetHintFont(const std::string& fontName)
   {
-    hintText->SetFont(fontName);
+    hintText.SetFont(fontName);
     return *this;
   }
 
   TextBox& TextBox::SetHintFontSize(float fontSize)
   {
-    hintText->SetFontSize(fontSize);
+    hintText.SetFontSize(fontSize);
     return *this;
   }
 
@@ -277,8 +244,8 @@ namespace Greet
 
   void TextBox::RecenterText()
   {
-    float cursorTextWidth = text->GetFont()->GetWidthOfText(text->GetText(),0,cursorPos);
-    float textWidth = text->GetFont()->GetWidthOfText(text->GetText());
+    float cursorTextWidth = text.font->GetWidthOfText(text.str,0,cursorPos);
+    float textWidth = text.font->GetWidthOfText(text.str);
     if(cursorTextWidth - textOffset > GetContentSize().w)
     {
       textOffset = cursorTextWidth - GetContentSize().w;
@@ -300,7 +267,7 @@ namespace Greet
   void TextBox::MoveCursor(int delta)
   {
     cursorPos += delta;
-    Math::Clamp<int>(&cursorPos, 0, text->GetText().length());
+    Math::Clamp<int>(&cursorPos, 0, text.str.length());
     RecenterText();
   }
 
@@ -311,13 +278,13 @@ namespace Greet
 
     if(!forward)
       cursorPos+=delta;
-    StringUtils::CharType type = StringUtils::GetCharType(text->GetText()[cursorPos]);
-    while(type == StringUtils::GetCharType(text->GetText()[cursorPos]) && cursorPos >= 0 && cursorPos < text->GetText().length())
+    StringUtils::CharType type = StringUtils::GetCharType(text.str[cursorPos]);
+    while(type == StringUtils::GetCharType(text.str[cursorPos]) && cursorPos >= 0 && cursorPos < text.str.length())
     {
       cursorPos += delta;
     }
-    Math::Clamp<int>(&cursorPos, 0, text->GetText().length());
-    if(type != StringUtils::GetCharType(text->GetText()[cursorPos]) && !forward)
+    Math::Clamp<int>(&cursorPos, 0, text.str.length());
+    if(type != StringUtils::GetCharType(text.str[cursorPos]) && !forward)
       cursorPos -= delta;
 
     // If it was a whitespace character we keep going

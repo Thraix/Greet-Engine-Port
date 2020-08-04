@@ -11,9 +11,7 @@ namespace Greet
 
   SceneView::SceneView(const XMLObject& xmlObject, Component* parent)
     : Component(xmlObject, parent)
-  {
-    m_isFocusable = true;
-  }
+  {}
 
   void SceneView::Update(float timeElapsed)
   {

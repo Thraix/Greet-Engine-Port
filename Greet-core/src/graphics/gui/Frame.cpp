@@ -28,7 +28,6 @@ namespace Greet {
     m_resizableFlags = RESIZING_LEFT | RESIZING_RIGHT | RESIZING_TOP | RESIZING_BOTTOM;
     m_resizing = 0;
     minSize = Vec2(100, 100);
-    m_isFocusable = true;
 
     minSize.w = GUIUtils::GetFloatFromXML(object,"minWidth", 100);
     minSize.h = GUIUtils::GetFloatFromXML(object,"minHeight", 100);

@@ -2,6 +2,7 @@
 
 #include <graphics/gui/Component.h>
 #include <graphics/gui/Label.h>
+#include <graphics/gui/Text.h>
 
 namespace Greet
 {
@@ -12,8 +13,8 @@ namespace Greet
     public:
       typedef std::function<void(Component*, const std::string& before, const std::string& after)> OnTextChangedCallback;
     protected:
-      Label* text;
-      Label* hintText;
+      Text text;
+      Text hintText;
 
       int cursorPos;
       int selectionPos;
@@ -31,9 +32,6 @@ namespace Greet
     public:
       TextBox(const std::string& name, Component* parent);
       TextBox(const XMLObject& object, Component* parent);
-      virtual ~TextBox();
-
-      void OnMeasured() override;
 
       void Render(GUIRenderer* renderer) const override;
       void Update(float timeElapsed) override;

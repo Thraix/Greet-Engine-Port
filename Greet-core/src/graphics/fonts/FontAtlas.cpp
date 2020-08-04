@@ -91,6 +91,6 @@ namespace Greet
 
   uint FontAtlas::GetBaselineOffset() const
   {
-    return (face->size->metrics.descender+ face->size->metrics.ascender) / 64.0f;
+    return (face->size->metrics.descender + face->size->metrics.ascender) / 64.0f;
   }
 }

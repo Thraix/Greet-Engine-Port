@@ -6,60 +6,30 @@ namespace Greet {
 
   REGISTER_COMPONENT_DEFINITION(Button);
 
+  Button::Button(const std::string& name, Component* parent)
+    : Label{name, parent}
+  {
+    SetGravity(Text::Gravity::CENTER);
+    SetAlign(Text::Align::CENTER);
+  }
+
+  Button::Button(const std::string& name, Component* parent, const std::string& text, const std::string& fontName, float fontSize)
+    : Label{name, parent, text, fontName, fontSize}
+  {
+    SetGravity(Text::Gravity::CENTER);
+    SetAlign(Text::Align::CENTER);
+  }
+
   Button::Button(const XMLObject& object, Component* parent)
-    : Component(object, parent)
+    : Label{object, parent}
   {
-    m_isFocusable = true;
-    label = new Label("Label", this,object.GetText(),GUIUtils::GetStringFromXML(object, "font", "default"),GUIUtils::GetFloatFromXML(object, "fontSize",20));
-    label->SetColor(GUIUtils::GetColorFromXML(object, "color", Vec4(0,0,0,1)))
-      .SetSize(1,1, ComponentSize::Type::WRAP, ComponentSize::Type::WEIGHT);
-
-    fontSize = GUIUtils::GetFloatFromXML(object, "fontSize", 20);
-  }
-
-  Button::~Button()
-  {
-    delete label;
-  }
-
-  void Button::OnMeasured()
-  {
-    label->Measure();
-    label->MeasureFill(GetContentSize(),{1,1});
-  }
-
-  void Button::Render(GUIRenderer* renderer) const
-  {
-    Vec2 p = pos + GetTotalPadding() +  Vec2(
-        (GetContentSize().w-label->GetWidth())/2, 0);
-    renderer->PushViewport(pos+GetTotalPadding(), GetContentSize());
-    renderer->PushTranslation(p);
-    label->Render(renderer);
-    renderer->PopTranslation();
-    renderer->PopViewport();
-
-  }
-
-  void Button::SetText(const std::string& text)
-  {
-    label->SetText(text);
-  }
-
-  void Button::OnFocused()
-  {
-  }
-
-  void Button::OnUnfocused()
-  {
-  }
-
-  void Button::MouseEntered()
-  {
-    SetCurrentStyle("hover");
-  }
-
-  void Button::MouseExited()
-  {
-    SetCurrentStyle("normal");
+    if(!object.HasAttribute("gravity"))
+    {
+      SetGravity(Text::Gravity::CENTER);
+    }
+    if(!object.HasAttribute("align"))
+    {
+      SetAlign(Text::Align::CENTER);
+    }
   }
 }

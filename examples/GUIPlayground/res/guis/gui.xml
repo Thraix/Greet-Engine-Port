@@ -5,16 +5,16 @@
   borderColor="#37474f"
   backgroundColor="#ffffff">
 <Docker width="1w" height="1w" name="docker" backgroundColor="#323232" edgeColor="#323232" edgeSize="10" edgeBorder="2" edgeBorderColor="#626262" border="2" borderColor="#626262">
-  <TabButton width="100" height="25" font="noto" fontSize="12" color="#ffffff" hover-backgroundColor="#424242" backgroundColor="#323232" active-backgroundColor="#424242" active-border="0 0 2 0" active-borderColor="#4CAF50"/>
+  <TabButton width="100" height="25" align="left" font="noto" fontSize="12" textColor="#ffffff" hover-backgroundColor="#424242" backgroundColor="#323232" active-backgroundColor="#424242" active-border="0 0 2 0" active-borderColor="#4CAF50" padding="0 5 0 0"/>
   <SplitIcon width="30" height="30" backgroundColor="#424242" border="5 2 2 2" borderColor="#626262"/>
   <DockerSplit>
     <DockerContainer weight="0.35">
       <DockerTab title="Settings">
         <Container name="container" width="fill_parent" height="fill_parent" backgroundColor="#424242" padding="10">
           <Label
-            fontSize="18" font="noto" color="#E0E0E0">Frame header</Label>
+            fontSize="18" font="noto" textColor="#E0E0E0">Frame header</Label>
           <Divider name="divider" backgroundColor="#E0E0E0"/>
-          <Label color="#E0E0E0" font="noto" fontSize="16">Radio Buttons</Label>
+          <Label textColor="#E0E0E0" font="noto" fontSize="16">Radio Buttons</Label>
 
           <RadioGroup name="Radio" width="fill_parent" height="wrap_content" margin="0" spacing="10">
             <Container vertical="false">
@@ -23,7 +23,7 @@
                 active-radius="8"
                 backgroundColor="#424242" borderColor="#4CAF50" border="2"
                 active-backgroundColor="#4CAF50" active-borderColor="#00000000" active-border="0"/>
-              <Label color="#E0E0E0" font="noto" fontSize="12">Yes</Label>
+              <Label textColor="#E0E0E0" font="noto" fontSize="12">Yes</Label>
             </Container>
             <Container vertical="false">
               <RadioButton width="16" height="16"
@@ -31,7 +31,7 @@
                 active-radius="8"
                 backgroundColor="#424242" borderColor="#4CAF50" border="2"
                 active-backgroundColor="#4CAF50" active-borderColor="#00000000" active-border="0"/>
-              <Label color="#E0E0E0" font="noto" fontSize="12">No</Label>
+              <Label textColor="#E0E0E0" font="noto" fontSize="12">No</Label>
             </Container>
             <Container vertical="false">
               <RadioButton width="16" height="16"
@@ -39,7 +39,7 @@
                 active-radius="8"
                 backgroundColor="#424242" borderColor="#4CAF50" border="2"
                 active-backgroundColor="#4CAF50" active-borderColor="#00000000" active-border="0"/>
-              <Label color="#E0E0E0" font="noto" fontSize="12">Maybe</Label>
+              <Label textColor="#E0E0E0" font="noto" fontSize="12">Maybe</Label>
             </Container>
           </RadioGroup>
 
@@ -47,20 +47,21 @@
             backgroundColor="#4CAF50"
             borderColor="#1B5E20"
             hover-backgroundColor="#4b994e"
-            color="#ffffff" fontSize="16" font="noto">Button!</Button>
+            press-backgroundColor="#307c33"
+            textColor="#ffffff" fontSize="16" font="noto">Button!</Button>
 
           <TextBox
             width="200" height="20"
             backgroundColor="#424242" borderColor="#4CAF50"
-            border="0 0 1 0" font="noto" fontSize="16" color="#E0E0E0"
-            hintColor="#757575" hintText="Username"
+            border="0 0 1 0" font="noto" fontSize="16" textColor="#E0E0E0"
+            hintTextColor="#757575" hintText="Username"
             padding="0 0"></TextBox>
 
           <TextBox
             width="200" height="20"
             backgroundColor="#424242" borderColor="#4CAF50"
-            border="0 0 1 0" font="noto" fontSize="16" color="#E0E0E0"
-            hintColor="#757575" hintText="Password"
+            border="0 0 1 0" font="noto" fontSize="16" textColor="#E0E0E0"
+            hintTextColor="#757575" hintText="Password"
             padding="0 0" password="true" ></TextBox>
 
           <Slider
@@ -77,7 +78,7 @@
 
         <Label
           padding="0"
-          fontSize="12" font="noto" color="#E0E0E0">Test label</Label>
+          fontSize="12" font="noto" textColor="#E0E0E0">Test label</Label>
 
         <Container
           width="fill_parent"
@@ -131,7 +132,7 @@
       minValue="0.25" maxValue="1.25" reverseProgress="true"/>
 
     <Container width="fill_parent" vertical="false">
-      <Label width="wrap_content" height="fill_parent" fontSize="16" font="noto" color="#E0E0E0">Background Color: </Label>
+      <Label width="wrap_content" height="fill_parent" fontSize="16" font="noto" textColor="#E0E0E0">Background Color: </Label>
 
       <ColorPicker
         width="48" height="30" name="backgroundChanger"

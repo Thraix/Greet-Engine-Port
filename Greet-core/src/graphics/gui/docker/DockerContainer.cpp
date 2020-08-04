@@ -79,7 +79,6 @@ namespace Greet
     }
     if(docker->IsHoldingTab() && Utils::IsInside(Input::GetMousePosPixel(), position, size))
     {
-      Log::Info("here ", GetTopSplitPos());
       splitIcon->PreRender(renderer, GetTopSplitPos());
       splitIcon->Render(renderer);
       splitIcon->PostRender(renderer);
@@ -238,7 +237,7 @@ namespace Greet
 
   void DockerContainer::AddTab(int i, DockerTab* tab)
   {
-    ASSERT(i >= 0 && i < children.size(), "Index out of bound: ", i, " >= ", children.size());
+    ASSERT(i >= 0 && i <= children.size(), "Index out of bound: ", i, " >= ", children.size());
     children.insert(children.begin() + i, tab);
     tab->SetPosition(position + GetTabOffset());
     tab->SetSize(size - GetTabOffset());

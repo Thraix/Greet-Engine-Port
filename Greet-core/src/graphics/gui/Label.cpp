@@ -9,43 +9,45 @@ namespace Greet
   {
   }
 
-  Label::Label(const std::string& name, Component* parent, const std::string& text, const std::string& fontName, float fontSize)
-    : Component{name, parent}, str{text}, fontSize{fontSize}, color{0,0,0,1}, hasMaxWidth{false}
+  Label::Label(const std::string& name, Component* parent, const std::string& str, const std::string& fontName, float fontSize)
+    : Component{name, parent}, text{str, fontName, fontSize}, hasMaxWidth{false}
   {
-    font = FontManager::Get(fontName, fontSize);
-    gravity = Gravity::CENTER;
+    text.gravity = Text::Gravity::CENTER;
+    text.align = Text::Align::LEFT;
   }
 
   Label::Label(const XMLObject& object, Component* parent)
-    : Component(object, parent), str{object.GetText()}, color{0,0,0,1}, hasMaxWidth{false}
+    : Component(object, parent), text{object.GetText(),GUIUtils::GetStringFromXML(object,"font",""), GUIUtils::GetFloatFromXML(object, "fontSize", 20)}, hasMaxWidth{false}
   {
-    fontSize = GUIUtils::GetFloatFromXML(object, "fontSize", 20);
-    font = FontManager::Get(GUIUtils::GetStringFromXML(object,"font",""),fontSize);
+    AddStyleVariables(StylingVariables{.colors={{"textColor", &text.color}}});
 
     std::string grav = object.GetAttribute("gravity", "center");
     if(grav == "top")
-      gravity = Gravity::TOP;
+      text.gravity = Text::Gravity::TOP;
     else if(grav == "bottom")
-      gravity = Gravity::BOTTOM;
+      text.gravity = Text::Gravity::BOTTOM;
     else// if(grav == "center") or invalid
-      gravity = Gravity::CENTER;
+      text.gravity = Text::Gravity::CENTER;
 
-    color = GUIUtils::GetColorFromXML(object,"color",Vec4(0,0,0,1));
+    std::string sAlign = object.GetAttribute("align", "left");
+    if(sAlign == "center")
+      text.align = Text::Align::CENTER;
+    else if(sAlign == "right")
+      text.align = Text::Align::RIGHT;
+    else// if(sAlign == "left") or invalid
+      text.align = Text::Align::LEFT;
   }
 
   void Label::Render(GUIRenderer* renderer) const
   {
-    if(gravity == Gravity::TOP)
-      renderer->SubmitString(str, pos + GetTotalPadding() + Vec2(0, font->GetBaselineOffset()), font, color, false);
-    else if(gravity == Gravity::CENTER)
-      renderer->SubmitString(str, pos + GetTotalPadding() + Vec2(0, GetContentSize().h + font->GetBaselineOffset())/2, font, color, false);
-    else// if(gravity == Gravity::BOTTOM)
-      renderer->SubmitString(str, pos + GetTotalPadding() + Vec2(0, GetContentSize().h), font, color, false);
+    renderer->PushTranslation(pos + GetTotalPadding());
+    text.Render(renderer, GetContentSize());
+    renderer->PopTranslation();
   }
 
-  Label& Label::SetText(const std::string& text)
+  Label& Label::SetText(const std::string& str)
   {
-    str = text;
+    text.str = str;
     if(size.widthType == ComponentSize::Type::WRAP)
       Remeasure();
     return *this;
@@ -53,53 +55,58 @@ namespace Greet
 
   const std::string& Label::GetText() const
   {
-    return str;
+    return text.str;
   }
 
   Vec2 Label::GetWrapSize() const
   {
-    float width = font->GetWidthOfText(str);
-    return Vec2(hasMaxWidth ? Math::Min(width, maxWidth) : width, font->GetSize());
+    float width = text.font->GetWidthOfText(text.str);
+    return Vec2(hasMaxWidth ? Math::Min(width, maxWidth) : width, text.font->GetSize());
   }
 
   const Vec4& Label::GetColor() const
   {
-    return color;
+    return text.color;
   }
 
   const Font* Label::GetFont() const
   {
-    return font;
+    return text.font;
   }
 
   float Label::GetFontSize() const
   {
-    return fontSize;
+    return text.fontSize;
   }
 
-  Label& Label::SetGravity(Gravity grav)
+  Label& Label::SetGravity(Text::Gravity grav)
   {
-    gravity = grav;
+    text.gravity = grav;
+    return *this;
+  }
+
+  Label& Label::SetAlign(Text::Align align)
+  {
+    text.align = align;
     return *this;
   }
 
   Label& Label::SetFont(const std::string& font)
   {
-    this->font = FontManager::Get(font, fontSize);
+    text.SetFont(font);
     return *this;
   }
 
   Label& Label::SetFontSize(float fontSize)
   {
-    font = FontManager::Get(font->GetFontContainer()->GetName(), fontSize);
-    this->fontSize = fontSize;
+    text.SetFontSize(fontSize);
     Remeasure();
     return *this;
   }
 
   Label& Label::SetColor(const Vec4& color)
   {
-    this->color = color;
+    text.color = color;
     return *this;
   }
 }

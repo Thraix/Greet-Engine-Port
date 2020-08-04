@@ -9,7 +9,6 @@ namespace Greet
   RadioButton::RadioButton(const XMLObject& xmlObject, Component* parent)
     : Component(xmlObject, parent), active(false), radioParent{nullptr}
   {
-    m_isFocusable = true;
     AddStyle("active", "normal");
   }
 

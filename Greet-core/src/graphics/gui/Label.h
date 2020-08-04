@@ -1,5 +1,6 @@
 #pragma once
 
+#include <graphics/gui/Text.h>
 #include <graphics/gui/Component.h>
 #include <graphics/fonts/Font.h>
 #include <graphics/fonts/FontManager.h>
@@ -9,18 +10,10 @@ namespace Greet {
   {
     private:
       REGISTER_COMPONENT_DECLARATION(Label);
-    enum class Gravity
-    {
-      TOP, CENTER, BOTTOM
-    };
     private:
-      Gravity gravity;
+      Text text;
       bool hasMaxWidth;
       float maxWidth;
-      std::string str;
-      float fontSize;
-      Font* font;
-      Vec4 color;
 
     public:
       Label(const std::string& name, Component* parent);
@@ -36,7 +29,8 @@ namespace Greet {
       const Font* GetFont() const;
       float GetFontSize() const;
 
-      Label& SetGravity(Gravity grav);
+      Label& SetGravity(Text::Gravity grav);
+      Label& SetAlign(Text::Align align);
       Label& SetFont(const std::string& font);
       Label& SetFontSize(float fontSize);
       Label& SetColor(const Vec4& color);
