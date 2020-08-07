@@ -49,7 +49,7 @@ namespace Greet {
         for (uint i = 0; i < size; i++)
         {
           renderables[i]->Begin(renderer);
-          renderables[i]->Submit(renderer);
+          renderables[i]->Render(renderer);
           renderables[i]->End(renderer);
         }
       }

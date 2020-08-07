@@ -53,13 +53,13 @@ namespace Greet
       void End();
       void Flush();
       void Draw();
-      void Submit(const Renderable2D& renderable);
-      void SubmitLine(const Vec2& pos, float length, float width, bool vertical, const Vec4& color, bool isHsv);
-      void SubmitString(const std::string& text, const Vec2& position, Font* font, const Vec4& color, bool isHsv = true);
-      void SubmitTriangle(const Vec2& pos1, const Vec2& pos2, const Vec2& pos3, const Vec4& color, bool isHsv = true);
-      void SubmitRect(const Vec2& pos, const Vec2& size, const Vec4& color, bool isHsv = true);
-      void SubmitRoundedRect(const Vec2& pos, const Vec2& size, const Vec4& color, float radius, uint precision, bool isHsv = true);
-      void SubmitRect(const Vec2& pos, const Vec2& size, const Vec4& color1, const Vec4& color2, const Vec4& color3, const Vec4& color4, bool isHsv = true);
+      void Draw(const Renderable2D& renderable);
+      void DrawLine(const Vec2& pos, float length, float width, bool vertical, const Vec4& color, bool isHsv);
+      void DrawText(const std::string& text, const Vec2& position, const Font& font, const Vec4& color, bool isHsv = true);
+      void DrawTriangle(const Vec2& pos1, const Vec2& pos2, const Vec2& pos3, const Vec4& color, bool isHsv = true);
+      void DrawRect(const Vec2& pos, const Vec2& size, const Vec4& color, bool isHsv = true);
+      void DrawRoundedRect(const Vec2& pos, const Vec2& size, const Vec4& color, float radius, uint precision, bool isHsv = true);
+      void DrawRect(const Vec2& pos, const Vec2& size, const Vec4& color1, const Vec4& color2, const Vec4& color3, const Vec4& color4, bool isHsv = true);
 
       void PushViewport(const Vec2& pos, const Vec2& size, bool overwrite=false);
       void PopViewport();

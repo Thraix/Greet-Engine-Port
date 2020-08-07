@@ -66,7 +66,7 @@ namespace Greet
   void SatValSlider::PreRender(GUIRenderer* renderer, const Vec2& translation) const
   {
     renderer->PushTranslation(translation);
-    renderer->SubmitRect(pos, size.size, Vec4(hue,0,0,1), Vec4(hue,1,0,1), Vec4(hue,0,1,1), Vec4(hue,1,1,1),true);
+    renderer->DrawRect(pos, size.size, Vec4(hue,0,0,1), Vec4(hue,1,0,1), Vec4(hue,0,1,1), Vec4(hue,1,1,1),true);
   }
 
   void SatValSlider::Render(GUIRenderer* renderer) const

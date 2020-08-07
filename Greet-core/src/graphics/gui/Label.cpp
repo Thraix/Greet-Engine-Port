@@ -12,8 +12,8 @@ namespace Greet
   Label::Label(const std::string& name, Component* parent, const std::string& str, const std::string& fontName, float fontSize)
     : Component{name, parent}, text{str, fontName, fontSize}, hasMaxWidth{false}
   {
-    text.gravity = Text::Gravity::CENTER;
-    text.align = Text::Align::LEFT;
+    text.gravity = Text::Gravity::Center;
+    text.align = Text::Align::Left;
   }
 
   Label::Label(const XMLObject& object, Component* parent)
@@ -23,19 +23,27 @@ namespace Greet
 
     std::string grav = object.GetAttribute("gravity", "center");
     if(grav == "top")
-      text.gravity = Text::Gravity::TOP;
+      text.gravity = Text::Gravity::Top;
     else if(grav == "bottom")
-      text.gravity = Text::Gravity::BOTTOM;
-    else// if(grav == "center") or invalid
-      text.gravity = Text::Gravity::CENTER;
+      text.gravity = Text::Gravity::Bottom;
+    else
+      text.gravity = Text::Gravity::Center;
 
     std::string sAlign = object.GetAttribute("align", "left");
     if(sAlign == "center")
-      text.align = Text::Align::CENTER;
+      text.align = Text::Align::Center;
     else if(sAlign == "right")
-      text.align = Text::Align::RIGHT;
-    else// if(sAlign == "left") or invalid
-      text.align = Text::Align::LEFT;
+      text.align = Text::Align::Right;
+    else
+      text.align = Text::Align::Left;
+
+    std::string sOverlap = object.GetAttribute("overlap", "dots");
+    if(sOverlap == "ignore")
+      text.overlapMode = Text::OverlapMode::Ignore;
+    else if(sOverlap == "wrap")
+      text.overlapMode = Text::OverlapMode::Wrap;
+    else
+      text.overlapMode = Text::OverlapMode::Dots;
   }
 
   void Label::Render(GUIRenderer* renderer) const
@@ -60,8 +68,9 @@ namespace Greet
 
   Vec2 Label::GetWrapSize() const
   {
-    float width = text.font->GetWidthOfText(text.str);
-    return Vec2(hasMaxWidth ? Math::Min(width, maxWidth) : width, text.font->GetSize());
+    float width = text.font.GetWidthOfText(text.str);
+    float maxWidth = GetWidthSizeType() != ComponentSize::Type::WRAP ? Math::Min(width, GetContentSize().w) : width;
+    return text.GetWrapSize(maxWidth);
   }
 
   const Vec4& Label::GetColor() const
@@ -69,7 +78,7 @@ namespace Greet
     return text.color;
   }
 
-  const Font* Label::GetFont() const
+  const Font& Label::GetFont() const
   {
     return text.font;
   }

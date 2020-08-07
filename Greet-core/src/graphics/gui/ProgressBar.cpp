@@ -31,9 +31,9 @@ namespace Greet
     Vec2 progressPos = pos + GetBorder().LeftTop() + GetPadding().LeftTop();
 
     if(reverse)
-      renderer->SubmitRoundedRect(progressPos + (GetContentSize() - localSize), localSize, progressColor, backgroundRadius,backgroundRoundedPrecision,false);
+      renderer->DrawRoundedRect(progressPos + (GetContentSize() - localSize), localSize, progressColor, backgroundRadius,backgroundRoundedPrecision,false);
     else
-      renderer->SubmitRoundedRect(progressPos,  localSize, progressColor, backgroundRadius,backgroundRoundedPrecision,false);
+      renderer->DrawRoundedRect(progressPos,  localSize, progressColor, backgroundRadius,backgroundRoundedPrecision,false);
   }
 
   void ProgressBar::Update(float timeElapsed)

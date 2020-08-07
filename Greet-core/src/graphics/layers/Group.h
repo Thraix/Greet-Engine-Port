@@ -20,7 +20,7 @@ namespace Greet {
       virtual void Remove(Renderable* renderable);
       virtual bool Update(float timeElapsed) override;
       virtual void Begin(Renderer2D* renderer) const override;
-      virtual void Submit(Renderer2D* renderer) const override;
+      virtual void Render(Renderer2D* renderer) const override;
       virtual void End(Renderer2D* renderer) const override;
 
       void SetEnable(bool enable) { Group::enable = enable;}

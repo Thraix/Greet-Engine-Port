@@ -51,7 +51,7 @@ namespace Greet {
     m_lastIndex = 0;
   }
 
-  void BatchRenderer::Submit(const Renderable2D& renderable)
+  void BatchRenderer::Draw(const Renderable2D& renderable)
   {
 
     const uint color = renderable.GetColor();
@@ -69,17 +69,17 @@ namespace Greet {
     Draw(renderable.GetPosition(),renderable.GetSize(), texPos, texSize, ts, color, mts,maskTexPos,maskTexSize);
   }
 
-  void BatchRenderer::SubmitString(const std::string& text, const Vec2& position, Font* font, const uint& color)
+  void BatchRenderer::DrawText(const std::string& text, const Vec2& position, const Font& font, const uint& color)
   {
-    float ts = GetTextureSlot(font->GetFontAtlasId());
-    if (ts == 0 && font->GetFontAtlasId() != 0)
+    float ts = GetTextureSlot(font.GetFontAtlasId());
+    if (ts == 0 && font.GetFontAtlasId() != 0)
     {
       Flush();
-      ts = GetTextureSlot(font->GetFontAtlasId());
+      ts = GetTextureSlot(font.GetFontAtlasId());
     }
 
-    FontAtlas* atlas = font->GetFontAtlas();
-    const Vec2& scale = Vec2(1,1);//Vec2(64.0, 64.0) / font->GetSize();//font->getScale();
+    const Ref<FontAtlas>& atlas = font.GetFontAtlas();
+    const Vec2& scale = Vec2(1,1);//Vec2(64.0, 64.0) / font.GetSize();//font.getScale();
     Vec2 pos;
     Vec2 size;
     Vec2 uv0;
@@ -89,15 +89,15 @@ namespace Greet {
     for (uint i = 0;i < text.length();i++)
     {
       const Glyph& glyph = atlas->GetGlyph(text[i]);
-      pos.x = x + glyph.bearingX * scale.x;
-      pos.y = roundPos.y - glyph.bearingY * scale.y;
-      size.x = glyph.width * scale.x;
-      size.y = glyph.height * scale.y;
+      pos.x = x + glyph.miBearingX * scale.x;
+      pos.y = roundPos.y - glyph.miBearingY * scale.y;
+      size.x = glyph.miWidth * scale.x;
+      size.y = glyph.miHeight * scale.y;
 
-      uv0.x = glyph.textureCoords.left;
-      uv0.y = 1.0-glyph.textureCoords.top;
-      uv1.x = glyph.textureCoords.right;
-      uv1.y = 1.0-glyph.textureCoords.bottom;
+      uv0.x = glyph.mvTextureCoords.left;
+      uv0.y = 1.0-glyph.mvTextureCoords.top;
+      uv1.x = glyph.mvTextureCoords.right;
+      uv1.y = 1.0-glyph.mvTextureCoords.bottom;
 
       AppendVertexBuffer(Vec2(pos.x       ,pos.y       ), Vec2(uv0.x,uv0.y),ts,color, 0, Vec2(0, 0));
       AppendVertexBuffer(Vec2(pos.x       ,pos.y+size.y), Vec2(uv0.x,uv1.y),ts,color, 0, Vec2(0, 0));
@@ -107,18 +107,16 @@ namespace Greet {
       AddIndicesPoly(4);
       m_iboSize += 6;
 
-
-
-      x += glyph.advanceX* scale.x;
+      x += glyph.miAdvanceX* scale.x;
     }
   }
 
-  void BatchRenderer::Submit(const Transform& transform, uint texID, Vec2 texPos, Vec2 texSize, uint color, uint maskTexId, const Vec2& maskTexPos, const Vec2& maskTexSize)
+  void BatchRenderer::DrawRect(const Transform& transform, uint texID, Vec2 texPos, Vec2 texSize, uint color, uint maskTexId, const Vec2& maskTexPos, const Vec2& maskTexSize)
   {
     Draw(transform, texPos, texSize, GetTextureSlot(texID), color, GetTextureSlot(maskTexId),maskTexPos,maskTexSize);
   }
 
-  void BatchRenderer::Submit(const Vec2& position,const Vec2& size, uint texID, Vec2 texPos, Vec2 texSize, uint color,uint maskTexId, const Vec2& maskTexPos, const Vec2& maskTexSize)
+  void BatchRenderer::DrawRect(const Vec2& position,const Vec2& size, uint texID, Vec2 texPos, Vec2 texSize, uint color,uint maskTexId, const Vec2& maskTexPos, const Vec2& maskTexSize)
   {
     uint ts = GetTextureSlot(texID);
     uint mts = GetTextureSlot(maskTexId);
@@ -130,7 +128,7 @@ namespace Greet {
     m_iboSize += 6;
   }
 
-  void BatchRenderer::Submit(const Vec2& position,const Vec2& size, uint texID, Vec2 texPos, Vec2 texSize, uint color)
+  void BatchRenderer::DrawRect(const Vec2& position,const Vec2& size, uint texID, Vec2 texPos, Vec2 texSize, uint color)
   {
     uint ts = GetTextureSlot(texID);
     AppendVertexBuffer(Vec2(position.x, position.y), Vec2(texPos.x, texPos.y), ts, color, 0, Vec2(0,0));

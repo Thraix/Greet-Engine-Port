@@ -11,25 +11,22 @@ namespace Greet{
   {
     public:
       friend class Font;
+      friend class FontManager;
 
     private:
-      const byte* m_data;
-      uint m_datasize;
-      std::string m_name;
-      std::string m_filename;
-      std::set<Font*, FontCompare> m_fonts;
+      std::string msFilename;
+      std::string msName;
+      std::unordered_map<uint, Font> mvFonts;
 
     public:
-      FontContainer(const std::string& filename, const std::string& name);
-      FontContainer(const byte* data, uint datasize, const std::string& name);
-      virtual ~FontContainer();
+      FontContainer(const std::string& asFilename);
 
-      Font* GetSize(uint size);
+      Font GetFont(uint aiSize);
+      const std::string& GetFilename() const { return msFilename; }
+      const std::string& GetName() const { return msName; }
 
-      inline const std::string& GetName() const { return m_name; }
-      inline const std::string& GetFileName() const { return m_filename; }
-      inline const byte* GetData() const { return m_data;}
-      inline uint GetDataSize() const { return m_datasize;}
+    private:
+      void SetName(const std::string& asName) { msName = asName; }
 
   };
 }

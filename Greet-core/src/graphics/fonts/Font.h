@@ -8,52 +8,28 @@ namespace Greet{
 
   class FontContainer;
 
-  class Font
+  class Font final
   {
     private:
-      FontAtlas* m_atlas;
-      FontContainer* m_container;
-      float m_size;
+      Ref<FontAtlas> mAtlas;
+      FontContainer* mContainer;
+      uint mfSize;
 
     public:
-      Font(FontContainer* container, uint size);
-      virtual ~Font();
-      void Init();
-      inline FontAtlas* GetFontAtlas() const { return m_atlas;}
-      inline uint GetFontAtlasId() const { return m_atlas->GetTextureId();}
-      inline float GetSize() const {return m_size;}
-      inline float GetBaselineOffset() const { return m_atlas->GetBaselineOffset();}
-      inline const FontContainer* GetFontContainer() const { return m_container;}
-      float GetWidthOfText(const std::string& text, uint startPos, uint endPos, float scale=1) const;
-      float GetWidthOfText(const std::string& text, float scale=1) const;
-      std::vector<float> GetPartialWidths(const std::string& text, float scale=1) const;
+      Font(const Ref<FontAtlas>& aAtlas, FontContainer* aContainer, uint aiSize);
 
-      friend bool operator<(const Font& f1, const Font& f2)
-      {
-        return f1.GetSize() < f2.GetSize();
-      }
-  };
+      const Ref<FontAtlas>& GetFontAtlas() const;
+      uint GetFontAtlasId() const;
 
-  struct FontCompare
-  {
-    using is_transparent = void;
 
-    // Yes these arguments are dumb, but atleast the compiler is not complaining anymore+-
-    bool operator()(Font *const& f1, Font *const& f2) const
-    {
-      return f1->GetSize() < f2->GetSize();
-    }
+      const std::string& GetName() const;
+      uint GetSize() const;
+      uint GetBaselineOffset() const;
 
-    // Yes these arguments are dumb, but atleast the compiler is not complaining anymore
-    bool operator()(const uint& s, Font *const& f) const
-    {
-      return s < f->GetSize();
-    }
+      uint GetWidthOfText(const std::string& asText, uint startPos, uint endPos) const;
+      uint GetWidthOfText(const std::string& asText) const;
+      uint GetWidthOfText(const std::string_view& asText) const;
 
-    // Yes these arguments are dumb, but atleast the compiler is not complaining anymore
-    bool operator()(Font *const& f, const uint& s) const
-    {
-      return f->GetSize() < s;
-    }
+      std::vector<uint> GetPartialWidths(const std::string& asText) const;
   };
 }

@@ -60,7 +60,7 @@ namespace Greet
       edgePos[vecIndex] = children[i]->GetPosition()[vecIndex] + children[i]->GetSize()[vecIndex];
       edgeSize[vecIndex] = docker->edgeWidth;
 
-      renderer->SubmitRect(edgePos, edgeSize, docker->edgeBorderColor, false);
+      renderer->DrawRect(edgePos, edgeSize, docker->edgeBorderColor, false);
       if(parent != nullptr)
         edgePos[1-vecIndex] -= docker->edgeBorderSize;
       edgePos[vecIndex] += docker->edgeBorderSize;
@@ -68,7 +68,7 @@ namespace Greet
       if(parent != nullptr)
         edgeSize[1-vecIndex] += 2*docker->edgeBorderSize;
       edgeSize[vecIndex] -= 2*docker->edgeBorderSize;
-      renderer->SubmitRect(edgePos, edgeSize, docker->edgeColor, false);
+      renderer->DrawRect(edgePos, edgeSize, docker->edgeColor, false);
     }
     for(auto&& child : children)
     {

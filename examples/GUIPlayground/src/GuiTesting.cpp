@@ -24,7 +24,7 @@ class Core : public App
     void Init() override
     {
       progressBarValue = 0;
-      FontManager::Add(new FontContainer("res/fonts/NotoSansUI-Regular.ttf","noto"));
+      FontManager::Add("noto", FontContainer("res/fonts/NotoSansUI-Regular.ttf"));
 
       guiScene = new GUIScene(new GUIRenderer());
 

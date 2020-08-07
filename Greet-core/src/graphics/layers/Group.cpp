@@ -53,13 +53,13 @@ namespace Greet {
       renderer->PushMatrix(m_transformationMatrix);
   }
 
-  void Group::Submit(Renderer2D* renderer) const
+  void Group::Render(Renderer2D* renderer) const
   {
     if (render)
       for (uint i = 0; i < m_renderables.size(); i++)
       {
         m_renderables[i]->Begin(renderer);
-        m_renderables[i]->Submit(renderer);
+        m_renderables[i]->Render(renderer);
         m_renderables[i]->End(renderer);
       }
   }

@@ -6,47 +6,36 @@
 
 namespace Greet{
 
-  std::vector<FontContainer*> FontManager::m_fonts;
+  std::unordered_map<std::string, FontContainer> FontManager::mvFonts;
 
-  void FontManager::Add(FontContainer* font)
+  bool FontManager::Add(const std::string& asFontname, const FontContainer& aFont)
   {
-    for (int i = 0;i < m_fonts.size();i++)
+    auto it = mvFonts.emplace(asFontname, aFont);
+    if(!it.second)
     {
-      if (font->GetName() == m_fonts[i]->GetName())
-      {
-        ErrorHandle::SetErrorCode(GREET_ERROR_MANAGER_ADD);
-        Log::Error("Given font name already exists: ", font->GetName().c_str());
-        return;
-      }
+      Log::Error("Given font name already exists: ", asFontname);
+      return false;
     }
-    m_fonts.push_back(font);
+    it.first->second.SetName(asFontname);
+    return true;
   }
 
-  Font* FontManager::Get(const std::string& fontname, uint size)
+  Font FontManager::Get(const std::string& asFontname, uint aiSize)
   {
-    for (uint i = 0; i < m_fonts.size(); i++)
+    auto it = mvFonts.find(asFontname);
+    if(it == mvFonts.end())
     {
-      if (fontname.compare(m_fonts[i]->GetName())==0)
-      {
-        return m_fonts[i]->GetSize(size);
-      }
+      Log::Error("Could not find the given font: ", asFontname);
+      return mvFonts.begin()->second.GetFont(aiSize);
     }
-    ErrorHandle::SetErrorCode(GREET_ERROR_MANAGER_GET);
-    Log::Error("Could not find the given font: ", fontname.c_str());
-    if (m_fonts.size() > 0)
-      return m_fonts[0]->GetSize(size);
-    return NULL; // Return Default that always can be read.
+    return it->second.GetFont(aiSize);
   }
 
   // TODO: REMOVE FONTS
 
   void FontManager::Destroy()
   {
-    for (uint i = 0; i < m_fonts.size(); i++)
-    {
-      delete m_fonts[i];
-    }
-    m_fonts.clear();
+    mvFonts.clear();
   }
 
 }

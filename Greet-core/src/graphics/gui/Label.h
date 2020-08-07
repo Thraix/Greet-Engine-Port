@@ -26,7 +26,7 @@ namespace Greet {
 
       virtual Vec2 GetWrapSize() const override;
       const Vec4& GetColor() const;
-      const Font* GetFont() const;
+      const Font& GetFont() const;
       float GetFontSize() const;
 
       Label& SetGravity(Text::Gravity grav);

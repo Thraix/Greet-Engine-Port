@@ -113,11 +113,11 @@ namespace Greet
     // Border around Component
     if(borderColor.a != 0.0)
       //renderer->SubmitRect(pos + Vec2(0,0), size, currentStyle->borderColor, false);
-      renderer->SubmitRoundedRect(pos+Vec2(0,0),size.size, borderColor, borderRadius, borderRoundedPrecision, false);
+      renderer->DrawRoundedRect(pos+Vec2(0,0),size.size, borderColor, borderRadius, borderRoundedPrecision, false);
 
     // Component background
     if (backgroundColor.a != 0.0)
-      renderer->SubmitRoundedRect(pos + border.LeftTop(), size.size-GetBorder().LeftTop()-GetBorder().RightBottom(), backgroundColor, backgroundRadius, backgroundRoundedPrecision, false);
+      renderer->DrawRoundedRect(pos + border.LeftTop(), size.size-GetBorder().LeftTop()-GetBorder().RightBottom(), backgroundColor, backgroundRadius, backgroundRoundedPrecision, false);
   }
 
   // Render component

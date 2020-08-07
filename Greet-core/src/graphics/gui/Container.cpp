@@ -235,19 +235,21 @@ namespace Greet
     {
       if(vertical)
       {
-        if(wrapSize.w < comp->GetWrapSize().w && comp->GetWidthSizeType() != ComponentSize::Type::WEIGHT)
-          wrapSize.w = fmax(wrapSize.w, comp->GetWrapSize().w);
+        Vec2 compWrapSize = comp->GetWrapSize();
+        if(wrapSize.w < compWrapSize.w && comp->GetWidthSizeType() != ComponentSize::Type::WEIGHT)
+          wrapSize.w = fmax(wrapSize.w, compWrapSize.w);
         if(comp->GetHeightSizeType() != ComponentSize::Type::WEIGHT)
-          wrapSize.h += comp->GetWrapSize().h + comp->GetMargin().top + spacing;
+          wrapSize.h += compWrapSize.h + comp->GetMargin().top + spacing;
         else
           wrapSize.h += comp->GetMargin().top + spacing;
       }
       else
       {
-        if(wrapSize.h < comp->GetWrapSize().h && comp->GetHeightSizeType() != ComponentSize::Type::WEIGHT)
-          wrapSize.h = fmax(wrapSize.h, comp->GetWrapSize().h);
+        Vec2 compWrapSize = comp->GetWrapSize();
+        if(wrapSize.h < compWrapSize.h && comp->GetHeightSizeType() != ComponentSize::Type::WEIGHT)
+          wrapSize.h = fmax(wrapSize.h, compWrapSize.h);
         if(comp->GetWidthSizeType() != ComponentSize::Type::WEIGHT)
-          wrapSize.w += comp->GetWrapSize().w + comp->GetMargin().left + spacing;
+          wrapSize.w += compWrapSize.w + comp->GetMargin().left + spacing;
         else
           wrapSize.w += comp->GetMargin().left + spacing + GetPadding().GetWidth();
       }
@@ -257,7 +259,7 @@ namespace Greet
     else if(!vertical && wrapSize.w > 0)
       wrapSize.w -= spacing;
 
-    return wrapSize+GetBorder().GetSize() + GetPadding().GetSize();
+    return wrapSize + GetBorder().GetSize() + GetPadding().GetSize();
   }
 
   bool Container::IsVertical() const

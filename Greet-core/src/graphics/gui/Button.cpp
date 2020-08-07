@@ -9,15 +9,15 @@ namespace Greet {
   Button::Button(const std::string& name, Component* parent)
     : Label{name, parent}
   {
-    SetGravity(Text::Gravity::CENTER);
-    SetAlign(Text::Align::CENTER);
+    SetGravity(Text::Gravity::Center);
+    SetAlign(Text::Align::Center);
   }
 
   Button::Button(const std::string& name, Component* parent, const std::string& text, const std::string& fontName, float fontSize)
     : Label{name, parent, text, fontName, fontSize}
   {
-    SetGravity(Text::Gravity::CENTER);
-    SetAlign(Text::Align::CENTER);
+    SetGravity(Text::Gravity::Center);
+    SetAlign(Text::Align::Center);
   }
 
   Button::Button(const XMLObject& object, Component* parent)
@@ -25,11 +25,11 @@ namespace Greet {
   {
     if(!object.HasAttribute("gravity"))
     {
-      SetGravity(Text::Gravity::CENTER);
+      SetGravity(Text::Gravity::Center);
     }
     if(!object.HasAttribute("align"))
     {
-      SetAlign(Text::Align::CENTER);
+      SetAlign(Text::Align::Center);
     }
   }
 }

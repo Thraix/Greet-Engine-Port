@@ -48,9 +48,9 @@ namespace Greet
 
     if(isFocused && cursorBlinkTimer < 0.5)
     {
-      float p = text.font->GetWidthOfText(text.str,0, cursorPos)-textOffset;
-      Vec2 curPos = pos + GetTotalPadding() + Vec2(p, (GetContentSize().h - text.font->GetSize())/2);
-      renderer->SubmitRect(curPos,Vec2(1,text.font->GetSize()),text.color,false);
+      float p = text.font.GetWidthOfText(text.str,0, cursorPos)-textOffset;
+      Vec2 curPos = pos + GetTotalPadding() + Vec2(p, (GetContentSize().h - text.font.GetSize())/2);
+      renderer->DrawRect(curPos,Vec2(1,text.font.GetSize()),text.color,false);
     }
   }
 
@@ -71,7 +71,7 @@ namespace Greet
         Vec2 translatedPos = e.GetPosition() - componentPos;
         // TODO: In the future we probably want to do some smart, average character length
         // to determain around where the cursor should be.
-        std::vector<float> widths{text.font->GetPartialWidths(str)};
+        std::vector<uint> widths{text.font.GetPartialWidths(str)};
         auto it{widths.begin()};
         float w = -textOffset + GetTotalPadding().w;
         uint index = 0;
@@ -244,8 +244,8 @@ namespace Greet
 
   void TextBox::RecenterText()
   {
-    float cursorTextWidth = text.font->GetWidthOfText(text.str,0,cursorPos);
-    float textWidth = text.font->GetWidthOfText(text.str);
+    float cursorTextWidth = text.font.GetWidthOfText(text.str,0,cursorPos);
+    float textWidth = text.font.GetWidthOfText(text.str);
     if(cursorTextWidth - textOffset > GetContentSize().w)
     {
       textOffset = cursorTextWidth - GetContentSize().w;

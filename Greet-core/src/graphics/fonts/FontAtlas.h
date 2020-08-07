@@ -13,39 +13,45 @@ namespace Greet
 {
   struct Glyph
   {
-    float width;
-    float bearingX;
-    float advanceX;
-    float advanceY;
-    float height;
-    float bearingY;
-    float descending;
-    Vec4 textureCoords;
+    float miWidth;
+    float miBearingX;
+    float miAdvanceX;
+    float miAdvanceY;
+    float miHeight;
+    float miBearingY;
+    float miDescending;
+    Vec4 mvTextureCoords;
   };
 
-  class FontAtlas
+  class FontAtlas final
   {
     private:
-      FT_Library library;
-      FT_Face face;
-      Ref<Texture2D> atlas;
-      uint width;
-      uint height;
-      uint fontSize;
-      std::map<char, Glyph> glyphs;
-      std::vector<byte> m_pixels;
+      FT_Library mLibrary;
+      FT_Face mFace;
+      Ref<Texture2D> mAtlas;
+      uint miWidth;
+      uint miHeight;
+      std::map<char, Glyph> mvGlyphs;
+      std::vector<byte> mvPixels;
 
-      uint yPos;
-      uint xPos;
-      uint nextYPos;
+      uint miYPos;
+      uint miXPos;
+      uint miNextYPos;
+
+    private:
+      FontAtlas(const std::string& asFilename, uint aiFontSize);
 
     public:
-      FontAtlas(const std::string& filename, uint width, uint height, uint fontSize);
-      virtual ~FontAtlas();
+      ~FontAtlas();
 
-      const Glyph& GetGlyph(char character);
+      FontAtlas(const FontAtlas&) = delete;
+      FontAtlas& operator=(const FontAtlas&) = delete;
+
+      const Glyph& GetGlyph(char acCharacter);
       uint GetTextureId() const;
       uint GetBaselineOffset() const;
+
+      static Ref<FontAtlas> Create(const std::string& asFontname, uint aiFontSize);
     private:
       const Glyph& AddGlyph(char character);
   };

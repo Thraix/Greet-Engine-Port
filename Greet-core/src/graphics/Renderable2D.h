@@ -58,10 +58,10 @@ namespace Greet{
       {
       }
 
-      virtual void Submit(Renderer2D* renderer) const override
+      virtual void Render(Renderer2D* renderer) const override
       {
         if (render)
-          renderer->Submit(*this);
+          renderer->Draw(*this);
       }
 
       virtual bool Update(float timeElapsed) override
