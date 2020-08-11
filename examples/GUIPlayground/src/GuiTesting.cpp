@@ -1,6 +1,8 @@
 #include <Greet.h>
 #include <functional>
 
+#include "TestScene.h"
+
 using namespace Greet;
 
 class Core : public App
@@ -8,6 +10,7 @@ class Core : public App
   private:
     GUIScene* guiScene;
     Component* content;
+    TestScene* scene;
     float progressBarValue;
   public:
     Core()
@@ -18,11 +21,13 @@ class Core : public App
 
     ~Core()
     {
-      delete guiScene;
+      /* delete guiScene; */
     }
 
     void Init() override
     {
+      GlobalSceneManager::GetSceneManager().Add2DScene(new TestScene(), "testscene");
+      return;
       progressBarValue = 0;
       FontManager::Add("noto", FontContainer("res/fonts/NotoSansUI-Regular.ttf"));
 
