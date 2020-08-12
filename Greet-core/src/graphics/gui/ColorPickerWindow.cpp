@@ -16,15 +16,17 @@ namespace Greet
   {
     shouldCloseUnfocus = true;
     LoadStyles(frameLook);
+    Measure({}, {});
 
     Vec3<float> hsv(ColorUtils::RGBtoHSV(Vec4(color.r,color.g,color.b,1)));
     svSlider = GetComponentByName<SatValSlider>("ColorPickerWindow#SatValSlider");
+    Log::Info(hsv.h);
     svSlider->SetHue(hsv.h);
     svSlider->SetSat(hsv.s);
     svSlider->SetVal(hsv.v);
 
     hSlider = GetComponentByName<HueSlider>("ColorPickerWindow#HueSlider");
-    hSlider->GetSliderComponent()->SetSize(1,7,ComponentSize::Type::WEIGHT, ComponentSize::Type::PIXELS);
+    hSlider->GetSliderComponent()->SetSize(1,7,ComponentSize::Type::Weight, ComponentSize::Type::Pixels);
     hSlider->SetValue(hsv.h);
     rTextBox = GetComponentByName<TextBox>("ColorPickerWindow#RTextBox");
     gTextBox = GetComponentByName<TextBox>("ColorPickerWindow#GTextBox");

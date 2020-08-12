@@ -332,8 +332,7 @@ namespace Greet
     {
       child->SetSize(_size - GetTabOffset());
     }
-    button->Measure();
-    button->MeasureFill(size, {1.0f,1.0f});
+    button->Measure(size, {1.0f, 1.0f});
   }
 
   DockerTab* DockerContainer::GetTab(const std::string& tabName) const

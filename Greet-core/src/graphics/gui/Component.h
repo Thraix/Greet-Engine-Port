@@ -70,11 +70,8 @@ namespace Greet
 
       virtual void PostConstruction(){}
 
-      // Measurements that doesn't depend on the parent
-      virtual void Measure();
-      // Measurements that does depend on the parent
-      void MeasureFill();
-      virtual void MeasureFill(const Vec2& emptyParentSpace, const Vec2& percentageFill);
+      virtual void Measure(const Vec2& emptyParentSpace, const Vec2& percentageFill);
+
       void Remeasure();
 
       // Size has updated
@@ -116,7 +113,8 @@ namespace Greet
       Vec2 GetSize() const;
       Component* GetParent() const;
 
-      virtual Vec2 GetWrapSize() const;
+      virtual float GetWrapWidth() const { return 100; };
+      virtual float GetWrapHeight() const { return 100; };
 
       // Will return the stored value
       virtual float GetWidth() const;

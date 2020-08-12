@@ -19,7 +19,7 @@ namespace Greet
     };
 
     Component* component = new Component{"SatValSliderComponent", this};
-    component->SetSize(7,7,ComponentSize::Type::PIXELS, ComponentSize::Type::PIXELS, false)
+    component->SetSize(7,7,ComponentSize::Type::Pixels, ComponentSize::Type::Pixels, false)
       .LoadStyle("normal", normal);
     sliderComponent = component;
   }
@@ -40,7 +40,7 @@ namespace Greet
       .tlbrs = {{"border", {2,2,2,2}}}
     };
       Component* component = new Component{"SatValSliderComponent", this};
-      component->SetSize(7,7,ComponentSize::Type::PIXELS, ComponentSize::Type::PIXELS, false)
+      component->SetSize(7,7,ComponentSize::Type::Pixels, ComponentSize::Type::Pixels, false)
         .LoadStyle("normal", normal);
       sliderComponent = component;
     }
@@ -51,16 +51,10 @@ namespace Greet
     delete sliderComponent;
   }
 
-  void SatValSlider::Measure()
+  void SatValSlider::Measure(const Vec2& emptyParentSpace, const Vec2& percentageFill)
   {
-    sliderComponent->Measure();
-    Component::Measure();
-  }
-
-  void SatValSlider::MeasureFill(const Vec2& emptyParentSpace, const Vec2& percentageFill)
-  {
-    Component::MeasureFill(emptyParentSpace, percentageFill);
-    sliderComponent->MeasureFill(GetContentSize(), {1, 1});
+    Component::Measure(emptyParentSpace, percentageFill);
+    sliderComponent->Measure(GetContentSize(), {1, 1});
   }
 
   void SatValSlider::PreRender(GUIRenderer* renderer, const Vec2& translation) const

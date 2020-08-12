@@ -18,6 +18,7 @@ namespace Greet
       virtual void OnMeasured() override;
 
       // Will return a newly calculated value
-      virtual Vec2 GetWrapSize() const override;
+      virtual float GetWrapWidth() const override;
+      virtual float GetWrapHeight() const override;
   };
 }

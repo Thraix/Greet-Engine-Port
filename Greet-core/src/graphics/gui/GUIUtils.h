@@ -11,15 +11,15 @@ namespace Greet {
   {
     enum class Type
     {
-      WRAP, WEIGHT, PIXELS
+      Wrap, Weight, Pixels
     };
 
     // Can become dirty if below values changes
     Vec2 size;
 
     Vec2 value = {1,1};
-    Type heightType = Type::WRAP;
-    Type widthType = Type::WRAP;
+    Type heightType = Type::Wrap;
+    Type widthType = Type::Wrap;
   };
 
   class GUIUtils

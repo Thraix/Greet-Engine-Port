@@ -56,7 +56,7 @@ namespace Greet
   Label& Label::SetText(const std::string& str)
   {
     text.str = str;
-    if(size.widthType == ComponentSize::Type::WRAP)
+    if(size.widthType == ComponentSize::Type::Wrap)
       Remeasure();
     return *this;
   }
@@ -66,11 +66,16 @@ namespace Greet
     return text.str;
   }
 
-  Vec2 Label::GetWrapSize() const
+  float Label::GetWrapWidth() const
+  {
+    return text.GetWrapWidth();
+  }
+
+  float Label::GetWrapHeight() const
   {
     float width = text.font.GetWidthOfText(text.str);
-    float maxWidth = GetWidthSizeType() != ComponentSize::Type::WRAP ? Math::Min(width, GetContentSize().w) : width;
-    return text.GetWrapSize(maxWidth);
+    float maxWidth = GetWidthSizeType() != ComponentSize::Type::Wrap ? Math::Min(width, GetContentSize().w) : width;
+    return text.GetWrapHeight(maxWidth);
   }
 
   const Vec4& Label::GetColor() const

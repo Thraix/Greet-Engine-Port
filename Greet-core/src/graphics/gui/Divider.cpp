@@ -14,18 +14,18 @@ namespace Greet
       size.value.w = 1;
       size.size.w = 1;
       if(!vertical)
-        size.widthType = ComponentSize::Type::WEIGHT;
+        size.widthType = ComponentSize::Type::Weight;
       else
-        size.widthType = ComponentSize::Type::PIXELS;
+        size.widthType = ComponentSize::Type::Pixels;
     }
     if(!xmlObject.HasAttribute("height"))
     {
       size.value.h = 1;
       size.size.h = 1;
       if(vertical)
-        size.heightType = ComponentSize::Type::WEIGHT;
+        size.heightType = ComponentSize::Type::Weight;
       else
-        size.heightType = ComponentSize::Type::PIXELS;
+        size.heightType = ComponentSize::Type::Pixels;
     }
   }
 
@@ -53,10 +53,17 @@ namespace Greet
     }
   }
 
-  Vec2 Divider::GetWrapSize() const
+  float Divider::GetWrapWidth() const
   {
-    if(parent && !vertical)
-      return Vec2(100, 1);
-    return Vec2(1, 100);
+    if(!vertical)
+      return 100;
+    return 1;
+  }
+
+  float Divider::GetWrapHeight() const
+  {
+    if(vertical)
+      return 100;
+    return 1;
   }
 }

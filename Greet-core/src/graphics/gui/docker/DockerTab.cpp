@@ -82,8 +82,7 @@ namespace Greet
 
   void DockerTab::SetSize(const Vec2& _size)
   {
-    component->Measure();
-    component->MeasureFill(_size, {1, 1});
+    component->Measure(_size, {1, 1});
   }
 
   void DockerTab::SetOnTabShowCallback(OnTabChangeCallback callback)

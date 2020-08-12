@@ -54,39 +54,102 @@ namespace Greet
     }
   }
 
-  void Container::Measure()
+  void Container::MeasureChildren(const Vec2& weightTotals)
   {
-    for(auto&& comp : m_components)
+    Vec2 pos{0, 0};
+    int spacings = std::max((int)m_components.size() - 1, 0);
+
+    Vec2 totalSize = GetPadding().GetSize() + GetBorder().GetSize();
+    if(vertical)
+      totalSize.h += spacing * spacings;
+    else
+      totalSize.w += spacing * spacings;
+    for(auto&& child : m_components)
     {
-      comp->Measure();
+      child->Measure({0, 0}, {0, 0});
+      child->SetPosition(pos);
+      if(vertical)
+        pos.y += child->GetSize().h + spacing;
+      else
+        pos.x += child->GetSize().w + spacing;
+      if(child->GetWidthSizeType() != ComponentSize::Type::Weight && !vertical)
+        totalSize.w += child->GetSize().w;
+      if(child->GetHeightSizeType() != ComponentSize::Type::Weight && vertical)
+        totalSize.h += child->GetSize().h;
     }
-    Component::Measure();
-  }
 
-  void Container::MeasureFill(const Vec2& emptyParentSpace, const Vec2& percentageFill)
-  {
-    Component::MeasureFill(emptyParentSpace, percentageFill);
+    totalSize.w = totalSize.w > size.size.w ? size.size.w : totalSize.w;
+    totalSize.h = totalSize.h > size.size.h ? size.size.h : totalSize.h;
 
-    Vec2 emptySpace = GetMeasureFillSize();
-    float weight = GetMeasureTotalWeight();
-    for(auto&& comp : m_components)
+    pos = {0, 0};
+    for(auto&& child : m_components)
     {
-      const Vec2& childSize = comp->GetSizeValue();
-      comp->MeasureFill(emptySpace, {this->vertical ? 1 : childSize.w / weight, this->vertical ? childSize.h / weight : 1});
-    }
-
-    float offset = 0;
-    for(auto&& comp : m_components)
-    {
-      if(this->vertical)
+      if(vertical)
       {
-        comp->SetPosition(Vec2(0.0f,offset));
-        offset += comp->GetMargin().top + comp->GetSize().h + spacing;
+        child->Measure({(size.size.w - totalSize.w), (size.size.h - totalSize.h) / weightTotals.h}, {1, child->GetSizeValue().h});
       }
       else
       {
-        comp->SetPosition(Vec2(offset,0.0f));
-        offset += comp->GetMargin().left + comp->GetSize().w + spacing;
+        child->Measure({(size.size.w - totalSize.w) / weightTotals.w, size.size.h - totalSize.h}, {1, child->GetSizeValue().h});
+      }
+      child->SetPosition(pos);
+      if(vertical)
+        pos.y += child->GetSize().h + spacing;
+      else
+        pos.x += child->GetSize().w + spacing;
+    }
+  }
+
+  void Container::Measure(const Vec2& emptyParentSpace, const Vec2& percentageFill)
+  {
+    bool childHasWidthWeight = false;
+    bool childHasHeightWeight = false;
+    Vec2 totalWeights{0, 0};
+
+    for(auto&& child : m_components)
+    {
+      if(child->GetWidthSizeType() == ComponentSize::Type::Weight)
+      {
+        totalWeights.w += child->GetSizeValue().w;
+        childHasWidthWeight = true;
+      }
+      if(child->GetHeightSizeType() == ComponentSize::Type::Weight)
+      {
+        totalWeights.h += child->GetSizeValue().h;
+        childHasWidthWeight = true;
+      }
+    }
+    Component::Measure(emptyParentSpace, percentageFill);
+
+    MeasureChildren(totalWeights);
+
+    bool remeasureChildren = true;
+    while(remeasureChildren)
+    {
+      remeasureChildren = false;
+      if(size.widthType == ComponentSize::Type::Wrap)
+      {
+        int wrapSize = GetWrapWidth();
+        if(wrapSize != size.size.w)
+        {
+          size.size.w = wrapSize;
+          if(childHasWidthWeight)
+            remeasureChildren = true;
+        }
+      }
+      if(size.heightType == ComponentSize::Type::Wrap)
+      {
+        int wrapSize = GetWrapHeight();
+        if(wrapSize != size.size.h)
+        {
+          size.size.h = wrapSize;
+          if(childHasHeightWeight)
+            remeasureChildren = true;
+        }
+      }
+      if(remeasureChildren)
+      {
+        MeasureChildren(totalWeights);
       }
     }
   }
@@ -102,9 +165,9 @@ namespace Greet
       else
         usedSpace += comp->GetMargin().GetWidth() + spacing;
 
-      if(this->vertical && comp->GetHeightSizeType() != ComponentSize::Type::WEIGHT)
+      if(this->vertical && comp->GetHeightSizeType() != ComponentSize::Type::Weight)
         usedSpace += comp->GetSize().h;
-      else if(!this->vertical && comp->GetWidthSizeType() != ComponentSize::Type::WEIGHT)
+      else if(!this->vertical && comp->GetWidthSizeType() != ComponentSize::Type::Weight)
         usedSpace += comp->GetSize().w;
     }
     if(usedSpace > 0)
@@ -130,9 +193,9 @@ namespace Greet
     float totalWeight = 0;
     for(auto&& comp : m_components)
     {
-      if(vertical && comp->GetHeightSizeType() == ComponentSize::Type::WEIGHT)
+      if(vertical && comp->GetHeightSizeType() == ComponentSize::Type::Weight)
         totalWeight += comp->GetSizeValue().h;
-      else if(!vertical && comp->GetWidthSizeType() == ComponentSize::Type::WEIGHT)
+      else if(!vertical && comp->GetWidthSizeType() == ComponentSize::Type::Weight)
         totalWeight += comp->GetSizeValue().w;
     }
     return totalWeight;
@@ -228,38 +291,50 @@ namespace Greet
     return m_components.size();
   }
 
-  Vec2 Container::GetWrapSize() const
+  float Container::GetWrapWidth() const
   {
-    Vec2 wrapSize{0,0};
-    for(auto&& comp : m_components)
+    float width = 0;
+    if(vertical)
     {
-      if(vertical)
+      for(auto&& child : m_components)
       {
-        Vec2 compWrapSize = comp->GetWrapSize();
-        if(wrapSize.w < compWrapSize.w && comp->GetWidthSizeType() != ComponentSize::Type::WEIGHT)
-          wrapSize.w = fmax(wrapSize.w, compWrapSize.w);
-        if(comp->GetHeightSizeType() != ComponentSize::Type::WEIGHT)
-          wrapSize.h += compWrapSize.h + comp->GetMargin().top + spacing;
-        else
-          wrapSize.h += comp->GetMargin().top + spacing;
-      }
-      else
-      {
-        Vec2 compWrapSize = comp->GetWrapSize();
-        if(wrapSize.h < compWrapSize.h && comp->GetHeightSizeType() != ComponentSize::Type::WEIGHT)
-          wrapSize.h = fmax(wrapSize.h, compWrapSize.h);
-        if(comp->GetWidthSizeType() != ComponentSize::Type::WEIGHT)
-          wrapSize.w += compWrapSize.w + comp->GetMargin().left + spacing;
-        else
-          wrapSize.w += comp->GetMargin().left + spacing + GetPadding().GetWidth();
+        if(child->GetWidthSizeType() != ComponentSize::Type::Weight)
+          width = std::max(width, child->GetSize().w);
       }
     }
-    if(vertical && wrapSize.h > 0)
-      wrapSize.h -= spacing;
-    else if(!vertical && wrapSize.w > 0)
-      wrapSize.w -= spacing;
+    else
+    {
+      width = spacing * std::max(((int)m_components.size() - 1), 0);
+      for(auto&& child : m_components)
+      {
+        if(child->GetWidthSizeType() != ComponentSize::Type::Weight)
+          width += child->GetSize().w;
+      }
+    }
+    return width + GetPadding().GetWidth() + GetBorder().GetWidth();
+  }
 
-    return wrapSize + GetBorder().GetSize() + GetPadding().GetSize();
+  float Container::GetWrapHeight() const
+  {
+    float height = 0;
+    if(vertical)
+    {
+      height = spacing * std::max(((int)m_components.size() - 1), 0);
+      for(auto&& child : m_components)
+      {
+        if(child->GetHeightSizeType() != ComponentSize::Type::Weight)
+          height += child->GetSize().h;
+      }
+    }
+    else
+    {
+      for(auto&& child : m_components)
+      {
+        if(child->GetHeightSizeType() != ComponentSize::Type::Weight)
+          height = std::max(height, child->GetSize().h);
+      }
+    }
+    return height + GetPadding().GetHeight() + GetBorder().GetHeight();
   }
 
   bool Container::IsVertical() const

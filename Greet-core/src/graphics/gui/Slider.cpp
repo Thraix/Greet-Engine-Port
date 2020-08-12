@@ -24,7 +24,7 @@ namespace Greet
     };
 
     sliderComponent = new Component(name+"#SliderComponent", this);
-    sliderComponent->SetSize(7,1,ComponentSize::Type::PIXELS, ComponentSize::Type::WEIGHT)
+    sliderComponent->SetSize(7,1,ComponentSize::Type::Pixels, ComponentSize::Type::Weight)
       .LoadStyle("normal", normal);
 
     minValue = 0;
@@ -87,9 +87,9 @@ namespace Greet
 
       sliderComponent = new Component(name+"#SliderComponent", this);
       if(flags & SLIDER_FLAG_VERTICAL)
-        sliderComponent->SetSize(1,7,ComponentSize::Type::WEIGHT, ComponentSize::Type::PIXELS);
+        sliderComponent->SetSize(1,7,ComponentSize::Type::Weight, ComponentSize::Type::Pixels);
       else
-        sliderComponent->SetSize(7,1,ComponentSize::Type::PIXELS, ComponentSize::Type::WEIGHT);
+        sliderComponent->SetSize(7,1,ComponentSize::Type::Pixels, ComponentSize::Type::Weight);
       sliderComponent->LoadStyle("normal", normal);
     }
 
@@ -97,20 +97,18 @@ namespace Greet
     SetValue(GUIUtils::GetFloatFromXML(xmlObject, "defaultValue", (maxValue-minValue)/2.0f));
   }
 
-  void Slider::Measure()
+  void Slider::Measure(const Vec2& emptyParentSpace, const Vec2& percentageFill)
   {
-    sliderComponent->Measure();
-    Component::Measure();
-  }
-
-  void Slider::MeasureFill(const Vec2& emptyParentSpace, const Vec2& percentageFill)
-  {
-    Component::MeasureFill(emptyParentSpace, percentageFill);
-    sliderComponent->MeasureFill(GetContentSize(),{1,1});
+    Component::Measure(emptyParentSpace, percentageFill);
+    sliderComponent->Measure(GetContentSize(),{1,1});
   }
 
   void Slider::OnMeasured()
   {
+    if(flags & SLIDER_FLAG_VERTICAL && size.size.h == 0)
+      return;
+    if(!(flags & SLIDER_FLAG_VERTICAL) && size.size.w == 0)
+      return;
     float value = GetValue();
 
     // vi will be the y value of the sizes if vertical and x value if not

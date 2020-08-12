@@ -17,29 +17,29 @@
           <Label textColor="#E0E0E0" font="noto" fontSize="16">Radio Buttons</Label>
 
           <RadioGroup name="Radio" width="fill_parent" height="wrap_content" margin="0" spacing="10">
-            <Container vertical="false">
+            <Container vertical="false" spacing="5">
               <RadioButton width="16" height="16"
                 radius="6" borderRadius="8"
                 active-radius="8"
                 backgroundColor="#424242" borderColor="#4CAF50" border="2"
                 active-backgroundColor="#4CAF50" active-borderColor="#00000000" active-border="0"/>
-              <Label textColor="#E0E0E0" font="noto" fontSize="12">Yes</Label>
+              <Label height="fill_parent" textColor="#E0E0E0" font="noto" fontSize="12">Yes</Label>
             </Container>
-            <Container vertical="false">
+            <Container vertical="false" spacing="5">
               <RadioButton width="16" height="16"
                 radius="6" borderRadius="8"
                 active-radius="8"
                 backgroundColor="#424242" borderColor="#4CAF50" border="2"
                 active-backgroundColor="#4CAF50" active-borderColor="#00000000" active-border="0"/>
-              <Label textColor="#E0E0E0" font="noto" fontSize="12">No</Label>
+              <Label height="fill_parent" textColor="#E0E0E0" font="noto" fontSize="12">No</Label>
             </Container>
-            <Container vertical="false">
+            <Container vertical="false" spacing="5">
               <RadioButton width="16" height="16"
                 radius="6" borderRadius="8"
                 active-radius="8"
                 backgroundColor="#424242" borderColor="#4CAF50" border="2"
                 active-backgroundColor="#4CAF50" active-borderColor="#00000000" active-border="0"/>
-              <Label textColor="#E0E0E0" font="noto" fontSize="12">Maybe</Label>
+              <Label height="fill_parent" textColor="#E0E0E0" font="noto" fontSize="12">Maybe</Label>
             </Container>
           </RadioGroup>
 

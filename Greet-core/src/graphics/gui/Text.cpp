@@ -95,14 +95,14 @@ overlapMode = OverlapMode::Wrap;
     }
   }
 
-  Vec2 Text::GetWrapSize(float maxWidth) const
+  float Text::GetWrapWidth() const
+  {
+    return font.GetWidthOfText(str);
+  }
+
+  float Text::GetWrapHeight(float maxWidth) const
   {
     std::vector<std::string> lines = GetStringLines(maxWidth);
-    uint width = 0;
-    for(auto&& line : lines)
-    {
-      width = std::max(width, font.GetWidthOfText(line));
-    }
-    return {(float)width, (float)lines.size() * font.GetSize()};
+    return (float)lines.size() * font.GetSize();
   }
 }

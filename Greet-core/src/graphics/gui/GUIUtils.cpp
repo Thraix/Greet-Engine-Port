@@ -111,18 +111,18 @@ namespace Greet
     *retValue = std::strtof(size.c_str(), &endPos);
     if(size == "fill_parent")
     {
-      *retType = ComponentSize::Type::WEIGHT;
+      *retType = ComponentSize::Type::Weight;
       *retValue = 1;
     }
     else if(size == "wrap_content")
-      *retType = ComponentSize::Type::WRAP;
+      *retType = ComponentSize::Type::Wrap;
     else if(*endPos == 'w')
-      *retType = ComponentSize::Type::WEIGHT;
+      *retType = ComponentSize::Type::Weight;
     else
     {
       if(endPos != &*size.end())
         Log::Warning("Invalid string in size property \"", size, "\"");
-      *retType = ComponentSize::Type::PIXELS;
+      *retType = ComponentSize::Type::Pixels;
     }
   }
 }

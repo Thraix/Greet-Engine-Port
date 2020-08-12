@@ -54,30 +54,21 @@ namespace Greet
     size = GUIUtils::GetComponentSizeFromXML(xmlObject, "width", "height", {});
   }
 
-  void Component::Measure()
+  void Component::Measure(const Vec2& emptyParentSpace, const Vec2& percentageFill)
   {
-    if(size.widthType == ComponentSize::Type::WRAP)
-      size.size.w = GetWrapSize().w;
-    else if(size.widthType == ComponentSize::Type::PIXELS)
+    if(size.widthType == ComponentSize::Type::Pixels)
       size.size.w = size.value.w;
-
-    if(size.heightType == ComponentSize::Type::WRAP)
-      size.size.h = GetWrapSize().h;
-    else if(size.heightType == ComponentSize::Type::PIXELS)
-      size.size.h = size.value.h;
-  }
-
-  void Component::MeasureFill()
-  {
-    MeasureFill(guiScene->GetSize(), {1, 1});
-  }
-
-  void Component::MeasureFill(const Vec2& emptyParentSpace, const Vec2& percentageFill)
-  {
-    if(size.widthType == ComponentSize::Type::WEIGHT)
+    else if(size.widthType == ComponentSize::Type::Weight)
       size.size.w = emptyParentSpace.x * percentageFill.x;
-    if(size.heightType == ComponentSize::Type::WEIGHT)
-      size.size.h = emptyParentSpace.y * percentageFill.y;
+    else
+      size.size.w = GetWrapWidth();
+
+    if(size.heightType == ComponentSize::Type::Pixels)
+      size.size.h = size.value.h;
+    else if(size.heightType == ComponentSize::Type::Weight)
+      size.size.h = emptyParentSpace.h * percentageFill.h;
+    else
+      size.size.h = GetWrapHeight();
     OnMeasured();
   }
 
@@ -96,8 +87,7 @@ namespace Greet
     remeasure = false;
     if(!parent)
     {
-      Measure();
-      MeasureFill();
+      Measure(guiScene->GetSize(), {1, 1});
     }
     else
     {
@@ -117,7 +107,7 @@ namespace Greet
 
     // Component background
     if (backgroundColor.a != 0.0)
-      renderer->DrawRoundedRect(pos + border.LeftTop(), size.size-GetBorder().LeftTop()-GetBorder().RightBottom(), backgroundColor, backgroundRadius, backgroundRoundedPrecision, false);
+      renderer->DrawRoundedRect(pos + border.LeftTop(), size.size - GetBorder().LeftTop()-GetBorder().RightBottom(), backgroundColor, backgroundRadius, backgroundRoundedPrecision, false);
   }
 
   // Render component
@@ -274,11 +264,6 @@ namespace Greet
   Vec2 Component::GetRealPosition() const
   {
     return pos + GetMargin().LeftTop() + (parent ? parent->GetTotalPadding()+parent->GetRealPosition() : Vec2(0,0));
-  }
-
-  Vec2 Component::GetWrapSize() const
-  {
-    return GetSize();
   }
 
   Component* Component::GetParent() const

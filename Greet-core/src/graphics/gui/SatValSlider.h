@@ -25,8 +25,7 @@ namespace Greet
       SatValSlider(const XMLObject& xmlObject, Component* parent);
       virtual ~SatValSlider();
 
-      virtual void Measure() override;
-      virtual void MeasureFill(const Vec2& emptyParentSpace, const Vec2& percentageFill) override;
+      virtual void Measure(const Vec2& emptyParentSpace, const Vec2& percentageFill) override;
 
       void PreRender(GUIRenderer* renderer, const Vec2& translation) const override;
       void Render(GUIRenderer* renderer) const override;

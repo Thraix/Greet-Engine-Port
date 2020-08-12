@@ -26,8 +26,8 @@ class Core : public App
 
     void Init() override
     {
-      GlobalSceneManager::GetSceneManager().Add2DScene(new TestScene(), "testscene");
-      return;
+      /* GlobalSceneManager::GetSceneManager().Add2DScene(new TestScene(), "testscene"); */
+      /* return; */
       progressBarValue = 0;
       FontManager::Add("noto", FontContainer("res/fonts/NotoSansUI-Regular.ttf"));
 

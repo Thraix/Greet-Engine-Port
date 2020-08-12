@@ -185,8 +185,7 @@ namespace Greet {
 
       return;
     }
-    frame->Measure();
-    frame->MeasureFill(GetSize(), {1, 1});
+    frame->Measure(GetSize(), {1, 1});
     frame->SetGUIScene(this);
     frames.push_back(frame);
     frame->PostConstruction();
