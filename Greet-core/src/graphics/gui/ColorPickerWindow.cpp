@@ -20,7 +20,6 @@ namespace Greet
 
     Vec3<float> hsv(ColorUtils::RGBtoHSV(Vec4(color.r,color.g,color.b,1)));
     svSlider = GetComponentByName<SatValSlider>("ColorPickerWindow#SatValSlider");
-    Log::Info(hsv.h);
     svSlider->SetHue(hsv.h);
     svSlider->SetSat(hsv.s);
     svSlider->SetVal(hsv.v);

@@ -5,6 +5,8 @@
 
 using namespace Greet;
 
+#define BIND_MEMBER(fn) [this](auto&&... args){ this->fn(std::forward<decltype(args)>(args)...); }
+
 class Core : public App
 {
   private:
@@ -39,22 +41,18 @@ class Core : public App
       Frame* frame = guiScene->GetFrame("Main");
       if(frame != nullptr)
       {
-        using namespace std::placeholders;
-        // Function callbacks
-        // Somewhat ugly, might look into making function pointers easier, since the structure
-        // is always the same.
         frame->GetComponentByName<ProgressBar>("progressBar")
           ->AttachValueReference(&progressBarValue);
         frame->GetComponentByName<RadioGroup>("Radio")
-          ->SetOnRadioChangeCallback(std::bind(&Core::OnRadioChangeCallback, std::ref(*this), _1));
+          ->SetOnRadioChangeCallback(BIND_MEMBER(OnRadioChangeCallback));
         frame->GetComponentByName<Slider>("Slider")
-          ->SetOnClickCallback(std::bind(&Core::OnClickCallback, std::ref(*this), _1));
+          ->SetOnClickCallback(BIND_MEMBER(OnClickCallback));
         frame->GetComponentByName<Slider>("Slider")
-          ->SetOnPressCallback(std::bind(&Core::OnPressCallback, std::ref(*this), _1));
+          ->SetOnPressCallback(BIND_MEMBER(OnClickCallback));
         frame->GetComponentByName<Slider>("Slider")
-          ->SetOnReleaseCallback(std::bind(&Core::OnReleaseCallback, std::ref(*this), _1));
+          ->SetOnReleaseCallback(BIND_MEMBER(OnReleaseCallback));
         frame->GetComponentByName<Slider>("Slider")
-          ->SetOnValueChangeCallback(std::bind(&Core::OnValueChangeCallback, std::ref(*this), _1, _2, _3));
+          ->SetOnValueChangeCallback(BIND_MEMBER(OnValueChangeCallback));
         frame->GetComponentByName<ProgressBar>("progressBar")
           ->AttachValueReference(&progressBarValue);
         frame->GetComponentByName<ProgressBar>("progressBarVertical")
@@ -64,9 +62,9 @@ class Core : public App
         frame->GetComponentByName<ProgressBar>("progressBarVerticalReverse")
           ->AttachValueReference(&progressBarValue);
         frame->GetComponentByName<ColorPicker>("backgroundChanger")
-          ->SetOnColorChangeCallback(std::bind(&Core::OnColorChangeCallback, std::ref(*this), _1, _2, _3));
+          ->SetOnColorChangeCallback(BIND_MEMBER(OnColorChangeCallback));
         frame->GetComponentByName<Button>("button")
-          ->SetOnClickCallback(std::bind(&Core::OnButtonPressCallback, std::ref(*this), _1));
+          ->SetOnClickCallback(BIND_MEMBER(OnButtonPressCallback));
         Docker* docker = frame->GetComponentByName<Docker>("docker");
         if(docker)
         {

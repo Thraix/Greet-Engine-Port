@@ -80,7 +80,7 @@ namespace Greet {
     //glfwSetWindowUserPointer(window,this);
 
     glfwSetFramebufferSizeCallback(window, window_resize);
-    glfwSetKeyCallback(window,key_callback);
+    glfwSetKeyCallback(window, key_callback);
     glfwSetMouseButtonCallback(window,mouse_button_callback);
     glfwSetCursorPosCallback(window,mouse_position_callback);
     glfwSetWindowFocusCallback(window,window_focus_callback);
