@@ -54,7 +54,7 @@ namespace Greet {
     {
       m_resizingFlags |= RESIZING_LEFT;
     }
-    else if ((m_resizableFlags & RESIZING_RIGHT) != 0 && mousePos.x >= pos.x + size.size.w - RESIZING_MARGIN && mousePos.x < pos.x + size.size.w + RESIZING_MARGIN)
+    else if ((m_resizableFlags & RESIZING_RIGHT) != 0 && mousePos.x >= pos.x + width.size - RESIZING_MARGIN && mousePos.x < pos.x + width.size + RESIZING_MARGIN)
     {
       m_resizingFlags |= RESIZING_RIGHT;
     }
@@ -62,7 +62,7 @@ namespace Greet {
     {
       m_resizingFlags |= RESIZING_TOP;
     }
-    else if ((m_resizableFlags & RESIZING_BOTTOM) != 0 && mousePos.y >= pos.y + size.size.h - RESIZING_MARGIN && mousePos.y < pos.y + size.size.h + RESIZING_MARGIN)
+    else if ((m_resizableFlags & RESIZING_BOTTOM) != 0 && mousePos.y >= pos.y + height.size - RESIZING_MARGIN && mousePos.y < pos.y + height.size + RESIZING_MARGIN)
     {
       m_resizingFlags |= RESIZING_BOTTOM;
     }
@@ -72,42 +72,42 @@ namespace Greet {
 
   void Frame::Resize(const Vec2& mousePos)
   {
-    Vec2 oldSize = size.value;
+    Vec2 oldSize = GetSizeValue();
     Vec2 diff = m_posOrigin - (m_clickPos - mousePos);
     if (m_resizingFlags & RESIZING_LEFT)
     {
       pos.x = m_posOrigin.x - (m_clickPos.x - mousePos.x);
-      size.value.w = m_sizeOrigin.x + (m_clickPos.x - mousePos.x);
-      if (size.value.w < minSize.w)
+      width.value = m_sizeOrigin.x + (m_clickPos.x - mousePos.x);
+      if (width.value < minSize.w)
       {
         pos.x = m_posOrigin.x + (m_sizeOrigin.x - minSize.w);
-        size.value.w = minSize.w;
+        width.value = minSize.w;
       }
     }
     else if (m_resizingFlags & RESIZING_RIGHT)
     {
-      size.value.w = m_sizeOrigin.x - (m_clickPos.x - mousePos.x);
-      if (size.value.w < minSize.w)
-        size.value.w = minSize.w;
+      width.value = m_sizeOrigin.x - (m_clickPos.x - mousePos.x);
+      if (width.value < minSize.w)
+        width.value = minSize.w;
     }
     if (m_resizingFlags & RESIZING_TOP)
     {
       pos.y = m_posOrigin.y - (m_clickPos.y - mousePos.y);
-      size.value.h = m_sizeOrigin.y + (m_clickPos.y - mousePos.y);
-      if (size.value.h < minSize.h)
+      height.value = m_sizeOrigin.y + (m_clickPos.y - mousePos.y);
+      if (height.value < minSize.h)
       {
         pos.y = m_posOrigin.y + (m_sizeOrigin.y - minSize.h);
-        size.value.h = minSize.h;
+        height.value = minSize.h;
       }
     }
     else if (m_resizingFlags & RESIZING_BOTTOM)
     {
-      size.value.h = m_sizeOrigin.y - (m_clickPos.y - mousePos.y);
-      if (size.value.h < minSize.h)
-        size.value.h = minSize.h;
+      height.value = m_sizeOrigin.y - (m_clickPos.y - mousePos.y);
+      if (height.value < minSize.h)
+        height.value = minSize.h;
     }
     ResizeScreenClamp();
-    if(oldSize != size.value)
+    if(oldSize != Vec2{width.value, height.value})
     {
       Remeasure();
     }
@@ -120,19 +120,19 @@ namespace Greet {
       if (pos.x < 0)
       {
         pos.x = 0;
-        size.size.w = m_posOrigin.x + m_sizeOrigin.x;
+        width.size = m_posOrigin.x + m_sizeOrigin.x;
       }
-      else if (pos.x > guiScene->GetWidth() - size.size.w)
+      else if (pos.x > guiScene->GetWidth() - width.size)
       {
-        size.size.w = guiScene->GetWidth() - m_posOrigin.x;
+        width.size = guiScene->GetWidth() - m_posOrigin.x;
       }
       if (pos.y < 0)
       {
         pos.y = 0;
-        size.size.h = m_posOrigin.y + m_sizeOrigin.y;
+        height.size = m_posOrigin.y + m_sizeOrigin.y;
       }
-      else if (pos.y > guiScene->GetHeight() - size.size.h)
-        size.size.h = guiScene->GetHeight() - m_posOrigin.y;
+      else if (pos.y > guiScene->GetHeight() - height.size)
+        height.size = guiScene->GetHeight() - m_posOrigin.y;
     }
   }
 
@@ -145,7 +145,7 @@ namespace Greet {
       if (e.GetButton() == GREET_MOUSE_1)
       {
         m_posOrigin = pos;
-        m_sizeOrigin = size.size;
+        m_sizeOrigin = {width.size, height.size};
         m_clickPos = translatedPos;
         CheckResize(translatedPos);
       }
@@ -186,13 +186,13 @@ namespace Greet {
     if(m_stayInsideWindow)
     {
       Vec2 p = pos;
-      if(p.x + size.size.w > guiScene->GetWidth())
+      if(p.x + width.size > guiScene->GetWidth())
       {
-        p.x = guiScene->GetWidth() - size.size.w;
+        p.x = guiScene->GetWidth() - width.size;
       }
-      if(p.y + size.size.h > guiScene->GetHeight())
+      if(p.y + height.size > guiScene->GetHeight())
       {
-        p.y = guiScene->GetHeight() - size.size.h;
+        p.y = guiScene->GetHeight() - height.size;
       }
       Component::SetPosition(p);
       return;

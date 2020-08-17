@@ -8,18 +8,26 @@ namespace Greet
   REGISTER_COMPONENT_DEFINITION(TextBox);
 
   TextBox::TextBox(const std::string& name, Component* parent)
-    : Component(name,parent), cursorPos(0), selectionPos(0), cursorBlinkTimer(0), textOffset{0}, password{false}, ctrlDown{false}, shiftDown{false}, text{"", "noto", 20}, hintText{"", "noto", 20}
+    : Component(name,parent), cursorPos(0), selectionPos(0), cursorBlinkTimer(0), textOffset{0}, password{false}, ctrlDown{false}, shiftDown{false}, text{""}, hintText{""}
   {}
 
   TextBox::TextBox(const XMLObject& object, Component* parent)
-    : Component(object,parent), cursorPos(0), selectionPos(0), cursorBlinkTimer(0), textOffset{0}, ctrlDown{false}, shiftDown{false}, text{object.GetText(), GUIUtils::GetStringFromXML(object, "font",""),GUIUtils::GetFloatFromXML(object,"fontSize", 20)}, hintText{GUIUtils::GetStringFromXML(object, "hintText", ""), GUIUtils::GetStringFromXML(object, "font",""),GUIUtils::GetFloatFromXML(object,"fontSize", 20)}
+    : Component(object,parent), cursorPos(0), selectionPos(0), cursorBlinkTimer(0), textOffset{0}, ctrlDown{false}, shiftDown{false},
+    text{object.GetText()},
+    hintText{GUIUtils::GetStringFromXML(object, "hintText", "")}
   {
+    text.overlapMode = Text::OverlapMode::Ignore;
     AddStyleVariables(
       StylingVariables{
         .colors =
         {
           {"textColor", &text.color},
           {"hintTextColor", &hintText.color}
+        },
+        .fonts =
+        {
+          {"font", &text.font},
+          {"hintFont", &hintText.font}
         }
       }
     );

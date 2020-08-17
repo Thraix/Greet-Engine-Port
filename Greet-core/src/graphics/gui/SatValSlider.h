@@ -9,16 +9,15 @@ namespace Greet
     private:
       REGISTER_COMPONENT_DECLARATION(SatValSlider);
     public:
-      typedef std::function<void(Component*, float oldValue, float newValue)> OnSatChangeCallback;
-      typedef std::function<void(Component*, float oldValue, float newValue)> OnValChangeCallback;
+      typedef std::function<void(Component*, float oldValue, float newValue)> OnValueChangeCallback;
     protected:
       float hue;
       float sat;
       float val;
 
       Component* sliderComponent;
-      OnSatChangeCallback onSatChangeCallback;
-      OnValChangeCallback onValChangeCallback;
+      OnValueChangeCallback onSatChangeCallback;
+      OnValueChangeCallback onValChangeCallback;
 
     public:
       SatValSlider(const std::string& xmlObject, Component* parent);
@@ -33,8 +32,8 @@ namespace Greet
       virtual void OnEvent(Event& event, const Vec2& componentPos) override;
 
       // Callbacks
-      virtual void SetOnSatChangeCallback(OnSatChangeCallback callback);
-      virtual void SetOnValChangeCallback(OnValChangeCallback callback);
+      virtual void SetOnSatChangeCallback(OnValueChangeCallback callback);
+      virtual void SetOnValChangeCallback(OnValueChangeCallback callback);
 
       void SetHue(float hue);
       void SetSat(float sat);

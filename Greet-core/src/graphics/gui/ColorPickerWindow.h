@@ -36,10 +36,10 @@ namespace Greet
       OnColorChangeCallback onColorChangeCallback;
 
     protected:
-      void SliderChanged();
-      void RGBTextBoxChanged(Component* textBox);
-      void HSVTextBoxChanged(Component* textBox);
-      void HexTextBoxChanged();
+      void SliderChanged(Component* component, float oldValue, float newValue);
+      void RGBTextBoxChanged(Component* textBox, const std::string& oldText, const std::string& newText);
+      void HSVTextBoxChanged(Component* textBox, const std::string& oldText, const std::string& newText);
+      void HexTextBoxChanged(Component* textBox, const std::string& oldText, const std::string& newText);
       void UpdateColor(float hue, float sat, float val, InputChangeType type);
 
     public:

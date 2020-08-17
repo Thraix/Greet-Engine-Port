@@ -4,22 +4,31 @@
 #include <utils/StringUtils.h>
 #include <utils/ColorUtils.h>
 #include <utils/xml/XML.h>
+#include <graphics/fonts/Font.h>
 
 namespace Greet {
 
-  struct ComponentSize
+  struct GUISize
   {
     enum class Type
     {
       Wrap, Weight, Pixels
     };
 
-    // Can become dirty if below values changes
-    Vec2 size;
+    float size = 0;
+    float value = 1;
+    Type type = Type::Wrap;
 
-    Vec2 value = {1,1};
-    Type heightType = Type::Wrap;
-    Type widthType = Type::Wrap;
+    friend std::ostream& operator<<(std::ostream& stream, const GUISize& size)
+    {
+      if(size.type == Type::Wrap)
+        return stream << "Wrap";
+      else if(size.type == Type::Weight)
+        return stream << "Weight: " << size.value;
+      else
+        return stream << "Pixel: " << size.value;
+
+    }
   };
 
   class GUIUtils
@@ -28,17 +37,18 @@ namespace Greet {
 
       static bool GetBooleanFromXML(const XMLObject& object, const std::string& key, bool defaultValue);
       static Vec4 GetColorFromXML(const XMLObject& object, const std::string& key, const Vec4& defaultValue);
-      static ComponentSize GetComponentSizeFromXML(const XMLObject& object, const std::string& widthKey, const std::string& heightKey, ComponentSize defaultValue);
+      static GUISize GetGUISizeFromXML(const XMLObject& object, const std::string& key, const GUISize& defaultValue);
       static std::string GetStringFromXML(const XMLObject& object, const std::string& key, const std::string& defaultValue);
       static int GetIntFromXML(const XMLObject& object, const std::string& key, int defaultValue);
       static float GetFloatFromXML(const XMLObject& object, const std::string& key, float defaultValue);
 
     private:
-      static void GetComponentSize(const std::string& size, float* retValue, ComponentSize::Type* retType);
     public:
+      static GUISize GetGUISize(const std::string& str);
       static Vec4 GetColor(const std::string& str);
       static float GetFloat(const std::string& str);
       static int GetInt(const std::string& str);
       static bool GetBoolean(const std::string& str);
+      static Font GetFont(const std::string& str);
   };
 }

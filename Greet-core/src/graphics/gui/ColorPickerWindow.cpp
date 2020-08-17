@@ -25,7 +25,7 @@ namespace Greet
     svSlider->SetVal(hsv.v);
 
     hSlider = GetComponentByName<HueSlider>("ColorPickerWindow#HueSlider");
-    hSlider->GetSliderComponent()->SetSize(1,7,ComponentSize::Type::Weight, ComponentSize::Type::Pixels);
+    hSlider->GetSliderComponent()->SetSize(1,7, GUISize::Type::Weight, GUISize::Type::Pixels);
     hSlider->SetValue(hsv.h);
     rTextBox = GetComponentByName<TextBox>("ColorPickerWindow#RTextBox");
     gTextBox = GetComponentByName<TextBox>("ColorPickerWindow#GTextBox");
@@ -38,19 +38,19 @@ namespace Greet
 
     using namespace std::placeholders;
 
-    hSlider->SetOnValueChangeCallback(std::bind(&ColorPickerWindow::SliderChanged, std::ref(*this)));
-    svSlider->SetOnSatChangeCallback(std::bind(&ColorPickerWindow::SliderChanged, std::ref(*this)));
-    svSlider->SetOnValChangeCallback(std::bind(&ColorPickerWindow::SliderChanged, std::ref(*this)));
-    rTextBox->SetOnTextChangedCallback(std::bind(&ColorPickerWindow::RGBTextBoxChanged, std::ref(*this),_1));
-    gTextBox->SetOnTextChangedCallback(std::bind(&ColorPickerWindow::RGBTextBoxChanged, std::ref(*this),_1));
-    bTextBox->SetOnTextChangedCallback(std::bind(&ColorPickerWindow::RGBTextBoxChanged, std::ref(*this),_1));
-    hTextBox->SetOnTextChangedCallback(std::bind(&ColorPickerWindow::HSVTextBoxChanged, std::ref(*this),_1));
-    sTextBox->SetOnTextChangedCallback(std::bind(&ColorPickerWindow::HSVTextBoxChanged, std::ref(*this),_1));
-    vTextBox->SetOnTextChangedCallback(std::bind(&ColorPickerWindow::HSVTextBoxChanged, std::ref(*this),_1));
-    hexTextBox->SetOnTextChangedCallback(std::bind(&ColorPickerWindow::HexTextBoxChanged, std::ref(*this)));
+    hSlider->SetOnValueChangeCallback(BIND_MEMBER_FUNC(SliderChanged));
+    svSlider->SetOnSatChangeCallback(BIND_MEMBER_FUNC(SliderChanged));
+    svSlider->SetOnValChangeCallback(BIND_MEMBER_FUNC(SliderChanged));
+    rTextBox->SetOnTextChangedCallback(BIND_MEMBER_FUNC(RGBTextBoxChanged));
+    gTextBox->SetOnTextChangedCallback(BIND_MEMBER_FUNC(RGBTextBoxChanged));
+    bTextBox->SetOnTextChangedCallback(BIND_MEMBER_FUNC(RGBTextBoxChanged));
+    hTextBox->SetOnTextChangedCallback(BIND_MEMBER_FUNC(HSVTextBoxChanged));
+    sTextBox->SetOnTextChangedCallback(BIND_MEMBER_FUNC(HSVTextBoxChanged));
+    vTextBox->SetOnTextChangedCallback(BIND_MEMBER_FUNC(HSVTextBoxChanged));
+    hexTextBox->SetOnTextChangedCallback(BIND_MEMBER_FUNC(HexTextBoxChanged));
 
     // Make textboxes and other stuff update
-    SliderChanged();
+    UpdateColor(hSlider->GetValue(), svSlider->GetSat(),svSlider->GetVal(), InputChangeType::SLIDER);
     SetPosition(pos);
 
   }
@@ -94,12 +94,12 @@ namespace Greet
       CallOnColorChangeCallback(prevRGB, Vec3<float>(rgb));
   }
 
-  void ColorPickerWindow::SliderChanged()
+  void ColorPickerWindow::SliderChanged(Component* component, float oldValue, float newValue)
   {
     UpdateColor(hSlider->GetValue(), svSlider->GetSat(),svSlider->GetVal(), InputChangeType::SLIDER);
   }
 
-  void ColorPickerWindow::RGBTextBoxChanged(Component* textBox)
+  void ColorPickerWindow::RGBTextBoxChanged(Component* textBox, const std::string& oldText, const std::string& newText)
   {
     float r = atof(rTextBox->GetText().c_str())/255.0f;
     float g = atof(gTextBox->GetText().c_str())/255.0f;
@@ -113,7 +113,7 @@ namespace Greet
     UpdateColor(hsv.h,hsv.s,hsv.v,InputChangeType::RGB_TEXTBOX);
   }
 
-  void ColorPickerWindow::HSVTextBoxChanged(Component* textBox)
+  void ColorPickerWindow::HSVTextBoxChanged(Component* textBox, const std::string& oldText, const std::string& newText)
   {
     float h = atoi(hTextBox->GetText().c_str())/255.0f;
     float s = atoi(sTextBox->GetText().c_str())/255.0f;
@@ -124,7 +124,7 @@ namespace Greet
     UpdateColor(h,s,v,InputChangeType::HSV_TEXTBOX);
   }
 
-  void ColorPickerWindow::HexTextBoxChanged()
+  void ColorPickerWindow::HexTextBoxChanged(Component* textBox, const std::string& oldText, const std::string& newText)
   {
     Vec4 rgba = ColorUtils::HexToVec4(LogUtils::HexToDec(hexTextBox->GetText()));
     Vec4 hsv = ColorUtils::RGBtoHSV(rgba.r,rgba.g,rgba.b,1);

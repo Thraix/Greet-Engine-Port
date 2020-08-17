@@ -11,21 +11,21 @@ namespace Greet
 
     if(!xmlObject.HasAttribute("width"))
     {
-      size.value.w = 1;
-      size.size.w = 1;
+      width.value = 1;
+      width.size = 1;
       if(!vertical)
-        size.widthType = ComponentSize::Type::Weight;
+        width.type = GUISize::Type::Weight;
       else
-        size.widthType = ComponentSize::Type::Pixels;
+        width.type = GUISize::Type::Pixels;
     }
     if(!xmlObject.HasAttribute("height"))
     {
-      size.value.h = 1;
-      size.size.h = 1;
+      height.value = 1;
+      height.size = 1;
       if(vertical)
-        size.heightType = ComponentSize::Type::Weight;
+        height.type = GUISize::Type::Weight;
       else
-        size.heightType = ComponentSize::Type::Pixels;
+        height.type = GUISize::Type::Pixels;
     }
   }
 
@@ -47,9 +47,9 @@ namespace Greet
     if(parent)
     {
       if(vertical)
-        size.size.h += parent->GetPadding().GetHeight();
+        height.size += parent->GetPadding().GetHeight();
       else
-        size.size.w += parent->GetPadding().GetWidth();
+        width.size += parent->GetPadding().GetWidth();
     }
   }
 

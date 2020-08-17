@@ -16,7 +16,7 @@ namespace Greet
   void SceneView::Update(float timeElapsed)
   {
     Vec2 translatedPos = GetRealPosition();
-    RenderCommand::PushViewportStack(GetRealPosition(), size.size);
+    RenderCommand::PushViewportStack(GetRealPosition(), GetSize());
 
     sceneManager.Update(timeElapsed);
 
@@ -26,7 +26,7 @@ namespace Greet
   void SceneView::Render(GUIRenderer* renderer) const
   {
     guiScene->PostRender();
-    RenderCommand::PushViewportStack(GetRealPosition(), size.size);
+    RenderCommand::PushViewportStack(GetRealPosition(), GetSize());
 
     sceneManager.Render();
 
@@ -36,7 +36,7 @@ namespace Greet
 
   void SceneView::OnEventHandler(Event& event, const Vec2& componentPos)
   {
-    RenderCommand::PushViewportStack(componentPos, size.size);
+    RenderCommand::PushViewportStack(componentPos, GetSize());
     if(EVENT_IS_TYPE(event, EventType::MOUSE_PRESS))
     {
       guiScene->RequestFocus(this);
@@ -61,8 +61,8 @@ namespace Greet
   void SceneView::OnMeasured()
   {
     Vec2 realPos = GetRealPosition();
-    RenderCommand::PushViewportStack(realPos, size.size);
-    ViewportResizeEvent event{realPos, size.size};
+    RenderCommand::PushViewportStack(realPos, GetSize());
+    ViewportResizeEvent event{realPos, GetSize()};
     sceneManager.OnEvent(event);
     RenderCommand::PopViewportStack();
   }

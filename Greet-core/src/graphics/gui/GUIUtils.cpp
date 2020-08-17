@@ -3,6 +3,7 @@
 #include <utils/xml/XMLException.h>
 #include <logging/Log.h>
 #include <utils/LogUtils.h>
+#include <graphics/fonts/FontManager.h>
 
 namespace Greet
 {
@@ -20,14 +21,11 @@ namespace Greet
     return defaultValue;
   }
 
-  ComponentSize GUIUtils::GetComponentSizeFromXML(const XMLObject& object, const std::string& widthKey, const std::string& heightKey, ComponentSize defaultValue)
+  GUISize GUIUtils::GetGUISizeFromXML(const XMLObject& object, const std::string& key, const GUISize& defaultValue)
   {
-    ComponentSize ret = defaultValue;
-    if(object.HasAttribute(widthKey))
-      GetComponentSize(object.GetAttribute(widthKey), &ret.value.w, &ret.widthType);
-    if(object.HasAttribute(heightKey))
-      GetComponentSize(object.GetAttribute(heightKey), &ret.value.h, &ret.heightType);
-    return ret;
+    if(object.HasAttribute(key))
+      return GetGUISize(object.GetAttribute(key));
+    return defaultValue;
   }
 
   std::string GUIUtils::GetStringFromXML(const XMLObject& object, const std::string& key, const std::string& defaultValue)
@@ -105,24 +103,47 @@ namespace Greet
     return value;
   }
 
-  void GUIUtils::GetComponentSize(const std::string& size, float* retValue, ComponentSize::Type* retType)
+  GUISize GUIUtils::GetGUISize(const std::string& str)
   {
+    GUISize sizing;
     char* endPos;
-    *retValue = std::strtof(size.c_str(), &endPos);
-    if(size == "fill_parent")
+    sizing.value = std::strtof(str.c_str(), &endPos);
+    if(str == "fill_parent")
     {
-      *retType = ComponentSize::Type::Weight;
-      *retValue = 1;
+      sizing.type = GUISize::Type::Weight;
+      sizing.value = 1;
     }
-    else if(size == "wrap_content")
-      *retType = ComponentSize::Type::Wrap;
+    else if(str == "wrap_content")
+      sizing.type = GUISize::Type::Wrap;
     else if(*endPos == 'w')
-      *retType = ComponentSize::Type::Weight;
+      sizing.type  = GUISize::Type::Weight;
     else
     {
-      if(endPos != &*size.end())
-        Log::Warning("Invalid string in size property \"", size, "\"");
-      *retType = ComponentSize::Type::Pixels;
+      if(endPos != &*str.end())
+        Log::Warning("Invalid string in size property \"", str, "\"");
+      sizing.type = GUISize::Type::Pixels;
     }
+    return sizing;
+  }
+
+  Font GUIUtils::GetFont(const std::string& str)
+  {
+    size_t p = str.find(":");
+    std::string fontName;
+    int fontSize = 12;
+
+    if(p == std::string::npos)
+      fontName = str;
+    else
+    {
+      fontName = str.substr(0, p);
+      char* endPos;
+      fontSize = std::strtol(str.c_str() + p + 1,  &endPos, 10);
+      if(endPos != &*str.end())
+        Log::Warning("Invalid fontSize in font: ", str.c_str() + p + 1);
+    }
+    if(fontSize <= 0)
+      fontSize = 12;
+    return FontManager::Get(fontName, fontSize);
   }
 }

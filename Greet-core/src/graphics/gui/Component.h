@@ -46,6 +46,8 @@ namespace Greet
       TLBR border = {0, 0, 0, 0};
       TLBR margin = {0, 0, 0, 0};
       TLBR padding = {0, 0, 0, 0};
+      GUISize width = GUISize{0, 1, GUISize::Type::Wrap};
+      GUISize height = GUISize{0, 1, GUISize::Type::Wrap};
 
     protected:
       GUIScene* guiScene;
@@ -53,7 +55,6 @@ namespace Greet
       bool remeasure = true;
 
       Vec2 pos;
-      ComponentSize size;
 
       bool isFocused;
       bool isHovered;
@@ -119,20 +120,20 @@ namespace Greet
       // Will return the stored value
       virtual float GetWidth() const;
       virtual float GetHeight() const;
-      ComponentSize::Type GetWidthSizeType() const;
-      ComponentSize::Type GetHeightSizeType() const;
+      GUISize::Type GetWidthType() const;
+      GUISize::Type GetHeightType() const;
 
       // Value of the sizeType, 1w will return 1 and not the size of the component
-      const Vec2& GetSizeValue() const;
+      Vec2 GetSizeValue() const;
 
       // Sets the sizeType size and not the actuall component size.
       Component& SetWidth(float width);
       Component& SetHeight(float height);
-      Component& SetWidthSizeType(ComponentSize::Type width);
-      Component& SetHeightSizeType(ComponentSize::Type height);
+      Component& SetWidthType(GUISize::Type width);
+      Component& SetHeightType(GUISize::Type height);
 
       // Faster to use since it sets all values and does a single remeasure.
-      Component& SetSize(float width, float height, ComponentSize::Type widthType, ComponentSize::Type heightType, bool remeasure = true);
+      Component& SetSize(float width, float height, GUISize::Type widthType, GUISize::Type heightType);
 
       ComponentStyle& GetStyle(const std::string& stylename);
       const ComponentStyle& GetStyle(const std::string& stylename) const;
@@ -185,7 +186,6 @@ namespace Greet
       {
         return stream << component.GetName();
       }
-
 
     protected:
       virtual void CallOnClickCallback();

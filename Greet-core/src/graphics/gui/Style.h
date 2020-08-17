@@ -1,5 +1,9 @@
 #pragma once
 
+// TODO: This whole class needs rewritting
+// To add a new styling type you have to copy paste
+// so much code it gets unmanagable...
+
 #include <graphics/gui/TLBR.h>
 #include <unordered_map>
 
@@ -29,6 +33,8 @@ namespace Greet
     std::unordered_map<std::string, float> floats;
     std::unordered_map<std::string, int> ints;
     std::unordered_map<std::string, bool> bools;
+    std::unordered_map<std::string, Font> fonts;
+    std::unordered_map<std::string, GUISize> sizes;
   };
 
   struct StylingVariables
@@ -38,63 +44,87 @@ namespace Greet
     StyleVariableMap<float> floats;
     StyleVariableMap<int> ints;
     StyleVariableMap<bool> bools;
+    StyleVariableMap<Font> fonts;
+    StyleVariableMap<GUISize> sizes;
 
     void Merge(const StylingVariables& variables)
     {
-        for(auto&& color : variables.colors)
+      for(auto&& color : variables.colors)
+      {
+        auto it = colors.find(color.first);
+        if(it != colors.end())
         {
-          auto it = colors.find(color.first);
-          if(it != colors.end())
-          {
-            Log::Error("Color styling already exist for component: ", color.first);
-            continue;
-          }
-          colors.emplace(color.first, color.second);
+          Log::Error("Color styling already exist for component: ", color.first);
+          continue;
         }
+        colors.emplace(color.first, color.second);
+      }
 
-        for(auto&& tlbr: variables.tlbrs)
+      for(auto&& tlbr: variables.tlbrs)
+      {
+        auto it = tlbrs.find(tlbr.first);
+        if(it != tlbrs.end())
         {
-          auto it = tlbrs.find(tlbr.first);
-          if(it != tlbrs.end())
-          {
-            Log::Error("TLBR styling already exist for component: ", tlbr.first);
-            continue;
-          }
-          tlbrs.emplace(tlbr.first, tlbr.second);
+          Log::Error("TLBR styling already exist for component: ", tlbr.first);
+          continue;
         }
+        tlbrs.emplace(tlbr.first, tlbr.second);
+      }
 
-        for(auto&& f : variables.floats)
+      for(auto&& f : variables.floats)
+      {
+        auto it = floats.find(f.first);
+        if(it != floats.end())
         {
-          auto it = floats.find(f.first);
-          if(it != floats.end())
-          {
-            Log::Error("Float styling already exist for component: ", f.first);
-            continue;
-          }
-          floats.emplace(f.first, f.second);
+          Log::Error("Float styling already exist for component: ", f.first);
+          continue;
         }
+        floats.emplace(f.first, f.second);
+      }
 
-        for(auto&& i : variables.ints)
+      for(auto&& i : variables.ints)
+      {
+        auto it = ints.find(i.first);
+        if(it != ints.end())
         {
-          auto it = ints.find(i.first);
-          if(it != ints.end())
-          {
-            Log::Error("Int styling already exist for component: ", i.first);
-            continue;
-          }
-          ints.emplace(i.first, i.second);
+          Log::Error("Int styling already exist for component: ", i.first);
+          continue;
         }
+        ints.emplace(i.first, i.second);
+      }
 
-        for(auto&& b : variables.bools)
+      for(auto&& b : variables.bools)
+      {
+        auto it = bools.find(b.first);
+        if(it != bools.end())
         {
-          auto it = bools.find(b.first);
-          if(it != bools.end())
-          {
-            Log::Error("Boolean styling already exist for component: ", b.first);
-            continue;
-          }
-          bools.emplace(b.first, b.second);
+          Log::Error("Boolean styling already exist for component: ", b.first);
+          continue;
         }
+        bools.emplace(b.first, b.second);
+      }
+
+      for(auto&& font : variables.fonts)
+      {
+        auto it = fonts.find(font.first);
+        if(it != fonts.end())
+        {
+          Log::Error("Font styling already exist for component: ", font.first);
+          continue;
+        }
+        fonts.emplace(font.first, font.second);
+      }
+
+      for(auto&& size : variables.sizes)
+      {
+        auto it = sizes.find(size.first);
+        if(it != sizes.end())
+        {
+          Log::Error("Size styling already exist for component: ", size.first);
+          continue;
+        }
+        sizes.emplace(size.first, size.second);
+      }
     }
   };
 
@@ -111,6 +141,8 @@ namespace Greet
       StyleMap<float> floats;
       StyleMap<int> ints;
       StyleMap<bool> bools;
+      StyleMap<Font> fonts;
+      StyleMap<GUISize> sizes;
     public:
 
       ComponentStyle(const StylingVariables& variables, ComponentStyle* inherit)
@@ -149,6 +181,16 @@ namespace Greet
         for(auto&& b : styling.bools)
         {
           SetBool(b.first, b.second);
+        }
+
+        for(auto&& font : styling.fonts)
+        {
+          SetFont(font.first, font.second);
+        }
+
+        for(auto&& size : styling.sizes)
+        {
+          SetSize(size.first, size.second);
         }
       }
 
@@ -189,6 +231,20 @@ namespace Greet
           std::string attribute = mode == "normal" ? b.first : mode + "-" + b.first;
           if(object.HasAttribute(attribute))
             SetBool(b.first, GUIUtils::GetBoolean(object.GetAttribute(attribute)));
+        }
+
+        for(auto&& font : fonts)
+        {
+          std::string attribute = mode == "normal" ? font.first : mode + "-" + font.first;
+          if(object.HasAttribute(attribute))
+            SetFont(font.first, GUIUtils::GetFont(object.GetAttribute(attribute)));
+        }
+
+        for(auto&& size : sizes)
+        {
+          std::string attribute = mode == "normal" ? size.first : mode + "-" + size.first;
+          if(object.HasAttribute(attribute))
+            SetSize(size.first, GUIUtils::GetGUISize(object.GetAttribute(attribute)));
         }
       }
 
@@ -247,6 +303,28 @@ namespace Greet
             continue;
           }
           bools.emplace(b.first, StyleVariable{inherit == nullptr, b.second});
+        }
+
+        for(auto&& font : style.fonts)
+        {
+          auto it = fonts.find(font.first);
+          if(it != fonts.end())
+          {
+            Log::Error("Font styling already exist for component: ", font.first);
+            continue;
+          }
+          fonts.emplace(font.first, StyleVariable{inherit == nullptr, font.second});
+        }
+
+        for(auto&& size : style.sizes)
+        {
+          auto it = sizes.find(size.first);
+          if(it != sizes.end())
+          {
+            Log::Error("GUISize styling already exist for component: ", size.first);
+            continue;
+          }
+          sizes.emplace(size.first, StyleVariable{inherit == nullptr, size.second});
         }
       }
 
@@ -335,6 +413,22 @@ namespace Greet
         return it->second.mVariable;
       }
 
+      const Font& GetFont(const std::string& name) const
+      {
+        auto it = fonts.find(name);
+        if(!it->second.mbSetVariable && inherit)
+          return inherit->GetFont(name);
+        return it->second.mVariable;
+      }
+
+      const GUISize& GetSize(const std::string& name) const
+      {
+        auto it = sizes.find(name);
+        if(!it->second.mbSetVariable && inherit)
+          return inherit->GetSize(name);
+        return it->second.mVariable;
+      }
+
       ComponentStyle& SetColor(const std::string& name, const Vec4& color)
       {
         auto it = colors.find(name);
@@ -405,6 +499,34 @@ namespace Greet
         return *this;
       }
 
+      ComponentStyle& SetFont(const std::string& name, const Font& font)
+      {
+        auto it = fonts.find(name);
+        if(it == fonts.end())
+        {
+          Log::Error("Component doesn't contain font: ", name);
+          return *this;
+        }
+        it->second.mbSetVariable = true;
+        it->second.mVariable = font;
+        *it->second.mpVariable = font;
+        return *this;
+      }
+
+      ComponentStyle& SetSize(const std::string& name, const GUISize& size)
+      {
+        auto it = sizes.find(name);
+        if(it == sizes.end())
+        {
+          Log::Error("Component doesn't contain size: ", name);
+          return *this;
+        }
+        it->second.mbSetVariable = true;
+        it->second.mVariable = size;
+        *it->second.mpVariable = size;
+        return *this;
+      }
+
       void SetStyling()
       {
         for(auto&& color : colors)
@@ -426,6 +548,16 @@ namespace Greet
         for(auto&& b : bools)
         {
           *b.second.mpVariable = GetBool(b.first);
+        }
+        for(auto&& font : fonts)
+        {
+          *font.second.mpVariable = GetFont(font.first);
+        }
+        for(auto&& size : sizes)
+        {
+          float oldSize = size.second.mpVariable->size;
+          *size.second.mpVariable = GetSize(size.first);
+          size.second.mpVariable->size = oldSize;
         }
       }
   };

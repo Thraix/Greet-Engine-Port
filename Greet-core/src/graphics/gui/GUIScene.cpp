@@ -124,7 +124,8 @@ namespace Greet {
     {
       if((*it)->remeasure)
       {
-        (*it)->Remeasure();
+        (*it)->remeasure = false;
+        (*it)->Measure(GetSize(), {1, 1});
       }
       (*it)->UpdateHandle(timeElapsed);
     }

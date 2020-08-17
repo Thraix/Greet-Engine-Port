@@ -15,7 +15,7 @@ namespace Greet
   REGISTER_COMPONENT_DEFINITION(Component);
 
   Component::Component(const std::string& name, Component* parent)
-    : parent{parent}, size{}, isFocused{false}, isHovered{false}, pos{0,0}, pressed{false}, name{name}
+    : parent{parent}, isFocused{false}, isHovered{false}, pos{0,0}, pressed{false}, name{name}
   {
     AddStyleVariables({
       .colors=
@@ -38,6 +38,11 @@ namespace Greet
       {
         {"backgroundRoundedPrecision", &backgroundRoundedPrecision},
         {"borderRoundedPrecision", &borderRoundedPrecision}
+      },
+      .sizes =
+      {
+        {"width", &width},
+        {"height", &height},
       }
     });
 
@@ -49,26 +54,24 @@ namespace Greet
 
 
   Component::Component(const XMLObject& xmlObject, Component* parent)
-    : Component{GUIUtils::GetStringFromXML(xmlObject,"name", xmlObject.GetName() + "#" + LogUtils::DecToHex(UUID::GetInstance().GetUUID(),8)), parent}
-  {
-    size = GUIUtils::GetComponentSizeFromXML(xmlObject, "width", "height", {});
-  }
+    : Component{GUIUtils::GetStringFromXML(xmlObject, "name", xmlObject.GetName() + "#" + LogUtils::DecToHex(UUID::GetInstance().GetUUID(),8)), parent}
+  {}
 
   void Component::Measure(const Vec2& emptyParentSpace, const Vec2& percentageFill)
   {
-    if(size.widthType == ComponentSize::Type::Pixels)
-      size.size.w = size.value.w;
-    else if(size.widthType == ComponentSize::Type::Weight)
-      size.size.w = emptyParentSpace.x * percentageFill.x;
+    if(width.type == GUISize::Type::Pixels)
+      width.size = width.value;
+    else if(width.type == GUISize::Type::Weight)
+      width.size = emptyParentSpace.x * percentageFill.x;
     else
-      size.size.w = GetWrapWidth();
+      width.size = GetWrapWidth();
 
-    if(size.heightType == ComponentSize::Type::Pixels)
-      size.size.h = size.value.h;
-    else if(size.heightType == ComponentSize::Type::Weight)
-      size.size.h = emptyParentSpace.h * percentageFill.h;
+    if(height.type == GUISize::Type::Pixels)
+      height.size = height.value;
+    else if(height.type == GUISize::Type::Weight)
+      height.size = emptyParentSpace.y * percentageFill.y;
     else
-      size.size.h = GetWrapHeight();
+      height.size = GetWrapHeight();
     OnMeasured();
   }
 
@@ -84,10 +87,9 @@ namespace Greet
 
   void Component::Remeasure()
   {
-    remeasure = false;
     if(!parent)
     {
-      Measure(guiScene->GetSize(), {1, 1});
+      remeasure = true;
     }
     else
     {
@@ -103,11 +105,11 @@ namespace Greet
     // Border around Component
     if(borderColor.a != 0.0)
       //renderer->SubmitRect(pos + Vec2(0,0), size, currentStyle->borderColor, false);
-      renderer->DrawRoundedRect(pos+Vec2(0,0),size.size, borderColor, borderRadius, borderRoundedPrecision, false);
+      renderer->DrawRoundedRect(pos+Vec2(0,0), {width.size, height.size}, borderColor, borderRadius, borderRoundedPrecision, false);
 
     // Component background
     if (backgroundColor.a != 0.0)
-      renderer->DrawRoundedRect(pos + border.LeftTop(), size.size - GetBorder().LeftTop()-GetBorder().RightBottom(), backgroundColor, backgroundRadius, backgroundRoundedPrecision, false);
+      renderer->DrawRoundedRect(pos + border.LeftTop(), Vec2{width.size, height.size} - GetBorder().LeftTop()-GetBorder().RightBottom(), backgroundColor, backgroundRadius, backgroundRoundedPrecision, false);
   }
 
   // Render component
@@ -125,7 +127,6 @@ namespace Greet
 
   void Component::UpdateHandle(float timeElapsed)
   {
-    size.size = Vec2(GetWidth(), GetHeight());
     Update(timeElapsed);
   }
 
@@ -169,7 +170,7 @@ namespace Greet
     {
       if(!isHovered)
       {
-        if(currentStyle == "normal")
+        if(currentStyle == "normal" && !UsingMouse())
           SetCurrentStyle("hover");
         isHovered = true;
         MouseEntered();
@@ -180,7 +181,7 @@ namespace Greet
     {
       isHovered = false;
       MouseExited();
-      if(currentStyle == "hover")
+      if(currentStyle == "hover" && currentStyle != "normal")
         SetCurrentStyle("normal");
     }
   }
@@ -278,65 +279,64 @@ namespace Greet
 
   Vec2 Component::GetSize() const
   {
-    return size.size;
+    return Vec2{width.size, height.size};
   }
 
   float Component::GetWidth() const
   {
-    return size.size.w;
+    return width.size;
   }
 
   float Component::GetHeight() const
   {
-    return size.size.h;
+    return height.size;
   }
 
-  ComponentSize::Type Component::GetWidthSizeType() const
+  GUISize::Type Component::GetWidthType() const
   {
-    return size.widthType;
+    return width.type;
   }
 
-  ComponentSize::Type Component::GetHeightSizeType() const
+  GUISize::Type Component::GetHeightType() const
   {
-    return size.heightType;
+    return height.type;
   }
 
-  Component& Component::SetWidth(float width)
+  Component& Component::SetWidth(float size)
   {
-    size.value.w = width;
-    remeasure = true;
+    width.value = size;
+    Remeasure();
     return *this;
   }
 
-  Component& Component::SetHeight(float height)
+  Component& Component::SetHeight(float size)
   {
-    size.value.h = height;
-    remeasure = true;
+    height.value = size;
+    Remeasure();
     return *this;
   }
 
-  Component& Component::SetWidthSizeType(ComponentSize::Type width)
+  Component& Component::SetWidthType(GUISize::Type type)
   {
-    size.widthType = width;
-    remeasure = true;
+    width.type = type;
+    Remeasure();
     return *this;
   }
 
-  Component& Component::SetHeightSizeType(ComponentSize::Type height)
+  Component& Component::SetHeightType(GUISize::Type type)
   {
-    size.heightType = height;
-    remeasure = true;
+    height.type = type;
+    Remeasure();
     return *this;
   }
 
-  Component& Component::SetSize(float width, float height, ComponentSize::Type widthType, ComponentSize::Type heightType, bool remeasure)
+  Component& Component::SetSize(float widthSize, float heightSize, GUISize::Type widthType, GUISize::Type heightType)
   {
-    size.value.w = width;
-    size.value.h = height;
-    size.widthType = widthType;
-    size.heightType = heightType;
-    if(remeasure)
-      remeasure = true;
+    width.value = widthSize;
+    width.type = widthType;
+    height.value = heightSize;
+    height.type = heightType;
+    Remeasure();
     return *this;
   }
 
@@ -415,14 +415,15 @@ namespace Greet
     {
       currentStyle = stylename;
       it->second.SetStyling();
+      Remeasure();
       return;
     }
     Log::Error("Style does not exist within component: ", name, ", ", stylename);
   }
 
-  const Vec2& Component::GetSizeValue() const
+  Vec2 Component::GetSizeValue() const
   {
-    return size.value;
+    return Vec2{width.value, height.value};
   }
 
   Component* Component::GetComponentByNameNoCast(const std::string& name)
@@ -434,7 +435,7 @@ namespace Greet
 
   bool Component::IsMouseInside(const Vec2& translatedPos) const
   {
-    return AABBUtils::PointInsideBox(translatedPos, Vec2{0,0}, size.size);
+    return AABBUtils::PointInsideBox(translatedPos, Vec2{0,0}, {width.size, height.size});
   }
 
   Component* Component::GetRootNode()
@@ -464,7 +465,7 @@ namespace Greet
 
   Vec2 Component::GetContentSize() const
   {
-    return size.size - GetPadding().GetSize() - GetBorder().GetSize();
+    return GetSize() - GetPadding().GetSize() - GetBorder().GetSize();
   }
 
   const std::string& Component::GetName() const

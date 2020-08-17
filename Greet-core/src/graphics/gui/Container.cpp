@@ -19,14 +19,25 @@ namespace Greet
   Container::Container(const std::string& name, Component* parent)
     : Component{name, parent}, vertical{true}, spacing{10}
   {
-
+    AddStyleVariables(
+      StylingVariables
+      {
+        .floats = {{"spacing", &spacing}},
+        .bools = {{"vertical", &vertical}}
+      }
+    );
   }
 
   Container::Container(const XMLObject& object, Component* parent)
     : Component(object, parent), vertical(true)
   {
-    vertical = GUIUtils::GetBooleanFromXML(object,"vertical",true);
-    spacing = GUIUtils::GetFloatFromXML(object, "spacing", 10);
+    AddStyleVariables(
+      StylingVariables
+      {
+        .floats = {{"spacing", &spacing}},
+        .bools = {{"vertical", &vertical}}
+      }
+    );
     for (uint i = 0;i < object.GetObjectCount();i++)
     {
       Component* component = ComponentFactory::GetComponent(object.GetObject(i), this);
@@ -72,31 +83,31 @@ namespace Greet
         pos.y += child->GetSize().h + spacing;
       else
         pos.x += child->GetSize().w + spacing;
-      if(child->GetWidthSizeType() != ComponentSize::Type::Weight && !vertical)
+      if(child->GetWidthType() != GUISize::Type::Weight && !vertical)
         totalSize.w += child->GetSize().w;
-      if(child->GetHeightSizeType() != ComponentSize::Type::Weight && vertical)
+      if(child->GetHeightType() != GUISize::Type::Weight && vertical)
         totalSize.h += child->GetSize().h;
     }
 
-    totalSize.w = totalSize.w > size.size.w ? size.size.w : totalSize.w;
-    totalSize.h = totalSize.h > size.size.h ? size.size.h : totalSize.h;
+    totalSize.w = totalSize.w > width.size ? width.size : totalSize.w;
+    totalSize.h = totalSize.h > height.size ? height.size : totalSize.h;
 
     pos = {0, 0};
     for(auto&& child : m_components)
     {
       if(vertical)
       {
-        child->Measure({(size.size.w - totalSize.w), (size.size.h - totalSize.h) / weightTotals.h}, {1, child->GetSizeValue().h});
+        child->Measure({(width.size - totalSize.w), (height.size - totalSize.h) / weightTotals.h}, {1, child->GetSizeValue().h});
       }
       else
       {
-        child->Measure({(size.size.w - totalSize.w) / weightTotals.w, size.size.h - totalSize.h}, {1, child->GetSizeValue().h});
+        child->Measure({(width.size - totalSize.w) / weightTotals.w, height.size - totalSize.h}, {1, child->GetSizeValue().h});
       }
       child->SetPosition(pos);
       if(vertical)
-        pos.y += child->GetSize().h + spacing;
+        pos.y += child->GetHeight() + spacing;
       else
-        pos.x += child->GetSize().w + spacing;
+        pos.x += child->GetWidth() + spacing;
     }
   }
 
@@ -108,12 +119,12 @@ namespace Greet
 
     for(auto&& child : m_components)
     {
-      if(child->GetWidthSizeType() == ComponentSize::Type::Weight)
+      if(child->GetWidthType() == GUISize::Type::Weight)
       {
         totalWeights.w += child->GetSizeValue().w;
         childHasWidthWeight = true;
       }
-      if(child->GetHeightSizeType() == ComponentSize::Type::Weight)
+      if(child->GetHeightType() == GUISize::Type::Weight)
       {
         totalWeights.h += child->GetSizeValue().h;
         childHasWidthWeight = true;
@@ -127,22 +138,22 @@ namespace Greet
     while(remeasureChildren)
     {
       remeasureChildren = false;
-      if(size.widthType == ComponentSize::Type::Wrap)
+      if(width.type == GUISize::Type::Wrap)
       {
         int wrapSize = GetWrapWidth();
-        if(wrapSize != size.size.w)
+        if(wrapSize != width.size)
         {
-          size.size.w = wrapSize;
+          width.size = wrapSize;
           if(childHasWidthWeight)
             remeasureChildren = true;
         }
       }
-      if(size.heightType == ComponentSize::Type::Wrap)
+      if(height.type == GUISize::Type::Wrap)
       {
         int wrapSize = GetWrapHeight();
-        if(wrapSize != size.size.h)
+        if(wrapSize != height.size)
         {
-          size.size.h = wrapSize;
+          height.size = wrapSize;
           if(childHasHeightWeight)
             remeasureChildren = true;
         }
@@ -165,9 +176,9 @@ namespace Greet
       else
         usedSpace += comp->GetMargin().GetWidth() + spacing;
 
-      if(this->vertical && comp->GetHeightSizeType() != ComponentSize::Type::Weight)
+      if(this->vertical && comp->GetHeightType() != GUISize::Type::Weight)
         usedSpace += comp->GetSize().h;
-      else if(!this->vertical && comp->GetWidthSizeType() != ComponentSize::Type::Weight)
+      else if(!this->vertical && comp->GetWidthType() != GUISize::Type::Weight)
         usedSpace += comp->GetSize().w;
     }
     if(usedSpace > 0)
@@ -193,9 +204,9 @@ namespace Greet
     float totalWeight = 0;
     for(auto&& comp : m_components)
     {
-      if(vertical && comp->GetHeightSizeType() == ComponentSize::Type::Weight)
+      if(vertical && comp->GetHeightType() == GUISize::Type::Weight)
         totalWeight += comp->GetSizeValue().h;
-      else if(!vertical && comp->GetWidthSizeType() == ComponentSize::Type::Weight)
+      else if(!vertical && comp->GetWidthType() == GUISize::Type::Weight)
         totalWeight += comp->GetSizeValue().w;
     }
     return totalWeight;
@@ -298,7 +309,7 @@ namespace Greet
     {
       for(auto&& child : m_components)
       {
-        if(child->GetWidthSizeType() != ComponentSize::Type::Weight)
+        if(child->GetWidthType() != GUISize::Type::Weight)
           width = std::max(width, child->GetSize().w);
       }
     }
@@ -307,7 +318,7 @@ namespace Greet
       width = spacing * std::max(((int)m_components.size() - 1), 0);
       for(auto&& child : m_components)
       {
-        if(child->GetWidthSizeType() != ComponentSize::Type::Weight)
+        if(child->GetWidthType() != GUISize::Type::Weight)
           width += child->GetSize().w;
       }
     }
@@ -322,7 +333,7 @@ namespace Greet
       height = spacing * std::max(((int)m_components.size() - 1), 0);
       for(auto&& child : m_components)
       {
-        if(child->GetHeightSizeType() != ComponentSize::Type::Weight)
+        if(child->GetHeightType() != GUISize::Type::Weight)
           height += child->GetSize().h;
       }
     }
@@ -330,7 +341,7 @@ namespace Greet
     {
       for(auto&& child : m_components)
       {
-        if(child->GetHeightSizeType() != ComponentSize::Type::Weight)
+        if(child->GetHeightType() != GUISize::Type::Weight)
           height = std::max(height, child->GetSize().h);
       }
     }

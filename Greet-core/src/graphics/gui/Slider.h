@@ -11,14 +11,13 @@ namespace Greet
     public:
       typedef std::function<void(Component*, float oldValue, float newValue)> OnValueChangeCallback;
     protected:
-      static uint SLIDER_FLAG_FORCE_INSIDE;
-      static uint SLIDER_FLAG_SNAP;
-      static uint SLIDER_FLAG_VERTICAL;
 
       // The slider indicator component can be any component really
       Component* sliderComponent;
       float sliderPos;
-      uint flags;
+      bool vertical = false;
+      bool clampSlider = true;
+      bool snapSlider = false;
       float minValue;
       float maxValue;
       float stepSize;

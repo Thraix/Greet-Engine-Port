@@ -5,25 +5,25 @@
   borderColor="#37474f"
   backgroundColor="#ffffff">
 <Docker width="1w" height="1w" name="docker" backgroundColor="#323232" edgeColor="#323232" edgeSize="10" edgeBorder="2" edgeBorderColor="#626262" border="2" borderColor="#626262">
-  <TabButton width="100" height="25" align="left" font="noto" fontSize="12" textColor="#ffffff" hover-backgroundColor="#424242" backgroundColor="#323232" active-backgroundColor="#424242" active-border="0 0 2 0" active-borderColor="#4CAF50" padding="0 5 0 0"/>
+  <TabButton width="100" height="25" align="left" font="noto:12" textColor="#ffffff" hover-backgroundColor="#424242" backgroundColor="#323232" active-backgroundColor="#424242" active-border="0 0 2 0" active-borderColor="#4CAF50" padding="0 5 0 0"/>
   <SplitIcon width="30" height="30" backgroundColor="#424242" border="5 2 2 2" borderColor="#626262"/>
   <DockerSplit>
     <DockerContainer weight="0.35">
       <DockerTab title="Settings">
         <Container name="container" width="fill_parent" height="fill_parent" backgroundColor="#424242" padding="10">
           <Label
-            fontSize="18" font="noto" textColor="#E0E0E0">Frame header</Label>
+            font="noto:18" textColor="#E0E0E0">Frame header</Label>
           <Divider name="divider" backgroundColor="#E0E0E0"/>
-          <Label textColor="#E0E0E0" font="noto" fontSize="16">Radio Buttons</Label>
+          <Label textColor="#E0E0E0" font="noto:16">Radio Buttons</Label>
 
-          <RadioGroup name="Radio" width="fill_parent" height="wrap_content" margin="0" spacing="10">
+          <RadioGroup name="Radio" width="fill_parent" height="wrap_content" backgroundColor="#ff00ff" margin="0" spacing="10">
             <Container vertical="false" spacing="5">
               <RadioButton width="16" height="16"
                 radius="6" borderRadius="8"
                 active-radius="8"
                 backgroundColor="#424242" borderColor="#4CAF50" border="2"
                 active-backgroundColor="#4CAF50" active-borderColor="#00000000" active-border="0"/>
-              <Label height="fill_parent" textColor="#E0E0E0" font="noto" fontSize="12">Yes</Label>
+              <Label height="fill_parent" textColor="#E0E0E0" font="noto:12">Yes</Label>
             </Container>
             <Container vertical="false" spacing="5">
               <RadioButton width="16" height="16"
@@ -31,7 +31,7 @@
                 active-radius="8"
                 backgroundColor="#424242" borderColor="#4CAF50" border="2"
                 active-backgroundColor="#4CAF50" active-borderColor="#00000000" active-border="0"/>
-              <Label height="fill_parent" textColor="#E0E0E0" font="noto" fontSize="12">No</Label>
+              <Label height="fill_parent" textColor="#E0E0E0" font="noto:12">No</Label>
             </Container>
             <Container vertical="false" spacing="5">
               <RadioButton width="16" height="16"
@@ -39,28 +39,28 @@
                 active-radius="8"
                 backgroundColor="#424242" borderColor="#4CAF50" border="2"
                 active-backgroundColor="#4CAF50" active-borderColor="#00000000" active-border="0"/>
-              <Label height="fill_parent" textColor="#E0E0E0" font="noto" fontSize="12">Maybe</Label>
+              <Label height="fill_parent" textColor="#E0E0E0" font="noto:12">Maybe</Label>
             </Container>
           </RadioGroup>
 
-          <Button width="fill_parent" height="30" name="button"
+          <Button width="fill_parent" height="100" name="button"
             backgroundColor="#4CAF50"
             borderColor="#1B5E20"
             hover-backgroundColor="#4b994e"
             press-backgroundColor="#307c33"
-            textColor="#ffffff" fontSize="16" font="noto">Button!</Button>
+            textColor="#ffffff" font="noto:16">Button!</Button>
 
           <TextBox
             width="200" height="20"
             backgroundColor="#424242" borderColor="#4CAF50"
-            border="0 0 1 0" font="noto" fontSize="16" textColor="#E0E0E0"
+            border="0 0 1 0" font="noto:16" textColor="#E0E0E0"
             hintTextColor="#757575" hintText="Username"
             padding="0 0"></TextBox>
 
           <TextBox
             width="200" height="20"
             backgroundColor="#424242" borderColor="#4CAF50"
-            border="0 0 1 0" font="noto" fontSize="16" textColor="#E0E0E0"
+            border="0 0 1 0" font="noto:16" textColor="#E0E0E0"
             hintTextColor="#757575" hintText="Password"
             padding="0 0" password="true" ></TextBox>
 
@@ -78,7 +78,7 @@
 
         <Label
           padding="0"
-          fontSize="12" font="noto" textColor="#E0E0E0">Test label</Label>
+          font="noto:12" textColor="#E0E0E0">Test label</Label>
 
         <Container
           width="fill_parent"
@@ -99,7 +99,7 @@
           backgroundColor="#757575"
           progressColor="#4CAF50"
           radius="6"
-          minValue="0.25" maxValue="1.25" vertical="true" reverseProgress="true"/>
+          minValue="0.25" maxValue="1.25" vertical="true" reverse="true"/>
 
         <Divider backgroundColor="#757575" vertical="true"/>
 
@@ -129,10 +129,10 @@
       backgroundColor="#757575"
       progressColor="#4CAF50"
       radius="6"
-      minValue="0.25" maxValue="1.25" reverseProgress="true"/>
+      minValue="0.25" maxValue="1.25" reverse="true"/>
 
     <Container width="fill_parent" vertical="false">
-      <Label width="wrap_content" height="fill_parent" fontSize="16" font="noto" textColor="#E0E0E0">Background Color: </Label>
+      <Label width="wrap_content" height="fill_parent" font="noto:16" textColor="#E0E0E0">Background Color: </Label>
 
       <ColorPicker
         width="48" height="30" name="backgroundChanger"
@@ -141,7 +141,7 @@
         border="1"
         />
     </Container>
-    <Label name="lorem" width="fill_parent" height="wrap_content" gravity="top" align="center" backgroundColor="#ff00ff" textColor="#E0E0E0" font="noto" fontSize="12" overlap="wrap">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</Label>
+    <Label name="lorem" width="fill_parent" height="wrap_content" gravity="top" align="center" backgroundColor="#ff00ff" textColor="#E0E0E0" font="noto:12" hover-font="noto:16" overlap="wrap">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</Label>
     </Container>
   </DockerTab>
   <DockerTab title="Project Explorer">

@@ -14,10 +14,13 @@ namespace Greet
     public:
       OnColorChangeCallback onColorChangeCallback;
     private:
+      Vec3<float>* attachedColor;
       ColorPickerWindow* picker;
     public:
       ColorPicker(const XMLObject& object, Component* parent);
       virtual ~ColorPicker();
+
+      void AttachColor(Vec3<float>* color);
 
       void OnEvent(Event& event, const Vec2& translatedPos) override;
       void OnColorChanged(const Vec3<float>& previous, const Vec3<float>& current);

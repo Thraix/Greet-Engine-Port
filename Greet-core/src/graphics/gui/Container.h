@@ -11,8 +11,8 @@ namespace Greet {
       REGISTER_COMPONENT_DECLARATION(Container);
     protected:
       std::vector<Component*> m_components;
-      bool vertical;
-      float spacing;
+      bool vertical = true;
+      float spacing = 10;
 
     public:
       Container();

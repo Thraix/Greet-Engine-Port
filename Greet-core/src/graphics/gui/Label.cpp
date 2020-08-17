@@ -7,19 +7,30 @@ namespace Greet
   Label::Label(const std::string& name, Component* parent)
     : Label{name,parent, "", "", 20}
   {
+    AddStyleVariables(StylingVariables{
+        .colors={{"textColor", &text.color}},
+        .fonts={{"font", &text.font}}
+        });
   }
 
   Label::Label(const std::string& name, Component* parent, const std::string& str, const std::string& fontName, float fontSize)
-    : Component{name, parent}, text{str, fontName, fontSize}, hasMaxWidth{false}
+    : Component{name, parent}, text{str}, hasMaxWidth{false}
   {
+    AddStyleVariables(StylingVariables{
+        .colors={{"textColor", &text.color}},
+        .fonts={{"font", &text.font}}
+        });
     text.gravity = Text::Gravity::Center;
     text.align = Text::Align::Left;
   }
 
   Label::Label(const XMLObject& object, Component* parent)
-    : Component(object, parent), text{object.GetText(),GUIUtils::GetStringFromXML(object,"font",""), GUIUtils::GetFloatFromXML(object, "fontSize", 20)}, hasMaxWidth{false}
+    : Component(object, parent), text{object.GetText()}, hasMaxWidth{false}
   {
-    AddStyleVariables(StylingVariables{.colors={{"textColor", &text.color}}});
+    AddStyleVariables(StylingVariables{
+        .colors={{"textColor", &text.color}},
+        .fonts={{"font", &text.font}}
+        });
 
     std::string grav = object.GetAttribute("gravity", "center");
     if(grav == "top")
@@ -56,7 +67,7 @@ namespace Greet
   Label& Label::SetText(const std::string& str)
   {
     text.str = str;
-    if(size.widthType == ComponentSize::Type::Wrap)
+    if(GetWidthType() == GUISize::Type::Wrap)
       Remeasure();
     return *this;
   }
@@ -74,7 +85,7 @@ namespace Greet
   float Label::GetWrapHeight() const
   {
     float width = text.font.GetWidthOfText(text.str);
-    float maxWidth = GetWidthSizeType() != ComponentSize::Type::Wrap ? Math::Min(width, GetContentSize().w) : width;
+    float maxWidth = GetWidthType() != GUISize::Type::Wrap ? Math::Min(width, GetContentSize().w) : width;
     return text.GetWrapHeight(maxWidth);
   }
 
@@ -90,7 +101,7 @@ namespace Greet
 
   float Label::GetFontSize() const
   {
-    return text.fontSize;
+    return text.font.GetSize();
   }
 
   Label& Label::SetGravity(Text::Gravity grav)

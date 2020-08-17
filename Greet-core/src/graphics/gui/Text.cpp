@@ -4,8 +4,8 @@
 
 namespace Greet
 {
-  Text::Text(const std::string& str, const std::string& fontname, float fontSize, const Vec4& color, Gravity gravity, Align align, OverlapMode overlapMode)
-    : str{str}, font{FontManager::Get(fontname, fontSize)}, fontSize{fontSize}, color{color}, gravity{gravity}, align{align}, overlapMode{overlapMode}
+  Text::Text(const std::string& str, const Font& font, const Vec4& color, Gravity gravity, Align align, OverlapMode overlapMode)
+    : str{str}, font{font}, color{color}, gravity{gravity}, align{align}, overlapMode{overlapMode}
   {
 overlapMode = OverlapMode::Wrap;
   }

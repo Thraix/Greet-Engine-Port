@@ -9,14 +9,14 @@ namespace Greet
   ProgressBar::ProgressBar(const XMLObject& object, Component* parent)
     : Component(object,parent), min(0), max(1), value(0), valueReference(nullptr), vertical(false), reverse(false)
   {
-    AddStyleVariables({.colors= {{"progressColor", &progressColor}}});
+    AddStyleVariables({
+        .colors = {{"progressColor", &progressColor}},
+        .bools = {{"vertical", &vertical}, {"reverse", &reverse}}
+        });
     if(object.HasAttribute("minValue"))
       min = atof(object.GetAttribute("minValue").c_str());
     if(object.HasAttribute("maxValue"))
       max = atof(object.GetAttribute("maxValue").c_str());
-
-    vertical = GUIUtils::GetBooleanFromXML(object,"vertical", false);
-    reverse = GUIUtils::GetBooleanFromXML(object,"reverseProgress", false);
   }
 
   void ProgressBar::Render(GUIRenderer* renderer) const

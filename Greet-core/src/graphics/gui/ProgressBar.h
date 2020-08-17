@@ -13,8 +13,8 @@ namespace Greet
       float* valueReference;
       float min;
       float max;
-      bool vertical;
-      bool reverse;
+      bool vertical = false;
+      bool reverse = false;
 
       Vec4 progressColor = {1,1,1,1};
 

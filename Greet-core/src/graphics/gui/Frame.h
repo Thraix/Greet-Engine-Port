@@ -57,7 +57,7 @@ namespace Greet {
 
       // Getters and setters
       virtual Vec2 GetComponentPosition() const { return Vec2(margin.left + border.left, margin.top + border.top); };
-      virtual Vec2 GetComponentSize() const { return size.size - GetComponentPosition() - Vec2(margin.right + border.right, margin.bottom + border.bottom); }
+      virtual Vec2 GetComponentSize() const { return GetSize() - GetComponentPosition() - Vec2(margin.right + border.right, margin.bottom + border.bottom); }
 
       // Set listeners
       void SetGUIMouseListener(GUIMouseListener* listener);

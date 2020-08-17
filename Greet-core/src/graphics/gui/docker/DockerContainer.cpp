@@ -12,7 +12,7 @@ namespace Greet
     button = new Button(docker->GetTabButton(), nullptr);
     button->AddStyle("active", "normal");
     button->LoadStyles(docker->GetTabButton());
-    button->Remeasure();
+    button->Measure({0, 0}, {0, 0});
     splitIcon = new Component(docker->GetSplitIconStyle(), nullptr);
     splitIcon->LoadStyles(docker->GetSplitIconStyle());
     splitIcon->Remeasure();
@@ -39,7 +39,7 @@ namespace Greet
     button = new Button(docker->GetTabButton(), nullptr);
     button->AddStyle("active", "normal");
     button->LoadStyles(docker->GetTabButton());
-    button->Remeasure();
+    button->Measure({0, 0}, {0, 0});
     splitIcon = new Component(docker->GetSplitIconStyle(), nullptr);
     splitIcon->LoadStyles(docker->GetSplitIconStyle());
     splitIcon->Remeasure();
@@ -72,8 +72,9 @@ namespace Greet
         button->SetCurrentStyle("hover");
       else
         button->SetCurrentStyle("normal");
-      button->PreRender(renderer, {(float)i * (float)button->GetWidth(), 0.0f});
       button->SetText(children[i]->GetTitle());
+      button->Measure({0, 0}, {0, 0});
+      button->PreRender(renderer, {(float)i * (float)button->GetWidth(), 0.0f});
       button->Render(renderer);
       button->PostRender(renderer);
     }

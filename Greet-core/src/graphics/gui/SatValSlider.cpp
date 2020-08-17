@@ -19,7 +19,7 @@ namespace Greet
     };
 
     Component* component = new Component{"SatValSliderComponent", this};
-    component->SetSize(7,7,ComponentSize::Type::Pixels, ComponentSize::Type::Pixels, false)
+    component->SetSize(7,7,GUISize::Type::Pixels, GUISize::Type::Pixels)
       .LoadStyle("normal", normal);
     sliderComponent = component;
   }
@@ -40,7 +40,7 @@ namespace Greet
       .tlbrs = {{"border", {2,2,2,2}}}
     };
       Component* component = new Component{"SatValSliderComponent", this};
-      component->SetSize(7,7,ComponentSize::Type::Pixels, ComponentSize::Type::Pixels, false)
+      component->SetSize(7,7,GUISize::Type::Pixels, GUISize::Type::Pixels)
         .LoadStyle("normal", normal);
       sliderComponent = component;
     }
@@ -60,7 +60,7 @@ namespace Greet
   void SatValSlider::PreRender(GUIRenderer* renderer, const Vec2& translation) const
   {
     renderer->PushTranslation(translation);
-    renderer->DrawRect(pos, size.size, Vec4(hue,0,0,1), Vec4(hue,1,0,1), Vec4(hue,0,1,1), Vec4(hue,1,1,1),true);
+    renderer->DrawRect(pos, GetSize(), Vec4(hue,0,0,1), Vec4(hue,1,0,1), Vec4(hue,0,1,1), Vec4(hue,1,1,1),true);
   }
 
   void SatValSlider::Render(GUIRenderer* renderer) const
@@ -110,12 +110,12 @@ namespace Greet
     }
   }
 
-  void SatValSlider::SetOnSatChangeCallback(OnSatChangeCallback callback)
+  void SatValSlider::SetOnSatChangeCallback(OnValueChangeCallback callback)
   {
     onSatChangeCallback = callback;
   }
 
-  void SatValSlider::SetOnValChangeCallback(OnValChangeCallback callback)
+  void SatValSlider::SetOnValChangeCallback(OnValueChangeCallback callback)
   {
     onValChangeCallback = callback;
   }

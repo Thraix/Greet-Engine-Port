@@ -5,8 +5,6 @@
 
 using namespace Greet;
 
-#define BIND_MEMBER(fn) [this](auto&&... args){ this->fn(std::forward<decltype(args)>(args)...); }
-
 class Core : public App
 {
   private:
@@ -44,15 +42,15 @@ class Core : public App
         frame->GetComponentByName<ProgressBar>("progressBar")
           ->AttachValueReference(&progressBarValue);
         frame->GetComponentByName<RadioGroup>("Radio")
-          ->SetOnRadioChangeCallback(BIND_MEMBER(OnRadioChangeCallback));
+          ->SetOnRadioChangeCallback(BIND_MEMBER_FUNC(OnRadioChangeCallback));
         frame->GetComponentByName<Slider>("Slider")
-          ->SetOnClickCallback(BIND_MEMBER(OnClickCallback));
+          ->SetOnClickCallback(BIND_MEMBER_FUNC(OnClickCallback));
         frame->GetComponentByName<Slider>("Slider")
-          ->SetOnPressCallback(BIND_MEMBER(OnClickCallback));
+          ->SetOnPressCallback(BIND_MEMBER_FUNC(OnClickCallback));
         frame->GetComponentByName<Slider>("Slider")
-          ->SetOnReleaseCallback(BIND_MEMBER(OnReleaseCallback));
+          ->SetOnReleaseCallback(BIND_MEMBER_FUNC(OnReleaseCallback));
         frame->GetComponentByName<Slider>("Slider")
-          ->SetOnValueChangeCallback(BIND_MEMBER(OnValueChangeCallback));
+          ->SetOnValueChangeCallback(BIND_MEMBER_FUNC(OnValueChangeCallback));
         frame->GetComponentByName<ProgressBar>("progressBar")
           ->AttachValueReference(&progressBarValue);
         frame->GetComponentByName<ProgressBar>("progressBarVertical")
@@ -62,9 +60,9 @@ class Core : public App
         frame->GetComponentByName<ProgressBar>("progressBarVerticalReverse")
           ->AttachValueReference(&progressBarValue);
         frame->GetComponentByName<ColorPicker>("backgroundChanger")
-          ->SetOnColorChangeCallback(BIND_MEMBER(OnColorChangeCallback));
+          ->SetOnColorChangeCallback(BIND_MEMBER_FUNC(OnColorChangeCallback));
         frame->GetComponentByName<Button>("button")
-          ->SetOnClickCallback(BIND_MEMBER(OnButtonPressCallback));
+          ->SetOnClickCallback(BIND_MEMBER_FUNC(OnButtonPressCallback));
         Docker* docker = frame->GetComponentByName<Docker>("docker");
         if(docker)
         {
