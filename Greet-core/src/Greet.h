@@ -71,6 +71,7 @@
 #include <graphics/gui/SceneView.h>
 #include <graphics/gui/Slider.h>
 #include <graphics/gui/Style.h>
+#include <graphics/gui/StyleTemplateClasses.h>
 #include <graphics/gui/TLBR.h>
 #include <graphics/gui/Text.h>
 #include <graphics/gui/TextBox.h>

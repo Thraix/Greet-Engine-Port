@@ -1,5 +1,6 @@
 #pragma once
 
+#include <graphics/gui/TLBR.h>
 #include <graphics/Window.h>
 #include <utils/StringUtils.h>
 #include <utils/ColorUtils.h>
@@ -19,6 +20,35 @@ namespace Greet {
     float value = 1;
     Type type = Type::Wrap;
 
+    GUISize()
+    {}
+
+    GUISize(float size, float value, Type type)
+      : size{size}, value{value}, type{type}
+    {}
+
+    GUISize(const GUISize& size)
+      : value{size.value}, type{size.type}
+    {}
+
+    GUISize(GUISize&& size)
+      : value{size.value}, type{size.type}
+    {}
+
+    GUISize& operator=(const GUISize& size)
+    {
+      value = size.value;
+      type = size.type;
+      return *this;
+    }
+
+    GUISize& operator=(GUISize&& size)
+    {
+      value = size.value;
+      type = size.type;
+      return *this;
+    }
+
     friend std::ostream& operator<<(std::ostream& stream, const GUISize& size)
     {
       if(size.type == Type::Wrap)
@@ -27,7 +57,6 @@ namespace Greet {
         return stream << "Weight: " << size.value;
       else
         return stream << "Pixel: " << size.value;
-
     }
   };
 
@@ -50,5 +79,6 @@ namespace Greet {
       static int GetInt(const std::string& str);
       static bool GetBoolean(const std::string& str);
       static Font GetFont(const std::string& str);
+      static TLBR GetTLBR(const std::string& str);
   };
 }

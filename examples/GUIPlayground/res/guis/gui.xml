@@ -16,7 +16,7 @@
           <Divider name="divider" backgroundColor="#E0E0E0"/>
           <Label textColor="#E0E0E0" font="noto:16">Radio Buttons</Label>
 
-          <RadioGroup name="Radio" width="fill_parent" height="wrap_content" backgroundColor="#ff00ff" margin="0" spacing="10">
+          <RadioGroup name="Radio" width="fill_parent" height="wrap_content" margin="0" spacing="10">
             <Container vertical="false" spacing="5">
               <RadioButton width="16" height="16"
                 radius="6" borderRadius="8"
@@ -43,7 +43,7 @@
             </Container>
           </RadioGroup>
 
-          <Button width="fill_parent" height="100" name="button"
+          <Button width="fill_parent" height="30" name="button"
             backgroundColor="#4CAF50"
             borderColor="#1B5E20"
             hover-backgroundColor="#4b994e"

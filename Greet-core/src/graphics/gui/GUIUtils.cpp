@@ -146,4 +146,31 @@ namespace Greet
       fontSize = 12;
     return FontManager::Get(fontName, fontSize);
   }
+
+  TLBR GUIUtils::GetTLBR(const std::string& str)
+  {
+    TLBR tlbr;
+    std::vector<std::string> strings = StringUtils::SplitString(str, " ");
+    if(strings.size() == 4)
+    {
+      tlbr.top = atof(strings.at(0).c_str());
+      tlbr.left = atof(strings.at(1).c_str());
+      tlbr.bottom = atof(strings.at(2).c_str());
+      tlbr.right = atof(strings.at(3).c_str());
+    }
+    else if(strings.size() == 2)
+    {
+      tlbr.top = tlbr.bottom = atof(strings.at(0).c_str());
+      tlbr.left = tlbr.right = atof(strings.at(1).c_str());
+    }
+    else if(strings.size() == 1)
+    {
+      tlbr.top = tlbr.left = tlbr.bottom = tlbr.right = atof(strings.at(0).c_str());
+    }
+    else
+    {
+      Log::Error("TLBR:: Invalid parameter for ", str);
+    }
+    return tlbr;
+  }
 }
