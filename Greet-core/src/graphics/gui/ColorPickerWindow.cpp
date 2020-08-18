@@ -4,6 +4,7 @@
 #include <utils/LogUtils.h>
 
 #include <functional>
+#include <sstream>
 
 namespace Greet
 {
@@ -11,30 +12,39 @@ namespace Greet
   {
 #include "ColorPickerLook.xml"
   };
+
+  MetaFile ColorPickerWindow::frameStyle = MetaFile
+  {
+    std::istringstream(
+#include "ColorPickerStyle.meta"
+    )
+  };
+
   ColorPickerWindow::ColorPickerWindow(const Vec2& pos, const Vec3<float>& color)
     : Frame(frameLook)
   {
+    LoadFrameStyle(frameStyle);
     shouldCloseUnfocus = true;
     LoadStyles(frameLook);
     Measure({}, {});
 
-    Vec3<float> hsv(ColorUtils::RGBtoHSV(Vec4(color.r,color.g,color.b,1)));
-    svSlider = GetComponentByName<SatValSlider>("ColorPickerWindow#SatValSlider");
+    Vec3<float> hsv(ColorUtils::RGBtoHSV(Vec4(color.r, color.g, color.b, 1)));
+    svSlider = GetComponentByName<SatValSlider>("CPW#SatValSlider");
     svSlider->SetHue(hsv.h);
     svSlider->SetSat(hsv.s);
     svSlider->SetVal(hsv.v);
 
-    hSlider = GetComponentByName<HueSlider>("ColorPickerWindow#HueSlider");
+    hSlider = GetComponentByName<HueSlider>("CPW#HueSlider");
     hSlider->GetSliderComponent()->SetSize(1,7, GUISize::Type::Weight, GUISize::Type::Pixels);
     hSlider->SetValue(hsv.h);
-    rTextBox = GetComponentByName<TextBox>("ColorPickerWindow#RTextBox");
-    gTextBox = GetComponentByName<TextBox>("ColorPickerWindow#GTextBox");
-    bTextBox = GetComponentByName<TextBox>("ColorPickerWindow#BTextBox");
-    hTextBox = GetComponentByName<TextBox>("ColorPickerWindow#HTextBox");
-    sTextBox = GetComponentByName<TextBox>("ColorPickerWindow#STextBox");
-    vTextBox = GetComponentByName<TextBox>("ColorPickerWindow#VTextBox");
-    hexTextBox = GetComponentByName<TextBox>("ColorPickerWindow#HexTextBox");
-    colorDisplay = GetComponentByName<Component>("ColorPickerWindow#ColorDisplay");
+    rTextBox = GetComponentByName<TextBox>("CPW#RTextBox");
+    gTextBox = GetComponentByName<TextBox>("CPW#GTextBox");
+    bTextBox = GetComponentByName<TextBox>("CPW#BTextBox");
+    hTextBox = GetComponentByName<TextBox>("CPW#HTextBox");
+    sTextBox = GetComponentByName<TextBox>("CPW#STextBox");
+    vTextBox = GetComponentByName<TextBox>("CPW#VTextBox");
+    hexTextBox = GetComponentByName<TextBox>("CPW#HexTextBox");
+    colorDisplay = GetComponentByName<Component>("CPW#ColorDisplay");
 
     using namespace std::placeholders;
 

@@ -19,6 +19,7 @@ namespace Greet
 
     protected:
       static XMLObject frameLook;
+      static MetaFile frameStyle;
       Vec3<float> color;
       HueSlider* hSlider;
       SatValSlider* svSlider;

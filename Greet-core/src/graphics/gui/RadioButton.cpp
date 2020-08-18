@@ -7,7 +7,7 @@ namespace Greet
   REGISTER_COMPONENT_DEFINITION(RadioButton);
 
   RadioButton::RadioButton(const XMLObject& xmlObject, Component* parent)
-    : Component(xmlObject, parent), active(false), radioParent{nullptr}
+    : Component(xmlObject, parent), active(false), radioParent{nullptr}, text{xmlObject.GetText()}
   {
     AddStyle("active", "normal");
     LoadStyles(xmlObject);
@@ -38,6 +38,18 @@ namespace Greet
       SetCurrentStyle("active");
     else
       SetCurrentStyle("normal");
+  }
+
+  float RadioButton::GetWrapWidth() const
+  {
+    return text.GetWrapWidth();
+  }
+
+  float RadioButton::GetWrapHeight() const
+  {
+    float width = text.font.GetWidthOfText(text.str);
+    float maxWidth = GetWidthType() != GUISize::Type::Wrap ? Math::Min(width, GetContentSize().w) : width;
+    return text.GetWrapHeight(maxWidth);
   }
 
   RadioGroup* RadioButton::FindRadioGroupParent() const

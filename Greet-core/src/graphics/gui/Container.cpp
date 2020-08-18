@@ -67,7 +67,7 @@ namespace Greet
 
   void Container::MeasureChildren(const Vec2& weightTotals)
   {
-    Vec2 pos{0, 0};
+    Vec2 childPos{0, 0};
     int spacings = std::max((int)m_components.size() - 1, 0);
 
     Vec2 totalSize = GetPadding().GetSize() + GetBorder().GetSize();
@@ -78,11 +78,11 @@ namespace Greet
     for(auto&& child : m_components)
     {
       child->Measure({0, 0}, {0, 0});
-      child->SetPosition(pos);
+      child->SetPosition(childPos);
       if(vertical)
-        pos.y += child->GetSize().h + spacing;
+        childPos.y += child->GetSize().h + spacing;
       else
-        pos.x += child->GetSize().w + spacing;
+        childPos.x += child->GetSize().w + spacing;
       if(child->GetWidthType() != GUISize::Type::Weight && !vertical)
         totalSize.w += child->GetSize().w;
       if(child->GetHeightType() != GUISize::Type::Weight && vertical)
@@ -92,7 +92,7 @@ namespace Greet
     totalSize.w = totalSize.w > width.size ? width.size : totalSize.w;
     totalSize.h = totalSize.h > height.size ? height.size : totalSize.h;
 
-    pos = {0, 0};
+    childPos = {0, 0};
     for(auto&& child : m_components)
     {
       if(vertical)
@@ -103,11 +103,11 @@ namespace Greet
       {
         child->Measure({(width.size - totalSize.w) / weightTotals.w, height.size - totalSize.h}, {1, child->GetSizeValue().h});
       }
-      child->SetPosition(pos);
+      child->SetPosition(childPos);
       if(vertical)
-        pos.y += child->GetHeight() + spacing;
+        childPos.y += child->GetHeight() + spacing;
       else
-        pos.x += child->GetWidth() + spacing;
+        childPos.x += child->GetWidth() + spacing;
     }
   }
 
