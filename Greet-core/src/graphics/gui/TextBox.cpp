@@ -31,6 +31,7 @@ namespace Greet
         }
       }
     );
+    LoadStyles(object);
 
     password = GUIUtils::GetBooleanFromXML(object, "password", false);
   }

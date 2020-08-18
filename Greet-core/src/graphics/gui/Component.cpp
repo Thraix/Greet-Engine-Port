@@ -55,7 +55,9 @@ namespace Greet
 
   Component::Component(const XMLObject& xmlObject, Component* parent)
     : Component{GUIUtils::GetStringFromXML(xmlObject, "name", xmlObject.GetName() + "#" + LogUtils::DecToHex(UUID::GetInstance().GetUUID(),8)), parent}
-  {}
+  {
+    LoadStyles(xmlObject);
+  }
 
   void Component::Measure(const Vec2& emptyParentSpace, const Vec2& percentageFill)
   {
@@ -373,7 +375,9 @@ namespace Greet
     }
     ComponentStyle* inheritStyle = nullptr;
     if(inherit != "")
+    {
       inheritStyle = &GetStyle(inherit);
+    }
     it = styles.emplace(stylename, ComponentStyle{styleVariables, inheritStyle}).first;
     return *this;
   }
@@ -394,6 +398,8 @@ namespace Greet
     {
       style.second.Load(style.first, xmlObject);
     }
+    // Update style variables
+    SetCurrentStyle(currentStyle);
   }
 
   Component& Component::LoadStyle(const std::string& stylename, const Styling& styling)

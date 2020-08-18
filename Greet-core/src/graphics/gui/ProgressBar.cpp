@@ -13,6 +13,7 @@ namespace Greet
         .colors = {{"progressColor", &progressColor}},
         .bools = {{"vertical", &vertical}, {"reverse", &reverse}}
         });
+    LoadStyles(object);
     if(object.HasAttribute("minValue"))
       min = atof(object.GetAttribute("minValue").c_str());
     if(object.HasAttribute("maxValue"))

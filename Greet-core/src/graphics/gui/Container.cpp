@@ -38,6 +38,7 @@ namespace Greet
         .bools = {{"vertical", &vertical}}
       }
     );
+    LoadStyles(object);
     for (uint i = 0;i < object.GetObjectCount();i++)
     {
       Component* component = ComponentFactory::GetComponent(object.GetObject(i), this);
@@ -46,7 +47,6 @@ namespace Greet
       else
         AddComponent(component);
     }
-
   }
 
   Container::~Container()

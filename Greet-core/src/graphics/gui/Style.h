@@ -79,16 +79,19 @@ namespace Greet
         AddVariables(variables);
       }
 
-      void SetInherit(ComponentStyle* inherit)
+      void SetInherit(ComponentStyle* aInherit)
       {
-        this->inherit = inherit;
-        colors.SetInherit(&inherit->colors);
-        tlbrs.SetInherit(&inherit->tlbrs);
-        floats.SetInherit(&inherit->floats);
-        ints.SetInherit(&inherit->ints);
-        bools.SetInherit(&inherit->bools);
-        fonts.SetInherit(&inherit->fonts);
-        sizes.SetInherit(&inherit->sizes);
+        inherit = aInherit;
+        if(inherit != nullptr)
+        {
+          colors.SetInherit(&inherit->colors);
+          tlbrs.SetInherit(&inherit->tlbrs);
+          floats.SetInherit(&inherit->floats);
+          ints.SetInherit(&inherit->ints);
+          bools.SetInherit(&inherit->bools);
+          fonts.SetInherit(&inherit->fonts);
+          sizes.SetInherit(&inherit->sizes);
+        }
       }
 
       void Load(const Styling& styling)

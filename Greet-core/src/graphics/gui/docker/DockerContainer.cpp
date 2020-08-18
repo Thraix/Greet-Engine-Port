@@ -14,7 +14,6 @@ namespace Greet
     button->LoadStyles(docker->GetTabButton());
     button->Measure({0, 0}, {0, 0});
     splitIcon = new Component(docker->GetSplitIconStyle(), nullptr);
-    splitIcon->LoadStyles(docker->GetSplitIconStyle());
     splitIcon->Remeasure();
 
     weight = GUIUtils::GetFloatFromXML(object, "weight", 1.0);

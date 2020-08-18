@@ -38,6 +38,7 @@ namespace Greet
     : Component(xmlObject, parent)
   {
     AddStyleVariables(StylingVariables{.bools = {{"vertical", &vertical}}});
+    LoadStyles(xmlObject);
 
     minValue = GUIUtils::GetFloatFromXML(xmlObject, "minValue", 0.0f);
     maxValue = GUIUtils::GetFloatFromXML(xmlObject, "maxValue", 100.0f);

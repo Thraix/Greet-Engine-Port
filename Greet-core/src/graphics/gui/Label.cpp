@@ -31,6 +31,7 @@ namespace Greet
         .colors={{"textColor", &text.color}},
         .fonts={{"font", &text.font}}
         });
+    LoadStyles(object);
 
     std::string grav = object.GetAttribute("gravity", "center");
     if(grav == "top")
