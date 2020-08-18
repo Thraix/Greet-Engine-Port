@@ -25,6 +25,12 @@ namespace Greet {
   Frame::Frame(const XMLObject& object)
     : Container(object, nullptr), shouldCloseUnfocus{false}, m_stayInsideWindow{true}
   {
+    if(object.HasAttribute("styling"))
+    {
+      std::string file = object.GetAttribute("styling");
+      MetaFile metaFile{file};
+      LoadFrameStyle(metaFile);
+    }
     m_resizableFlags = RESIZING_LEFT | RESIZING_RIGHT | RESIZING_TOP | RESIZING_BOTTOM;
     m_resizing = 0;
     minSize = Vec2(100, 100);

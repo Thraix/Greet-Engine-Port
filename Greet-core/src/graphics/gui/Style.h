@@ -1,5 +1,6 @@
 #pragma once
 
+#include <utils/MetaFile.h>
 #include <graphics/fonts/Font.h>
 #include <graphics/gui/GUIUtils.h>
 #include <graphics/gui/StyleTemplateClasses.h>
@@ -114,6 +115,17 @@ namespace Greet
         bools.Load(mode, object);
         fonts.Load(mode, object);
         sizes.Load(mode, object);
+      }
+
+      void Load(const std::string& component, const std::string& mode, const MetaFile& object)
+      {
+        colors.Load(component, mode, object);
+        tlbrs.Load(component, mode, object);
+        floats.Load(component, mode, object);
+        ints.Load(component, mode, object);
+        bools.Load(component, mode, object);
+        fonts.Load(component, mode, object);
+        sizes.Load(component, mode, object);
       }
 
       void AddVariables(const StylingVariables& style)

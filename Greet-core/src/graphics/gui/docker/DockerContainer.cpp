@@ -345,6 +345,14 @@ namespace Greet
     return nullptr;
   }
 
+  void DockerContainer::LoadFrameStyle(const MetaFile& metaFile)
+  {
+    for(auto&& child : children)
+    {
+      child->LoadFrameStyle(metaFile);
+    }
+  }
+
   const Vec2& DockerContainer::GetTopSplitPos() const
   {
     // TODO: Store all this in a variable

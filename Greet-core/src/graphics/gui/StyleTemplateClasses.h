@@ -5,6 +5,7 @@
 #include <graphics/gui/TLBR.h>
 #include <logging/Log.h>
 #include <math/Vec4.h>
+#include <utils/MetaFile.h>
 
 #include <unordered_map>
 #include <string>
@@ -14,7 +15,7 @@ namespace Greet
   template<typename T>
   struct StyleVariable
   {
-    bool mbSetVariable; // if false the value will be set to the inherited value
+    bool mbSetVariable = false; // if false the value will be set to the inherited value
     T mVariable;
     T* mpVariable;
 
@@ -79,6 +80,27 @@ namespace Greet
       }
     }
 
+    void Load(const std::string& component, const std::string& mode, const MetaFile& object)
+    {
+      // TODO: Pass this in the params instead
+      auto classes = object.GetMetaClass(component);
+      if(classes.size() == 0)
+        return;
+      if(classes.size() > 1)
+        Log::Warning("More than one style specified in style file for component \"", component, "\"");
+      const MetaFileClass& styling = classes[0];
+
+      for(auto&& value : values)
+      {
+        std::string attribute = mode == "normal" ? value.first : mode + "-" + value.first;
+        if(styling.HasValue(attribute) && !value.second.mbSetVariable)
+        {
+          SetValue(value.first, StrToValFunc::Get(styling.GetValue(attribute)));
+        }
+      }
+    }
+
+
     void AddVariables(const StyleVariableMap<T>& avValues)
     {
       for(auto&& value : avValues.values)
@@ -89,7 +111,7 @@ namespace Greet
           Log::Error("Styling already exist for component: ", value.first);
           continue;
         }
-        values.emplace(value.first, StyleVariable{inherit == nullptr, value.second});
+        values.emplace(value.first, StyleVariable{false, value.second});
       }
     }
 

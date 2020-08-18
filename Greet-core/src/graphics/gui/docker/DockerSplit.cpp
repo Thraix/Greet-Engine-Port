@@ -360,6 +360,14 @@ namespace Greet
     return nullptr;
   }
 
+  void DockerSplit::LoadFrameStyle(const MetaFile& metaFile)
+  {
+    for(auto&& child : children)
+    {
+      child->LoadFrameStyle(metaFile);
+    }
+  }
+
   bool DockerSplit::IsVertical() const
   {
     return vertical;

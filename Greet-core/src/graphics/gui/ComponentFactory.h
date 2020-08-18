@@ -5,13 +5,39 @@
 #include <functional>
 #include <utils/xml/XMLObject.h>
 
+#define REGISTER_BASE_COMPONENT_DECLARATION(COMPONENT_NAME) \
+  private: \
+    static ComponentRegistry<COMPONENT_NAME> reg; \
+  public: \
+    virtual std::string GetTopClass() \
+    { \
+      return #COMPONENT_NAME; \
+    }
+
+
 #define REGISTER_COMPONENT_DECLARATION(COMPONENT_NAME) \
-  static ComponentRegistry<COMPONENT_NAME> reg
+  private: \
+    static ComponentRegistry<COMPONENT_NAME> reg; \
+  public: \
+    virtual std::string GetTopClass() override \
+    { \
+      return #COMPONENT_NAME; \
+    }
+
 #define REGISTER_COMPONENT_DEFINITION(COMPONENT_NAME) \
   ComponentRegistry<COMPONENT_NAME> COMPONENT_NAME::reg(#COMPONENT_NAME)
 
+
+
 #define REGISTER_FRAME_DECLARATION(FRAME_NAME) \
-  static FrameRegistry<FRAME_NAME> reg
+  private: \
+    static FrameRegistry<FRAME_NAME> reg; \
+  public: \
+    virtual std::string GetTopClass() override \
+    { \
+      return #FRAME_NAME; \
+    }
+
 #define REGISTER_FRAME_DEFINITION(FRAME_NAME) \
   FrameRegistry<FRAME_NAME> FRAME_NAME::reg(#FRAME_NAME)
 

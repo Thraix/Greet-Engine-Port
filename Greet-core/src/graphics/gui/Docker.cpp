@@ -154,6 +154,11 @@ namespace Greet
     split->SetPosition(GetTotalPadding());
   }
 
+  void Docker::LoadFrameStyle(const MetaFile& metaFile)
+  {
+    split->LoadFrameStyle(metaFile);
+  }
+
   Component* Docker::GetComponentByNameNoCast(const std::string& name)
   {
     Component* comp = Component::GetComponentByNameNoCast(name);

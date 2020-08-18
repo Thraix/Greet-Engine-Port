@@ -37,6 +37,8 @@ namespace Greet {
       Component* GetComponent(uint index);
       size_t GetComponentCount() const;
 
+      virtual void LoadFrameStyle(const MetaFile& metaFile) override;
+
       bool IsVertical() const;
       Container& SetVertical(bool v);
       Container& SetSpacing(float spacing);

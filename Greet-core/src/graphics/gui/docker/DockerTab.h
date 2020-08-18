@@ -44,6 +44,7 @@ namespace Greet {
 
       Component* GetComponentByNameNoCast(const std::string& name);
       DockerContainer* GetContainer() const;
+      void LoadFrameStyle(const MetaFile& metaFile);
 
       void SetOnTabShowCallback(OnTabChangeCallback callback);
       void SetOnTabHideCallback(OnTabChangeCallback callback);

@@ -402,6 +402,16 @@ namespace Greet
     SetCurrentStyle(currentStyle);
   }
 
+  void Component::LoadFrameStyle(const MetaFile& metaFile)
+  {
+    for(auto&& style : styles)
+    {
+      style.second.Load(GetTopClass(), style.first, metaFile);
+    }
+    // Update style variables
+    SetCurrentStyle(currentStyle);
+  }
+
   Component& Component::LoadStyle(const std::string& stylename, const Styling& styling)
   {
     auto it = styles.find(stylename);

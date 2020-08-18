@@ -47,6 +47,8 @@ namespace Greet {
       Vec2 GetMinSize() const override;
       DockerTab* GetTab(const std::string& tabName) const override;
 
+      void LoadFrameStyle(const MetaFile& metaFile) override;
+
       void SetPosition(const Vec2& _size) override;
       void SetSize(const Vec2& _size) override;
       void SetGUIScene(GUIScene* scene) override;

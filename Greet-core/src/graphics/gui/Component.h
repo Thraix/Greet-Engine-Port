@@ -3,6 +3,7 @@
 #include <unordered_map>
 
 #include <graphics/gui/Style.h>
+#include <utils/MetaFile.h>
 #include <graphics/renderers/GUIRenderer.h>
 #include <event/MouseEvent.h>
 #include <event/KeyEvent.h>
@@ -16,7 +17,7 @@ namespace Greet
     public:
       friend class GUIScene;
     private:
-      REGISTER_COMPONENT_DECLARATION(Component);
+      REGISTER_BASE_COMPONENT_DECLARATION(Component);
     public:
 
       // Typedef callbacks
@@ -140,6 +141,7 @@ namespace Greet
       Component& AddStyle(const std::string& stylename, const std::string& inherit = "");
       Component& AddStyleVariables(const StylingVariables& variables);
       void LoadStyles(const XMLObject& xmlObject);
+      virtual void LoadFrameStyle(const MetaFile& metaFile);
       Component& LoadStyle(const std::string& stylename, const Styling& styling);
       void SetCurrentStyle(const std::string& stylename);
 

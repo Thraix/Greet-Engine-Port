@@ -10,6 +10,7 @@ namespace Greet
     : Component(xmlObject, parent), active(false), radioParent{nullptr}
   {
     AddStyle("active", "normal");
+    LoadStyles(xmlObject);
   }
 
   void RadioButton::PostConstruction()

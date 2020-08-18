@@ -302,6 +302,15 @@ namespace Greet
     return m_components.size();
   }
 
+  void Container::LoadFrameStyle(const MetaFile& metaFile)
+  {
+    Component::LoadFrameStyle(metaFile);
+    for(auto&& child : m_components)
+    {
+      child->LoadFrameStyle(metaFile);
+    }
+  }
+
   float Container::GetWrapWidth() const
   {
     float width = 0;

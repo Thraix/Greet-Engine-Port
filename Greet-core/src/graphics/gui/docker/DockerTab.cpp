@@ -65,6 +65,11 @@ namespace Greet
     return parentContainer;
   }
 
+  void DockerTab::LoadFrameStyle(const MetaFile& metaFile)
+  {
+    component->LoadFrameStyle(metaFile);
+  }
+
   void DockerTab::SetContainer(DockerContainer* _parentContainer)
   {
     parentContainer = _parentContainer;
