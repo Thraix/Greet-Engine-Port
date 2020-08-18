@@ -42,19 +42,12 @@
               radius="10"
               />
           </Slider>
-
           <Label>Test label</Label>
-
           <Container width="fill_parent" height="100" vertical="false">
-
             <ProgressBar width="12" height="fill_parent" name="progressBarVertical" minValue="0.25" maxValue="1.25" vertical="true"/>
-
             <Divider backgroundColor="#757575" vertical="true"/>
-
             <ProgressBar width="12" height="fill_parent" name="progressBarVerticalReverse" minValue="0.25" maxValue="1.25" vertical="true" reverse="true"/>
-
             <Divider backgroundColor="#757575" vertical="true"/>
-
             <Slider width="12" height="1w" minValue="10" maxValue="90" defaultValue="30" stepSize="10" vertical="true">
               <Component
                 backgroundColor="#4CAF50"

@@ -80,16 +80,8 @@ namespace Greet
       }
     }
 
-    void Load(const std::string& component, const std::string& mode, const MetaFile& object)
+    void Load(const std::string& mode, const MetaFileClass& styling)
     {
-      // TODO: Pass this in the params instead
-      auto classes = object.GetMetaClass(component);
-      if(classes.size() == 0)
-        return;
-      if(classes.size() > 1)
-        Log::Warning("More than one style specified in style file for component \"", component, "\"");
-      const MetaFileClass& styling = classes[0];
-
       for(auto&& value : values)
       {
         std::string attribute = mode == "normal" ? value.first : mode + "-" + value.first;

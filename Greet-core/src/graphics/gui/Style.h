@@ -119,13 +119,20 @@ namespace Greet
 
       void Load(const std::string& component, const std::string& mode, const MetaFile& object)
       {
-        colors.Load(component, mode, object);
-        tlbrs.Load(component, mode, object);
-        floats.Load(component, mode, object);
-        ints.Load(component, mode, object);
-        bools.Load(component, mode, object);
-        fonts.Load(component, mode, object);
-        sizes.Load(component, mode, object);
+        auto classes = object.GetMetaClass(component);
+        if(classes.size() == 0)
+          return;
+        if(classes.size() > 1)
+          Log::Warning("More than one style specified in style file for component \"", component, "\"");
+        const MetaFileClass& styling = classes[0];
+
+        colors.Load(mode, styling);
+        tlbrs.Load(mode, styling);
+        floats.Load(mode, styling);
+        ints.Load(mode, styling);
+        bools.Load(mode, styling);
+        fonts.Load(mode, styling);
+        sizes.Load(mode, styling);
       }
 
       void AddVariables(const StylingVariables& style)
