@@ -1,7 +1,5 @@
 #include "Text.h"
 
-#include <cassert>
-
 namespace Greet
 {
   Text::Text(const std::string& str, const Font& font, const Vec4& color, Gravity gravity, Align align, OverlapMode overlapMode)
