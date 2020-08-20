@@ -57,13 +57,6 @@ border=1
 [Divider]
 backgroundColor=#757575
 
-[Slider]
-backgroundColor=#757575
-width=fill_parent
-height=10 
-radius=5
-indicatorInside=true
-
 [RadioButton]
 width=16
 height=16
@@ -76,3 +69,21 @@ active-backgroundColor=#4CAF50
 active-borderColor=#00000000
 active-border=0
 active-radius=8
+
+[Slider]
+backgroundColor=#757575
+width=fill_parent
+height=16
+radius=8
+indicatorInside=true
+
+[sliderVertical]
+width=16
+height=1w
+vertical=true
+
+[sliderComponent]
+width=16
+height=16 
+backgroundColor=#4CAF50
+radius=8

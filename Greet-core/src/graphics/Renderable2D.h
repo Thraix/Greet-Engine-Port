@@ -29,6 +29,11 @@ namespace Greet{
     protected:
 
     public:
+      Renderable2D(const Vec2& position,const Vec2& size, uint color)
+        : m_position(position),m_size(size), m_color(color)
+      {
+      }
+
       Renderable2D(const Vec2& position,const Vec2& size, uint color, Sprite sprite)
         : m_position(position),m_size(size), m_color(color), m_sprite(sprite)
       {

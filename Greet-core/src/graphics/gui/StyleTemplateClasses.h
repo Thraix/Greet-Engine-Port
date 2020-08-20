@@ -80,14 +80,21 @@ namespace Greet
       }
     }
 
-    void Load(const std::string& mode, const MetaFileClass& styling)
+    void Load(const std::string& mode, MetaFileClass* stylingType, MetaFileClass* stylingName)
     {
       for(auto&& value : values)
       {
         std::string attribute = mode == "normal" ? value.first : mode + "-" + value.first;
-        if(styling.HasValue(attribute) && !value.second.mbSetVariable)
+
+        if(stylingName)
         {
-          SetValue(value.first, StrToValFunc::Get(styling.GetValue(attribute)));
+          if(stylingName->HasValue(attribute) && !value.second.mbSetVariable)
+            SetValue(value.first, StrToValFunc::Get(stylingName->GetValue(attribute)));
+        }
+        if(stylingType)
+        {
+          if(stylingType->HasValue(attribute) && !value.second.mbSetVariable)
+            SetValue(value.first, StrToValFunc::Get(stylingType->GetValue(attribute)));
         }
       }
     }

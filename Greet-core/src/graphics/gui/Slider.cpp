@@ -102,14 +102,8 @@ namespace Greet
 
   void Slider::OnMeasured()
   {
-    if(vertical && height.size == 0)
-      return;
-    if(!vertical && width.size == 0)
-      return;
-    float value = GetValue();
-
     // vi will be the y value of the sizes if vertical and x value if not
-    float& sliderDirSize =vertical ? height.size : width.size;
+    float& sliderDirSize = vertical ? height.size : width.size;
     uint vi = vertical ? 1 : 0;
 
     if(clampSlider)
@@ -122,12 +116,11 @@ namespace Greet
       minPos = 0;
       maxPos = sliderDirSize;
     }
-
-    SetValue(value);
   }
 
   void Slider::Render(GUIRenderer* renderer) const
   {
+    float sliderPos = GetSliderPosFromValue(value);
     Vec2 sliderOffset = pos + GetTotalPadding() + sliderComponent->GetMargin().LeftTop() - sliderComponent->GetSize()/2;
     if(vertical)
       sliderComponent->PreRender(renderer,  sliderOffset + Vec2{GetContentSize().w/2, sliderPos});
@@ -145,14 +138,13 @@ namespace Greet
       if(e.GetButton() == GREET_MOUSE_1 && pressed)
       {
         Vec2 translatedPos = e.GetPosition() - componentPos;
-        float oldValue = GetSliderValueFromPos(sliderPos);
+        float oldValue = value;
         if(vertical)
           SetValue(GetSliderValueFromPos(translatedPos.y));
         else
           SetValue(GetSliderValueFromPos(translatedPos.x));
-        float newValue = GetSliderValueFromPos(sliderPos);
-        if(oldValue != newValue)
-          CallOnValueChangeCallback(oldValue, newValue);
+        if(oldValue != value)
+          CallOnValueChangeCallback(oldValue, value);
       }
     }
     else if(EVENT_IS_TYPE(event, EventType::MOUSE_MOVE))
@@ -161,14 +153,13 @@ namespace Greet
       if(pressed)
       {
         Vec2 translatedPos = e.GetPosition() - componentPos;
-        float oldValue = GetSliderValueFromPos(sliderPos);
+        float oldValue = value;
         if(vertical)
           SetValue(GetSliderValueFromPos(translatedPos.y));
         else
           SetValue(GetSliderValueFromPos(translatedPos.x));
-        float newValue = GetSliderValueFromPos(sliderPos);
-        if(oldValue != newValue)
-          CallOnValueChangeCallback(oldValue, newValue);
+        if(oldValue != value)
+          CallOnValueChangeCallback(oldValue, value);
       }
     }
 
@@ -177,6 +168,7 @@ namespace Greet
   void Slider::SetOnValueChangeCallback(OnValueChangeCallback callback)
   {
     onValueChangeCallback = callback;
+    CallOnValueChangeCallback(value, value);
   }
 
   void Slider::CallOnValueChangeCallback(float oldValue, float newValue)
@@ -191,6 +183,12 @@ namespace Greet
     return *this;
   }
 
+  void Slider::LoadFrameStyle(const MetaFile& metaFile)
+  {
+    Component::LoadFrameStyle(metaFile);
+    sliderComponent->LoadFrameStyle(metaFile);
+  }
+
   Component* Slider::GetSliderComponent()
   {
     return sliderComponent;
@@ -198,15 +196,29 @@ namespace Greet
 
   float Slider::GetValue() const
   {
-    return GetSliderValueFromPos(sliderPos);
+    return value;
   }
 
-  void Slider::SetValue(float value)
+  float Slider::GetMinValue() const
   {
-    Math::Clamp(&value, minValue, maxValue);
+    return minValue;
+  }
+
+  float Slider::GetMaxValue() const
+  {
+    return maxValue;
+  }
+
+  void Slider::SetValue(float afValue)
+  {
+    Math::Clamp(&afValue, minValue, maxValue);
+    float oldValue = value;
+    value = afValue;
     if(snapSlider)
-      value = GetSnappedSlider(value);
-    sliderPos = GetSliderPosFromValue(value);
+      value = GetSnappedSlider(afValue);
+
+    if(value != oldValue)
+      CallOnValueChangeCallback(oldValue, value);
   }
 
   float Slider::GetSnappedSlider(float sliderValue) const

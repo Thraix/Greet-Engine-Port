@@ -35,25 +35,23 @@
           <TextBox hintText="Username"></TextBox>
           <TextBox hintText="Password" password="true" ></TextBox>
 
-          <Slider name="Slider" minValue="10" maxValue="90" defaultValue="30" stepSize="10">
-            <Component
-              backgroundColor="#4CAF50"
-              width="20" height="20" margin="0"
-              radius="10"
-              />
+          <Slider name="slider" minValue="10" maxValue="90" defaultValue="30">
+            <Component name="sliderComponent"/>
           </Slider>
+
           <Label>Test label</Label>
           <Container width="fill_parent" height="100" vertical="false">
+
             <ProgressBar width="12" height="fill_parent" name="progressBarVertical" minValue="0.25" maxValue="1.25" vertical="true"/>
+
             <Divider backgroundColor="#757575" vertical="true"/>
+
             <ProgressBar width="12" height="fill_parent" name="progressBarVerticalReverse" minValue="0.25" maxValue="1.25" vertical="true" reverse="true"/>
+
             <Divider backgroundColor="#757575" vertical="true"/>
-            <Slider width="12" height="1w" minValue="10" maxValue="90" defaultValue="30" stepSize="10" vertical="true">
-              <Component
-                backgroundColor="#4CAF50"
-                width="20" height="20" margin="0"
-                radius="10"
-                />
+
+            <Slider name="sliderVertical" minValue="10" maxValue="90" defaultValue="30" stepSize="10">
+              <Component name="sliderComponent"/>
             </Slider>
 
           </Container>
@@ -63,10 +61,8 @@
 
           <Container width="fill_parent" vertical="false">
             <Label height="fill_parent" font="noto:16">Background Color: </Label>
-
             <ColorPicker name="backgroundChanger"/>
           </Container>
-          <Label name="lorem" width="fill_parent" gravity="top" align="center" backgroundColor="#ff00ff" hover-font="noto:16" overlap="wrap">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</Label>
         </Container>
       </DockerTab>
       <DockerTab title="Project Explorer">
@@ -77,12 +73,14 @@
       <DockerSplit>
         <DockerContainer>
           <DockerTab title="Editor">
-            <Component name="EditorContainer" width="fill_parent" height="fill_parent" backgroundColor="#424242"/>
+            <SceneView name="EditorView" width="fill_parent" height="fill_parent"/>
           </DockerTab>
         </DockerContainer>
         <DockerContainer>
           <DockerTab title="Debugger">
-            <Component width="fill_parent" height="fill_parent" backgroundColor="#424242"/>
+            <Container width="fill_parent" height="fill_parent" backgroundColor="#424242" padding="10">
+              <Label name="lorem" width="fill_parent" gravity="top" align="center" backgroundColor="#000000" hover-font="noto:16" overlap="wrap">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</Label>
+          </Container>
           </DockerTab>
           <DockerTab title="Profiler">
             <Component width="fill_parent" height="fill_parent" backgroundColor="#424242"/>

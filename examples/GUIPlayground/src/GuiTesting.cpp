@@ -5,6 +5,19 @@
 
 using namespace Greet;
 
+class Layer2D : public Layer
+{
+  public:
+    Layer2D()
+      : Layer{new BatchRenderer(ShaderFactory::Shader2D()), Mat3{1}}
+    {}
+
+    virtual void ViewportResize(ViewportResizeEvent& event) override
+    {
+      SetProjectionMatrix(Mat3::OrthographicViewport());
+    }
+};
+
 class Core : public App
 {
   private:
@@ -12,6 +25,9 @@ class Core : public App
     Component* content;
     TestScene* scene;
     float progressBarValue;
+    Layer2D* layer;
+    SceneView* editorView;
+    Renderable2D* renderable;
   public:
     Core()
       : App("GUI Testing", 960, 540)
@@ -21,13 +37,17 @@ class Core : public App
 
     ~Core()
     {
-      /* delete guiScene; */
+      delete guiScene;
+      delete layer;
     }
 
     void Init() override
     {
+      renderable = new Renderable2D({0, 0}, {70, 70}, 0xffffffff);
       /* GlobalSceneManager::GetSceneManager().Add2DScene(new TestScene(), "testscene"); */
       /* return; */
+      layer = new Layer2D();
+      layer->Add(renderable);
       progressBarValue = 0;
       FontManager::Add("noto", FontContainer("res/fonts/NotoSansUI-Regular.ttf"));
 
@@ -39,18 +59,21 @@ class Core : public App
       Frame* frame = guiScene->GetFrame("Main");
       if(frame != nullptr)
       {
+        editorView = frame->GetComponentByName<SceneView>("EditorView");
         frame->GetComponentByName<ProgressBar>("progressBar")
           ->AttachValueReference(&progressBarValue);
         frame->GetComponentByName<RadioGroup>("Radio")
           ->SetOnRadioChangeCallback(BIND_MEMBER_FUNC(OnRadioChangeCallback));
-        frame->GetComponentByName<Slider>("Slider")
+        frame->GetComponentByName<Slider>("slider")
           ->SetOnClickCallback(BIND_MEMBER_FUNC(OnClickCallback));
-        frame->GetComponentByName<Slider>("Slider")
+        frame->GetComponentByName<Slider>("slider")
           ->SetOnPressCallback(BIND_MEMBER_FUNC(OnClickCallback));
-        frame->GetComponentByName<Slider>("Slider")
+        frame->GetComponentByName<Slider>("slider")
           ->SetOnReleaseCallback(BIND_MEMBER_FUNC(OnReleaseCallback));
-        frame->GetComponentByName<Slider>("Slider")
+        frame->GetComponentByName<Slider>("slider")
           ->SetOnValueChangeCallback(BIND_MEMBER_FUNC(OnValueChangeCallback));
+        frame->GetComponentByName<Slider>("sliderVertical")
+          ->SetOnValueChangeCallback(BIND_MEMBER_FUNC(OnValueChangeVerticalCallback));
         frame->GetComponentByName<ProgressBar>("progressBar")
           ->AttachValueReference(&progressBarValue);
         frame->GetComponentByName<ProgressBar>("progressBarVertical")
@@ -63,6 +86,9 @@ class Core : public App
           ->SetOnColorChangeCallback(BIND_MEMBER_FUNC(OnColorChangeCallback));
         frame->GetComponentByName<Button>("button")
           ->SetOnClickCallback(BIND_MEMBER_FUNC(OnButtonPressCallback));
+
+        editorView->GetSceneManager().Add2DScene(layer, "2dScene");
+
         Docker* docker = frame->GetComponentByName<Docker>("docker");
         if(docker)
         {
@@ -93,20 +119,25 @@ class Core : public App
 
     void OnButtonPressCallback(Component* button)
     {
-      Log::Info("Button pressed: ", button->GetName());
+      renderable->m_color = 0xff000000 | ((rand() % 255) << 16) | ((rand() % 255) << 8) | (rand() % 255);
     }
 
-    void OnValueChangeCallback(Component* component, float oldValue, float newValue)
+    void OnValueChangeCallback(Slider* slider, float oldValue, float newValue)
     {
-      Log::Info("Slider changed value from ", oldValue, " to ", newValue);
+      renderable->m_position.x = editorView->GetWidth()/2 + newValue - (slider->GetMaxValue() - slider->GetMinValue()) / 2 - renderable->m_size.w / 2;
+    }
+
+    void OnValueChangeVerticalCallback(Slider* slider, float oldValue, float newValue)
+    {
+      renderable->m_position.y = editorView->GetHeight()/2 + newValue - (slider->GetMaxValue() - slider->GetMinValue()) / 2 - renderable->m_size.h / 2;
     }
 
     void OnColorChangeCallback(Component* component, const Vec3<float>& oldValue, const Vec3<float>& current)
     {
       Vec4 color = {current.r, current.g, current.b, 1.0};
       RenderCommand::SetClearColor(Vec4(current.r,current.g,current.b,1));
-      Component* editorContainer = guiScene->GetFrame("Main")->GetComponentByName<Component>("EditorContainer");
-      editorContainer->LoadStyle("normal", Styling{.colors={{"backgroundColor", color}}});
+      Component* editorVieww = guiScene->GetFrame("Main")->GetComponentByName<Component>("EditorView");
+      editorVieww->LoadStyle("normal", Styling{.colors={{"backgroundColor", color}}});
     }
 
     void OnClickCallback(Component* component)

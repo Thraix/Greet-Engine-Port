@@ -60,6 +60,8 @@ namespace Greet
 
   void SceneView::OnMeasured()
   {
+    if(width.size <= 0 || height.size <= 0)
+      return;
     Vec2 realPos = GetRealPosition();
     RenderCommand::PushViewportStack(realPos, GetSize());
     ViewportResizeEvent event{realPos, GetSize()};

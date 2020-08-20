@@ -406,7 +406,7 @@ namespace Greet
   {
     for(auto&& style : styles)
     {
-      style.second.Load(GetTopClass(), style.first, metaFile);
+      style.second.Load(GetTopClass(), GetName(), style.first, metaFile);
     }
     // Update style variables
     SetCurrentStyle(currentStyle);

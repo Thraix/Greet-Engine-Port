@@ -117,22 +117,33 @@ namespace Greet
         sizes.Load(mode, object);
       }
 
-      void Load(const std::string& component, const std::string& mode, const MetaFile& object)
+      void Load(const std::string& componentType, const std::string& componentName, const std::string& mode, const MetaFile& object)
       {
-        auto classes = object.GetMetaClass(component);
-        if(classes.size() == 0)
-          return;
-        if(classes.size() > 1)
-          Log::Warning("More than one style specified in style file for component \"", component, "\"");
-        const MetaFileClass& styling = classes[0];
+        auto classesType = object.GetMetaClass(componentType);
+        MetaFileClass* stylingType = nullptr;
+        if(classesType.size() != 0)
+        {
+          stylingType = &classesType[0];
+          if(classesType.size() > 1)
+            Log::Warning("More than one style specified in style file for component \"", classesType, "\"");
+        }
 
-        colors.Load(mode, styling);
-        tlbrs.Load(mode, styling);
-        floats.Load(mode, styling);
-        ints.Load(mode, styling);
-        bools.Load(mode, styling);
-        fonts.Load(mode, styling);
-        sizes.Load(mode, styling);
+        auto classesName = object.GetMetaClass(componentName);
+        MetaFileClass* stylingName = nullptr;
+        if(classesName.size() != 0)
+        {
+          stylingName = &classesName[0];
+          if(classesName.size() > 1)
+            Log::Warning("More than one style specified in style file for component \"", classesName, "\"");
+        }
+
+        colors.Load(mode, stylingType, stylingName);
+        tlbrs.Load(mode, stylingType, stylingName);
+        floats.Load(mode, stylingType, stylingName);
+        ints.Load(mode, stylingType, stylingName);
+        bools.Load(mode, stylingType, stylingName);
+        fonts.Load(mode, stylingType, stylingName);
+        sizes.Load(mode, stylingType, stylingName);
       }
 
       void AddVariables(const StylingVariables& style)
