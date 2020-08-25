@@ -20,6 +20,8 @@ namespace Greet
       ColorPicker(const XMLObject& object, Component* parent);
       virtual ~ColorPicker();
 
+      void PreRender(GUIRenderer* renderer, const Vec2& translation) const override;
+
       void AttachColor(Vec3<float>* color);
 
       void OnEvent(Event& event, const Vec2& translatedPos) override;
@@ -27,6 +29,8 @@ namespace Greet
 
       void SetOnColorChangeCallback(OnColorChangeCallback callback);
       void CallOnColorChangeCallback(const Vec3<float>& previous, const Vec3<float>& current);
+
+      const Vec3<float>& GetColor() const;
   };
 
 }

@@ -55,7 +55,7 @@
 
           <Container width="fill_parent" vertical="false">
             <Label height="fill_parent" font="noto:16">Background Color: </Label>
-            <ColorPicker name="backgroundChanger"/>
+            <ColorPicker name="backgroundChanger" color="#22ff22"/>
           </Container>
         </Container>
       </DockerTab>

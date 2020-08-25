@@ -49,5 +49,7 @@ namespace Greet
 
       void SetOnColorChangeCallback(OnColorChangeCallback callback);
       void CallOnColorChangeCallback(const Vec3<float>& previous, const Vec3<float>& current);
+
+      const Vec3<float>& GetColor() const;
   };
 }

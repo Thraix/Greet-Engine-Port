@@ -151,4 +151,9 @@ namespace Greet
     if(onColorChangeCallback)
       onColorChangeCallback(previous, current);
   }
+
+  const Vec3<float>& ColorPickerWindow::GetColor() const
+  {
+    return color;
+  }
 }
