@@ -20,7 +20,7 @@ namespace Greet
       .tlbrs = {{"border", {2,2,2,2}}}
     };
 
-    sliderComponent = new Component(name+"#SliderComponent", this);
+    sliderComponent = new Component{name+"#SliderComponent", this, "SliderComponent"};
     sliderComponent->SetSize(7,1,GUISize::Type::Pixels, GUISize::Type::Weight)
       .LoadStyle("normal", normal);
 
@@ -72,22 +72,8 @@ namespace Greet
       sliderComponent = ComponentFactory::GetComponent(xmlObject.GetObject(0), this);
     else
     {
-      Styling normal
-      {
-        .colors = {
-          {"backgroundColor", {1,1,1,1}},
-          {"borderColor", {0,0,0,1}},
-        },
-        .tlbrs = {{"border", {2,2,2,2}}}
-      };
-
       clampSlider = GUIUtils::GetBooleanFromXML(xmlObject, "indicatorInside", false);
-      sliderComponent = new Component(name+"#SliderComponent", this);
-      if(vertical)
-        sliderComponent->SetSize(1,7,GUISize::Type::Weight, GUISize::Type::Pixels);
-      else
-        sliderComponent->SetSize(7,1,GUISize::Type::Pixels, GUISize::Type::Weight);
-      sliderComponent->LoadStyle("normal", normal);
+      sliderComponent = new Component{name+"#SliderComponent", this, "SliderComponent"};
     }
 
     // Default defaultValue should be in the middle

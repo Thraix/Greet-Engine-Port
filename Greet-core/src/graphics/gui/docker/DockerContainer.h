@@ -21,8 +21,6 @@ namespace Greet {
 
       bool hover = false;
       uint hoverTab = 0;
-      Button* button;
-      Component* splitIcon;
 
     public:
       DockerContainer(const XMLObject& object, Docker* docker, DockerSplit* parentSplit);

@@ -17,9 +17,10 @@ namespace Greet {
       DockerSplit* split;
       DockerTab* grabbedTab;
       float grabbedDistance = 0;
-      XMLObject tabButton;
-      XMLObject splitIconStyle;
       bool childrenChanged;
+
+      Button* tabButton;
+      Component* splitIcon;
     public:
       Vec4 edgeColor;
       int edgeWidth;
@@ -32,8 +33,8 @@ namespace Greet {
       void GrabDockerTab(DockerTab* tab);
       void HandleDroppedTab(MouseReleaseEvent& event, const Vec2& componentPos);
 
-      const XMLObject& GetTabButton() const;
-      const XMLObject& GetSplitIconStyle() const;
+      Button* GetTabButton() const;
+      Component* GetSplitIcon() const;
 
       // Overrided functions
       void Render(GUIRenderer* renderer) const override;

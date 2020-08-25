@@ -7,8 +7,10 @@ namespace Greet
   REGISTER_COMPONENT_DEFINITION(Docker);
 
   Docker::Docker(const XMLObject& object, Component* parent)
-    : Component(object, parent), split{nullptr}, grabbedTab{nullptr}, tabButton{}
+    : Component(object, parent), split{nullptr}, grabbedTab{nullptr}, tabButton{nullptr}, splitIcon{nullptr}
   {
+      splitIcon = new Component({"StyleIcon", {}, ""}, nullptr);
+      tabButton = new Button({"TabButton", {}, ""}, nullptr);
     for(auto&& child : object.GetObjects())
     {
       if(child.GetName() == "DockerSplit")
@@ -33,11 +35,14 @@ namespace Greet
       }
       else if(child.GetName() == "TabButton")
       {
-        tabButton = child;
+        delete tabButton;
+        tabButton = new Button(child, nullptr);
       }
       else if(child.GetName() == "SplitIcon")
       {
-        splitIconStyle = child;
+        delete splitIcon;
+        splitIcon = new Component(child, nullptr);
+        splitIcon->Measure({0, 0}, {0, 0});
       }
       else
       {
@@ -49,6 +54,11 @@ namespace Greet
       Log::Error("No DockerSplit found in Docker");
       split = new DockerSplit({"DockerSplit",{},""}, this, nullptr);
     }
+
+    tabButton->AddStyle("active", "normal");
+    tabButton->Measure({0, 0}, {1, 1});
+    splitIcon->Measure({0, 0}, {1, 1});
+
     edgeColor = GUIUtils::GetColorFromXML(object, "edgeColor", backgroundColor);
     edgeWidth = GUIUtils::GetIntFromXML(object, "edgeSize", 10);
     edgeBorderSize  = GUIUtils::GetIntFromXML(object, "edgeBorder", 0);
@@ -61,14 +71,14 @@ namespace Greet
     grabbedTab = tab;
   }
 
-  const XMLObject& Docker::GetTabButton() const
+  Button* Docker::GetTabButton() const
   {
     return tabButton;
   }
 
-  const XMLObject& Docker::GetSplitIconStyle() const
+  Component* Docker::GetSplitIcon() const
   {
-    return splitIconStyle;
+    return splitIcon;
   }
 
   void Docker::HandleDroppedTab(MouseReleaseEvent& event, const Vec2& componentPos)
@@ -156,7 +166,12 @@ namespace Greet
 
   void Docker::LoadFrameStyle(const MetaFile& metaFile)
   {
+    Log::Info("----------------------------------------");
     split->LoadFrameStyle(metaFile);
+    tabButton->LoadFrameStyle(metaFile);
+    tabButton->Measure({0, 0}, {1, 1});
+    splitIcon->LoadFrameStyle(metaFile);
+    splitIcon->Measure({0, 0}, {1, 1});
   }
 
   Component* Docker::GetComponentByNameNoCast(const std::string& name)

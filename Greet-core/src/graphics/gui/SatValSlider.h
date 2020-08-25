@@ -20,7 +20,7 @@ namespace Greet
       OnValueChangeCallback onValChangeCallback;
 
     public:
-      SatValSlider(const std::string& xmlObject, Component* parent);
+      SatValSlider(const std::string& xmlObject, Component* parent, const std::string& componentType = "SatValSlider");
       SatValSlider(const XMLObject& xmlObject, Component* parent);
       virtual ~SatValSlider();
 

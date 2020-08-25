@@ -50,8 +50,8 @@ namespace Greet {
       double elapsed = m_timer->Elapsed();
       if (elapsed - updateTimer >= updateTick)
       {
-        DriverDispatcher::Update(updateTick);
         Window::Update();
+        DriverDispatcher::Update(updateTick);
         GlobalSceneManager::GetSceneManager().Update(elapsed - updateTimer);
         Update(elapsed - updateTimer);
         updates++;

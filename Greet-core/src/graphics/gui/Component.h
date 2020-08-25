@@ -17,7 +17,7 @@ namespace Greet
     public:
       friend class GUIScene;
     private:
-      REGISTER_BASE_COMPONENT_DECLARATION(Component);
+      REGISTER_COMPONENT_DECLARATION(Component);
     public:
 
       // Typedef callbacks
@@ -30,6 +30,7 @@ namespace Greet
 
     protected:
       std::string name;
+      std::string componentType;
 
       //////////////////
       // Styles
@@ -67,7 +68,7 @@ namespace Greet
       OnReleaseCallback onReleaseCallback;
 
     public:
-      Component(const std::string& name, Component* parent);
+      Component(const std::string& name, Component* parent, const std::string& componentType);
       Component(const XMLObject& object, Component* parent);
 
       virtual void PostConstruction(){}

@@ -74,28 +74,20 @@ namespace Greet
     {
       for(auto&& value : values)
       {
-        std::string attribute = mode == "normal" ? value.first : mode + "-" + value.first;
+        std::string attribute = GetAttributeName(mode, value.first);
         if(object.HasAttribute(attribute))
           SetValue(value.first, StrToValFunc::Get(object.GetAttribute(attribute)));
       }
     }
 
-    void Load(const std::string& mode, MetaFileClass* stylingType, MetaFileClass* stylingName)
+    void Load(const std::string& mode, MetaFileClass* stylingType, MetaFileClass* stylingName, MetaFileClass* stylingVariables)
     {
       for(auto&& value : values)
       {
-        std::string attribute = mode == "normal" ? value.first : mode + "-" + value.first;
-
-        if(stylingName)
-        {
-          if(stylingName->HasValue(attribute) && !value.second.mbSetVariable)
-            SetValue(value.first, StrToValFunc::Get(stylingName->GetValue(attribute)));
-        }
-        if(stylingType)
-        {
-          if(stylingType->HasValue(attribute) && !value.second.mbSetVariable)
-            SetValue(value.first, StrToValFunc::Get(stylingType->GetValue(attribute)));
-        }
+        if(!value.second.mbSetVariable)
+          LoadStylingVariable(mode, value.first, stylingName, stylingVariables);
+        if(!value.second.mbSetVariable)
+          LoadStylingVariable(mode, value.first, stylingType, stylingVariables);
       }
     }
 
@@ -149,6 +141,39 @@ namespace Greet
         *value.second.mpVariable = GetValue(value.first);
       }
     }
+    private:
+      void LoadStylingVariable(const std::string& mode, const std::string& variable, MetaFileClass* styling, MetaFileClass* stylingVariables)
+      {
+        std::string attribute = GetAttributeName(mode, variable);
+        if(styling)
+        {
+          if(styling->HasValue(attribute))
+          {
+            const std::string& str = styling->GetValue(attribute);
+            if(str[0] == '$')
+            {
+              if(!stylingVariables->HasValue(str.substr(1)))
+              {
+                Log::Warning("Styling variable does not exist: ", str.substr(1));
+              }
+              else
+              {
+                const std::string& val = stylingVariables->GetValue(str.substr(1));
+                SetValue(variable, StrToValFunc::Get(val));
+              }
+            }
+            else
+            {
+              SetValue(variable, StrToValFunc::Get(styling->GetValue(attribute)));
+            }
+          }
+        }
+      }
+
+      std::string GetAttributeName(const std::string& mode, const std::string& variable)
+      {
+        return mode == "normal" ? variable : mode + "-" + variable;
+      }
   };
 
   struct ColorStyle

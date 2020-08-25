@@ -6,8 +6,8 @@ namespace Greet
 {
   REGISTER_COMPONENT_DEFINITION(SatValSlider);
 
-  SatValSlider::SatValSlider(const std::string& name, Component* parent)
-    : Component{name, parent}, hue{0}, sat{0.5}, val{0.5}
+  SatValSlider::SatValSlider(const std::string& name, Component* parent, const std::string& componentType)
+    : Component{name, parent, componentType}, hue{0}, sat{0.5}, val{0.5}
   {
     Styling normal
     {
@@ -18,7 +18,7 @@ namespace Greet
       .tlbrs = {{"border", {2,2,2,2}}}
     };
 
-    Component* component = new Component{"SatValSliderComponent", this};
+    Component* component = new Component{"SatValSliderComponent", this, "SliderComponent"};
     component->SetSize(7,7,GUISize::Type::Pixels, GUISize::Type::Pixels)
       .LoadStyle("normal", normal);
     sliderComponent = component;
@@ -39,7 +39,7 @@ namespace Greet
       },
       .tlbrs = {{"border", {2,2,2,2}}}
     };
-      Component* component = new Component{"SatValSliderComponent", this};
+      Component* component = new Component{"SatValSliderComponent", this, "SliderComponent"};
       component->SetSize(7,7,GUISize::Type::Pixels, GUISize::Type::Pixels)
         .LoadStyle("normal", normal);
       sliderComponent = component;

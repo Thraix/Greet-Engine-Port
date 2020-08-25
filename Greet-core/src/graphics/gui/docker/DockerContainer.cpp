@@ -9,13 +9,6 @@ namespace Greet
   DockerContainer::DockerContainer(const XMLObject& object, Docker* docker, DockerSplit* parent)
     : DockerInterface{docker, parent}, activeTab{0}
   {
-    button = new Button(docker->GetTabButton(), nullptr);
-    button->AddStyle("active", "normal");
-    button->LoadStyles(docker->GetTabButton());
-    button->Measure({0, 0}, {0, 0});
-    splitIcon = new Component(docker->GetSplitIconStyle(), nullptr);
-    splitIcon->Remeasure();
-
     weight = GUIUtils::GetFloatFromXML(object, "weight", 1.0);
     for(auto&& objectChild : object.GetObjects())
     {
@@ -35,14 +28,6 @@ namespace Greet
   DockerContainer::DockerContainer(DockerTab* tab, Docker* docker, DockerSplit* parent)
     : DockerInterface{docker, parent}, activeTab{0}
   {
-    button = new Button(docker->GetTabButton(), nullptr);
-    button->AddStyle("active", "normal");
-    button->LoadStyles(docker->GetTabButton());
-    button->Measure({0, 0}, {0, 0});
-    splitIcon = new Component(docker->GetSplitIconStyle(), nullptr);
-    splitIcon->LoadStyles(docker->GetSplitIconStyle());
-    splitIcon->Remeasure();
-
     AddTab(0, tab);
   }
 
@@ -50,8 +35,6 @@ namespace Greet
   {
     for(auto&& child : children)
       delete child;
-    delete button;
-    delete splitIcon;
   }
 
   void DockerContainer::Render(GUIRenderer* renderer) const
@@ -63,20 +46,23 @@ namespace Greet
     children[activeTab]->Render(renderer);
 
     renderer->PushTranslation(docker->GetPosition() + position);
+    Button* tabButton = docker->GetTabButton();
     for(int i = 0;i<children.size();i++)
     {
       if(i == activeTab)
-        button->SetCurrentStyle("active");
+        tabButton->SetCurrentStyle("active");
       else if(hover && i == hoverTab)
-        button->SetCurrentStyle("hover");
+        tabButton->SetCurrentStyle("hover");
       else
-        button->SetCurrentStyle("normal");
-      button->SetText(children[i]->GetTitle());
-      button->Measure({0, 0}, {0, 0});
-      button->PreRender(renderer, {(float)i * (float)button->GetWidth(), 0.0f});
-      button->Render(renderer);
-      button->PostRender(renderer);
+        tabButton->SetCurrentStyle("normal");
+      tabButton->SetText(children[i]->GetTitle());
+      tabButton->Measure({0, 0}, {0, 0});
+      tabButton->PreRender(renderer, {(float)i * (float)tabButton->GetWidth(), 0.0f});
+      tabButton->Render(renderer);
+      tabButton->PostRender(renderer);
     }
+
+    Component* splitIcon = docker->GetSplitIcon();
     if(docker->IsHoldingTab() && Utils::IsInside(Input::GetMousePosPixel(), position, size))
     {
       splitIcon->PreRender(renderer, GetTopSplitPos());
@@ -276,7 +262,7 @@ namespace Greet
 
   Vec2 DockerContainer::GetMinSize() const
   {
-    return Vec2{20, button->GetHeight()+20};
+    return Vec2{20, docker->GetTabButton()->GetHeight()+20};
   }
 
   int DockerContainer::GetTabIndex(DockerTab* tab)
@@ -292,9 +278,9 @@ namespace Greet
 
   int DockerContainer::GetTab(const Vec2& mousePos)
   {
-    if(mousePos.y >= 0 && mousePos.y < button->GetHeight())
+    if(mousePos.y >= 0 && mousePos.y < docker->GetTabButton()->GetHeight())
     {
-      int tab = floor(mousePos.x / (button->GetWidth() + 1));
+      int tab = floor(mousePos.x / (docker->GetTabButton()->GetWidth() + 1));
       if(tab < children.size())
       {
         return tab;
@@ -332,7 +318,6 @@ namespace Greet
     {
       child->SetSize(_size - GetTabOffset());
     }
-    button->Measure(size, {1.0f, 1.0f});
   }
 
   DockerTab* DockerContainer::GetTab(const std::string& tabName) const
@@ -406,7 +391,8 @@ namespace Greet
 
   const Vec2& DockerContainer::GetTabOffset() const
   {
-    static Vec2 offset = {0, button->GetHeight()};
+    static Vec2 offset;
+    offset = {0, docker->GetTabButton()->GetHeight()};
     return offset;
   }
 

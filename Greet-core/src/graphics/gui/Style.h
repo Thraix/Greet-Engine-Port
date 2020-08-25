@@ -137,13 +137,22 @@ namespace Greet
             Log::Warning("More than one style specified in style file for component \"", classesName, "\"");
         }
 
-        colors.Load(mode, stylingType, stylingName);
-        tlbrs.Load(mode, stylingType, stylingName);
-        floats.Load(mode, stylingType, stylingName);
-        ints.Load(mode, stylingType, stylingName);
-        bools.Load(mode, stylingType, stylingName);
-        fonts.Load(mode, stylingType, stylingName);
-        sizes.Load(mode, stylingType, stylingName);
+        auto classesVariables = object.GetMetaClass("Variables");
+        MetaFileClass* stylingVariables = nullptr;
+        if(classesVariables.size() != 0)
+        {
+          stylingVariables = &classesVariables[0];
+          if(classesVariables.size() > 1)
+            Log::Warning("More than one variable meta class specified in style file for component \"", stylingVariables, "\"");
+        }
+
+        colors.Load(mode, stylingType, stylingName, stylingVariables);
+        tlbrs.Load(mode, stylingType, stylingName, stylingVariables);
+        floats.Load(mode, stylingType, stylingName, stylingVariables);
+        ints.Load(mode, stylingType, stylingName, stylingVariables);
+        bools.Load(mode, stylingType, stylingName, stylingVariables);
+        fonts.Load(mode, stylingType, stylingName, stylingVariables);
+        sizes.Load(mode, stylingType, stylingName, stylingVariables);
       }
 
       void AddVariables(const StylingVariables& style)

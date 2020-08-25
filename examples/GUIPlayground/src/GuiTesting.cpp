@@ -136,8 +136,8 @@ class Core : public App
     {
       Vec4 color = {current.r, current.g, current.b, 1.0};
       RenderCommand::SetClearColor(Vec4(current.r,current.g,current.b,1));
-      Component* editorVieww = guiScene->GetFrame("Main")->GetComponentByName<Component>("EditorView");
-      editorVieww->LoadStyle("normal", Styling{.colors={{"backgroundColor", color}}});
+      Component* editorView = guiScene->GetFrame("Main")->GetComponentByName<Component>("EditorView");
+      editorView->LoadStyle("normal", Styling{.colors={{"backgroundColor", color}}});
     }
 
     void OnClickCallback(Component* component)

@@ -1,20 +1,18 @@
 <Frame
   name="Main"
   styling="res/styling/styling.meta"
-  width="fill_parent" height="fill_parent" minWidth="100" spacing="10"
-  resizeTop="false" resizeLeft="false" resizeBottom="false" resizeRight="true"
-  borderColor="#37474f"
-  backgroundColor="#ffffff">
+  width="fill_parent" height="fill_parent" minWidth="100"
+  resizeTop="false" resizeLeft="false" resizeBottom="false" resizeRight="true">
 <Docker width="1w" height="1w" name="docker" backgroundColor="#323232" edgeColor="#323232" edgeSize="10" edgeBorder="2" edgeBorderColor="#626262" border="2" borderColor="#626262">
-  <TabButton width="100" height="25" align="left" font="noto:12" textColor="#ffffff" hover-backgroundColor="#424242" backgroundColor="#323232" active-backgroundColor="#424242" active-border="0 0 2 0" active-borderColor="#4CAF50" padding="0 5 0 0"/>
+  <TabButton align="left"/>
   <SplitIcon width="30" height="30" backgroundColor="#424242" border="5 2 2 2" borderColor="#626262"/>
   <DockerSplit>
     <DockerContainer weight="0.35">
       <DockerTab title="Settings">
-        <Container name="container" width="fill_parent" height="fill_parent" backgroundColor="#424242" padding="10">
-          <Label font="noto:18" textColor="#E0E0E0">Frame header</Label>
+        <Container name="container" width="fill_parent" height="fill_parent" padding="10">
+          <Label font="noto:18">Frame header</Label>
           <Divider name="divider" backgroundColor="#E0E0E0"/>
-          <Label textColor="#E0E0E0" font="noto:16">Radio Buttons</Label>
+          <Label font="noto:16">Radio Buttons</Label>
 
           <RadioGroup name="Radio" width="fill_parent" height="wrap_content" margin="0" spacing="10">
             <Container vertical="false" spacing="5">
@@ -32,12 +30,10 @@
           </RadioGroup>
 
           <Button name="button">Button!</Button>
-          <TextBox hintText="Username"></TextBox>
-          <TextBox hintText="Password" password="true" ></TextBox>
+          <TextBox hintText="Username"/>
+          <TextBox hintText="Password" password="true"/>
 
-          <Slider name="slider" minValue="10" maxValue="90" defaultValue="30">
-            <Component name="sliderComponent"/>
-          </Slider>
+          <Slider name="slider" minValue="10" maxValue="90" defaultValue="30"/>
 
           <Label>Test label</Label>
           <Container width="fill_parent" height="100" vertical="false">
@@ -50,9 +46,7 @@
 
             <Divider backgroundColor="#757575" vertical="true"/>
 
-            <Slider name="sliderVertical" minValue="10" maxValue="90" defaultValue="30" stepSize="10">
-              <Component name="sliderComponent"/>
-            </Slider>
+            <Slider name="sliderVertical" minValue="10" maxValue="90" defaultValue="30" stepSize="10"/>
 
           </Container>
 
@@ -66,7 +60,7 @@
         </Container>
       </DockerTab>
       <DockerTab title="Project Explorer">
-        <Component width="fill_parent" height="fill_parent" backgroundColor="#424242"/>
+        <Component width="fill_parent" height="fill_parent"/>
       </DockerTab>
     </DockerContainer>
     <DockerSplit vertical="true">
@@ -78,21 +72,21 @@
         </DockerContainer>
         <DockerContainer>
           <DockerTab title="Debugger">
-            <Container width="fill_parent" height="fill_parent" backgroundColor="#424242" padding="10">
+            <Container width="fill_parent" height="fill_parent" padding="10">
               <Label name="lorem" width="fill_parent" gravity="top" align="center" backgroundColor="#000000" hover-font="noto:16" overlap="wrap">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</Label>
           </Container>
           </DockerTab>
           <DockerTab title="Profiler">
-            <Component width="fill_parent" height="fill_parent" backgroundColor="#424242"/>
+            <Container width="fill_parent" height="fill_parent"/>
           </DockerTab>
         </DockerContainer>
       </DockerSplit>
       <DockerContainer>
         <DockerTab title="Console">
-          <Component width="fill_parent" height="fill_parent" backgroundColor="#424242"/>
+          <Container width="fill_parent" height="fill_parent"/>
         </DockerTab>
         <DockerTab title="Variables">
-          <Component width="fill_parent" height="fill_parent" backgroundColor="#424242"/>
+          <Container width="fill_parent" height="fill_parent"/>
         </DockerTab>
       </DockerContainer>
     </DockerSplit>

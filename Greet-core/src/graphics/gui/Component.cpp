@@ -14,8 +14,8 @@ namespace Greet
 
   REGISTER_COMPONENT_DEFINITION(Component);
 
-  Component::Component(const std::string& name, Component* parent)
-    : parent{parent}, isFocused{false}, isHovered{false}, pos{0,0}, pressed{false}, name{name}
+  Component::Component(const std::string& name, Component* parent, const std::string& componentType)
+    : parent{parent}, isFocused{false}, isHovered{false}, pos{0,0}, pressed{false}, name{name}, componentType{componentType}
   {
     AddStyleVariables({
       .colors=
@@ -54,7 +54,7 @@ namespace Greet
 
 
   Component::Component(const XMLObject& xmlObject, Component* parent)
-    : Component{GUIUtils::GetStringFromXML(xmlObject, "name", xmlObject.GetName() + "#" + LogUtils::DecToHex(UUID::GetInstance().GetUUID(),8)), parent}
+    : Component{GUIUtils::GetStringFromXML(xmlObject, "name", xmlObject.GetName() + "#" + LogUtils::DecToHex(UUID::GetInstance().GetUUID(),8)), parent, xmlObject.GetName()}
   {
     LoadStyles(xmlObject);
   }
@@ -406,7 +406,7 @@ namespace Greet
   {
     for(auto&& style : styles)
     {
-      style.second.Load(GetTopClass(), GetName(), style.first, metaFile);
+      style.second.Load(componentType, GetName(), style.first, metaFile);
     }
     // Update style variables
     SetCurrentStyle(currentStyle);
