@@ -7,26 +7,10 @@ namespace Greet
   Divider::Divider(const XMLObject& xmlObject, Component* parent)
     : Component(xmlObject,parent), vertical(false)
   {
-    vertical = GUIUtils::GetBooleanFromXML(xmlObject,"vertical", false);
-
-    if(!xmlObject.HasAttribute("width"))
-    {
-      width.value = 1;
-      width.size = 1;
-      if(!vertical)
-        width.type = GUISize::Type::Weight;
-      else
-        width.type = GUISize::Type::Pixels;
-    }
-    if(!xmlObject.HasAttribute("height"))
-    {
-      height.value = 1;
-      height.size = 1;
-      if(vertical)
-        height.type = GUISize::Type::Weight;
-      else
-        height.type = GUISize::Type::Pixels;
-    }
+    AddStyleVariables(StylingVariables{
+        .bools = {{"vertical", &vertical}}
+        });
+    LoadStyles(xmlObject);
   }
 
   void Divider::PreRender(GUIRenderer* renderer, const Vec2& translation) const

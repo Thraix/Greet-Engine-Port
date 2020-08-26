@@ -1,7 +1,7 @@
 R"(
 <Frame name="CPW" vertical="false" backgroundColor="#424242" borderColor="#626262" border="2" padding="10">
-  <SatValSlider name="CPW#SatValSlider" width="200" height="200"/>
-  <HueSlider name="CPW#HueSlider" vertical="true" width="20" height="1w"/>
+  <SatValSlider name="CPW#SatValSlider"/>
+  <HueSlider name="CPW#HueSlider"/>
   <Container name="CPW#TextBoxContainer" height="1w">
 
     <Container name="CPW#RHTextBoxContainer" vertical="false" spacing="5">

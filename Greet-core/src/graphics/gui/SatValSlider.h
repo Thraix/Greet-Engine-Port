@@ -15,7 +15,6 @@ namespace Greet
       float sat;
       float val;
 
-      Component* sliderComponent;
       OnValueChangeCallback onSatChangeCallback;
       OnValueChangeCallback onValChangeCallback;
 
@@ -23,8 +22,6 @@ namespace Greet
       SatValSlider(const std::string& xmlObject, Component* parent, const std::string& componentType = "SatValSlider");
       SatValSlider(const XMLObject& xmlObject, Component* parent);
       virtual ~SatValSlider();
-
-      virtual void Measure(const Vec2& emptyParentSpace, const Vec2& percentageFill) override;
 
       void PreRender(GUIRenderer* renderer, const Vec2& translation) const override;
       void Render(GUIRenderer* renderer) const override;

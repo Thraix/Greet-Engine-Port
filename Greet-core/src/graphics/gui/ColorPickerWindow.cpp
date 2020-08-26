@@ -35,7 +35,6 @@ namespace Greet
     svSlider->SetVal(hsv.v);
 
     hSlider = GetComponentByName<HueSlider>("CPW#HueSlider");
-    hSlider->GetSliderComponent()->SetSize(1,7, GUISize::Type::Weight, GUISize::Type::Pixels);
     hSlider->SetValue(hsv.h);
     rTextBox = GetComponentByName<TextBox>("CPW#RTextBox");
     gTextBox = GetComponentByName<TextBox>("CPW#GTextBox");

@@ -76,6 +76,13 @@ border=1
 
 [Divider]
 backgroundColor=$lighterGray
+width=fill_parent
+height=2
+
+[dividerVertical]
+width=2
+height=fill_parent
+vertical=true
 
 [RadioButton]
 width=16
@@ -102,7 +109,7 @@ width=16
 height=1w
 vertical=true
 
-[SliderComponent]
+[SliderIndicator]
 width=16
 height=16
 backgroundColor=$primaryColor

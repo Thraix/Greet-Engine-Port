@@ -11,18 +11,8 @@ namespace Greet
     : Component{name, parent}
   {
     AddStyleVariables(StylingVariables{.bools = {{"vertical", &vertical}}});
-    Styling normal
-    {
-      .colors = {
-        {"backgroundColor", {1,1,1,1}},
-        {"borderColor", {0,0,0,1}},
-      },
-      .tlbrs = {{"border", {2,2,2,2}}}
-    };
 
-    sliderComponent = new Component{name+"#SliderComponent", this, "SliderComponent"};
-    sliderComponent->SetSize(7,1,GUISize::Type::Pixels, GUISize::Type::Weight)
-      .LoadStyle("normal", normal);
+    sliderComponent = new Component{name+"#SliderIndicator", this, "SliderIndicator"};
 
     minValue = 0;
     maxValue = 100;
@@ -50,10 +40,6 @@ namespace Greet
       std::swap(minValue,maxValue);
     }
 
-    //if((maxValue - minValue) / stepSize > 1.0001)
-    //  Log::Warning("Step size in Slider doesn't divide max - min evenly");
-
-
     if(stepSize < 0)
     {
       stepSize = -stepSize;
@@ -68,12 +54,14 @@ namespace Greet
     minPos = 0;
     maxPos = 1;
 
+    clampSlider = GUIUtils::GetBooleanFromXML(xmlObject, "indicatorInside", false);
     if(xmlObject.GetObjectCount() > 0)
+    {
       sliderComponent = ComponentFactory::GetComponent(xmlObject.GetObject(0), this);
+    }
     else
     {
-      clampSlider = GUIUtils::GetBooleanFromXML(xmlObject, "indicatorInside", false);
-      sliderComponent = new Component{name+"#SliderComponent", this, "SliderComponent"};
+      sliderComponent = new Component{name+"#SliderIndicator", this, "SliderIndicator"};
     }
 
     // Default defaultValue should be in the middle
