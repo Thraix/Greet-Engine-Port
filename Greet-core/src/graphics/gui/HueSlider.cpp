@@ -26,6 +26,6 @@ namespace Greet
   void HueSlider::PreRender(GUIRenderer* renderer, const Vec2& translation) const
   {
     renderer->PushTranslation(translation);
-    renderer->DrawRect(pos, GetSize(), Vec4(0,1,1,1), Vec4(0,1,1,1), Vec4(1,1,1,1), Vec4(1,1,1,1),true);
+    renderer->DrawRect(pos, GetSize(), Color(0, 1, 1), Color(0, 1, 1), Color(1, 1, 1), Color(1, 1, 1), true);
   }
 }

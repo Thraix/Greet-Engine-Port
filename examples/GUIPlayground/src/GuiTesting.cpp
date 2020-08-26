@@ -132,12 +132,11 @@ class Core : public App
       renderable->m_position.y = editorView->GetHeight()/2 + newValue - (slider->GetMaxValue() - slider->GetMinValue()) / 2 - renderable->m_size.h / 2;
     }
 
-    void OnColorChangeCallback(Component* component, const Vec3<float>& oldValue, const Vec3<float>& current)
+    void OnColorChangeCallback(Component* component, const Color& oldValue, const Color& current)
     {
-      Vec4 color = {current.r, current.g, current.b, 1.0};
       RenderCommand::SetClearColor(Vec4(current.r,current.g,current.b,1));
       Component* editorView = guiScene->GetFrame("Main")->GetComponentByName<Component>("EditorView");
-      editorView->LoadStyle("normal", Styling{.colors={{"backgroundColor", color}}});
+      editorView->LoadStyle("normal", Styling{.colors={{"backgroundColor", current}}});
     }
 
     void OnClickCallback(Component* component)

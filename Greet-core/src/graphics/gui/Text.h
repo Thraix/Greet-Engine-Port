@@ -27,12 +27,12 @@ namespace Greet
 
       std::string str;
       Font font = FontManager::Get("noto", 12);
-      Vec4 color = {0, 0, 0, 1};
+      Color color{0, 0, 0};
       Gravity gravity;
       Align align;
       OverlapMode overlapMode;
 
-      Text(const std::string& str, const Font& font = FontManager::Get("noto", 18), const Vec4& color = {0, 0, 0, 1}, Gravity gravity = Gravity::Center, Align align = Align::Left, OverlapMode overlapMode = OverlapMode::Dots);
+      Text(const std::string& str, const Font& font = FontManager::Get("noto", 18), const Color& color = {0, 0, 0}, Gravity gravity = Gravity::Center, Align align = Align::Left, OverlapMode overlapMode = OverlapMode::Dots);
 
       void Render(GUIRenderer* renderer, const Vec2& contentSize) const;
 

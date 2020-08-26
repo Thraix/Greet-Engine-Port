@@ -178,7 +178,7 @@ namespace Greet
 
   struct ColorStyle
   {
-    static Vec4 Get(const std::string& str) { return GUIUtils::GetColor(str); }
+    static Color Get(const std::string& str) { return GUIUtils::GetColor(str); }
   };
 
   struct TLBRStyle

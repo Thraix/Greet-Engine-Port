@@ -1,5 +1,6 @@
 #pragma once
 
+#include <graphics/Color.h>
 #include <graphics/gui/Frame.h>
 #include <graphics/gui/SatValSlider.h>
 #include <graphics/gui/HueSlider.h>
@@ -15,12 +16,12 @@ namespace Greet
         SLIDER, RGB_TEXTBOX, HSV_TEXTBOX, HEX_TEXTBOX
       };
     public:
-      typedef std::function<void(const Vec3<float>& previous, const Vec3<float>& current)> OnColorChangeCallback;
+      typedef std::function<void(const Color& previous, const Color& current)> OnColorChangeCallback;
 
     protected:
       static XMLObject frameLook;
       static MetaFile frameStyle;
-      Vec3<float> color;
+      Color color;
       HueSlider* hSlider;
       SatValSlider* svSlider;
 
@@ -41,15 +42,15 @@ namespace Greet
       void RGBTextBoxChanged(Component* textBox, const std::string& oldText, const std::string& newText);
       void HSVTextBoxChanged(Component* textBox, const std::string& oldText, const std::string& newText);
       void HexTextBoxChanged(Component* textBox, const std::string& oldText, const std::string& newText);
-      void UpdateColor(float hue, float sat, float val, InputChangeType type);
+      void UpdateColor(const Color& hsv, InputChangeType type);
 
     public:
       ColorPickerWindow();
-      ColorPickerWindow(const Vec2& pos, const Vec3<float>& color);
+      ColorPickerWindow(const Vec2& pos, const Color& color);
 
       void SetOnColorChangeCallback(OnColorChangeCallback callback);
-      void CallOnColorChangeCallback(const Vec3<float>& previous, const Vec3<float>& current);
+      void CallOnColorChangeCallback(const Color& previous, const Color& current);
 
-      const Vec3<float>& GetColor() const;
+      const Color& GetColor() const;
   };
 }

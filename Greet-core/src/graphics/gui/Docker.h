@@ -22,10 +22,10 @@ namespace Greet {
       Button* tabButton;
       Component* splitIcon;
     public:
-      Vec4 edgeColor;
+      Color edgeColor;
       int edgeWidth;
       int edgeBorderSize;
-      Vec4 edgeBorderColor;
+      Color edgeBorderColor;
 
     public:
       Docker(const XMLObject& object, Component* parent);

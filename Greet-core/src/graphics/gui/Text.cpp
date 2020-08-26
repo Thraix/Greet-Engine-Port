@@ -2,7 +2,7 @@
 
 namespace Greet
 {
-  Text::Text(const std::string& str, const Font& font, const Vec4& color, Gravity gravity, Align align, OverlapMode overlapMode)
+  Text::Text(const std::string& str, const Font& font, const Color& color, Gravity gravity, Align align, OverlapMode overlapMode)
     : str{str}, font{font}, color{color}, gravity{gravity}, align{align}, overlapMode{overlapMode}
   {
 overlapMode = OverlapMode::Wrap;

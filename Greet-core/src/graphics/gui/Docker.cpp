@@ -62,7 +62,7 @@ namespace Greet
     edgeColor = GUIUtils::GetColorFromXML(object, "edgeColor", backgroundColor);
     edgeWidth = GUIUtils::GetIntFromXML(object, "edgeSize", 10);
     edgeBorderSize  = GUIUtils::GetIntFromXML(object, "edgeBorder", 0);
-    edgeBorderColor = GUIUtils::GetColorFromXML(object, "edgeBorderColor", Vec4{1,1,1,1});
+    edgeBorderColor = GUIUtils::GetColorFromXML(object, "edgeBorderColor", Color{1,1,1,1});
   }
 
   void Docker::GrabDockerTab(DockerTab* tab)

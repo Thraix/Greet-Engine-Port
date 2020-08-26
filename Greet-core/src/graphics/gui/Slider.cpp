@@ -183,7 +183,7 @@ namespace Greet
     return maxValue;
   }
 
-  void Slider::SetValue(float afValue)
+  void Slider::SetValue(float afValue, bool abCallback)
   {
     Math::Clamp(&afValue, minValue, maxValue);
     float oldValue = value;
@@ -191,7 +191,7 @@ namespace Greet
     if(snapSlider)
       value = GetSnappedSlider(afValue);
 
-    if(value != oldValue)
+    if(abCallback && value != oldValue)
       CallOnValueChangeCallback(oldValue, value);
   }
 

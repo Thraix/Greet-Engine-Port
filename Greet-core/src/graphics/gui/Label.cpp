@@ -90,7 +90,7 @@ namespace Greet
     return text.GetWrapHeight(maxWidth);
   }
 
-  const Vec4& Label::GetColor() const
+  const Color& Label::GetColor() const
   {
     return text.color;
   }
@@ -130,7 +130,7 @@ namespace Greet
     return *this;
   }
 
-  Label& Label::SetColor(const Vec4& color)
+  Label& Label::SetColor(const Color& color)
   {
     text.color = color;
     return *this;

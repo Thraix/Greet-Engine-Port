@@ -39,10 +39,10 @@ namespace Greet
 
       //////////////////
       // Style variables
-      Vec4 backgroundColor{0};
+      Color backgroundColor{0};
       float backgroundRadius = 0;
       int backgroundRoundedPrecision = 3;
-      Vec4 borderColor = {0};
+      Color borderColor = {0};
       float borderRadius = 0;
       int borderRoundedPrecision = 3;
       TLBR border = {0, 0, 0, 0};

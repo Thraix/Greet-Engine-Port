@@ -7,29 +7,27 @@ namespace Greet
   REGISTER_COMPONENT_DEFINITION(SatValSlider);
 
   SatValSlider::SatValSlider(const std::string& name, Component* parent, const std::string& componentType)
-    : Component{name, parent, componentType}, hue{0}, sat{0.5}, val{0.5}
+    : Component{name, parent, componentType}, color{0, 0.5, 0.5, 1}
   {}
 
   SatValSlider::SatValSlider(const XMLObject& xmlObject, Component* parent)
-    : Component(xmlObject, parent)
+    : Component(xmlObject, parent), color{0, 0.5, 0.5, 1}
   {}
 
-  SatValSlider::~SatValSlider()
-  {}
 
   void SatValSlider::PreRender(GUIRenderer* renderer, const Vec2& translation) const
   {
     renderer->PushTranslation(translation);
-    renderer->DrawRect(pos, GetSize(), Vec4(hue, 0, 0, 1), Vec4(hue, 1, 0, 1), Vec4(hue, 0, 1, 1), Vec4(hue, 1, 1, 1), true);
+    renderer->DrawRect(pos, GetSize(), Color(color.h, 0, 0), Color(color.h, 1, 0), Color(color.h, 0, 1), Color(color.h, 1, 1), true);
   }
 
   void SatValSlider::Render(GUIRenderer* renderer) const
   {
-    Vec2 sliderPos = {GetSliderPosFromSat(sat), GetSliderPosFromVal(val)};
+    Vec2 sliderPos = {GetSliderPosFromSat(color.s), GetSliderPosFromVal(color.v)};
     Vec2 size = GetSize();
-    Vec4 color = 1 - ColorUtils::HSVtoRGB(Vec4{hue, sat, val, 0});
-    renderer->DrawRect(pos + Vec2{sliderPos .x, 0}, Vec2{1, size.h}, color, false);
-    renderer->DrawRect(pos + Vec2{0, sliderPos .y}, Vec2{size.w, 1}, color, false);
+    Color argb = Color(color).ToRGB().Invert();
+    renderer->DrawRect(pos + Vec2{sliderPos .x, 0}, Vec2{1, size.h}, argb, false);
+    renderer->DrawRect(pos + Vec2{0, sliderPos .y}, Vec2{size.w, 1}, argb, false);
   }
 
   void SatValSlider::OnEvent(Event& event, const Vec2& componentPos)
@@ -80,35 +78,35 @@ namespace Greet
 
   void SatValSlider::SetHue(float hue)
   {
-    this->hue = hue;
+    color.h = hue;
   }
 
-  void SatValSlider::SetSat(float afSat)
+  void SatValSlider::SetSat(float afSat, bool abCallback)
   {
-    float oldSat = sat;
-    sat = afSat;
-    Math::Clamp(&this->sat, 0.0f,1.0f);
-    if(sat != oldSat)
-      CallOnSatChangeCallback(oldSat, sat);
+    float oldSat = color.s;
+    color.s = afSat;
+    Math::Clamp(&color.s, 0.0f,1.0f);
+    if(abCallback && color.s != oldSat)
+      CallOnSatChangeCallback(oldSat, color.s);
   }
 
-  void SatValSlider::SetVal(float afVal)
+  void SatValSlider::SetVal(float afVal, bool abCallback)
   {
-    float oldVal = val;
-    val = afVal;
-    Math::Clamp(&this->val, 0.0f,1.0f);
-    if(val != oldVal)
-      CallOnValChangeCallback(oldVal, val);
+    float oldVal = color.v;
+    color.v = afVal;
+    Math::Clamp(&color.v, 0.0f,1.0f);
+    if(abCallback && color.v != oldVal)
+      CallOnValChangeCallback(oldVal, color.v);
   }
 
   float SatValSlider::GetSat() const
   {
-    return sat;
+    return color.s;
   }
 
   float SatValSlider::GetVal() const
   {
-    return val;
+    return color.v;
   }
 
   float SatValSlider::GetSliderSatFromPos(float pos) const

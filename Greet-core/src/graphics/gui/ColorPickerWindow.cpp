@@ -20,7 +20,7 @@ namespace Greet
     )
   };
 
-  ColorPickerWindow::ColorPickerWindow(const Vec2& pos, const Vec3<float>& color)
+  ColorPickerWindow::ColorPickerWindow(const Vec2& pos, const Color& color)
     : Frame(frameLook)
   {
     LoadFrameStyle(frameStyle);
@@ -28,7 +28,7 @@ namespace Greet
     LoadStyles(frameLook);
     Measure({}, {});
 
-    Vec3<float> hsv(ColorUtils::RGBtoHSV(Vec4(color.r, color.g, color.b, 1)));
+    Color hsv = Color(color).ToHSV();
     svSlider = GetComponentByName<SatValSlider>("CPW#SatValSlider");
     svSlider->SetHue(hsv.h);
     svSlider->SetSat(hsv.s);
@@ -59,7 +59,7 @@ namespace Greet
     hexTextBox->SetOnTextChangedCallback(BIND_MEMBER_FUNC(HexTextBoxChanged));
 
     // Make textboxes and other stuff update
-    UpdateColor(hSlider->GetValue(), svSlider->GetSat(),svSlider->GetVal(), InputChangeType::SLIDER);
+    UpdateColor(hsv, InputChangeType::SLIDER);
     SetPosition(pos);
 
   }
@@ -68,44 +68,45 @@ namespace Greet
   {
   }
 
-  void ColorPickerWindow::UpdateColor(float hue, float sat, float val, InputChangeType type)
+  void ColorPickerWindow::UpdateColor(const Color& hsv, InputChangeType type)
   {
+    if(hsv == color)
+      return;
     ComponentStyle& s = colorDisplay->GetStyle("normal");
-    Vec3<float> prevRGB = color;
-    Vec4 rgb = ColorUtils::HSVtoRGB(hue,sat,val,1);
-    color = Vec3<float>(rgb);
-    s.SetColor("backgroundColor", rgb);
-    svSlider->SetHue(hue);
+    Color prevRGB = color;
+    color = Color(hsv).ToRGB();
+    s.SetColor("backgroundColor", color);
+    svSlider->SetHue(hsv.h);
 
     if(type != InputChangeType::RGB_TEXTBOX)
     {
-      rTextBox->SetText(std::to_string((int)(255*rgb.r)));
-      gTextBox->SetText(std::to_string((int)(255*rgb.g)));
-      bTextBox->SetText(std::to_string((int)(255*rgb.b)));
+      rTextBox->SetText(std::to_string((int)(255*color.r)));
+      gTextBox->SetText(std::to_string((int)(255*color.g)));
+      bTextBox->SetText(std::to_string((int)(255*color.b)));
     }
     if(type != InputChangeType::HSV_TEXTBOX)
     {
-      hTextBox->SetText(std::to_string((int)(255*hue)));
-      sTextBox->SetText(std::to_string((int)(255*sat)));
-      vTextBox->SetText(std::to_string((int)(255*val)));
+      hTextBox->SetText(std::to_string((int)(255*hsv.h)));
+      sTextBox->SetText(std::to_string((int)(255*hsv.s)));
+      vTextBox->SetText(std::to_string((int)(255*hsv.v)));
     }
     if(type != InputChangeType::SLIDER)
     {
-      hSlider->SetValue(hue);
-      svSlider->SetSat(sat);
-      svSlider->SetVal(val);
+      hSlider->SetValue(hsv.h, false);
+      svSlider->SetSat(hsv.s, false);
+      svSlider->SetVal(hsv.v, false);
     }
     if(type != InputChangeType::HEX_TEXTBOX)
     {
-      hexTextBox->SetText(LogUtils::DecToHex(((int)(255*rgb.r) << 16) | ((int)(255*rgb.g) << 8)  | (int)(255*rgb.b),6));
+      hexTextBox->SetText(LogUtils::DecToHex(((int)(255*color.r) << 16) | ((int)(255*color.g) << 8)  | (int)(255*color.b),6));
     }
-    if(Vec3<float>(rgb) != prevRGB)
-      CallOnColorChangeCallback(prevRGB, Vec3<float>(rgb));
+    if(color != prevRGB)
+      CallOnColorChangeCallback(prevRGB, color);
   }
 
   void ColorPickerWindow::SliderChanged(Component* component, float oldValue, float newValue)
   {
-    UpdateColor(hSlider->GetValue(), svSlider->GetSat(),svSlider->GetVal(), InputChangeType::SLIDER);
+    UpdateColor({hSlider->GetValue(), svSlider->GetSat(), svSlider->GetVal()}, InputChangeType::SLIDER);
   }
 
   void ColorPickerWindow::RGBTextBoxChanged(Component* textBox, const std::string& oldText, const std::string& newText)
@@ -118,8 +119,8 @@ namespace Greet
     Math::Clamp(&g,0.0f,1.0f);
     Math::Clamp(&b,0.0f,1.0f);
 
-    Vec4 hsv = ColorUtils::RGBtoHSV(r,g,b,1);
-    UpdateColor(hsv.h,hsv.s,hsv.v,InputChangeType::RGB_TEXTBOX);
+    Color hsv = Color(r, g, b).ToHSV();
+    UpdateColor(hsv, InputChangeType::RGB_TEXTBOX);
   }
 
   void ColorPickerWindow::HSVTextBoxChanged(Component* textBox, const std::string& oldText, const std::string& newText)
@@ -130,14 +131,13 @@ namespace Greet
     Math::Clamp(&h,0.0f,1.0f);
     Math::Clamp(&s,0.0f,1.0f);
     Math::Clamp(&v,0.0f,1.0f);
-    UpdateColor(h,s,v,InputChangeType::HSV_TEXTBOX);
+    UpdateColor({h, s, v}, InputChangeType::HSV_TEXTBOX);
   }
 
   void ColorPickerWindow::HexTextBoxChanged(Component* textBox, const std::string& oldText, const std::string& newText)
   {
-    Vec4 rgba = ColorUtils::HexToVec4(LogUtils::HexToDec(hexTextBox->GetText()));
-    Vec4 hsv = ColorUtils::RGBtoHSV(rgba.r,rgba.g,rgba.b,1);
-    UpdateColor(hsv.h,hsv.s,hsv.v,InputChangeType::HEX_TEXTBOX);
+    Color hsv = Color(LogUtils::HexToDec(hexTextBox->GetText())).ToHSV();
+    UpdateColor(hsv, InputChangeType::HEX_TEXTBOX);
   }
 
   void ColorPickerWindow::SetOnColorChangeCallback(OnColorChangeCallback callback)
@@ -145,13 +145,13 @@ namespace Greet
     onColorChangeCallback = callback;
   }
 
-  void ColorPickerWindow::CallOnColorChangeCallback(const Vec3<float>& previous, const Vec3<float>& current)
+  void ColorPickerWindow::CallOnColorChangeCallback(const Color& previous, const Color& current)
   {
     if(onColorChangeCallback)
       onColorChangeCallback(previous, current);
   }
 
-  const Vec3<float>& ColorPickerWindow::GetColor() const
+  const Color& ColorPickerWindow::GetColor() const
   {
     return color;
   }

@@ -14,7 +14,7 @@ namespace Greet
     return defaultValue;
   }
 
-  Vec4 GUIUtils::GetColorFromXML(const XMLObject& object, const std::string& key, const Vec4& defaultValue)
+  Color GUIUtils::GetColorFromXML(const XMLObject& object, const std::string& key, const Color& defaultValue)
   {
     if(object.HasAttribute(key))
       return GetColor(object.GetAttribute(key));
@@ -66,7 +66,7 @@ namespace Greet
     return false;
   }
 
-  Vec4 GUIUtils::GetColor(const std::string& str)
+  Color GUIUtils::GetColor(const std::string& str)
   {
     if (str[0] == '#')
     {
@@ -74,15 +74,14 @@ namespace Greet
       if (color.length() != 6 && color.length() != 8)
       {
         Log::Error("Invalid length for color: ", str);
-        return Vec4(1, 0, 1, 1); // Invalid color pink since its very visible
+        return Color(1, 0, 1, 1); // Invalid color pink since its very visible
       }
       if (color.length() == 6)
         color = "FF" + color; // Add alpha to color
-      uint colori = LogUtils::HexToDec(color);
-      return ColorUtils::ColorHexToVec4(colori);
+      return Color(LogUtils::HexToDec(color));
     }
     Log::Error("Invalid starting character for color: ", str);
-    return Vec4(1, 0, 1, 1); // Invalid color pink since its very visible
+    return Color(1, 0, 1, 1); // Invalid color pink since its very visible
   }
 
   float GUIUtils::GetFloat(const std::string& str)

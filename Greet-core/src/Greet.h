@@ -25,6 +25,7 @@
 #include <event/ViewportEvent.h>
 #include <event/WindowEvent.h>
 #include <graphics/Animation.h>
+#include <graphics/Color.h>
 #include <graphics/FrameBufferObject.h>
 #include <graphics/GlobalSceneManager.h>
 #include <graphics/Light.h>

@@ -1,10 +1,11 @@
 #pragma once
 
-#include <utils/MetaFile.h>
+#include <graphics/Color.h>
 #include <graphics/fonts/Font.h>
 #include <graphics/gui/GUIUtils.h>
 #include <graphics/gui/StyleTemplateClasses.h>
 #include <graphics/gui/TLBR.h>
+#include <utils/MetaFile.h>
 
 #include <unordered_map>
 
@@ -29,7 +30,7 @@ namespace Greet
 {
   struct StylingVariables
   {
-    StyleVariableMap<Vec4> colors;
+    StyleVariableMap<Color> colors;
     StyleVariableMap<TLBR> tlbrs;
     StyleVariableMap<float> floats;
     StyleVariableMap<int> ints;
@@ -51,7 +52,7 @@ namespace Greet
 
   struct Styling
   {
-    std::unordered_map<std::string, Vec4> colors;
+    std::unordered_map<std::string, Color> colors;
     std::unordered_map<std::string, TLBR> tlbrs;
     std::unordered_map<std::string, float> floats;
     std::unordered_map<std::string, int> ints;
@@ -65,7 +66,7 @@ namespace Greet
     private:
       ComponentStyle* inherit;
 
-      StyleMap<Vec4, ColorStyle> colors;
+      StyleMap<Color, ColorStyle> colors;
       StyleMap<TLBR, TLBRStyle> tlbrs;
       StyleMap<float, FloatStyle> floats;
       StyleMap<int, IntStyle> ints;
@@ -166,7 +167,7 @@ namespace Greet
         sizes.AddVariables(style.sizes);
       }
 
-      REGISTER_STYLE_FUNCTIONS(Vec4, Color, colors);
+      REGISTER_STYLE_FUNCTIONS(Color, Color, colors);
       REGISTER_STYLE_FUNCTIONS(TLBR, TLBR, tlbrs);
       REGISTER_STYLE_FUNCTIONS(float, Float, floats);
       REGISTER_STYLE_FUNCTIONS(int, Int, ints);

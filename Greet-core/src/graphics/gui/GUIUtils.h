@@ -1,11 +1,11 @@
 #pragma once
 
-#include <graphics/gui/TLBR.h>
+#include <graphics/Color.h>
 #include <graphics/Window.h>
-#include <utils/StringUtils.h>
-#include <utils/ColorUtils.h>
-#include <utils/xml/XML.h>
 #include <graphics/fonts/Font.h>
+#include <graphics/gui/TLBR.h>
+#include <utils/StringUtils.h>
+#include <utils/xml/XML.h>
 
 namespace Greet {
 
@@ -65,7 +65,7 @@ namespace Greet {
     public:
 
       static bool GetBooleanFromXML(const XMLObject& object, const std::string& key, bool defaultValue);
-      static Vec4 GetColorFromXML(const XMLObject& object, const std::string& key, const Vec4& defaultValue);
+      static Color GetColorFromXML(const XMLObject& object, const std::string& key, const Color& defaultValue);
       static GUISize GetGUISizeFromXML(const XMLObject& object, const std::string& key, const GUISize& defaultValue);
       static std::string GetStringFromXML(const XMLObject& object, const std::string& key, const std::string& defaultValue);
       static int GetIntFromXML(const XMLObject& object, const std::string& key, int defaultValue);
@@ -74,7 +74,7 @@ namespace Greet {
     private:
     public:
       static GUISize GetGUISize(const std::string& str);
-      static Vec4 GetColor(const std::string& str);
+      static Color GetColor(const std::string& str);
       static float GetFloat(const std::string& str);
       static int GetInt(const std::string& str);
       static bool GetBoolean(const std::string& str);

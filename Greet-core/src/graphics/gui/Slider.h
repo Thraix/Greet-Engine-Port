@@ -52,7 +52,7 @@ namespace Greet
       float GetValue() const;
       float GetMinValue() const;
       float GetMaxValue() const;
-      void SetValue(float value);
+      void SetValue(float value, bool abCallback = true);
       float GetSnappedSlider(float sliderValue) const;
       float GetSliderValueFromPos(float pos) const;
       float GetSliderPosFromValue(float value) const;

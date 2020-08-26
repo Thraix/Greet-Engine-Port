@@ -9,9 +9,9 @@ namespace Greet
   ColorPicker::ColorPicker(const XMLObject& object, Component* parent)
     : Component{object, parent}, attachedColor{nullptr}
   {
-    picker = new ColorPickerWindow(Vec2(0,0), Vec3<float>{GUIUtils::GetColorFromXML(object, "color", Vec4{1,1,1,1})});
+    picker = new ColorPickerWindow(Vec2(0,0), GUIUtils::GetColorFromXML(object, "color", Color{1,1,1,1}));
     using namespace std::placeholders;
-    picker->SetOnColorChangeCallback(std::bind(&ColorPicker::OnColorChanged, std::ref(*this), _1, _2));
+    picker->SetOnColorChangeCallback(BIND_MEMBER_FUNC(OnColorChanged));
   }
 
   ColorPicker::~ColorPicker()
@@ -29,10 +29,10 @@ namespace Greet
       renderer->DrawRoundedRect(pos+Vec2(0,0), {width.size, height.size}, borderColor, borderRadius, borderRoundedPrecision, false);
 
     // Component background
-    renderer->DrawRoundedRect(pos + border.LeftTop(), Vec2{width.size, height.size} - GetBorder().LeftTop()-GetBorder().RightBottom(), Vec4(GetColor().x, GetColor().y, GetColor().z, 1.0), backgroundRadius, backgroundRoundedPrecision, false);
+    renderer->DrawRoundedRect(pos + border.LeftTop(), Vec2{width.size, height.size} - GetBorder().LeftTop()-GetBorder().RightBottom(), GetColor(), backgroundRadius, backgroundRoundedPrecision, false);
   }
 
-  void ColorPicker::AttachColor(Vec3<float>* color)
+  void ColorPicker::AttachColor(Color* color)
   {
     attachedColor = color;
   }
@@ -48,7 +48,7 @@ namespace Greet
     }
   }
 
-  void ColorPicker::OnColorChanged(const Vec3<float>& previous, const Vec3<float>& current)
+  void ColorPicker::OnColorChanged(const Color& previous, const Color& current)
   {
     if(attachedColor)
       *attachedColor = current;
@@ -58,16 +58,16 @@ namespace Greet
   void ColorPicker::SetOnColorChangeCallback(OnColorChangeCallback callback)
   {
     onColorChangeCallback = callback;
-    CallOnColorChangeCallback({0.0f}, GetColor());
+    CallOnColorChangeCallback({0, 0, 0}, GetColor());
   }
 
-  void ColorPicker::CallOnColorChangeCallback(const Vec3<float>& previous, const Vec3<float>& current)
+  void ColorPicker::CallOnColorChangeCallback(const Color& previous, const Color& current)
   {
     if(onColorChangeCallback)
       onColorChangeCallback(this, previous, current);
   }
 
-  const Vec3<float>& ColorPicker::GetColor() const
+  const Color& ColorPicker::GetColor() const
   {
     return picker->GetColor();
   }

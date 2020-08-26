@@ -10,11 +10,11 @@ namespace Greet
     private:
       REGISTER_COMPONENT_DECLARATION(ColorPicker);
     public:
-      typedef std::function<void(Component* comp, const Vec3<float>& previous, const Vec3<float>& current)> OnColorChangeCallback;
+      typedef std::function<void(Component* comp, const Color& previous, const Color& current)> OnColorChangeCallback;
     public:
       OnColorChangeCallback onColorChangeCallback;
     private:
-      Vec3<float>* attachedColor;
+      Color* attachedColor;
       ColorPickerWindow* picker;
     public:
       ColorPicker(const XMLObject& object, Component* parent);
@@ -22,15 +22,15 @@ namespace Greet
 
       void PreRender(GUIRenderer* renderer, const Vec2& translation) const override;
 
-      void AttachColor(Vec3<float>* color);
+      void AttachColor(Color* color);
 
       void OnEvent(Event& event, const Vec2& translatedPos) override;
-      void OnColorChanged(const Vec3<float>& previous, const Vec3<float>& current);
+      void OnColorChanged(const Color& previous, const Color& current);
 
       void SetOnColorChangeCallback(OnColorChangeCallback callback);
-      void CallOnColorChangeCallback(const Vec3<float>& previous, const Vec3<float>& current);
+      void CallOnColorChangeCallback(const Color& previous, const Color& current);
 
-      const Vec3<float>& GetColor() const;
+      const Color& GetColor() const;
   };
 
 }
