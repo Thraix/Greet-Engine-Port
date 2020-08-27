@@ -1,5 +1,7 @@
 #include "DockerSplit.h"
 
+#include <chrono>
+#include <thread>
 #include <graphics/gui/Docker.h>
 
 namespace Greet
@@ -61,12 +63,8 @@ namespace Greet
       edgeSize[vecIndex] = docker->edgeWidth;
 
       renderer->DrawRect(edgePos, edgeSize, docker->edgeBorderColor, false);
-      if(parent != nullptr)
-        edgePos[1-vecIndex] -= docker->edgeBorderSize;
       edgePos[vecIndex] += docker->edgeBorderSize;
 
-      if(parent != nullptr)
-        edgeSize[1-vecIndex] += 2*docker->edgeBorderSize;
       edgeSize[vecIndex] -= 2*docker->edgeBorderSize;
       renderer->DrawRect(edgePos, edgeSize, docker->edgeColor, false);
     }
@@ -74,24 +72,6 @@ namespace Greet
     {
       child->Render(renderer);
     }
-    int vecIndex = vertical ? 1 : 0;
-    Vec2 offset{position};
-
-    Vec2 p{0,0};
-    Vec2 s{(float)docker->edgeWidth, (float)docker->edgeWidth};
-
-    // Code for rendering edges, needed for later
-#if 0
-    p[vecIndex] = -docker->edgeWidth;
-    s[1-vecIndex] = size[1-vecIndex];
-    for(int i = 0;i<children.size()-1;i++)
-    {
-      offset[vecIndex] += children[i]->GetSize()[vecIndex] + docker->edgeWidth;
-      renderer->PushTranslation(offset);
-      renderer->SubmitRect(p, s, {1,1,1,1}, false);
-      renderer->PopTranslation();
-    }
-#endif
   }
 
   void DockerSplit::Update(float timeElapsed)
@@ -168,7 +148,7 @@ namespace Greet
         dockerThis->SetWeight(weightThis);
         dockerNext->SetWeight(totalWeight - weightThis);
 
-        SetSize(size);
+        SetSize(size, false);
         return;
       }
       Vec2 pos = componentPos;
@@ -211,16 +191,13 @@ namespace Greet
   void DockerSplit::HandleDroppedTab(DockerTab* tab, MouseReleaseEvent& event, const Vec2& componentPos)
   {
     Vec2 mousePos = event.GetPosition() - componentPos;
-    Vec2 position = {0,0};
     for(auto&& child : children)
     {
-      if(mousePos.x >= position.x && mousePos.y >= position.y && mousePos.x < position.x + child->GetSize().x && mousePos.y < position.y + child->GetSize().y)
+      if(Utils::IsInside(mousePos, child->GetPosition(), child->GetSize()))
       {
-        child->HandleDroppedTab(tab, event, componentPos + position);
+        child->HandleDroppedTab(tab, event, componentPos);
         return;
       }
-      int vecIndex = vertical ? 1 : 0;
-      position[vecIndex] += child->GetSize()[vecIndex];
     }
   }
 
@@ -302,7 +279,7 @@ namespace Greet
         s[vecIndex] = GetPosition()[vecIndex] + GetSize()[vecIndex] - p[vecIndex];
       }
       children[i]->SetPosition(p);
-      children[i]->SetSize(s);
+      children[i]->SetSize(s, true);
     }
 
     UpdateWeights();
@@ -393,31 +370,31 @@ namespace Greet
     }
   }
 
-  void DockerSplit::SetSize(const Vec2& _size)
+  void DockerSplit::SetSize(const Vec2& avSize, bool abRemeasure)
   {
-    size = _size;
+    size = avSize;
     int vecIndex = vertical ? 1 : 0;
     float totalWeight = children.size();
     int edgeWidths = docker->edgeWidth * (children.size() - 1);
     Vec2 pos = position;
     float usedSize = 0.0f;
 
-    for(auto&& child : children)
+    for(int i = 0; i < children.size() - 1; i++)
     {
-      Vec2 childSize = _size;
-      childSize[vecIndex] = round((_size[vecIndex] - edgeWidths) * child->GetWeight() / totalWeight);
-      child->SetSize(childSize);
-      child->SetPosition(pos);
+      Vec2 childSize = avSize;
+      childSize[vecIndex] = round((avSize[vecIndex] - edgeWidths) * children[i]->GetWeight() / totalWeight);
+      children[i]->SetSize(childSize, abRemeasure);
+      children[i]->SetPosition(pos);
       usedSize += childSize[vecIndex] + docker->edgeWidth;
       pos[vecIndex] += childSize[vecIndex] + docker->edgeWidth;
     }
-    usedSize -= docker->edgeWidth;
 
     // Add the unused space to the last component
     DockerInterface* last = children[children.size() - 1];
-    Vec2 childSize = last->GetSize();
-    childSize[vecIndex] += size[vecIndex] - usedSize;
-    last->SetSize(childSize);
+    Vec2 childSize = avSize;
+    childSize[vecIndex] = size[vecIndex] - usedSize;
+    last->SetSize(childSize, abRemeasure);
+    last->SetPosition(pos);
   }
 
 

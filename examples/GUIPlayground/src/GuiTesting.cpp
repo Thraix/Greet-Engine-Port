@@ -87,7 +87,7 @@ class Core : public App
         frame->GetComponentByName<Button>("button")
           ->SetOnClickCallback(BIND_MEMBER_FUNC(OnButtonPressCallback));
 
-        editorView->GetSceneManager().Add2DScene(layer, "2dScene");
+        editorView->Add2DScene(layer, "2dScene");
 
         Docker* docker = frame->GetComponentByName<Docker>("docker");
         if(docker)

@@ -30,6 +30,8 @@ namespace Greet {
       std::string title;
       Component* component;
       bool shown = false;
+      bool remeasure = false;
+      Vec2 size;
 
     public:
       DockerTab(const std::string& title, Component* component);
@@ -52,7 +54,7 @@ namespace Greet {
       void SetContainer(DockerContainer* parentContainer);
       void SetGUIScene(GUIScene* scene);
       void SetPosition(const Vec2& position);
-      void SetSize(const Vec2& position);
+      void SetSize(const Vec2& avSize, bool abRemeasure);
 
       Docker* GetDocker() const;
       void SetDocker(Docker* docker);

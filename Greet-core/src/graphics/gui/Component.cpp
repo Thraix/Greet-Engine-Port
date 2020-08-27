@@ -61,6 +61,7 @@ namespace Greet
 
   void Component::Measure(const Vec2& emptyParentSpace, const Vec2& percentageFill)
   {
+    remeasure = false;
     if(width.type == GUISize::Type::Pixels)
       width.size = width.value;
     else if(width.type == GUISize::Type::Weight)
@@ -74,7 +75,6 @@ namespace Greet
       height.size = emptyParentSpace.y * percentageFill.y;
     else
       height.size = GetWrapHeight();
-    OnMeasured();
   }
 
   Vec2 Component::GetMeasureFillSize()
@@ -266,7 +266,7 @@ namespace Greet
 
   Vec2 Component::GetRealPosition() const
   {
-    return pos + GetMargin().LeftTop() + (parent ? parent->GetTotalPadding()+parent->GetRealPosition() : Vec2(0,0));
+    return pos + GetMargin().LeftTop() + (parent ? parent->GetTotalPadding() + parent->GetRealPosition() : Vec2(0,0));
   }
 
   Component* Component::GetParent() const

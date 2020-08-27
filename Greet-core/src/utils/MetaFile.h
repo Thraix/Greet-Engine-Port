@@ -81,7 +81,6 @@ namespace Greet
 
       MetaFile(std::istringstream&& stream)
       {
-        Log::Info("meta file stream");
         LoadMetaFile(stream);
       }
 

@@ -163,6 +163,11 @@ namespace Greet
         MeasureChildren(totalWeights);
       }
     }
+
+    for(auto&& child : m_components)
+    {
+      child->OnMeasured();
+    }
   }
 
   Vec2 Container::GetMeasureFillSize()

@@ -42,6 +42,12 @@ namespace Greet
 
   void DockerTab::Update(float timeElapsed)
   {
+    if(remeasure)
+    {
+      remeasure = false;
+      component->Measure(size, {1, 1});
+      component->OnMeasured();
+    }
     component->UpdateHandle(timeElapsed);
   }
 
@@ -85,9 +91,16 @@ namespace Greet
     component->SetPosition(_position);
   }
 
-  void DockerTab::SetSize(const Vec2& _size)
+  void DockerTab::SetSize(const Vec2& avSize, bool abRemeasure)
   {
-    component->Measure(_size, {1, 1});
+    size = avSize;
+    if(abRemeasure)
+    {
+      component->Measure(size, {1, 1});
+      component->OnMeasured();
+    }
+    else
+      remeasure = true;
   }
 
   void DockerTab::SetOnTabShowCallback(OnTabChangeCallback callback)

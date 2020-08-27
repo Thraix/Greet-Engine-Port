@@ -52,7 +52,7 @@ namespace Greet {
 
       void SetGUIScene(GUIScene* scene) override;
       void SetPosition(const Vec2& position) override;
-      void SetSize(const Vec2& size) override;
+      void SetSize(const Vec2& avSize, bool abRemeasure) override;
 
       DockerTab* GetTab(const std::string& tabName) const override;
 

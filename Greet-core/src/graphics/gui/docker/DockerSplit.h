@@ -50,7 +50,7 @@ namespace Greet {
       void LoadFrameStyle(const MetaFile& metaFile) override;
 
       void SetPosition(const Vec2& _size) override;
-      void SetSize(const Vec2& _size) override;
+      void SetSize(const Vec2& avSize, bool abRemeasure) override;
       void SetGUIScene(GUIScene* scene) override;
 
       void UpdateWeights();

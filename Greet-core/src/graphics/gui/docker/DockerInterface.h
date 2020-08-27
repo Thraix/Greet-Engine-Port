@@ -48,7 +48,7 @@ namespace Greet
       virtual void LoadFrameStyle(const MetaFile& metaFile) = 0;
 
       virtual void SetPosition(const Vec2& position) = 0;
-      virtual void SetSize(const Vec2& position) = 0;
+      virtual void SetSize(const Vec2& avSize, bool abRemeasure) = 0;
       virtual void SetGUIScene(GUIScene* scene) = 0;
 
       virtual void DebugPrint(int indent) = 0;

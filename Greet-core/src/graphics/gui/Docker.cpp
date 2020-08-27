@@ -83,7 +83,7 @@ namespace Greet
 
   void Docker::HandleDroppedTab(MouseReleaseEvent& event, const Vec2& componentPos)
   {
-    Vec2 mousePos = event.GetPosition() - componentPos - GetTotalPadding();
+    Vec2 mousePos = event.GetPosition() - componentPos;
 
     int splitLimit = 0;
 
@@ -112,7 +112,9 @@ namespace Greet
 
   void Docker::Render(GUIRenderer* renderer) const
   {
+    renderer->PushTranslation(GetTotalPadding());
     split->Render(renderer);
+    renderer->PopTranslation();
   }
 
   void Docker::Update(float timeElapsed)
@@ -135,7 +137,7 @@ namespace Greet
       {
         if(e.GetButton() == GREET_MOUSE_1)
         {
-          HandleDroppedTab(e, componentPos);
+          HandleDroppedTab(e, componentPos + GetTotalPadding());
         }
         return;
       }
@@ -144,7 +146,7 @@ namespace Greet
         grabbedTab = nullptr;
         return;
       }
-      split->OnEvent(event, componentPos);
+      split->OnEvent(event, componentPos + GetTotalPadding());
     }
     else if(EVENT_IS_TYPE(event, EventType::MOUSE_MOVE))
     {
@@ -154,19 +156,18 @@ namespace Greet
         grabbedDistance += e.GetDeltaPosition().Length();
       }
     }
-    split->OnEvent(event, componentPos);
+    split->OnEvent(event, componentPos + GetTotalPadding());
   }
 
   void Docker::OnMeasured()
   {
-    split->SetSize(GetContentSize());
+    split->SetSize(GetContentSize(), true);
     // Update positions of child dockers
-    split->SetPosition(GetTotalPadding());
+    split->SetPosition({0, 0});
   }
 
   void Docker::LoadFrameStyle(const MetaFile& metaFile)
   {
-    Log::Info("----------------------------------------");
     split->LoadFrameStyle(metaFile);
     tabButton->LoadFrameStyle(metaFile);
     tabButton->Measure({0, 0}, {1, 1});

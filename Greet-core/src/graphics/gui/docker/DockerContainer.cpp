@@ -63,7 +63,7 @@ namespace Greet
     }
 
     Component* splitIcon = docker->GetSplitIcon();
-    if(docker->IsHoldingTab() && Utils::IsInside(Input::GetMousePosPixel(), position, size))
+    if(docker->IsHoldingTab() && Utils::IsInside(Input::GetMousePosPixel(), position + docker->GetRealPosition() + docker->GetTotalPadding(), size))
     {
       splitIcon->PreRender(renderer, GetTopSplitPos());
       splitIcon->Render(renderer);
@@ -129,7 +129,7 @@ namespace Greet
 
   void DockerContainer::HandleDroppedTab(DockerTab* tab, MouseReleaseEvent& event, const Vec2& componentPos)
   {
-    Vec2 mousePos = event.GetPosition() - position;
+    Vec2 mousePos = event.GetPosition() - position - componentPos;
     DockerSplit* split = static_cast<DockerSplit*>(parent);
     int index = split->GetDockerIndex(this);
     bool splitContainer = false;
@@ -226,7 +226,7 @@ namespace Greet
     ASSERT(i >= 0 && i <= children.size(), "Index out of bound: ", i, " >= ", children.size());
     children.insert(children.begin() + i, tab);
     tab->SetPosition(position + GetTabOffset());
-    tab->SetSize(size - GetTabOffset());
+    tab->SetSize(size - GetTabOffset(), true);
     tab->docker = docker;
     tab->SetContainer(this);
   }
@@ -311,12 +311,12 @@ namespace Greet
     }
   }
 
-  void DockerContainer::SetSize(const Vec2& _size)
+  void DockerContainer::SetSize(const Vec2& avSize, bool abRemeasure)
   {
-    size = _size;
+    size = avSize;
     for(auto&& child : children)
     {
-      child->SetSize(_size - GetTabOffset());
+      child->SetSize(avSize - GetTabOffset(), abRemeasure);
     }
   }
 
@@ -438,7 +438,7 @@ namespace Greet
     container->SetWeight(1);
     SetWeight(1);
     newSplit->SetPosition(position);
-    newSplit->SetSize(size);
+    newSplit->SetSize(size, true);
     newSplit->SetWeight(weight);
     split->AddDocker(index, newSplit);
     split->RemoveDocker(index+1);

@@ -1,4 +1,5 @@
 #include "GUIScene.h"
+
 #include <event/EventDispatcher.h>
 #include <graphics/RenderCommand.h>
 #include <graphics/gui/Frame.h>
@@ -124,7 +125,6 @@ namespace Greet {
     {
       if((*it)->remeasure)
       {
-        (*it)->remeasure = false;
         (*it)->Measure(GetSize(), {1, 1});
       }
       (*it)->UpdateHandle(timeElapsed);

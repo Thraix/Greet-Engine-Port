@@ -33,7 +33,7 @@
           <TextBox hintText="Username"/>
           <TextBox hintText="Password" password="true"/>
 
-          <Slider name="slider" minValue="10" maxValue="90" defaultValue="30"/>
+          <Slider name="slider" minValue="10" maxValue="90" defaultValue="30" indicatorInside="true"/>
 
           <Label>Test label</Label>
           <Container width="fill_parent" height="100" vertical="false" indicatorInside="true">
@@ -46,7 +46,7 @@
 
             <Divider name="dividerVertical"/>
 
-            <Slider name="sliderVertical" minValue="10" maxValue="90" defaultValue="30" stepSize="10"/>
+            <Slider name="sliderVertical" minValue="10" maxValue="90" defaultValue="30" stepSize="10" indicatorInside="true"/>
 
           </Container>
 
@@ -72,7 +72,7 @@
         </DockerContainer>
         <DockerContainer>
           <DockerTab title="Debugger">
-            <Container width="fill_parent" height="fill_parent" padding="10">
+            <Container name="debugger" width="fill_parent" height="fill_parent" padding="10">
               <Label name="lorem" width="fill_parent" gravity="top" align="center" backgroundColor="#000000" hover-font="noto:16" overlap="wrap">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</Label>
           </Container>
           </DockerTab>

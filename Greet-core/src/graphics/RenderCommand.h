@@ -33,6 +33,8 @@ namespace Greet
       static Vec4 TopViewportStack();
       static void ResetViewport();
 
+      static float GetViewportX();
+      static float GetViewportY();
       static float GetViewportWidth();
       static float GetViewportHeight();
       static float GetViewportAspect();
