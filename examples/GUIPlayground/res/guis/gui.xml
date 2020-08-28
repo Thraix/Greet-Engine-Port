@@ -13,7 +13,6 @@
           <Label font="noto:18">Frame header</Label>
           <Divider/>
           <Label font="noto:16">Radio Buttons</Label>
-
           <RadioGroup name="Radio" width="fill_parent" height="wrap_content" margin="0" spacing="10">
             <Container vertical="false" spacing="5">
               <RadioButton/>
