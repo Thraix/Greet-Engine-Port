@@ -15,7 +15,6 @@ namespace Greet
       // The slider indicator component can be any component really
       Component* sliderComponent;
       float value;
-      bool vertical = false;
       bool clampSlider = true;
       bool snapSlider = false;
       float minValue;
@@ -26,6 +25,10 @@ namespace Greet
       float maxPos;
 
       OnValueChangeCallback onValueChangeCallback;
+
+      //////////////////
+      // Style variables
+      bool vertical = false;
 
 
 

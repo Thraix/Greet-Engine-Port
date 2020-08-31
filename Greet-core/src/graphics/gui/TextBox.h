@@ -13,6 +13,8 @@ namespace Greet
     public:
       typedef std::function<void(Component*, const std::string& before, const std::string& after)> OnTextChangedCallback;
     protected:
+      //////////////////
+      // Style variables
       Text text;
       Text hintText;
 

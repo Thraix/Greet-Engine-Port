@@ -22,6 +22,8 @@ namespace Greet
   void RadioGroup::SetOnRadioChangeCallback(OnRadioChangeCallback callback)
   {
     onRadioChangeCallback = callback;
+    if(activeButton)
+      CallOnRadioChangeCallback(activeButton);
   }
 
   void RadioGroup::CallOnRadioChangeCallback(RadioButton* button)

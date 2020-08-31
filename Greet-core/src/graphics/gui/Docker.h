@@ -12,6 +12,9 @@ namespace Greet {
   {
     private:
       REGISTER_COMPONENT_DECLARATION(Docker);
+      friend class DockerSplit;
+      friend class DockerContainer;
+      friend class DockerTab;
 
     protected:
       DockerSplit* split;
@@ -21,11 +24,13 @@ namespace Greet {
 
       Button* tabButton;
       Component* splitIcon;
-    public:
-      Color edgeColor;
-      int edgeWidth;
-      int edgeBorderSize;
-      Color edgeBorderColor;
+    private:
+      //////////////////
+      // Style variables
+      Color edgeColor = Color{1, 1, 1};
+      float edgeWidth = 10;
+      float edgeBorderSize = 0;
+      Color edgeBorderColor = Color{1, 1, 1};
 
     public:
       Docker(const XMLObject& object, Component* parent);

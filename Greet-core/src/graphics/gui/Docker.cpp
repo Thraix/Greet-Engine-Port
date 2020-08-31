@@ -9,8 +9,14 @@ namespace Greet
   Docker::Docker(const XMLObject& object, Component* parent)
     : Component(object, parent), split{nullptr}, grabbedTab{nullptr}, tabButton{nullptr}, splitIcon{nullptr}
   {
-      splitIcon = new Component({"StyleIcon", {}, ""}, nullptr);
-      tabButton = new Button({"TabButton", {}, ""}, nullptr);
+    AddStyleVariables(StylingVariables{
+      .colors = {{"edgeColor", &edgeColor}, {"edgeBorderColor", &edgeBorderColor}},
+      .floats = {{"edgeWidth", &edgeWidth}, {"edgeBorderSize", &edgeBorderSize}}
+    });
+    LoadStyles(object);
+
+    splitIcon = new Component({"StyleIcon", {}, ""}, nullptr);
+    tabButton = new Button({"TabButton", {}, ""}, nullptr);
     for(auto&& child : object.GetObjects())
     {
       if(child.GetName() == "DockerSplit")
@@ -58,11 +64,6 @@ namespace Greet
     tabButton->AddStyle("active", "normal");
     tabButton->Measure({0, 0}, {1, 1});
     splitIcon->Measure({0, 0}, {1, 1});
-
-    edgeColor = GUIUtils::GetColorFromXML(object, "edgeColor", backgroundColor);
-    edgeWidth = GUIUtils::GetIntFromXML(object, "edgeSize", 10);
-    edgeBorderSize  = GUIUtils::GetIntFromXML(object, "edgeBorder", 0);
-    edgeBorderColor = GUIUtils::GetColorFromXML(object, "edgeBorderColor", Color{1,1,1,1});
   }
 
   void Docker::GrabDockerTab(DockerTab* tab)

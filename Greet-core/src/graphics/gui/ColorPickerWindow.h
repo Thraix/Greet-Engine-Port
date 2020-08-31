@@ -13,7 +13,7 @@ namespace Greet
     protected:
       enum class InputChangeType
       {
-        SLIDER, RGB_TEXTBOX, HSV_TEXTBOX, HEX_TEXTBOX
+        NONE, SLIDER, RGB_TEXTBOX, HSV_TEXTBOX, HEX_TEXTBOX
       };
     public:
       typedef std::function<void(const Color& previous, const Color& current)> OnColorChangeCallback;
@@ -42,7 +42,7 @@ namespace Greet
       void RGBTextBoxChanged(Component* textBox, const std::string& oldText, const std::string& newText);
       void HSVTextBoxChanged(Component* textBox, const std::string& oldText, const std::string& newText);
       void HexTextBoxChanged(Component* textBox, const std::string& oldText, const std::string& newText);
-      void UpdateColor(const Color& hsv, InputChangeType type);
+      void UpdateColor(const Color& avColor, InputChangeType type, bool rgb);
 
     public:
       ColorPickerWindow();

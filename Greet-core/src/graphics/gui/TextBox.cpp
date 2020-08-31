@@ -316,6 +316,7 @@ namespace Greet
   void TextBox::SetOnTextChangedCallback(OnTextChangedCallback callback)
   {
     onTextChangedCallback = callback;
+    CallOnTextChangedCallback(str, str);
   }
 
   void TextBox::CallOnTextChangedCallback(const std::string& before, const std::string& after)

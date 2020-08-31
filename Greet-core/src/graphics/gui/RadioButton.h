@@ -16,15 +16,12 @@ namespace Greet
       // Simpler than doing dynamic cast whenever we need RadioGroup
       RadioGroup* radioParent;
       bool active;
-      Text text;
+
     public:
       RadioButton(const XMLObject& xmlObject, Component* component);
       void PostConstruction() override;
 
       void CallOnClickCallback() override;
-
-      float GetWrapWidth() const override;
-      float GetWrapHeight() const override;
 
     private:
       void Select(bool select);

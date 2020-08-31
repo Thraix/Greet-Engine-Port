@@ -11,7 +11,10 @@ namespace Greet {
     private:
       REGISTER_COMPONENT_DECLARATION(Label);
     private:
+      //////////////////
+      // Style variables
       Text text;
+
       bool hasMaxWidth;
       float maxWidth;
 

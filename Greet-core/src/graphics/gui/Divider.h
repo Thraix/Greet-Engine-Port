@@ -10,7 +10,11 @@ namespace Greet
     private:
       REGISTER_COMPONENT_DECLARATION(Divider);
     protected:
+
+      //////////////////
+      // Style variables
       bool vertical;
+
     public:
       Divider(const XMLObject& object, Component* parent);
       void PreRender(GUIRenderer* renderer, const Vec2& translation) const override;

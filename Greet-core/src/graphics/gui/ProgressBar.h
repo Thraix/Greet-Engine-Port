@@ -13,9 +13,11 @@ namespace Greet
       float* valueReference;
       float min;
       float max;
+
+      //////////////////
+      // Style variables
       bool vertical = false;
       bool reverse = false;
-
       Color progressColor{1,1,1,1};
 
     public:
