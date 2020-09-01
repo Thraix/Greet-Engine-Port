@@ -11,7 +11,7 @@ namespace Greet
   {
     AddStyleVariables(StylingVariables{
       .colors = {{"edgeColor", &edgeColor}, {"edgeBorderColor", &edgeBorderColor}},
-      .floats = {{"edgeWidth", &edgeWidth}, {"edgeBorderSize", &edgeBorderSize}}
+      .floats = {{"edgeWidth", &edgeWidth}, {"edgeBorder", &edgeBorderSize}}
     });
     LoadStyles(object);
 

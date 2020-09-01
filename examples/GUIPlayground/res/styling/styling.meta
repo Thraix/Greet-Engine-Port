@@ -114,3 +114,14 @@ width=16
 height=16
 backgroundColor=$primaryColor
 radius=8
+
+[Docker]
+width=fill_parent
+height=fill_parent
+backgroundColor=#323232
+edgeColor=#323232
+edgeSize=10
+edgeBorder=2
+edgeBorderColor=#626262
+border=2
+borderColor=#626262

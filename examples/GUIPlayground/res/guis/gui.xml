@@ -3,7 +3,7 @@
   styling="res/styling/styling.meta"
   width="fill_parent" height="fill_parent" minWidth="100"
   resizeTop="false" resizeLeft="false" resizeBottom="false" resizeRight="true">
-<Docker width="1w" height="1w" name="docker" backgroundColor="#323232" edgeColor="#323232" edgeSize="10" edgeBorder="2" edgeBorderColor="#626262" border="2" borderColor="#626262">
+<Docker name="docker">
   <TabButton align="left"/>
   <SplitIcon width="30" height="30" backgroundColor="#424242" border="5 2 2 2" borderColor="#626262"/>
   <DockerSplit>
