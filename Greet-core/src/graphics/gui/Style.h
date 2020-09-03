@@ -20,7 +20,7 @@
     return map.GetValue(str);\
   }\
   \
-  ComponentStyle& SetColor(const std::string& str, const ret& val) \
+  ComponentStyle& Set##name(const std::string& str, const ret& val) \
   { \
     map.SetValue(str, val); \
     return *this; \

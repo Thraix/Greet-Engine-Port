@@ -141,6 +141,7 @@ namespace Greet
         *value.second.mpVariable = GetValue(value.first);
       }
     }
+
     private:
       void LoadStylingVariable(const std::string& mode, const std::string& variable, MetaFileClass* styling, MetaFileClass* stylingVariables)
       {

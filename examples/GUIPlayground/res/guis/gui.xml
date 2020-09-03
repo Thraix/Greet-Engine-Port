@@ -1,8 +1,8 @@
 <Frame
   name="Main"
   styling="res/styling/styling.meta"
-  width="fill_parent" height="fill_parent" minWidth="100"
-  resizeTop="false" resizeLeft="false" resizeBottom="false" resizeRight="true">
+  width="fill_parent" height="fill_parent"
+  resizeTop="false" resizeLeft="false" resizeBottom="false" resizeRight="false">
 <Docker name="docker">
   <TabButton align="left"/>
   <SplitIcon width="30" height="30" backgroundColor="#424242" border="5 2 2 2" borderColor="#626262"/>
