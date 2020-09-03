@@ -9,6 +9,7 @@
 #include <event/MouseEvent.h>
 #include <string>
 #include <list>
+#include <queue>
 
 namespace Greet {
 
@@ -22,6 +23,10 @@ namespace Greet {
       std::list<Frame*> frames;
       Component* focused;
       GUIRenderer* renderer;
+
+      std::queue<Frame*> addQueue;
+      std::queue<Frame*> removeQueue;
+      Component* focusQueue;
 
     public:
       GUIScene(GUIRenderer* renderer);
@@ -37,14 +42,17 @@ namespace Greet {
       void PostRender();
       void Update(float timeElapsed);
 
-      bool RequestFocus(Component* component);
-      void AddFrame(Frame* frame);
-      Frame* RemoveFrame(const std::string& name);
-      Frame* RemoveFrame(Frame* frame);
+      void RequestFocusQueued(Component* component);
+      void AddFrameQueued(Frame* frame);
+      void RemoveFrameQueued(const std::string& name);
+      void RemoveFrameQueued(Frame* frame);
       Frame* GetFrame(const std::string& name);
 
       float GetWidth() const;
       float GetHeight() const;
       Vec2 GetSize() const;
+    private:
+      void RequestFocus(Component* component);
+
   };
 }

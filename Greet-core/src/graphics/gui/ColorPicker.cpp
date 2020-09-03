@@ -42,9 +42,9 @@ namespace Greet
     if(EVENT_IS_TYPE(event, EventType::MOUSE_PRESS))
     {
       MousePressEvent& e = static_cast<MousePressEvent&>(event);
-      guiScene->AddFrame(picker);
+      guiScene->AddFrameQueued(picker);
       picker->SetPosition(e.GetPosition());
-      guiScene->RequestFocus(picker);
+      guiScene->RequestFocusQueued(picker);
     }
   }
 

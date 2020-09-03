@@ -169,6 +169,7 @@ namespace Greet
 
   void Docker::LoadFrameStyle(const MetaFile& metaFile)
   {
+    Component::LoadFrameStyle(metaFile);
     split->LoadFrameStyle(metaFile);
     tabButton->LoadFrameStyle(metaFile);
     tabButton->Measure({0, 0}, {1, 1});

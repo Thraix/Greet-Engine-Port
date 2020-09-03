@@ -53,7 +53,7 @@ class Core : public App
 
       guiScene = new GUIScene(new GUIRenderer());
 
-      guiScene->AddFrame(FrameFactory::GetFrame("res/guis/gui.xml"));
+      guiScene->AddFrameQueued(FrameFactory::GetFrame("res/guis/gui.xml"));
 
 #if 1
       Frame* frame = guiScene->GetFrame("Main");

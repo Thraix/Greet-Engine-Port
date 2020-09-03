@@ -210,7 +210,7 @@ namespace Greet {
   {
     if(!GetParent() && !focused && shouldCloseUnfocus)
     {
-      guiScene->RemoveFrame(name);
+      guiScene->RemoveFrameQueued(name);
     }
   }
 }

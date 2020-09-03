@@ -155,7 +155,7 @@ namespace Greet
     if(!guiScene)
       Log::Error("GuiScene not initialized");
     if(!isFocused)
-      guiScene->RequestFocus(this);
+      guiScene->RequestFocusQueued(this);
     if(event.GetButton() == GREET_MOUSE_1)
     {
       pressed = true;
