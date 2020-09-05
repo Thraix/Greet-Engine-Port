@@ -41,6 +41,8 @@ namespace Greet {
       {}
 
     public:
+      virtual ~Event() {}
+
       virtual EventType GetType() const = 0;
       virtual uint GetCategory() const = 0;
       uint GetFlags() const { return flags; }

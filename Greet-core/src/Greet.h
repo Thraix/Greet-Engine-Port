@@ -25,6 +25,7 @@
 #include <event/ViewportEvent.h>
 #include <event/WindowEvent.h>
 #include <graphics/Animation.h>
+#include <graphics/Color.h>
 #include <graphics/FrameBufferObject.h>
 #include <graphics/GlobalSceneManager.h>
 #include <graphics/Light.h>
@@ -71,7 +72,9 @@
 #include <graphics/gui/SceneView.h>
 #include <graphics/gui/Slider.h>
 #include <graphics/gui/Style.h>
+#include <graphics/gui/StyleTemplateClasses.h>
 #include <graphics/gui/TLBR.h>
+#include <graphics/gui/Text.h>
 #include <graphics/gui/TextBox.h>
 #include <graphics/gui/docker/DockerContainer.h>
 #include <graphics/gui/docker/DockerInterface.h>

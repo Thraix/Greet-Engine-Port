@@ -2,6 +2,7 @@
 
 #include <graphics/gui/Component.h>
 #include <graphics/gui/RadioGroup.h>
+#include <graphics/gui/Text.h>
 
 namespace Greet
 {
@@ -15,6 +16,7 @@ namespace Greet
       // Simpler than doing dynamic cast whenever we need RadioGroup
       RadioGroup* radioParent;
       bool active;
+
     public:
       RadioButton(const XMLObject& xmlObject, Component* component);
       void PostConstruction() override;

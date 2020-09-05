@@ -11,8 +11,11 @@ namespace Greet {
       REGISTER_COMPONENT_DECLARATION(Container);
     protected:
       std::vector<Component*> m_components;
-      bool vertical;
-      float spacing;
+
+      //////////////////
+      // Style variables
+      bool vertical = true;
+      float spacing = 10;
 
     public:
       Container();
@@ -22,8 +25,7 @@ namespace Greet {
 
       virtual ~Container();
 
-      void Measure() override;
-      void MeasureFill(const Vec2& emptyParentSpace, const Vec2& percentageFill) override;
+      void Measure(const Vec2& emptyParentSpace, const Vec2& percentageFill) override;
       Vec2 GetMeasureFillSize() override;
       float GetMeasureTotalWeight() override;
 
@@ -38,11 +40,14 @@ namespace Greet {
       Component* GetComponent(uint index);
       size_t GetComponentCount() const;
 
+      virtual void LoadFrameStyle(const MetaFile& metaFile) override;
+
       bool IsVertical() const;
       Container& SetVertical(bool v);
       Container& SetSpacing(float spacing);
 
-      virtual Vec2 GetWrapSize() const override;
+      virtual float GetWrapWidth() const override;
+      virtual float GetWrapHeight() const override;
 
       void OnMousePressEventHandler(MousePressEvent& event, const Vec2& componentPos) override;
       void OnMouseMoveEventHandler(MouseMoveEvent& event, const Vec2& componentPos) override;
@@ -50,5 +55,8 @@ namespace Greet {
       virtual void SetGUIScene(GUIScene* scene) override;
 
       virtual Component* GetComponentByNameNoCast(const std::string& name) override;
+
+    private:
+      void MeasureChildren(const Vec2& weightTotals);
   };
 }

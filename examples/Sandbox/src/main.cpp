@@ -81,7 +81,7 @@ class Core : public App
 
       TextureManager::AddTexture2D("noise", Texture2D::Create(image, noiseS, noiseS, TextureParams(TextureFilter::NEAREST, TextureWrap::CLAMP_TO_EDGE, TextureInternalFormat::RGBA)));
 
-      FontManager::Add(new FontContainer("res/fonts/NotoSansUI-Regular.ttf","noto"));
+      FontManager::Add("noto", FontContainer("res/fonts/NotoSansUI-Regular.ttf"));
 
       GUIScene* guiScene = new GUIScene(new GUIRenderer());
       guiScene->AddFrame(FrameFactory::GetFrame("res/guis/header.xml"));

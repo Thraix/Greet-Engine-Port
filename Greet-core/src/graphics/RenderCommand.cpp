@@ -92,6 +92,20 @@ namespace Greet
     return viewportStack.top();
   }
 
+  float RenderCommand::GetViewportX()
+  {
+    if(viewportStack.empty())
+      return 0;
+    return viewportStack.top().x;
+  }
+
+  float RenderCommand::GetViewportY()
+  {
+    if(viewportStack.empty())
+      return 0;
+    return viewportStack.top().y;
+  }
+
   float RenderCommand::GetViewportWidth()
   {
     if(viewportStack.empty())

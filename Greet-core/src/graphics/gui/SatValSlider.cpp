@@ -6,67 +6,28 @@ namespace Greet
 {
   REGISTER_COMPONENT_DEFINITION(SatValSlider);
 
-  SatValSlider::SatValSlider(const std::string& name, Component* parent)
-    : Component{name, parent}, hue{0}, sat{0.5}, val{0.5}
-  {
-    m_isFocusable = true;
-    Style normal{};
-    normal.SetBackgroundColor(Vec4(1,1,1,1))
-      .SetBorderColor(Vec4(0,0,0,1))
-      .SetBorder(TLBR(2,2,2,2));
-    Component* component = new Component{"SatValSliderComponent", this};
-    component->SetSize(7,7,ComponentSize::Type::PIXELS, ComponentSize::Type::PIXELS, false)
-      .AddStyle("normal", normal);
-    sliderComponent = component;
-  }
+  SatValSlider::SatValSlider(const std::string& name, Component* parent, const std::string& componentType)
+    : Component{name, parent, componentType}, color{0, 0.5, 0.5, 1}
+  {}
 
   SatValSlider::SatValSlider(const XMLObject& xmlObject, Component* parent)
-    : Component(xmlObject, parent)
-  {
-    m_isFocusable = true;
-    if(xmlObject.GetObjectCount() > 0)
-      sliderComponent = ComponentFactory::GetComponent(xmlObject.GetObject(0), this);
-    else
-    {
-      Style normal{};
-      normal.SetBackgroundColor(Vec4(1,1,1,1)).SetBorderColor(Vec4(0,0,0,1));
-      Component* component = new Component{"SatValSliderComponent", this};
-      component->SetSize(7,7,ComponentSize::Type::PIXELS, ComponentSize::Type::PIXELS, false)
-        .AddStyle("normal", normal);
-      sliderComponent = component;
-    }
-  }
+    : Component(xmlObject, parent), color{0, 0.5, 0.5, 1}
+  {}
 
-  SatValSlider::~SatValSlider()
-  {
-    delete sliderComponent;
-  }
-
-  void SatValSlider::Measure()
-  {
-    sliderComponent->Measure();
-    Component::Measure();
-  }
-
-  void SatValSlider::MeasureFill(const Vec2& emptyParentSpace, const Vec2& percentageFill)
-  {
-    Component::MeasureFill(emptyParentSpace, percentageFill);
-    sliderComponent->MeasureFill(GetContentSize(), {1, 1});
-  }
 
   void SatValSlider::PreRender(GUIRenderer* renderer, const Vec2& translation) const
   {
     renderer->PushTranslation(translation);
-    renderer->SubmitRect(pos, size.size, Vec4(hue,0,0,1), Vec4(hue,1,0,1), Vec4(hue,0,1,1), Vec4(hue,1,1,1),true);
+    renderer->DrawRect(pos, GetSize(), Color(color.h, 0, 0), Color(color.h, 1, 0), Color(color.h, 0, 1), Color(color.h, 1, 1), true);
   }
 
   void SatValSlider::Render(GUIRenderer* renderer) const
   {
-    Vec2 sliderOffset = pos + GetTotalPadding() + sliderComponent->GetMargin().LeftTop() - sliderComponent->GetSize()/2;
-
-    sliderComponent->PreRender(renderer,  sliderOffset + Vec2{sat,val} * GetContentSize());
-    sliderComponent->RenderHandle(renderer);
-    sliderComponent->PostRender(renderer);
+    Vec2 sliderPos = {GetSliderPosFromSat(color.s), GetSliderPosFromVal(color.v)};
+    Vec2 size = GetSize();
+    Color argb = Color(color).ToRGB().Invert();
+    renderer->DrawRect(pos + Vec2{sliderPos .x, 0}, Vec2{1, size.h}, argb, false);
+    renderer->DrawRect(pos + Vec2{0, sliderPos .y}, Vec2{size.w, 1}, argb, false);
   }
 
   void SatValSlider::OnEvent(Event& event, const Vec2& componentPos)
@@ -77,14 +38,8 @@ namespace Greet
       if(e.GetButton() == GREET_MOUSE_1 && pressed)
       {
         Vec2 translatedPos = e.GetPosition() - componentPos;
-        float oldSat = sat;
-        float oldVal = val;
-
         SetSat(GetSliderSatFromPos(translatedPos.x));
         SetVal(GetSliderValFromPos(translatedPos.y));
-
-        //if(oldSat != newSat || oldVal != newVal)
-        //CallOnValueChangeCallback(oldSat, newSat, oldVal, newVal);
       }
     }
     else if(EVENT_IS_TYPE(event, EventType::MOUSE_MOVE))
@@ -93,26 +48,18 @@ namespace Greet
       {
         MouseMoveEvent& e = static_cast<MouseMoveEvent&>(event);
         Vec2 translatedPos = e.GetPosition() - componentPos;
-        float oldSat = GetSliderSatFromPos(sat);
-        float oldVal = GetSliderValFromPos(val);
-
         SetSat(GetSliderSatFromPos(translatedPos.x));
         SetVal(GetSliderValFromPos(translatedPos.y));
-
-        if(oldSat != sat)
-          CallOnSatChangeCallback(oldSat, sat);
-        if(oldVal != val)
-          CallOnValChangeCallback(oldVal, val);
       }
     }
   }
 
-  void SatValSlider::SetOnSatChangeCallback(OnSatChangeCallback callback)
+  void SatValSlider::SetOnSatChangeCallback(OnValueChangeCallback callback)
   {
     onSatChangeCallback = callback;
   }
 
-  void SatValSlider::SetOnValChangeCallback(OnValChangeCallback callback)
+  void SatValSlider::SetOnValChangeCallback(OnValueChangeCallback callback)
   {
     onValChangeCallback = callback;
   }
@@ -129,50 +76,56 @@ namespace Greet
       onValChangeCallback(this, oldVal, newVal);
   }
 
-  void SatValSlider::SetSat(float sat)
-  {
-    this->sat= sat;
-    Math::Clamp(&this->sat, 0.0f,1.0f);
-  }
-
   void SatValSlider::SetHue(float hue)
   {
-    this->hue = hue;
+    color.h = hue;
   }
 
-  void SatValSlider::SetVal(float val)
+  void SatValSlider::SetSat(float afSat, bool abCallback)
   {
-    this->val = val;
-    Math::Clamp(&this->val, 0.0f,1.0f);
+    float oldSat = color.s;
+    color.s = afSat;
+    Math::Clamp(&color.s, 0.0f,1.0f);
+    if(abCallback && color.s != oldSat)
+      CallOnSatChangeCallback(oldSat, color.s);
+  }
+
+  void SatValSlider::SetVal(float afVal, bool abCallback)
+  {
+    float oldVal = color.v;
+    color.v = afVal;
+    Math::Clamp(&color.v, 0.0f,1.0f);
+    if(abCallback && color.v != oldVal)
+      CallOnValChangeCallback(oldVal, color.v);
   }
 
   float SatValSlider::GetSat() const
   {
-    return sat;
+    return color.s;
   }
 
   float SatValSlider::GetVal() const
   {
-    return val;
+    return color.v;
   }
 
   float SatValSlider::GetSliderSatFromPos(float pos) const
   {
-    return pos / GetContentSize().w;
+    return pos / (GetSize().w - 1);
   }
 
   float SatValSlider::GetSliderPosFromSat(float value) const
   {
-    return GetContentSize().w * value;
+    return (GetSize().w - 1) * value;
   }
 
   float SatValSlider::GetSliderValFromPos(float pos) const
   {
-    return pos / GetContentSize().h;
+    return pos / (GetSize().h - 1);
   }
 
   float SatValSlider::GetSliderPosFromVal(float value) const
   {
-    return GetContentSize().h * value;
+    return (GetSize().h - 1) * value;
   }
 }

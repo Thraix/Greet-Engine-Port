@@ -31,34 +31,36 @@ namespace Greet {
       return std::regex_match(str, std::regex("[-+]?[0-9]*\\.?[0-9]*"));
     }
 
-    static size_t GetTrimStartPos(const std::string& str)
+    static size_t GetTrimStartPos(const std::string_view& str)
     {
       size_t pos = 0;
       while((str[pos] == ' ' || str[pos] == '\t') && pos < str.size())
         pos++;
 
-      if(pos == str.size())
-        return std::string::npos;
       return pos;
     }
 
-    static size_t GetTrimEndPos(const std::string& str)
+    static size_t GetTrimEndPos(const std::string_view& str)
     {
       size_t pos = str.size() - 1;
-      while((str[pos] == ' ' || str[pos] == '\t') && pos >= str.size())
+      while((str[pos] == ' ' || str[pos] == '\t') && pos > 0)
         pos--;
-
-      if(pos == -1u)
-        return std::string::npos;
       return pos;
+    }
+
+    static std::string_view Trim(const std::string_view& str)
+    {
+      size_t start = GetTrimStartPos(str);
+      size_t end = GetTrimEndPos(str);
+      if(start == str.size())
+        return "";
+      return std::string_view(str.begin() + start, end - start + 1);
     }
 
     static std::string_view Trim(const std::string& str)
     {
       size_t start = GetTrimStartPos(str);
       size_t end = GetTrimEndPos(str);
-      if(start == std::string::npos)
-        return str;
       return std::string_view(str.c_str() + start, end - start + 1);
     }
 

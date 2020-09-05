@@ -12,19 +12,25 @@ namespace Greet {
   {
     private:
       REGISTER_COMPONENT_DECLARATION(Docker);
+      friend class DockerSplit;
+      friend class DockerContainer;
+      friend class DockerTab;
 
     protected:
       DockerSplit* split;
       DockerTab* grabbedTab;
       float grabbedDistance = 0;
-      XMLObject tabButton;
-      XMLObject splitIconStyle;
       bool childrenChanged;
-    public:
-      Vec4 edgeColor;
-      int edgeWidth;
-      int edgeBorderSize;
-      Vec4 edgeBorderColor;
+
+      Button* tabButton;
+      Component* splitIcon;
+    private:
+      //////////////////
+      // Style variables
+      Color edgeColor = Color{1, 1, 1};
+      float edgeWidth = 10;
+      float edgeBorderSize = 0;
+      Color edgeBorderColor = Color{1, 1, 1};
 
     public:
       Docker(const XMLObject& object, Component* parent);
@@ -32,14 +38,17 @@ namespace Greet {
       void GrabDockerTab(DockerTab* tab);
       void HandleDroppedTab(MouseReleaseEvent& event, const Vec2& componentPos);
 
-      const XMLObject& GetTabButton() const;
-      const XMLObject& GetSplitIconStyle() const;
+      Button* GetTabButton() const;
+      Component* GetSplitIcon() const;
 
       // Overrided functions
       void Render(GUIRenderer* renderer) const override;
       void Update(float timeElapsed) override;
       void OnEvent(Event& event, const Vec2& componentPos) override;
       void OnMeasured() override;
+
+      virtual void LoadFrameStyle(const MetaFile& metaFile) override;
+
       Component* GetComponentByNameNoCast(const std::string& name) override;
       void SetGUIScene(GUIScene* scene) override;
 

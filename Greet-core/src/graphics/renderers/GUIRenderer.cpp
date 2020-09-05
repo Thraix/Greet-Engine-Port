@@ -7,7 +7,6 @@
 #include <graphics/Renderable2D.h>
 #include <graphics/shaders/ShaderFactory.h>
 #include <internal/GreetGL.h>
-#include <utils/ColorUtils.h>
 
 namespace Greet
 {
@@ -149,48 +148,47 @@ namespace Greet
       Log::Warning("Trying to pop the last translation.");
   }
 
-  void GUIRenderer::Submit(const Renderable2D& renderable)
+  void GUIRenderer::Draw(const Renderable2D& renderable)
   {
-    SubmitRect(renderable.GetPosition(), renderable.GetSize(), ColorUtils::ColorHexToVec4(renderable.GetColor()), false);
+    DrawRect(renderable.GetPosition(), renderable.GetSize(), Color(renderable.GetColor()), false);
   }
 
-  void GUIRenderer::SubmitLine(const Vec2& pos, float length, float width, bool vertical, const Vec4& color, bool isHsv)
+  void GUIRenderer::DrawLine(const Vec2& pos, float length, float width, bool vertical, const Color& color, bool isHsv)
   {
 
-    SubmitRect(pos, Vec2(vertical ? width : length, vertical ? length : width), color,isHsv);
+    DrawRect(pos, Vec2(vertical ? width : length, vertical ? length : width), color,isHsv);
   }
 
-  void GUIRenderer::SubmitTriangle(const Vec2& pos1, const Vec2& pos2, const Vec2& pos3, const Vec4& color, bool isHsv)
+  void GUIRenderer::DrawTriangle(const Vec2& pos1, const Vec2& pos2, const Vec2& pos3, const Color& color, bool isHsv)
   {
     AppendTriangle(pos1,pos2,pos3,color,isHsv);
   }
 
-  void GUIRenderer::SubmitRect(const Vec2& pos, const Vec2& size, const Vec4& color, bool isHsv)
+  void GUIRenderer::DrawRect(const Vec2& pos, const Vec2& size, const Color& color, bool isHsv)
   {
     AppendQuad(pos, size, Vec2(0, 0), Vec2(1, 1), 0, color, isHsv);
   }
-  void GUIRenderer::SubmitRoundedRect(const Vec2& pos, const Vec2& size, const Vec4& color, float radius, uint precision, bool isHsv)
+  void GUIRenderer::DrawRoundedRect(const Vec2& pos, const Vec2& size, const Color& color, float radius, uint precision, bool isHsv)
   {
     AppendRoundedQuad(pos,size,color,isHsv,radius,precision);
   }
 
-  void  GUIRenderer::SubmitRect(const Vec2& pos, const Vec2& size, const Vec4& color1, const Vec4& color2, const Vec4& color3, const Vec4& color4, bool isHsv)
+  void  GUIRenderer::DrawRect(const Vec2& pos, const Vec2& size, const Color& color1, const Color& color2, const Color& color3, const Color& color4, bool isHsv)
   {
     AppendQuad(pos, size, Vec2(0, 0), Vec2(1, 1), 0, color1, color2, color3, color4, isHsv);
   }
 
 
-  void GUIRenderer::SubmitString(const std::string& text, const Vec2& position, Font* font, const Vec4& color, bool isHsv)
+  void GUIRenderer::DrawText(const std::string& text, const Vec2& position, const Font& font, const Color& color, bool isHsv)
   {
-    float ts = GetTextureSlot(font->GetFontAtlasId());
-    if (ts == 0 && font->GetFontAtlasId() != 0)
+    float ts = GetTextureSlot(font.GetFontAtlasId());
+    if (ts == 0 && font.GetFontAtlasId() != 0)
     {
       Flush();
-      ts = GetTextureSlot(font->GetFontAtlasId());
+      ts = GetTextureSlot(font.GetFontAtlasId());
     }
 
-    FontAtlas* atlas = font->GetFontAtlas();
-    const Vec2& scale = Vec2(1,1);//Vec2(64.0, 64.0) / font->GetSize();//font->getScale();
+    const Ref<FontAtlas>& atlas = font.GetFontAtlas();
     Vec2 pos;
     Vec2 size;
     Vec2 uv0;
@@ -200,19 +198,19 @@ namespace Greet
     for (uint i = 0;i < text.length();i++)
     {
       const Glyph& glyph = atlas->GetGlyph(text[i]);
-      pos.x = x + glyph.bearingX * scale.x;
-      pos.y = (roundPos.y - glyph.bearingY * scale.y);
-      size.x = glyph.width * scale.x;
-      size.y = glyph.height * scale.y;
+      pos.x = x + glyph.miBearingX;
+      pos.y = (roundPos.y - glyph.miBearingY);
+      size.x = glyph.miWidth;
+      size.y = glyph.miHeight;
 
-      uv0.x = glyph.textureCoords.left;
-      uv0.y = 1.0-glyph.textureCoords.top;
-      uv1.x = glyph.textureCoords.right;
-      uv1.y = 1.0-glyph.textureCoords.bottom;
+      uv0.x = glyph.mvTextureCoords.left;
+      uv0.y = 1.0-glyph.mvTextureCoords.top;
+      uv1.x = glyph.mvTextureCoords.right;
+      uv1.y = 1.0-glyph.mvTextureCoords.bottom;
 
       AppendQuad(pos, size, uv0, uv1, ts, color, isHsv);
 
-      x += glyph.advanceX* scale.x;
+      x += glyph.miAdvanceX;
     }
   }
 
@@ -259,7 +257,7 @@ namespace Greet
     }
   }
 
-  void GUIRenderer::AppendTriangle(const Vec2& pos1, const Vec2& pos2, const Vec2& pos3, const Vec4& color, bool isHsv)
+  void GUIRenderer::AppendTriangle(const Vec2& pos1, const Vec2& pos2, const Vec2& pos3, const Color& color, bool isHsv)
   {
     if (NeedFlush(3, 3))
       Flush();
@@ -277,7 +275,7 @@ namespace Greet
     m_lastIndex += 3;
   }
 
-  void GUIRenderer::AppendQuad(const Vec2& position, const Vec2& size, const Vec2& texCoord1, const Vec2& texCoord2, float texId, const Vec4& color1, const Vec4& color2, const Vec4& color3, const Vec4& color4, bool isHsv)
+  void GUIRenderer::AppendQuad(const Vec2& position, const Vec2& size, const Vec2& texCoord1, const Vec2& texCoord2, float texId, const Color& color1, const Color& color2, const Color& color3, const Color& color4, bool isHsv)
   {
     if (NeedFlush(6, 4))
       Flush();
@@ -301,7 +299,7 @@ namespace Greet
 
   // TODO: Improve this code, remove the center vertex and
   // remove unnecessary verticies when width is too small
-  void GUIRenderer::AppendRoundedQuad(const Vec2& position, const Vec2& size, const Vec4& color, bool isHsv, float radius, uint precision)
+  void GUIRenderer::AppendRoundedQuad(const Vec2& position, const Vec2& size, const Color& color, bool isHsv, float radius, uint precision)
   {
     // If precision is 0 or radius is too little, just draw a normal quad
     if(precision == 0 || radius <= 0)
@@ -409,7 +407,7 @@ namespace Greet
     m_lastIndex += (precision+1)*4 + 1;
   }
 
-  void GUIRenderer::AppendQuaterCircle(const Vec2& center, const Vec4& color, bool isHsv, float radius, uint precision, bool left, bool top)
+  void GUIRenderer::AppendQuaterCircle(const Vec2& center, const Color& color, bool isHsv, float radius, uint precision, bool left, bool top)
   {
     Vec4 viewport = GetViewport(center-radius, center + radius);
     float xRad = radius;
@@ -444,12 +442,12 @@ namespace Greet
 
   }
 
-  void GUIRenderer::AppendQuad(const Vec2& position, const Vec2& size, const Vec2& texCoord1, const Vec2& texCoord2, float texId, const Vec4& color, bool isHsv)
+  void GUIRenderer::AppendQuad(const Vec2& position, const Vec2& size, const Vec2& texCoord1, const Vec2& texCoord2, float texId, const Color& color, bool isHsv)
   {
     AppendQuad(position, size, texCoord1, texCoord2, texId, color, color, color, color, isHsv);
   }
 
-  void GUIRenderer::AppendVertexBuffer(const Vec2& position, const Vec2& texCoord, float texId, const Vec4& color, const Vec4& viewport, bool isHsv)
+  void GUIRenderer::AppendVertexBuffer(const Vec2& position, const Vec2& texCoord, float texId, const Color& color, const Vec4& viewport, bool isHsv)
   {
     m_buffer->pos = GetMatrix() * (translationStack.top() + position);
     m_buffer->texCoord = texCoord;

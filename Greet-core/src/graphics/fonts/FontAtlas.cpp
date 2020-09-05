@@ -5,92 +5,97 @@
 
 namespace Greet
 {
-  FontAtlas::FontAtlas(const std::string& filename, uint width, uint height, uint fontSize)
-    : yPos(0), xPos(0), nextYPos(0), width(width), height(height), fontSize(fontSize),
-    atlas{Texture2D::Create(width, height, TextureParams(TextureFilter::LINEAR, TextureWrap::CLAMP_TO_EDGE, TextureInternalFormat::RGBA))},
-    m_pixels(width*height*4)
+  FontAtlas::FontAtlas(const std::string& asFilename, uint aiFontSize)
+    : miYPos{0}, miXPos{0}, miNextYPos{0}, miWidth{512}, miHeight{512}, mAtlas{Texture2D::Create(512, 512, TextureParams(TextureFilter::NEAREST, TextureWrap::CLAMP_TO_EDGE, TextureInternalFormat::RGBA))}, mvPixels(miWidth * miHeight * 4)
   {
-    if(FT_Init_FreeType(&library))
+    if(FT_Init_FreeType(&mLibrary))
     {
       Log::Error("Could not initialize FreeType.");
     }
-    if(FT_New_Face(library, filename.c_str(), 0, &face))
+    if(FT_New_Face(mLibrary, asFilename.c_str(), 0, &mFace))
     {
-      Log::Error("Could not initialize font: ", filename);
+      Log::Error("Could not initialize font: ", asFilename);
     }
 
-    FT_Set_Pixel_Sizes(face, 0, fontSize);
+    FT_Set_Pixel_Sizes(mFace, 0, aiFontSize);
 
-    memset(m_pixels.data(), 0, width*height*4);
+    memset(mvPixels.data(), 0, miWidth * miHeight * 4);
   }
 
   FontAtlas::~FontAtlas()
   {
+    FT_Done_Face(mFace);
+    FT_Done_FreeType(mLibrary);
   }
 
-  const Glyph& FontAtlas::GetGlyph(char character)
+  const Glyph& FontAtlas::GetGlyph(char acCharacter)
   {
-    auto it = glyphs.find(character);
-    if(it != glyphs.end())
+    auto it = mvGlyphs.find(acCharacter);
+    if(it != mvGlyphs.end())
     {
       return it->second;
     }
-    return AddGlyph(character);
+    return AddGlyph(acCharacter);
   }
 
-  const Glyph& FontAtlas::AddGlyph(char character)
+  const Glyph& FontAtlas::AddGlyph(char acCharacter)
   {
-    if(FT_Load_Char(face,character,FT_LOAD_RENDER))
+    if(FT_Load_Char(mFace,acCharacter,FT_LOAD_RENDER))
     {
-      Log::Error("Could not load character: ", character);
+      Log::Error("Could not load character: ", acCharacter);
       // Lets just hope that there is a character in the map. Maybe add a dummy character later
-      return glyphs.begin()->second;
+      return mvGlyphs.begin()->second;
     }
 
-    uint pixelWidth = face->glyph->bitmap.width;
-    uint pixelHeight = face->glyph->bitmap.rows;
-    if(xPos + pixelWidth >= width)
+    uint pixelWidth = mFace->glyph->bitmap.width;
+    uint pixelHeight = mFace->glyph->bitmap.rows;
+    if(miXPos + pixelWidth >= miWidth)
     {
-      xPos = 0;
-      yPos = nextYPos + 1;
+      miXPos = 0;
+      miYPos = miNextYPos + 1;
     }
     // Set new y value.
-    if(yPos+pixelHeight > nextYPos)
-      nextYPos = yPos+pixelHeight;
+    if(miYPos+pixelHeight > miNextYPos)
+      miNextYPos = miYPos+pixelHeight;
     for(uint y = 0;y<pixelHeight;y++)
     {
       for(uint x = 0;x<pixelWidth;x++)
       {
-        unsigned char a = face->glyph->bitmap.buffer[(x+y*pixelWidth)];
-        m_pixels[4*((x+xPos) + (y+yPos) * width)+0] = 0xff;
-        m_pixels[4*((x+xPos) + (y+yPos) * width)+1] = 0xff;
-        m_pixels[4*((x+xPos) + (y+yPos) * width)+2] = 0xff;
-        m_pixels[4*((x+xPos) + (y+yPos) * width)+3] = a;
+        unsigned char a = mFace->glyph->bitmap.buffer[(x+y*pixelWidth)];
+        mvPixels[4*((x+miXPos) + (y+miYPos) * miWidth)+0] = 0xff;
+        mvPixels[4*((x+miXPos) + (y+miYPos) * miWidth)+1] = 0xff;
+        mvPixels[4*((x+miXPos) + (y+miYPos) * miWidth)+2] = 0xff;
+        mvPixels[4*((x+miXPos) + (y+miYPos) * miWidth)+3] = a;
       }
     }
     Glyph g;
-    g.width = face->glyph->metrics.width / 64.0;
-    g.bearingX = face->glyph->metrics.horiBearingX / 64.0;
-    g.advanceX = face->glyph->metrics.horiAdvance / 64.0;
-    g.advanceY = face->glyph->metrics.vertAdvance / 64.0;
-    g.height = face->glyph->metrics.height / 64.0;
-    g.bearingY = (face->glyph->metrics.horiBearingY) / 64.0;
-    g.descending = (g.height - face->glyph->metrics.horiBearingY) / 64.0;
-    g.textureCoords = Vec4(yPos / (float)height, xPos / (float)width, (yPos+pixelHeight)/(float)height, (xPos+pixelWidth)/(float)width);
-    xPos += pixelWidth + 1;
-    std::pair<std::map<char,  Glyph>::iterator, bool> ret = glyphs.emplace(character, g);
-    atlas->SetPixels(m_pixels);
-    //Log::Info(g.width," ",g.kerning, " ", g.advanceX," ",g.advanceY, " ", g.height," ", g.ascending," ",g.descending);
+    g.miWidth = mFace->glyph->metrics.width / 64;
+    g.miBearingX = mFace->glyph->metrics.horiBearingX / 64;
+    g.miAdvanceX = mFace->glyph->metrics.horiAdvance / 64;
+    g.miAdvanceY = mFace->glyph->metrics.vertAdvance / 64;
+    g.miHeight = mFace->glyph->metrics.height / 64;
+    g.miBearingY = (mFace->glyph->metrics.horiBearingY) / 64;
+    g.miDescending = (g.miHeight - mFace->glyph->metrics.horiBearingY) / 64;
+    g.mvTextureCoords = Vec4(miYPos / (float)miHeight, miXPos / (float)miWidth, (miYPos+pixelHeight)/(float)miHeight, (miXPos+pixelWidth)/(float)miWidth);
+    miXPos += pixelWidth + 1;
+    std::pair<std::map<char,  Glyph>::iterator, bool> ret = mvGlyphs.emplace(acCharacter, g);
+    mAtlas->SetPixels(mvPixels);
+    //Log::Info(g.miWidth," ",g.kerning, " ", g.advanceX," ",g.advanceY, " ", g.miHeight," ", g.ascending," ",g.descending);
     return ret.first->second;
   }
 
   uint FontAtlas::GetTextureId() const
   {
-    return atlas->GetTexId();
+    return mAtlas->GetTexId();
   }
 
   uint FontAtlas::GetBaselineOffset() const
   {
-    return (face->size->metrics.descender+ face->size->metrics.ascender) / 64.0f;
+    return (mFace->size->metrics.descender + mFace->size->metrics.ascender) / 64.0f;
+  }
+
+  Ref<FontAtlas> FontAtlas::Create(const std::string& asFontname, uint aiFontSize)
+  {
+    return Ref<FontAtlas>{new FontAtlas(asFontname, aiFontSize)};
   }
 }

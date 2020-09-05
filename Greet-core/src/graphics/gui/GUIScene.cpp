@@ -1,4 +1,5 @@
 #include "GUIScene.h"
+
 #include <event/EventDispatcher.h>
 #include <graphics/RenderCommand.h>
 #include <graphics/gui/Frame.h>
@@ -120,14 +121,49 @@ namespace Greet {
 
   void GUIScene::Update(float timeElapsed)
   {
+    while(!addQueue.empty())
+    {
+      Frame* frame = addQueue.front();
+      frame->Measure(GetSize(), {1, 1});
+      frame->SetGUIScene(this);
+      frames.push_back(frame);
+      frame->PostConstruction();
+      addQueue.pop();
+    }
+    if(focusQueue)
+      RequestFocus(focusQueue);
+    focusQueue = nullptr;
+
+    while(!removeQueue.empty())
+    {
+      Frame* frame = removeQueue.front();
+      for (auto it = frames.begin(); it != frames.end();++it)
+      {
+        if ((*it) == frame)
+        {
+          frames.erase(it);
+          break;
+        }
+      }
+      removeQueue.pop();
+    }
     for (auto it = frames.begin(); it != frames.end(); ++it)
     {
+      if((*it)->remeasure)
+      {
+        (*it)->Measure(GetSize(), {1, 1});
+      }
       (*it)->UpdateHandle(timeElapsed);
     }
   }
 
+  void GUIScene::RequestFocusQueued(Component* component)
+  {
+    focusQueue = component;
+  }
+
   // Could do checks if a popup is refusing to give request or something
-  bool GUIScene::RequestFocus(Component* component)
+  void GUIScene::RequestFocus(Component* component)
   {
     // Unfocus the currently focused component
     if(focused)
@@ -169,11 +205,9 @@ namespace Greet {
     }
 
     focused = component;
-
-    return true;
   }
 
-  void GUIScene::AddFrame(Frame* frame)
+  void GUIScene::AddFrameQueued(Frame* frame)
   {
     if (frame == nullptr)
     {
@@ -181,37 +215,25 @@ namespace Greet {
 
       return;
     }
-    frame->Measure();
-    frame->MeasureFill(GetSize(), {1, 1});
-    frame->SetGUIScene(this);
-    frames.push_back(frame);
-    frame->PostConstruction();
+    addQueue.push(frame);
   }
 
-  Frame* GUIScene::RemoveFrame(const std::string& name)
+  void GUIScene::RemoveFrameQueued(const std::string& name)
   {
     for(auto it = frames.begin(); it!=frames.end();++it)
     {
       if((*it)->GetName() == name)
       {
-        frames.erase(it);
-        return (*it);
+        RemoveFrameQueued(*it);
+        return;
       }
     }
-    return nullptr;
+    return;
   }
 
-  Frame* GUIScene::RemoveFrame(Frame* frame)
+  void GUIScene::RemoveFrameQueued(Frame* frame)
   {
-    for (auto it = frames.begin(); it != frames.end();++it)
-    {
-      if ((*it) == frame)
-      {
-        frames.erase(it);
-        return frame;
-      }
-    }
-    return nullptr;
+    removeQueue.push(frame);
   }
 
   Frame* GUIScene::GetFrame(const std::string& name)

@@ -17,7 +17,7 @@ namespace Greet {
       static byte RESIZING_LEFT;
       static byte RESIZING_TOP;
       static byte RESIZING_BOTTOM;
-      static uint RESIZING_MARGIN;
+      static int RESIZING_MARGIN;
 
       bool m_resizing;
       byte m_resizableFlags;
@@ -44,8 +44,9 @@ namespace Greet {
       virtual bool IsMouseInside(const Vec2& mousePos) const override;
       virtual void SetPosition(const Vec2& pos) override;
 
-      // Check if the mouse is within the resize window and sets flags
-      bool CheckResize(const Vec2& mousePos);
+      // Check if the mouse is within the resize window
+      bool IsHoverResize(const Vec2& mousePos);
+      void SetResizeFlags(const Vec2& mousePos);
 
       // Resize the window the mouse position
       void Resize(const Vec2& mousePos);
@@ -53,11 +54,13 @@ namespace Greet {
       // Clamp the container inside window after resizing it.
       void ResizeScreenClamp();
 
-      void OnEvent(Event& event, const Vec2& componentPos) override;
+      void OnMousePressEventHandler(MousePressEvent& event, const Vec2& componentPos) override;
+      void OnMouseReleaseEventHandler(MouseReleaseEvent& event, const Vec2& componentPos) override;
+      void OnMouseMoveEventHandler(MouseMoveEvent& event, const Vec2& componentPos) override;
 
       // Getters and setters
-      virtual Vec2 GetComponentPosition() const { return Vec2(currentStyle->margin.left + currentStyle->border.left, currentStyle->margin.top + currentStyle->border.top); };
-      virtual Vec2 GetComponentSize() const { return size.size - GetComponentPosition() - Vec2(currentStyle->margin.right + currentStyle->border.right, currentStyle->margin.bottom + currentStyle->border.bottom); }
+      virtual Vec2 GetComponentPosition() const { return Vec2(margin.left + border.left, margin.top + border.top); };
+      virtual Vec2 GetComponentSize() const { return GetSize() - GetComponentPosition() - Vec2(margin.right + border.right, margin.bottom + border.bottom); }
 
       // Set listeners
       void SetGUIMouseListener(GUIMouseListener* listener);

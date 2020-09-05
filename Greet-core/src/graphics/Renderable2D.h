@@ -29,6 +29,11 @@ namespace Greet{
     protected:
 
     public:
+      Renderable2D(const Vec2& position,const Vec2& size, uint color)
+        : m_position(position),m_size(size), m_color(color)
+      {
+      }
+
       Renderable2D(const Vec2& position,const Vec2& size, uint color, Sprite sprite)
         : m_position(position),m_size(size), m_color(color), m_sprite(sprite)
       {
@@ -58,10 +63,10 @@ namespace Greet{
       {
       }
 
-      virtual void Submit(Renderer2D* renderer) const override
+      virtual void Render(Renderer2D* renderer) const override
       {
         if (render)
-          renderer->Submit(*this);
+          renderer->Draw(*this);
       }
 
       virtual bool Update(float timeElapsed) override

@@ -7,26 +7,16 @@ namespace Greet
 {
   REGISTER_COMPONENT_DEFINITION(Slider);
 
-  uint Slider::SLIDER_FLAG_FORCE_INSIDE = BIT(0);
-  uint Slider::SLIDER_FLAG_SNAP = BIT(1);
-  uint Slider::SLIDER_FLAG_VERTICAL = BIT(2);
-
   Slider::Slider(const std::string& name, Component* parent)
-    : Component{name, parent}, flags{0}
+    : Component{name, parent}
   {
-    m_isFocusable = true;
-    Style normal{};
-    normal.SetBackgroundColor(Vec4(1,1,1,1))
-      .SetBorderColor(Vec4(0,0,0,1))
-      .SetBorder(TLBR(2,2,2,2));
-    sliderComponent = new Component(name+"#SliderComponent", this);
-    sliderComponent->SetSize(7,1,ComponentSize::Type::PIXELS, ComponentSize::Type::WEIGHT)
-      .AddStyle("normal", normal);
+    AddStyleVariables(StylingVariables{.bools = {{"vertical", &vertical}}});
+
+    sliderComponent = new Component{name+"#SliderIndicator", this, "SliderIndicator"};
 
     minValue = 0;
     maxValue = 100;
     stepSize = 0;
-    flags |= SLIDER_FLAG_VERTICAL;
     // Bit of a hack to make the initial value correct
     minPos = 0;
     maxPos = 1;
@@ -35,28 +25,20 @@ namespace Greet
   }
 
   Slider::Slider(const XMLObject& xmlObject, Component* parent)
-    : Component(xmlObject, parent), flags{0}
+    : Component(xmlObject, parent)
   {
-    m_isFocusable = true;
-    if(xmlObject.GetObjectCount() > 0)
-      sliderComponent = ComponentFactory::GetComponent(xmlObject.GetObject(0), this);
+    AddStyleVariables(StylingVariables{.bools = {{"vertical", &vertical}}});
+    LoadStyles(xmlObject);
 
     minValue = GUIUtils::GetFloatFromXML(xmlObject, "minValue", 0.0f);
     maxValue = GUIUtils::GetFloatFromXML(xmlObject, "maxValue", 100.0f);
     stepSize = GUIUtils::GetFloatFromXML(xmlObject, "stepSize", 0.0f);
-
-    flags |= GUIUtils::GetBooleanFromXML(xmlObject, "indicatorInside", false) ? SLIDER_FLAG_FORCE_INSIDE : false;
-    flags |= GUIUtils::GetBooleanFromXML(xmlObject, "vertical", false) ? SLIDER_FLAG_VERTICAL : false;
 
     if(maxValue - minValue < 0)
     {
       Log::Warning("Min value in slider is greater than max value");
       std::swap(minValue,maxValue);
     }
-
-    //if((maxValue - minValue) / stepSize > 1.0001)
-    //  Log::Warning("Step size in Slider doesn't divide max - min evenly");
-
 
     if(stepSize < 0)
     {
@@ -65,53 +47,56 @@ namespace Greet
     }
 
     if(stepSize > 0)
-      flags |= SLIDER_FLAG_SNAP;
+      snapSlider = true;
 
 
     // Bit of a hack to make the initial value correct
     minPos = 0;
     maxPos = 1;
+
+    clampSlider = GUIUtils::GetBooleanFromXML(xmlObject, "indicatorInside", false);
+    if(xmlObject.GetObjectCount() > 0)
+    {
+      sliderComponent = ComponentFactory::GetComponent(xmlObject.GetObject(0), this);
+    }
+    else
+    {
+      sliderComponent = new Component{name+"#SliderIndicator", this, "SliderIndicator"};
+    }
+
     // Default defaultValue should be in the middle
     SetValue(GUIUtils::GetFloatFromXML(xmlObject, "defaultValue", (maxValue-minValue)/2.0f));
   }
 
-  void Slider::Measure()
+  void Slider::Measure(const Vec2& emptyParentSpace, const Vec2& percentageFill)
   {
-    sliderComponent->Measure();
-    Component::Measure();
-  }
-
-  void Slider::MeasureFill(const Vec2& emptyParentSpace, const Vec2& percentageFill)
-  {
-    Component::MeasureFill(emptyParentSpace, percentageFill);
-    sliderComponent->MeasureFill(GetContentSize(),{1,1});
+    Component::Measure(emptyParentSpace, percentageFill);
+    sliderComponent->Measure(GetContentSize(),{1,1});
   }
 
   void Slider::OnMeasured()
   {
-    float value = GetValue();
-
     // vi will be the y value of the sizes if vertical and x value if not
-    uint vi = (flags & SLIDER_FLAG_VERTICAL) ? 1 : 0;
+    float& sliderDirSize = vertical ? height.size : width.size;
+    uint vi = vertical ? 1 : 0;
 
-    if(flags & SLIDER_FLAG_FORCE_INSIDE)
+    if(clampSlider)
     {
       minPos = sliderComponent->GetSize()[vi]/2;
-      maxPos = size.size[vi]-GetBorder().GetSize()[vi]-minPos;
+      maxPos = sliderDirSize - GetBorder().GetSize()[vi]-minPos;
     }
     else
     {
       minPos = 0;
-      maxPos = size.size[vi];
+      maxPos = sliderDirSize;
     }
-
-    SetValue(value);
   }
 
   void Slider::Render(GUIRenderer* renderer) const
   {
+    float sliderPos = GetSliderPosFromValue(value);
     Vec2 sliderOffset = pos + GetTotalPadding() + sliderComponent->GetMargin().LeftTop() - sliderComponent->GetSize()/2;
-    if(flags & SLIDER_FLAG_VERTICAL)
+    if(vertical)
       sliderComponent->PreRender(renderer,  sliderOffset + Vec2{GetContentSize().w/2, sliderPos});
     else
       sliderComponent->PreRender(renderer,  sliderOffset + Vec2{sliderPos, GetContentSize().h/2});
@@ -127,14 +112,13 @@ namespace Greet
       if(e.GetButton() == GREET_MOUSE_1 && pressed)
       {
         Vec2 translatedPos = e.GetPosition() - componentPos;
-        float oldValue = GetSliderValueFromPos(sliderPos);
-        if(flags & SLIDER_FLAG_VERTICAL)
+        float oldValue = value;
+        if(vertical)
           SetValue(GetSliderValueFromPos(translatedPos.y));
         else
           SetValue(GetSliderValueFromPos(translatedPos.x));
-        float newValue = GetSliderValueFromPos(sliderPos);
-        if(oldValue != newValue)
-          CallOnValueChangeCallback(oldValue, newValue);
+        if(oldValue != value)
+          CallOnValueChangeCallback(oldValue, value);
       }
     }
     else if(EVENT_IS_TYPE(event, EventType::MOUSE_MOVE))
@@ -143,14 +127,13 @@ namespace Greet
       if(pressed)
       {
         Vec2 translatedPos = e.GetPosition() - componentPos;
-        float oldValue = GetSliderValueFromPos(sliderPos);
-        if(flags & SLIDER_FLAG_VERTICAL)
+        float oldValue = value;
+        if(vertical)
           SetValue(GetSliderValueFromPos(translatedPos.y));
         else
           SetValue(GetSliderValueFromPos(translatedPos.x));
-        float newValue = GetSliderValueFromPos(sliderPos);
-        if(oldValue != newValue)
-          CallOnValueChangeCallback(oldValue, newValue);
+        if(oldValue != value)
+          CallOnValueChangeCallback(oldValue, value);
       }
     }
 
@@ -159,6 +142,7 @@ namespace Greet
   void Slider::SetOnValueChangeCallback(OnValueChangeCallback callback)
   {
     onValueChangeCallback = callback;
+    CallOnValueChangeCallback(value, value);
   }
 
   void Slider::CallOnValueChangeCallback(float oldValue, float newValue)
@@ -169,11 +153,14 @@ namespace Greet
 
   Slider& Slider::SetVertical(bool vertical)
   {
-    if(vertical)
-      flags |= SLIDER_FLAG_VERTICAL;
-    else
-      flags &= ~SLIDER_FLAG_VERTICAL;
+    this->vertical = vertical;
     return *this;
+  }
+
+  void Slider::LoadFrameStyle(const MetaFile& metaFile)
+  {
+    Component::LoadFrameStyle(metaFile);
+    sliderComponent->LoadFrameStyle(metaFile);
   }
 
   Component* Slider::GetSliderComponent()
@@ -183,15 +170,29 @@ namespace Greet
 
   float Slider::GetValue() const
   {
-    return GetSliderValueFromPos(sliderPos);
+    return value;
   }
 
-  void Slider::SetValue(float value)
+  float Slider::GetMinValue() const
   {
-    Math::Clamp(&value, minValue, maxValue);
-    if(flags & SLIDER_FLAG_SNAP)
-      value = GetSnappedSlider(value);
-    sliderPos = GetSliderPosFromValue(value);
+    return minValue;
+  }
+
+  float Slider::GetMaxValue() const
+  {
+    return maxValue;
+  }
+
+  void Slider::SetValue(float afValue, bool abCallback)
+  {
+    Math::Clamp(&afValue, minValue, maxValue);
+    float oldValue = value;
+    value = afValue;
+    if(snapSlider)
+      value = GetSnappedSlider(afValue);
+
+    if(abCallback && value != oldValue)
+      CallOnValueChangeCallback(oldValue, value);
   }
 
   float Slider::GetSnappedSlider(float sliderValue) const

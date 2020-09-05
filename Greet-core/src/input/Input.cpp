@@ -7,8 +7,8 @@ namespace Greet
 {
   Vec2 Input::mousePos;
   Vec2 Input::mouseLastPos;
-  std::vector<bool> Input::mouseButtonsDown(16);
-  std::vector<bool> Input::keyButtonsDown(256);
+  std::unordered_map<int, bool> Input::mouseButtonsDown(16);
+  std::unordered_map<int, bool> Input::keyButtonsDown(256);
   float Input::mouseScrollX;
   float Input::mouseScrollY;
 
@@ -19,15 +19,16 @@ namespace Greet
 
   void Input::SetKeyButton(int keyCode, bool value)
   {
-    while(keyCode >= keyButtonsDown.size())
-      keyButtonsDown.push_back(false);
+    if(keyCode == GREET_KEY_UNKNOWN)
+    {
+      Log::Error("Invalid key pressed");
+      return;
+    }
     keyButtonsDown[keyCode] = value;
   }
 
   void Input::SetMouseButton(int mouseCode, bool value)
   {
-    while(mouseCode >= mouseButtonsDown.size())
-      mouseButtonsDown.push_back(false);
     mouseButtonsDown[mouseCode] = value;
   }
 
@@ -39,15 +40,17 @@ namespace Greet
 
   bool Input::IsKeyDown(int keyCode)
   {
-    if(keyCode < keyButtonsDown.size())
-      return keyButtonsDown[keyCode];
+    auto it = keyButtonsDown.find(keyCode);
+    if(it != keyButtonsDown.end())
+      return it->second;
     return false;
   }
 
   bool Input::IsMouseDown(int mouseCode)
   {
-    if(mouseCode < mouseButtonsDown.size())
-      return mouseButtonsDown[mouseCode];
+    auto it = mouseButtonsDown.find(mouseCode);
+    if(it != mouseButtonsDown.end())
+      return it->second;
     return false;
   }
 

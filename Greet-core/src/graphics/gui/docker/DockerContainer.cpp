@@ -14,7 +14,7 @@ namespace Greet
     {
       if(objectChild.GetName() == "DockerTab")
       {
-        children.push_back(new DockerTab(objectChild, docker, this));
+        AddTab(children.size(), new DockerTab(objectChild, docker, this));
       }
       else
       {
@@ -23,29 +23,18 @@ namespace Greet
     }
     if(children.size() > 0)
       children[0]->ShowTab();
-    button = new Button(docker->GetTabButton(), nullptr);
-    button->AddStyle("active", Style{"active", docker->GetTabButton()});
-    splitIcon = new Component(docker->GetSplitIconStyle(), nullptr);
-    splitIcon->Remeasure();
   }
 
   DockerContainer::DockerContainer(DockerTab* tab, Docker* docker, DockerSplit* parent)
     : DockerInterface{docker, parent}, activeTab{0}
   {
-    children.push_back(tab);
-    tab->SetContainer(this);
-    button = new Button(docker->GetTabButton(), nullptr);
-    button->AddStyle("active", Style{"active", docker->GetTabButton()});
-    splitIcon = new Component(docker->GetSplitIconStyle(), nullptr);
-    splitIcon->Remeasure();
+    AddTab(0, tab);
   }
 
   DockerContainer::~DockerContainer()
   {
     for(auto&& child : children)
       delete child;
-    delete button;
-    delete splitIcon;
   }
 
   void DockerContainer::Render(GUIRenderer* renderer) const
@@ -57,20 +46,24 @@ namespace Greet
     children[activeTab]->Render(renderer);
 
     renderer->PushTranslation(docker->GetPosition() + position);
+    Button* tabButton = docker->GetTabButton();
     for(int i = 0;i<children.size();i++)
     {
       if(i == activeTab)
-        button->SetCurrentStyle("active");
+        tabButton->SetCurrentStyle("active");
       else if(hover && i == hoverTab)
-        button->SetCurrentStyle("hover");
+        tabButton->SetCurrentStyle("hover");
       else
-        button->SetCurrentStyle("normal");
-      button->PreRender(renderer, {(float)i * (float)button->GetWidth(), 0.0f});
-      button->SetText(children[i]->GetTitle());
-      button->Render(renderer);
-      button->PostRender(renderer);
+        tabButton->SetCurrentStyle("normal");
+      tabButton->SetText(children[i]->GetTitle());
+      tabButton->Measure({0, 0}, {0, 0});
+      tabButton->PreRender(renderer, {(float)i * (float)tabButton->GetWidth(), 0.0f});
+      tabButton->Render(renderer);
+      tabButton->PostRender(renderer);
     }
-    if(docker->IsHoldingTab() && Utils::IsInside(Input::GetMousePosPixel(), position, size))
+
+    Component* splitIcon = docker->GetSplitIcon();
+    if(docker->IsHoldingTab() && Utils::IsInside(Input::GetMousePosPixel(), position + docker->GetRealPosition() + docker->GetTotalPadding(), size))
     {
       splitIcon->PreRender(renderer, GetTopSplitPos());
       splitIcon->Render(renderer);
@@ -136,7 +129,7 @@ namespace Greet
 
   void DockerContainer::HandleDroppedTab(DockerTab* tab, MouseReleaseEvent& event, const Vec2& componentPos)
   {
-    Vec2 mousePos = event.GetPosition() - position;
+    Vec2 mousePos = event.GetPosition() - position - componentPos;
     DockerSplit* split = static_cast<DockerSplit*>(parent);
     int index = split->GetDockerIndex(this);
     bool splitContainer = false;
@@ -190,8 +183,7 @@ namespace Greet
       AddTab(tabIndex, tab);
 
       // Fix this container
-      tab->GetContainer()->RemoveTab(tab);
-      tab->SetContainer(this);
+      tabContainer->RemoveTab(tab);
       SelectTab(tabIndex);
       return;
     }
@@ -199,7 +191,7 @@ namespace Greet
 
   void DockerContainer::SelectTab(int i)
   {
-    ASSERT(i >= 0 && i < children.size(), "Index out of bound");
+    ASSERT(i >= 0 && i < children.size(), "Index out of bound: ", i, " >= ", children.size());
     if(i != activeTab)
     {
       if(activeTab >= 0 && activeTab < children.size())
@@ -219,7 +211,7 @@ namespace Greet
 
   void DockerContainer::HoverTab(int i)
   {
-    ASSERT(i >= 0 && i < children.size(), "Index out of bound");
+    ASSERT(i >= 0 && i < children.size(), "Index out of bound: ", i, " >= ", children.size());
     hoverTab = i;
     hover = true;
   }
@@ -229,19 +221,19 @@ namespace Greet
     hover = false;
   }
 
-  void DockerContainer::AddTab(int index, DockerTab* tab)
+  void DockerContainer::AddTab(int i, DockerTab* tab)
   {
-    ASSERT(index >= 0 && index <= children.size(), "Index out of bound");
-    children.insert(children.begin() + index, tab);
+    ASSERT(i >= 0 && i <= children.size(), "Index out of bound: ", i, " >= ", children.size());
+    children.insert(children.begin() + i, tab);
     tab->SetPosition(position + GetTabOffset());
-    tab->SetSize(size - GetTabOffset());
+    tab->SetSize(size - GetTabOffset(), true);
     tab->docker = docker;
     tab->SetContainer(this);
   }
 
   void DockerContainer::RemoveTab(int i)
   {
-    ASSERT(i >= 0 && i < children.size(), "Index out of bound");
+    ASSERT(i >= 0 && i < children.size(), "Index out of bound: ", i, " >= ", children.size());
     children.erase(children.begin() + i);
 
     DockerSplit* split = static_cast<DockerSplit*>(parent);
@@ -270,7 +262,7 @@ namespace Greet
 
   Vec2 DockerContainer::GetMinSize() const
   {
-    return Vec2{20, button->GetHeight()+20};
+    return Vec2{20, docker->GetTabButton()->GetHeight()+20};
   }
 
   int DockerContainer::GetTabIndex(DockerTab* tab)
@@ -286,9 +278,9 @@ namespace Greet
 
   int DockerContainer::GetTab(const Vec2& mousePos)
   {
-    if(mousePos.y >= 0 && mousePos.y < button->GetHeight())
+    if(mousePos.y >= 0 && mousePos.y < docker->GetTabButton()->GetHeight())
     {
-      int tab = floor(mousePos.x / (button->GetWidth() + 1));
+      int tab = floor(mousePos.x / (docker->GetTabButton()->GetWidth() + 1));
       if(tab < children.size())
       {
         return tab;
@@ -319,15 +311,13 @@ namespace Greet
     }
   }
 
-  void DockerContainer::SetSize(const Vec2& _size)
+  void DockerContainer::SetSize(const Vec2& avSize, bool abRemeasure)
   {
-    size = _size;
+    size = avSize;
     for(auto&& child : children)
     {
-      child->SetSize(_size - GetTabOffset());
+      child->SetSize(avSize - GetTabOffset(), abRemeasure);
     }
-    button->Measure();
-    button->MeasureFill(size, {1.0f,1.0f});
   }
 
   DockerTab* DockerContainer::GetTab(const std::string& tabName) const
@@ -338,6 +328,14 @@ namespace Greet
         return child;
     }
     return nullptr;
+  }
+
+  void DockerContainer::LoadFrameStyle(const MetaFile& metaFile)
+  {
+    for(auto&& child : children)
+    {
+      child->LoadFrameStyle(metaFile);
+    }
   }
 
   const Vec2& DockerContainer::GetTopSplitPos() const
@@ -393,7 +391,8 @@ namespace Greet
 
   const Vec2& DockerContainer::GetTabOffset() const
   {
-    static Vec2 offset = {0, button->GetHeight()};
+    static Vec2 offset;
+    offset = {0, docker->GetTabButton()->GetHeight()};
     return offset;
   }
 
@@ -439,7 +438,7 @@ namespace Greet
     container->SetWeight(1);
     SetWeight(1);
     newSplit->SetPosition(position);
-    newSplit->SetSize(size);
+    newSplit->SetSize(size, true);
     newSplit->SetWeight(weight);
     split->AddDocker(index, newSplit);
     split->RemoveDocker(index+1);

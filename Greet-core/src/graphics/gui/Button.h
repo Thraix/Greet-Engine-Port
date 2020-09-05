@@ -4,25 +4,13 @@
 #include <graphics/gui/Label.h>
 
 namespace Greet {
-  class Button : public Component
+  class Button : public Label
   {
     private:
       REGISTER_COMPONENT_DECLARATION(Button);
-    protected:
-      float fontSize;
-      Label* label;
     public:
+      Button(const std::string& name, Component* parent);
+      Button(const std::string& name, Component* parent, const std::string& text, const std::string& fontName, float fontSize);
       Button(const XMLObject& object, Component* parent);
-      virtual ~Button();
-
-      void OnMeasured() override;
-      void Render(GUIRenderer* renderer) const override;
-      void SetText(const std::string& text);
-      const Font* GetFont() const { return label->GetFont(); }
-
-      void OnFocused() override;
-      void OnUnfocused() override;
-      void MouseEntered() override;
-      void MouseExited() override;
   };
 }

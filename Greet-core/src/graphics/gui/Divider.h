@@ -10,7 +10,11 @@ namespace Greet
     private:
       REGISTER_COMPONENT_DECLARATION(Divider);
     protected:
+
+      //////////////////
+      // Style variables
       bool vertical;
+
     public:
       Divider(const XMLObject& object, Component* parent);
       void PreRender(GUIRenderer* renderer, const Vec2& translation) const override;
@@ -18,6 +22,7 @@ namespace Greet
       virtual void OnMeasured() override;
 
       // Will return a newly calculated value
-      virtual Vec2 GetWrapSize() const override;
+      virtual float GetWrapWidth() const override;
+      virtual float GetWrapHeight() const override;
   };
 }

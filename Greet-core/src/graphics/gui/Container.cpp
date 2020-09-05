@@ -19,14 +19,26 @@ namespace Greet
   Container::Container(const std::string& name, Component* parent)
     : Component{name, parent}, vertical{true}, spacing{10}
   {
-
+    AddStyleVariables(
+      StylingVariables
+      {
+        .floats = {{"spacing", &spacing}},
+        .bools = {{"vertical", &vertical}}
+      }
+    );
   }
 
   Container::Container(const XMLObject& object, Component* parent)
     : Component(object, parent), vertical(true)
   {
-    vertical = GUIUtils::GetBooleanFromXML(object,"verticalAlign",true);
-    spacing = GUIUtils::GetFloatFromXML(object, "spacing", 10);
+    AddStyleVariables(
+      StylingVariables
+      {
+        .floats = {{"spacing", &spacing}},
+        .bools = {{"vertical", &vertical}}
+      }
+    );
+    LoadStyles(object);
     for (uint i = 0;i < object.GetObjectCount();i++)
     {
       Component* component = ComponentFactory::GetComponent(object.GetObject(i), this);
@@ -35,7 +47,6 @@ namespace Greet
       else
         AddComponent(component);
     }
-
   }
 
   Container::~Container()
@@ -54,40 +65,114 @@ namespace Greet
     }
   }
 
-  void Container::Measure()
+  void Container::MeasureChildren(const Vec2& weightTotals)
   {
-    for(auto&& comp : m_components)
-    {
-      comp->Measure();
-    }
-    Component::Measure();
-  }
+    Vec2 childPos{0, 0};
+    int spacings = std::max((int)m_components.size() - 1, 0);
 
-  void Container::MeasureFill(const Vec2& emptyParentSpace, const Vec2& percentageFill)
-  {
-    Component::MeasureFill(emptyParentSpace, percentageFill);
-
-    Vec2 emptySpace = GetMeasureFillSize();
-    float weight = GetMeasureTotalWeight();
-    for(auto&& comp : m_components)
+    Vec2 totalSize = GetPadding().GetSize() + GetBorder().GetSize();
+    if(vertical)
+      totalSize.h += spacing * spacings;
+    else
+      totalSize.w += spacing * spacings;
+    for(auto&& child : m_components)
     {
-      const Vec2& childSize = comp->GetSizeValue();
-      comp->MeasureFill(emptySpace, {this->vertical ? 1 : childSize.w / weight, this->vertical ? childSize.h / weight : 1});
-    }
-
-    float offset = 0;
-    for(auto&& comp : m_components)
-    {
-      if(this->vertical)
+      child->Measure({0, 0}, {0, 0});
+      child->SetPosition(childPos);
+      if(vertical)
       {
-        comp->SetPosition(Vec2(0.0f,offset));
-        offset += comp->GetMargin().top + comp->GetSize().h + spacing;
+        childPos.y += child->GetSize().h + spacing + child->GetMargin().GetHeight();
+        totalSize.h += child->GetMargin().GetHeight();
       }
       else
       {
-        comp->SetPosition(Vec2(offset,0.0f));
-        offset += comp->GetMargin().left + comp->GetSize().w + spacing;
+        childPos.x += child->GetSize().w + spacing + child->GetMargin().GetWidth();
+        totalSize.w += child->GetMargin().GetWidth();
       }
+      if(child->GetWidthType() != GUISize::Type::Weight && !vertical)
+        totalSize.w += child->GetSize().w;
+      if(child->GetHeightType() != GUISize::Type::Weight && vertical)
+        totalSize.h += child->GetSize().h;
+    }
+
+    totalSize.w = totalSize.w > width.size ? width.size : totalSize.w;
+    totalSize.h = totalSize.h > height.size ? height.size : totalSize.h;
+
+    childPos = {0, 0};
+    for(auto&& child : m_components)
+    {
+      if(vertical)
+      {
+        child->Measure({(width.size - totalSize.w - child->GetMargin().GetWidth()), (height.size - totalSize.h) / weightTotals.h}, {1, child->GetSizeValue().h});
+      }
+      else
+      {
+        child->Measure({(width.size - totalSize.w) / weightTotals.w, height.size - totalSize.h - child->GetMargin().GetHeight()}, {1, child->GetSizeValue().h});
+      }
+      child->SetPosition(childPos);
+      if(vertical)
+        childPos.y += child->GetHeight() + spacing + child->GetMargin().GetHeight();
+      else
+        childPos.x += child->GetWidth() + spacing + child->GetMargin().GetWidth();
+    }
+  }
+
+  void Container::Measure(const Vec2& emptyParentSpace, const Vec2& percentageFill)
+  {
+    bool childHasWidthWeight = false;
+    bool childHasHeightWeight = false;
+    Vec2 totalWeights{0, 0};
+
+    for(auto&& child : m_components)
+    {
+      if(child->GetWidthType() == GUISize::Type::Weight)
+      {
+        totalWeights.w += child->GetSizeValue().w;
+        childHasWidthWeight = true;
+      }
+      if(child->GetHeightType() == GUISize::Type::Weight)
+      {
+        totalWeights.h += child->GetSizeValue().h;
+        childHasWidthWeight = true;
+      }
+    }
+    Component::Measure(emptyParentSpace, percentageFill);
+
+    MeasureChildren(totalWeights);
+
+    bool remeasureChildren = true;
+    while(remeasureChildren)
+    {
+      remeasureChildren = false;
+      if(width.type == GUISize::Type::Wrap)
+      {
+        int wrapSize = GetWrapWidth();
+        if(wrapSize != width.size)
+        {
+          width.size = wrapSize;
+          if(childHasWidthWeight)
+            remeasureChildren = true;
+        }
+      }
+      if(height.type == GUISize::Type::Wrap)
+      {
+        int wrapSize = GetWrapHeight();
+        if(wrapSize != height.size)
+        {
+          height.size = wrapSize;
+          if(childHasHeightWeight)
+            remeasureChildren = true;
+        }
+      }
+      if(remeasureChildren)
+      {
+        MeasureChildren(totalWeights);
+      }
+    }
+
+    for(auto&& child : m_components)
+    {
+      child->OnMeasured();
     }
   }
 
@@ -102,9 +187,9 @@ namespace Greet
       else
         usedSpace += comp->GetMargin().GetWidth() + spacing;
 
-      if(this->vertical && comp->GetHeightSizeType() != ComponentSize::Type::WEIGHT)
+      if(this->vertical && comp->GetHeightType() != GUISize::Type::Weight)
         usedSpace += comp->GetSize().h;
-      else if(!this->vertical && comp->GetWidthSizeType() != ComponentSize::Type::WEIGHT)
+      else if(!this->vertical && comp->GetWidthType() != GUISize::Type::Weight)
         usedSpace += comp->GetSize().w;
     }
     if(usedSpace > 0)
@@ -130,9 +215,9 @@ namespace Greet
     float totalWeight = 0;
     for(auto&& comp : m_components)
     {
-      if(vertical && comp->GetHeightSizeType() == ComponentSize::Type::WEIGHT)
+      if(vertical && comp->GetHeightType() == GUISize::Type::Weight)
         totalWeight += comp->GetSizeValue().h;
-      else if(!vertical && comp->GetWidthSizeType() == ComponentSize::Type::WEIGHT)
+      else if(!vertical && comp->GetWidthType() == GUISize::Type::Weight)
         totalWeight += comp->GetSizeValue().w;
     }
     return totalWeight;
@@ -228,30 +313,65 @@ namespace Greet
     return m_components.size();
   }
 
-  Vec2 Container::GetWrapSize() const
+  void Container::LoadFrameStyle(const MetaFile& metaFile)
   {
-    Vec2 wrapSize{0,0};
-    for(auto&& comp : m_components)
+    Component::LoadFrameStyle(metaFile);
+    for(auto&& child : m_components)
     {
-      if(vertical)
+      child->LoadFrameStyle(metaFile);
+    }
+  }
+
+  float Container::GetWrapWidth() const
+  {
+    float width = 0;
+    if(vertical)
+    {
+      for(auto&& child : m_components)
       {
-        if(wrapSize.w < comp->GetSize().w)
-          wrapSize.w = comp->GetSize().w;
-        wrapSize.h += comp->GetSize().h + comp->GetMargin().top + spacing;
-      }
-      else
-      {
-        if(wrapSize.h < comp->GetSize().h)
-          wrapSize.h = comp->GetSize().h;
-        wrapSize.w += comp->GetSize().w + comp->GetMargin().left + spacing + GetPadding().GetWidth();
+        if(child->GetWidthType() != GUISize::Type::Weight)
+          width = std::max(width, child->GetSize().w + child->GetMargin().GetWidth());
+        else
+          width = std::max(width, child->GetMargin().GetWidth());
       }
     }
-    if(vertical && wrapSize.h > 0)
-      wrapSize.h -= spacing;
-    else if(!vertical && wrapSize.w > 0)
-      wrapSize.w -= spacing;
+    else
+    {
+      width = spacing * std::max(((int)m_components.size() - 1), 0);
+      for(auto&& child : m_components)
+      {
+        if(child->GetWidthType() != GUISize::Type::Weight)
+          width += child->GetSize().w;
+        width += child->GetMargin().GetWidth();
+      }
+    }
+    return width + GetPadding().GetWidth() + GetBorder().GetWidth();
+  }
 
-    return wrapSize+GetBorder().GetSize() + GetPadding().GetSize();
+  float Container::GetWrapHeight() const
+  {
+    float height = 0;
+    if(vertical)
+    {
+      height = spacing * std::max(((int)m_components.size() - 1), 0);
+      for(auto&& child : m_components)
+      {
+        if(child->GetHeightType() != GUISize::Type::Weight)
+          height += child->GetSize().h;
+        height += child->GetMargin().GetHeight();
+      }
+    }
+    else
+    {
+      for(auto&& child : m_components)
+      {
+        if(child->GetHeightType() != GUISize::Type::Weight)
+          height = std::max(height, child->GetSize().h + child->GetMargin().GetHeight());
+        else
+          height = std::max(height, child->GetMargin().GetHeight());
+      }
+    }
+    return height + GetPadding().GetHeight() + GetBorder().GetHeight();
   }
 
   bool Container::IsVertical() const

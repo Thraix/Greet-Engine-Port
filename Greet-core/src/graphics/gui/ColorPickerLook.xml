@@ -1,0 +1,35 @@
+R"(
+<Frame name="CPW" vertical="false" backgroundColor="#424242" borderColor="#626262" border="2" padding="10">
+  <SatValSlider name="CPW#SatValSlider"/>
+  <HueSlider name="CPW#HueSlider"/>
+  <Container name="CPW#TextBoxContainer" height="1w">
+
+    <Container name="CPW#RHTextBoxContainer" vertical="false" spacing="5">
+      <Label name="CPW#RLabel">R</Label>
+      <TextBox name="CPW#RTextBox"/>
+      <Label name="CPW#HLabel">H</Label>
+      <TextBox name="CPW#HTextBox"/>
+    </Container>
+
+    <Container name="CPW#GSTextBoxContainer" vertical="false" spacing="5">
+      <Label name="CPW#TLabel">G</Label>
+      <TextBox name="CPW#GTextBox"/>
+      <Label name="CPW#SLabel">S</Label>
+      <TextBox name="CPW#STextBox"/>
+    </Container>
+
+    <Container name="CPW#BVTextBoxContainer" vertical="false" spacing="5">
+      <Label name="CPW#BLabel">B</Label>
+      <TextBox name="CPW#BTextBox"/>
+      <Label name="CPW#VLabel">V</Label>
+      <TextBox name="CPW#VTextBox"/>
+    </Container>
+
+    <Container name="CPW#HexTextBoxContainer" width="1w" vertical="false" spacing="5">
+      <Label name="CPW#HexLabel">#</Label>
+      <TextBox name="CPW#HexTextBox" width="1w"/>
+    </Container>
+    <Component name="CPW#ColorDisplay"/>
+  </Container>
+</Frame>
+)"

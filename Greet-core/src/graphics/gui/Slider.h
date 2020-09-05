@@ -9,16 +9,14 @@ namespace Greet
     private:
       REGISTER_COMPONENT_DECLARATION(Slider);
     public:
-      typedef std::function<void(Component*, float oldValue, float newValue)> OnValueChangeCallback;
+      typedef std::function<void(Slider*, float oldValue, float newValue)> OnValueChangeCallback;
     protected:
-      static uint SLIDER_FLAG_FORCE_INSIDE;
-      static uint SLIDER_FLAG_SNAP;
-      static uint SLIDER_FLAG_VERTICAL;
 
       // The slider indicator component can be any component really
       Component* sliderComponent;
-      float sliderPos;
-      uint flags;
+      float value;
+      bool clampSlider = true;
+      bool snapSlider = false;
       float minValue;
       float maxValue;
       float stepSize;
@@ -28,14 +26,17 @@ namespace Greet
 
       OnValueChangeCallback onValueChangeCallback;
 
+      //////////////////
+      // Style variables
+      bool vertical = false;
+
 
 
     public:
       Slider(const std::string& name, Component* parent);
       Slider(const XMLObject& xmlObject, Component* parent);
 
-      virtual void Measure() override;
-      virtual void MeasureFill(const Vec2& emptyParentSpace, const Vec2& percentageFill) override;
+      virtual void Measure(const Vec2& emptyParentSpace, const Vec2& percentageFill) override;
       virtual void OnMeasured() override;
 
       virtual void Render(GUIRenderer* renderer) const override;
@@ -47,10 +48,14 @@ namespace Greet
 
       Slider& SetVertical(bool vertical);
 
+      virtual void LoadFrameStyle(const MetaFile& metaFile) override;
+
       Component* GetSliderComponent();
 
       float GetValue() const;
-      void SetValue(float value);
+      float GetMinValue() const;
+      float GetMaxValue() const;
+      void SetValue(float value, bool abCallback = true);
       float GetSnappedSlider(float sliderValue) const;
       float GetSliderValueFromPos(float pos) const;
       float GetSliderPosFromValue(float value) const;

@@ -1,14 +1,33 @@
 #include <Greet.h>
 #include <functional>
 
+#include "TestScene.h"
+
 using namespace Greet;
+
+class Layer2D : public Layer
+{
+  public:
+    Layer2D()
+      : Layer{new BatchRenderer(ShaderFactory::Shader2D()), Mat3{1}}
+    {}
+
+    virtual void ViewportResize(ViewportResizeEvent& event) override
+    {
+      SetProjectionMatrix(Mat3::OrthographicViewport());
+    }
+};
 
 class Core : public App
 {
   private:
     GUIScene* guiScene;
     Component* content;
+    TestScene* scene;
     float progressBarValue;
+    Layer2D* layer;
+    SceneView* editorView;
+    Renderable2D* renderable;
   public:
     Core()
       : App("GUI Testing", 960, 540)
@@ -19,37 +38,42 @@ class Core : public App
     ~Core()
     {
       delete guiScene;
+      delete layer;
     }
 
     void Init() override
     {
+      renderable = new Renderable2D({0, 0}, {70, 70}, 0xffffffff);
+      /* GlobalSceneManager::GetSceneManager().Add2DScene(new TestScene(), "testscene"); */
+      /* return; */
+      layer = new Layer2D();
+      layer->Add(renderable);
       progressBarValue = 0;
-      FontManager::Add(new FontContainer("res/fonts/NotoSansUI-Regular.ttf","noto"));
+      FontManager::Add("noto", FontContainer("res/fonts/NotoSansUI-Regular.ttf"));
 
       guiScene = new GUIScene(new GUIRenderer());
 
-      guiScene->AddFrame(FrameFactory::GetFrame("res/guis/gui.xml"));
+      guiScene->AddFrameQueued(FrameFactory::GetFrame("res/guis/gui.xml"));
 
 #if 1
-      Frame* frame = guiScene->GetFrame("LeftComponent");
+      Frame* frame = guiScene->GetFrame("Main");
       if(frame != nullptr)
       {
-        using namespace std::placeholders;
-        // Function callbacks
-        // Somewhat ugly, might look into making function pointers easier, since the structure
-        // is always the same.
+        editorView = frame->GetComponentByName<SceneView>("EditorView");
         frame->GetComponentByName<ProgressBar>("progressBar")
           ->AttachValueReference(&progressBarValue);
         frame->GetComponentByName<RadioGroup>("Radio")
-          ->SetOnRadioChangeCallback(std::bind(&Core::OnRadioChangeCallback, std::ref(*this), _1));
-        frame->GetComponentByName<Slider>("Slider")
-          ->SetOnClickCallback(std::bind(&Core::OnClickCallback, std::ref(*this), _1));
-        frame->GetComponentByName<Slider>("Slider")
-          ->SetOnPressCallback(std::bind(&Core::OnPressCallback, std::ref(*this), _1));
-        frame->GetComponentByName<Slider>("Slider")
-          ->SetOnReleaseCallback(std::bind(&Core::OnReleaseCallback, std::ref(*this), _1));
-        frame->GetComponentByName<Slider>("Slider")
-          ->SetOnValueChangeCallback(std::bind(&Core::OnValueChangeCallback, std::ref(*this), _1, _2, _3));
+          ->SetOnRadioChangeCallback(BIND_MEMBER_FUNC(OnRadioChangeCallback));
+        frame->GetComponentByName<Slider>("slider")
+          ->SetOnClickCallback(BIND_MEMBER_FUNC(OnClickCallback));
+        frame->GetComponentByName<Slider>("slider")
+          ->SetOnPressCallback(BIND_MEMBER_FUNC(OnClickCallback));
+        frame->GetComponentByName<Slider>("slider")
+          ->SetOnReleaseCallback(BIND_MEMBER_FUNC(OnReleaseCallback));
+        frame->GetComponentByName<Slider>("slider")
+          ->SetOnValueChangeCallback(BIND_MEMBER_FUNC(OnValueChangeCallback));
+        frame->GetComponentByName<Slider>("sliderVertical")
+          ->SetOnValueChangeCallback(BIND_MEMBER_FUNC(OnValueChangeVerticalCallback));
         frame->GetComponentByName<ProgressBar>("progressBar")
           ->AttachValueReference(&progressBarValue);
         frame->GetComponentByName<ProgressBar>("progressBarVertical")
@@ -59,9 +83,12 @@ class Core : public App
         frame->GetComponentByName<ProgressBar>("progressBarVerticalReverse")
           ->AttachValueReference(&progressBarValue);
         frame->GetComponentByName<ColorPicker>("backgroundChanger")
-          ->SetOnColorChangeCallback(std::bind(&Core::OnColorChangeCallback, std::ref(*this), _1, _2, _3));
+          ->SetOnColorChangeCallback(BIND_MEMBER_FUNC(OnColorChangeCallback));
         frame->GetComponentByName<Button>("button")
-          ->SetOnClickCallback(std::bind(&Core::OnButtonPressCallback, std::ref(*this), _1));
+          ->SetOnClickCallback(BIND_MEMBER_FUNC(OnButtonPressCallback));
+
+        editorView->Add2DScene(layer, "2dScene");
+
         Docker* docker = frame->GetComponentByName<Docker>("docker");
         if(docker)
         {
@@ -92,17 +119,24 @@ class Core : public App
 
     void OnButtonPressCallback(Component* button)
     {
-      Log::Info("Button pressed: ", button->GetName());
+      renderable->m_color = 0xff000000 | ((rand() % 255) << 16) | ((rand() % 255) << 8) | (rand() % 255);
     }
 
-    void OnValueChangeCallback(Component* component, float oldValue, float newValue)
+    void OnValueChangeCallback(Slider* slider, float oldValue, float newValue)
     {
-      Log::Info("Slider changed value from ", oldValue, " to ", newValue);
+      renderable->m_position.x = editorView->GetWidth()/2 + newValue - (slider->GetMaxValue() - slider->GetMinValue()) / 2 - renderable->m_size.w / 2;
     }
 
-    void OnColorChangeCallback(Component* component, const Vec3<float>& oldValue, const Vec3<float>& current)
+    void OnValueChangeVerticalCallback(Slider* slider, float oldValue, float newValue)
+    {
+      renderable->m_position.y = editorView->GetHeight()/2 + newValue - (slider->GetMaxValue() - slider->GetMinValue()) / 2 - renderable->m_size.h / 2;
+    }
+
+    void OnColorChangeCallback(Component* component, const Color& oldValue, const Color& current)
     {
       RenderCommand::SetClearColor(Vec4(current.r,current.g,current.b,1));
+      Component* editorView = guiScene->GetFrame("Main")->GetComponentByName<Component>("EditorView");
+      editorView->LoadStyle("normal", Styling{.colors={{"backgroundColor", current}}});
     }
 
     void OnClickCallback(Component* component)

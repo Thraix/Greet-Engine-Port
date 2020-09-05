@@ -44,14 +44,14 @@ namespace Greet {
       BatchRenderer(const Ref<Shader>& shader);
       virtual ~BatchRenderer();
       void Begin() override;
-      void Submit(const Renderable2D& renderable) override;
+      void Draw(const Renderable2D& renderable) override;
 #if 0
       void Submit(const RenderablePoly* renderable);
 #endif
-      void Submit(const Transform& transform, uint texID, Vec2 texPos, Vec2 texSize, uint color, uint maskTexId, const Vec2& maskTexPos, const Vec2& maskTexSize);
-      void Submit(const Vec2& position, const Vec2& size, uint texID, Vec2 texPos, Vec2 texSize, uint color, uint maskTexId, const Vec2& maskTexPos, const Vec2& maskTexSize);
-      void Submit(const Vec2& position, const Vec2& size, uint texID, Vec2 texPos, Vec2 texSize, uint color);
-      void SubmitString(const std::string& text, const Vec2& position, Font* font, const uint& color);
+      void DrawRect(const Transform& transform, uint texID, Vec2 texPos, Vec2 texSize, uint color, uint maskTexId, const Vec2& maskTexPos, const Vec2& maskTexSize);
+      void DrawRect(const Vec2& position, const Vec2& size, uint texID, Vec2 texPos, Vec2 texSize, uint color, uint maskTexId, const Vec2& maskTexPos, const Vec2& maskTexSize);
+      void DrawRect(const Vec2& position, const Vec2& size, uint texID, Vec2 texPos, Vec2 texSize, uint color);
+      void DrawText(const std::string& text, const Vec2& position, const Font& font, const uint& color);
       void Draw(const Transform& transform, const Vec2& texPos, const Vec2& texSize, const uint textureSlot, const uint& color, const uint& maskTexSlot, const Vec2& maskTexPos, const Vec2& maskTexSize);
       void Draw(const Vec2& position, const Vec2& size, const Vec2& texPos, const Vec2& texSize, const uint textureSlot, const uint color, const uint& maskTexSlot, const Vec2& maskTexPos, const Vec2& maskTexSize);
       void Draw(const Vec2& position, const Vec2* vertices, const uint amount, const uint color);

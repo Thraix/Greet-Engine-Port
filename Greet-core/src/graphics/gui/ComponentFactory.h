@@ -1,17 +1,21 @@
 #pragma once
 
-#include <map>
+#include <unordered_map>
 #include <utility>
 #include <functional>
 #include <utils/xml/XMLObject.h>
 
 #define REGISTER_COMPONENT_DECLARATION(COMPONENT_NAME) \
-  static ComponentRegistry<COMPONENT_NAME> reg
+    static ComponentRegistry<COMPONENT_NAME> reg; \
+
 #define REGISTER_COMPONENT_DEFINITION(COMPONENT_NAME) \
   ComponentRegistry<COMPONENT_NAME> COMPONENT_NAME::reg(#COMPONENT_NAME)
 
+
+
 #define REGISTER_FRAME_DECLARATION(FRAME_NAME) \
-  static FrameRegistry<FRAME_NAME> reg
+    static FrameRegistry<FRAME_NAME> reg; \
+
 #define REGISTER_FRAME_DEFINITION(FRAME_NAME) \
   FrameRegistry<FRAME_NAME> FRAME_NAME::reg(#FRAME_NAME)
 
@@ -27,7 +31,7 @@ namespace Greet
     friend class Window;
 
     private:
-      typedef std::map<std::string, std::function<Component*(const XMLObject& xmlObject, Component*)>> ComponentMap;
+      typedef std::unordered_map<std::string, std::function<Component*(const XMLObject& xmlObject, Component*)>> ComponentMap;
       static ComponentMap* guiComponents;
     private:
       static ComponentMap* GetMap()
@@ -60,7 +64,7 @@ namespace Greet
     friend class Window;
 
     private:
-      typedef std::map<std::string, std::function<Frame*(const XMLObject& xmlObject)>> FrameMap;
+      typedef std::unordered_map<std::string, std::function<Frame*(const XMLObject& xmlObject)>> FrameMap;
 
     private:
       static FrameMap* guiFrames;

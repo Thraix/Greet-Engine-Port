@@ -9,24 +9,16 @@ namespace Greet
     private:
       REGISTER_COMPONENT_DECLARATION(SatValSlider);
     public:
-      typedef std::function<void(Component*, float oldValue, float newValue)> OnSatChangeCallback;
-      typedef std::function<void(Component*, float oldValue, float newValue)> OnValChangeCallback;
+      typedef std::function<void(Component*, float oldValue, float newValue)> OnValueChangeCallback;
     protected:
-      float hue;
-      float sat;
-      float val;
+      Color color;
 
-      Component* sliderComponent;
-      OnSatChangeCallback onSatChangeCallback;
-      OnValChangeCallback onValChangeCallback;
+      OnValueChangeCallback onSatChangeCallback;
+      OnValueChangeCallback onValChangeCallback;
 
     public:
-      SatValSlider(const std::string& xmlObject, Component* parent);
+      SatValSlider(const std::string& xmlObject, Component* parent, const std::string& componentType = "SatValSlider");
       SatValSlider(const XMLObject& xmlObject, Component* parent);
-      virtual ~SatValSlider();
-
-      virtual void Measure() override;
-      virtual void MeasureFill(const Vec2& emptyParentSpace, const Vec2& percentageFill) override;
 
       void PreRender(GUIRenderer* renderer, const Vec2& translation) const override;
       void Render(GUIRenderer* renderer) const override;
@@ -34,12 +26,12 @@ namespace Greet
       virtual void OnEvent(Event& event, const Vec2& componentPos) override;
 
       // Callbacks
-      virtual void SetOnSatChangeCallback(OnSatChangeCallback callback);
-      virtual void SetOnValChangeCallback(OnValChangeCallback callback);
+      virtual void SetOnSatChangeCallback(OnValueChangeCallback callback);
+      virtual void SetOnValChangeCallback(OnValueChangeCallback callback);
 
       void SetHue(float hue);
-      void SetSat(float sat);
-      void SetVal(float val);
+      void SetSat(float sat, bool callback = true);
+      void SetVal(float val, bool callback = true);
 
       float GetSat() const;
       float GetVal() const;

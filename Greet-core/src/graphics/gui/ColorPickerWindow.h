@@ -1,5 +1,6 @@
 #pragma once
 
+#include <graphics/Color.h>
 #include <graphics/gui/Frame.h>
 #include <graphics/gui/SatValSlider.h>
 #include <graphics/gui/HueSlider.h>
@@ -12,13 +13,15 @@ namespace Greet
     protected:
       enum class InputChangeType
       {
-        SLIDER, RGB_TEXTBOX, HSV_TEXTBOX, HEX_TEXTBOX
+        NONE, SLIDER, RGB_TEXTBOX, HSV_TEXTBOX, HEX_TEXTBOX
       };
     public:
-      typedef std::function<void(const Vec3<float>& previous, const Vec3<float>& current)> OnColorChangeCallback;
+      typedef std::function<void(const Color& previous, const Color& current)> OnColorChangeCallback;
 
     protected:
-      Vec3<float> color;
+      static XMLObject frameLook;
+      static MetaFile frameStyle;
+      Color color;
       HueSlider* hSlider;
       SatValSlider* svSlider;
 
@@ -35,17 +38,19 @@ namespace Greet
       OnColorChangeCallback onColorChangeCallback;
 
     protected:
-      void SliderChanged();
-      void RGBTextBoxChanged(Component* textBox);
-      void HSVTextBoxChanged(Component* textBox);
-      void HexTextBoxChanged();
-      void UpdateColor(float hue, float sat, float val, InputChangeType type);
+      void SliderChanged(Component* component, float oldValue, float newValue);
+      void RGBTextBoxChanged(Component* textBox, const std::string& oldText, const std::string& newText);
+      void HSVTextBoxChanged(Component* textBox, const std::string& oldText, const std::string& newText);
+      void HexTextBoxChanged(Component* textBox, const std::string& oldText, const std::string& newText);
+      void UpdateColor(const Color& avColor, InputChangeType type, bool rgb);
 
     public:
       ColorPickerWindow();
-      ColorPickerWindow(const Vec2& pos, const Vec3<float>& color);
+      ColorPickerWindow(const Vec2& pos, const Color& color);
 
       void SetOnColorChangeCallback(OnColorChangeCallback callback);
-      void CallOnColorChangeCallback(const Vec3<float>& previous, const Vec3<float>& current);
+      void CallOnColorChangeCallback(const Color& previous, const Color& current);
+
+      const Color& GetColor() const;
   };
 }

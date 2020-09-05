@@ -7,26 +7,10 @@ namespace Greet
   Divider::Divider(const XMLObject& xmlObject, Component* parent)
     : Component(xmlObject,parent), vertical(false)
   {
-    vertical = GUIUtils::GetBooleanFromXML(xmlObject,"vertical", false);
-
-    if(!xmlObject.HasAttribute("width"))
-    {
-      size.value.w = 1;
-      size.size.w = 1;
-      if(!vertical)
-        size.widthType = ComponentSize::Type::WEIGHT;
-      else
-        size.widthType = ComponentSize::Type::PIXELS;
-    }
-    if(!xmlObject.HasAttribute("height"))
-    {
-      size.value.h = 1;
-      size.size.h = 1;
-      if(vertical)
-        size.heightType = ComponentSize::Type::WEIGHT;
-      else
-        size.heightType = ComponentSize::Type::PIXELS;
-    }
+    AddStyleVariables(StylingVariables{
+        .bools = {{"vertical", &vertical}}
+        });
+    LoadStyles(xmlObject);
   }
 
   void Divider::PreRender(GUIRenderer* renderer, const Vec2& translation) const
@@ -47,16 +31,23 @@ namespace Greet
     if(parent)
     {
       if(vertical)
-        size.size.h += parent->GetPadding().GetHeight();
+        height.size += parent->GetPadding().GetHeight();
       else
-        size.size.w += parent->GetPadding().GetWidth();
+        width.size += parent->GetPadding().GetWidth();
     }
   }
 
-  Vec2 Divider::GetWrapSize() const
+  float Divider::GetWrapWidth() const
   {
-    if(parent && !vertical)
-      return Vec2(100, 1);
-    return Vec2(1, 100);
+    if(!vertical)
+      return 100;
+    return 1;
+  }
+
+  float Divider::GetWrapHeight() const
+  {
+    if(vertical)
+      return 100;
+    return 1;
   }
 }

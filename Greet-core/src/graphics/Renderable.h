@@ -19,7 +19,7 @@ namespace Greet {
 
       }
       virtual void Begin(Renderer2D* renderer) const {}
-      virtual void Submit(Renderer2D* renderer) const = 0;
+      virtual void Render(Renderer2D* renderer) const = 0;
       virtual void End(Renderer2D* renderer) const {}
 
       virtual bool Update(float timeElapsed) = 0;

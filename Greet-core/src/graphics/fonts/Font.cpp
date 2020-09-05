@@ -1,67 +1,86 @@
 #include "Font.h"
-#include <graphics/fonts/FontContainer.h>
 #include <logging/Log.h>
+
+#include <graphics/fonts/FontContainer.h>
 
 namespace Greet{
 
-  Font::Font(FontContainer* container, uint size)
-    : m_container(container), m_size(size)
+  Font::Font(const Ref<FontAtlas>& aAtlas, FontContainer* aContainer, uint aiSize)
+    : mAtlas(aAtlas), mContainer{aContainer}, mfSize(aiSize)
+  {}
+
+  const Ref<FontAtlas>& Font::GetFontAtlas() const
   {
-    Init();
-  }
-  Font::~Font()
-  {
-    delete m_atlas;
+    return mAtlas;
   }
 
-  void Font::Init()
+  uint Font::GetFontAtlasId() const
   {
-    m_atlas = new FontAtlas(m_container->GetFileName(),512,512, m_size);
+    return mAtlas->GetTextureId();
   }
 
-  float Font::GetWidthOfText(const std::string& text, uint startPos, uint endPos, float scale) const
+  const std::string& Font::GetName() const
   {
-    float width = 0;
-    if (startPos > text.size() || endPos < startPos || endPos > text.size())
+    return mContainer->GetName();
+  }
+
+  uint Font::GetSize() const
+  {
+    return mfSize;
+  }
+
+  uint Font::GetBaselineOffset() const
+  {
+    return mAtlas->GetBaselineOffset();
+  }
+
+  uint Font::GetWidthOfText(const std::string_view& asText) const
+  {
+    uint width = 0;
+    for (uint i = 0;i < asText.size();i++)
     {
-      Log::Error("Invalid start and endpos (start=", startPos, ", end=", endPos, ", strlen=", text.size(), ")");
+      const Glyph& glyph = mAtlas->GetGlyph(asText[i]);
+      // If it is the last char do not include the advancement
+      if(i == asText.size() - 1 && asText[i] != ' ')
+        width += glyph.miWidth;
+      else
+        width += glyph.miAdvanceX;
+    }
+    return width;
+  }
+
+  uint Font::GetWidthOfText(const std::string& asText, uint aiStartPos, uint aiEndPos) const
+  {
+    if (aiStartPos > asText.size() || aiEndPos < aiStartPos || aiEndPos > asText.size())
+    {
+      Log::Error("Invalid start and endpos (start=", aiStartPos, ", end=", aiEndPos, ", strlen=", asText.size(), ")");
       return 0;
     }
-
-    for (uint i = startPos;i < endPos;i++)
-    {
-      const Glyph& glyph = m_atlas->GetGlyph(text[i]);
-      // If it is the last char do not include the advancement
-      if(i == endPos - 1 && text[i] != ' ')
-        width += glyph.width;
-      else
-        width += glyph.advanceX;
-    }
-    return width*scale;
+    return GetWidthOfText(std::string_view(asText.c_str() + aiStartPos, aiEndPos - aiStartPos));
   }
 
-  float Font::GetWidthOfText(const std::string& text, float scale) const
+  uint Font::GetWidthOfText(const std::string& asText) const
   {
-    return GetWidthOfText(text,0,text.size(),scale);
+    return GetWidthOfText(asText, 0, asText.size());
   }
 
-  std::vector<float> Font::GetPartialWidths(const std::string& text, float scale) const
+  std::vector<uint> Font::GetPartialWidths(const std::string& asText) const
   {
     float width = 0;
 
-    std::vector<float> widths;
+    std::vector<uint> widths;
 
-    for (uint i = 0;i < text.size();i++)
+    for (uint i = 0;i < asText.size();i++)
     {
-      const Glyph& glyph = m_atlas->GetGlyph(text[i]);
-      widths.push_back(width*scale);
+      const Glyph& glyph = mAtlas->GetGlyph(asText[i]);
+      widths.push_back(width);
       // If it is the last char do not include the advancment
-      if(i == text.size()- 1 && text[i] != ' ')
-        width += glyph.width;
+      if(i == asText.size()- 1 && asText[i] != ' ')
+        width += glyph.miWidth;
       else
-        width += glyph.advanceX;
+        width += glyph.miAdvanceX;
     }
-    widths.push_back(text.size());
+    widths.push_back(width);
     return widths;
   }
 }

@@ -2,7 +2,7 @@
 
 #include <input/InputDefines.h>
 #include <math/Vec2.h>
-#include <vector>
+#include <unordered_map>
 
 namespace Greet
 {
@@ -15,8 +15,8 @@ namespace Greet
 
       static Vec2 mouseLastPos;
       static Vec2 mousePos;
-      static std::vector<bool> mouseButtonsDown;
-      static std::vector<bool> keyButtonsDown;
+      static std::unordered_map<int, bool> mouseButtonsDown;
+      static std::unordered_map<int, bool> keyButtonsDown;
       static float mouseScrollX;
       static float mouseScrollY;
 

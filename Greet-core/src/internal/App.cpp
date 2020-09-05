@@ -50,8 +50,9 @@ namespace Greet {
       double elapsed = m_timer->Elapsed();
       if (elapsed - updateTimer >= updateTick)
       {
-        DriverDispatcher::Update(updateTick);
+        Timer timer;
         Window::Update();
+        DriverDispatcher::Update(updateTick);
         GlobalSceneManager::GetSceneManager().Update(elapsed - updateTimer);
         Update(elapsed - updateTimer);
         updates++;
@@ -59,6 +60,7 @@ namespace Greet {
         Input::Update();
       }
 
+      elapsed = m_timer->Elapsed();
       if (elapsed - renderTimer >= frameCap)
       {
         RenderCommand::Clear();
@@ -69,6 +71,7 @@ namespace Greet {
         renderTimer = elapsed;
       }
 
+      elapsed = m_timer->Elapsed();
       if (elapsed - timer >= 1.0)
       {
         m_fps = frames;

@@ -1,17 +1,20 @@
 #pragma once
 
-#include <vector>
+#include <unordered_map>
+
+#include <graphics/fonts/Font.h>
+#include <graphics/fonts/FontAtlas.h>
 #include <graphics/fonts/FontContainer.h>
 
 namespace Greet {
   class FontManager
   {
     private:
-      static std::vector<FontContainer*> m_fonts;
+      static std::unordered_map<std::string, FontContainer> mvFonts;
     public:
 
-      static void Add(FontContainer* font);
-      static Font* Get(const std::string& fontname, uint size);
+      static bool Add(const std::string& asFontname, const FontContainer& aFont);
+      static Font Get(const std::string& asFontname, uint aiSize);
       static void Destroy();
     private:
       FontManager(){}

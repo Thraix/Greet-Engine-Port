@@ -1,6 +1,6 @@
 #pragma once
 
-#include <map>
+#include <unordered_map>
 #include <string>
 #include <fstream>
 #include <utils/StringUtils.h>
@@ -12,9 +12,11 @@ namespace Greet
   {
     friend class MetaFile;
     private:
-      std::map<std::string, std::string> values;
+      std::unordered_map<std::string, std::string> values;
+      std::string className;
 
-      MetaFileClass()
+      MetaFileClass(const std::string& className)
+        : className{className}
       {}
 
     public:
@@ -26,9 +28,31 @@ namespace Greet
         return val;
       }
 
-      const std::map<std::string, std::string>& GetValues() const
+      bool HasValue(const std::string& key) const
+      {
+        return values.find(key) != values.end();
+      }
+
+      const std::string& GetValue(const std::string& key) const
+      {
+        auto it = values.find(key);
+        ASSERT(it != values.end(), "Values does not exist in meta file");
+        return it->second;
+      }
+
+      const std::unordered_map<std::string, std::string>& GetValues() const
       {
         return values;
+      }
+
+      friend std::ostream& operator<<(std::ostream& stream, const MetaFileClass& file)
+      {
+        stream << "[" << file.className << "]" << std::endl;
+        for(auto value : file.GetValues())
+        {
+          stream << value.first << "=" << value.second << std::endl;
+        }
+        return stream;
       }
   };
 
@@ -51,58 +75,21 @@ namespace Greet
             Log::Error("Could not find meta file: ", filepath);
             return;
           }
-
-          std::string currentClass = "";
-          auto metaClassIt = classes.end();
-          std::string line;
-          while(std::getline(stream, line))
-          {
-            if(line.empty())
-              continue;
-
-            if(line[StringUtils::GetTrimStartPos(line)] == '[' && line[StringUtils::GetTrimEndPos(line)] == ']' )
-            {
-              currentClass = StringUtils::Trim(line);
-              currentClass = currentClass.substr(1, currentClass.size() - 2);
-              metaClassIt = classes.find(currentClass);
-              if(metaClassIt == classes.end())
-                metaClassIt = classes.emplace(currentClass, std::vector<MetaFileClass>{{}}).first;
-              else
-                metaClassIt->second.push_back({});
-              continue;
-            }
-
-            size_t pos = line.find("=");
-            if(pos == std::string::npos)
-            {
-              Log::Warning("Meta file line does not contain \'=\'");
-              continue;
-            }
-
-            std::string key = line.substr(0,pos);
-            std::string value = line.substr(pos+1);
-            if(key.length() == 0)
-            {
-              Log::Warning("Meta file key is empty");
-              continue;
-            }
-            if(metaClassIt != classes.end())
-            {
-              auto res = metaClassIt->second[metaClassIt->second.size()-1].values.emplace(key, value);
-              if(!res.second)
-              {
-                Log::Warning("Meta file key is defined twice: ", key);
-              }
-            }
-            else
-            {
-              Log::Error("No meta file header specified: ", filepath);
-            }
-          }
+          LoadMetaFile(stream);
         }
       }
 
-      const std::vector<MetaFileClass>& GetMetaClass(const std::string& className)
+      MetaFile(std::istringstream&& stream)
+      {
+        LoadMetaFile(stream);
+      }
+
+      bool HasMetaClass(const std::string& className)
+      {
+        return classes.find(className) != classes.end();
+      }
+
+      const std::vector<MetaFileClass>& GetMetaClass(const std::string& className) const
       {
         static std::vector<MetaFileClass> empty;
         auto it = classes.find(className);
@@ -117,15 +104,61 @@ namespace Greet
         {
           for(auto metaClass : metaClasses.second)
           {
-            stream << "[" << metaClasses.first << "]" << std::endl;
-            for(auto value : metaClass.GetValues())
-            {
-              stream << value.first << "=" << value.second << std::endl;
-            }
-            stream << std::endl;
+            stream << metaClass;
           }
         }
         return stream;
+      }
+    private:
+      void LoadMetaFile(std::istream& stream)
+      {
+        std::string currentClass = "";
+        auto metaClassIt = classes.end();
+        std::string line;
+        while(std::getline(stream, line))
+        {
+          if(line.empty())
+            continue;
+
+          if(line[StringUtils::GetTrimStartPos(line)] == '[' && line[StringUtils::GetTrimEndPos(line)] == ']' )
+          {
+            currentClass = StringUtils::Trim(line);
+            currentClass = currentClass.substr(1, currentClass.size() - 2);
+            metaClassIt = classes.find(currentClass);
+            if(metaClassIt == classes.end())
+              metaClassIt = classes.emplace(currentClass, std::vector<MetaFileClass>{{currentClass}}).first;
+            else
+              metaClassIt->second.push_back({currentClass});
+            continue;
+          }
+
+          size_t pos = line.find("=");
+          if(pos == std::string::npos)
+          {
+            Log::Warning("Meta file line does not contain \'=\'");
+            continue;
+          }
+
+          std::string_view key = StringUtils::Trim(std::string_view(line.c_str(), pos));
+          std::string_view value = StringUtils::Trim(std::string_view(line.c_str() + pos + 1));
+          if(key.length() == 0)
+          {
+            Log::Warning("Meta file key is empty");
+            continue;
+          }
+          if(metaClassIt != classes.end())
+          {
+            auto res = metaClassIt->second[metaClassIt->second.size()-1].values.emplace(key, value);
+            if(!res.second)
+            {
+              Log::Warning("Meta file key is defined twice: ", key);
+            }
+          }
+          else
+          {
+            Log::Error("No meta file header specified: ", filepath);
+          }
+        }
       }
   };
 }

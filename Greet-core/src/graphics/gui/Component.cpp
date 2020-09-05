@@ -14,54 +14,67 @@ namespace Greet
 
   REGISTER_COMPONENT_DEFINITION(Component);
 
-  Component::Component(const std::string& name, Component* parent)
-    : parent{parent}, size{},
-    m_isFocusable{false},isFocused{false},isHovered{false}, pos{0,0}, pressed{false}, name{name}
+  Component::Component(const std::string& name, Component* parent, const std::string& componentType)
+    : parent{parent}, isFocused{false}, isHovered{false}, pos{0,0}, pressed{false}, name{name}, componentType{componentType}
   {
-    AddStyle("normal", Style{});
+    AddStyleVariables({
+      .colors=
+      {
+        {"backgroundColor", &backgroundColor},
+        {"borderColor", &borderColor}
+      },
+      .tlbrs =
+      {
+        {"border", &border},
+        {"margin", &margin},
+        {"padding", &padding}
+      },
+      .floats =
+      {
+        {"radius", &backgroundRadius},
+        {"borderRadius", &borderRadius}
+      },
+      .ints =
+      {
+        {"backgroundRoundedPrecision", &backgroundRoundedPrecision},
+        {"borderRoundedPrecision", &borderRoundedPrecision}
+      },
+      .sizes =
+      {
+        {"width", &width},
+        {"height", &height},
+      }
+    });
+
+    AddStyle("normal");
+    AddStyle("hover", "normal");
+    AddStyle("press", "normal");
     SetCurrentStyle("normal");
   }
 
+
   Component::Component(const XMLObject& xmlObject, Component* parent)
-    : Component{GUIUtils::GetStringFromXML(xmlObject,"name", xmlObject.GetName() + "#" + LogUtils::DecToHex(UUID::GetInstance().GetUUID(),8)), parent}
+    : Component{GUIUtils::GetStringFromXML(xmlObject, "name", xmlObject.GetName() + "#" + LogUtils::DecToHex(UUID::GetInstance().GetUUID(),8)), parent, xmlObject.GetName()}
   {
-    size = GUIUtils::GetComponentSizeFromXML(xmlObject, "width", "height", {});
-    AddStyle("normal", Style{"", xmlObject});
-    AddStyle("hover", Style{"hover", xmlObject});
-    AddStyle("press", Style{"press", xmlObject});
+    LoadStyles(xmlObject);
   }
 
-  void Component::Measure()
+  void Component::Measure(const Vec2& emptyParentSpace, const Vec2& percentageFill)
   {
-    if(size.widthType != ComponentSize::Type::WEIGHT)
-    {
-      if(size.widthType == ComponentSize::Type::WRAP)
-        size.size.w = GetWrapSize().w;
-      else
-        size.size.w = size.value.w;
-    }
+    remeasure = false;
+    if(width.type == GUISize::Type::Pixels)
+      width.size = width.value;
+    else if(width.type == GUISize::Type::Weight)
+      width.size = emptyParentSpace.x * percentageFill.x;
+    else
+      width.size = GetWrapWidth();
 
-    if(size.heightType != ComponentSize::Type::WEIGHT)
-    {
-      if(size.heightType == ComponentSize::Type::WRAP)
-        size.size.h = GetWrapSize().h;
-      else
-        size.size.h = size.value.h;
-    }
-  }
-
-  void Component::MeasureFill()
-  {
-    MeasureFill(guiScene->GetSize(), {1, 1});
-  }
-
-  void Component::MeasureFill(const Vec2& emptyParentSpace, const Vec2& percentageFill)
-  {
-    if(size.widthType == ComponentSize::Type::WEIGHT)
-      size.size.w = emptyParentSpace.x * percentageFill.x;
-    if(size.heightType == ComponentSize::Type::WEIGHT)
-      size.size.h = emptyParentSpace.y * percentageFill.y;
-    OnMeasured();
+    if(height.type == GUISize::Type::Pixels)
+      height.size = height.value;
+    else if(height.type == GUISize::Type::Weight)
+      height.size = emptyParentSpace.y * percentageFill.y;
+    else
+      height.size = GetWrapHeight();
   }
 
   Vec2 Component::GetMeasureFillSize()
@@ -78,8 +91,7 @@ namespace Greet
   {
     if(!parent)
     {
-      Measure();
-      MeasureFill();
+      remeasure = true;
     }
     else
     {
@@ -93,13 +105,13 @@ namespace Greet
     renderer->PushTranslation(translation);
 
     // Border around Component
-    if (currentStyle->hasBorderColor)
+    if(borderColor.a != 0.0)
       //renderer->SubmitRect(pos + Vec2(0,0), size, currentStyle->borderColor, false);
-      renderer->SubmitRoundedRect(pos+Vec2(0,0),size.size, currentStyle->borderColor, currentStyle->borderRadius, currentStyle->roundedPrecision, false);
+      renderer->DrawRoundedRect(pos+Vec2(0,0), {width.size, height.size}, borderColor, borderRadius, borderRoundedPrecision, false);
 
     // Component background
-    if (currentStyle->hasBackgroundColor)
-      renderer->SubmitRoundedRect(pos + currentStyle->border.LeftTop(), size.size-GetBorder().LeftTop()-GetBorder().RightBottom(), currentStyle->backgroundColor, currentStyle->radius,currentStyle->roundedPrecision,false);
+    if (backgroundColor.a != 0.0)
+      renderer->DrawRoundedRect(pos + border.LeftTop(), Vec2{width.size, height.size} - GetBorder().LeftTop()-GetBorder().RightBottom(), backgroundColor, backgroundRadius, backgroundRoundedPrecision, false);
   }
 
   // Render component
@@ -117,7 +129,6 @@ namespace Greet
 
   void Component::UpdateHandle(float timeElapsed)
   {
-    size.size = Vec2(GetWidth(), GetHeight());
     Update(timeElapsed);
   }
 
@@ -141,39 +152,39 @@ namespace Greet
 
   void Component::OnMousePressEventHandler(MousePressEvent& event, const Vec2& componentPos)
   {
-    if(m_isFocusable)
+    if(!guiScene)
+      Log::Error("GuiScene not initialized");
+    if(!isFocused)
+      guiScene->RequestFocusQueued(this);
+    if(event.GetButton() == GREET_MOUSE_1)
     {
-      if(!guiScene)
-        Log::Error("GuiScene not initialized");
-      if(!isFocused)
-        guiScene->RequestFocus(this);
-      if(event.GetButton() == GREET_MOUSE_1)
-      {
-        pressed = true;
-        CallOnPressCallback();
-      }
-      OnEvent(event, componentPos);
+      pressed = true;
+      if(currentStyle == "hover")
+        SetCurrentStyle("press");
+      CallOnPressCallback();
     }
+    OnEvent(event, componentPos);
   }
 
   void Component::OnMouseMoveEventHandler(MouseMoveEvent& event, const Vec2& componentPos)
   {
-    if(m_isFocusable)
+    if(IsMouseInside(event.GetPosition() - componentPos) || UsingMouse())
     {
-      if(IsMouseInside(event.GetPosition() - componentPos) || UsingMouse())
+      if(!isHovered)
       {
-        if(!isHovered)
-        {
-          isHovered = true;
-          MouseEntered();
-        }
-        OnEvent(event, componentPos);
+        if(currentStyle == "normal" && !UsingMouse())
+          SetCurrentStyle("hover");
+        isHovered = true;
+        MouseEntered();
       }
-      else if(isHovered)
-      {
-        isHovered = false;
-        MouseExited();
-      }
+      OnEvent(event, componentPos);
+    }
+    else if(isHovered)
+    {
+      isHovered = false;
+      MouseExited();
+      if(currentStyle == "hover" && currentStyle != "normal")
+        SetCurrentStyle("normal");
     }
   }
 
@@ -184,7 +195,13 @@ namespace Greet
       if(pressed)
       {
         if(IsMouseInside(event.GetPosition() - componentPos))
+        {
+          if(currentStyle == "press")
+            SetCurrentStyle("hover");
           CallOnClickCallback();
+        }
+        else if(currentStyle == "press")
+          SetCurrentStyle("normal");
         CallOnReleaseCallback();
         OnEvent(event, componentPos);
         pressed = false;
@@ -249,12 +266,7 @@ namespace Greet
 
   Vec2 Component::GetRealPosition() const
   {
-    return pos + GetMargin().LeftTop() + (parent ? parent->GetTotalPadding()+parent->GetRealPosition() : Vec2(0,0));
-  }
-
-  Vec2 Component::GetWrapSize() const
-  {
-    return Vec2(100,100);
+    return pos + GetMargin().LeftTop() + (parent ? parent->GetTotalPadding() + parent->GetRealPosition() : Vec2(0,0));
   }
 
   Component* Component::GetParent() const
@@ -269,65 +281,64 @@ namespace Greet
 
   Vec2 Component::GetSize() const
   {
-    return size.size;
+    return Vec2{width.size, height.size};
   }
 
   float Component::GetWidth() const
   {
-    return size.size.w;
+    return width.size;
   }
 
   float Component::GetHeight() const
   {
-    return size.size.h;
+    return height.size;
   }
 
-  ComponentSize::Type Component::GetWidthSizeType() const
+  GUISize::Type Component::GetWidthType() const
   {
-    return size.widthType;
+    return width.type;
   }
 
-  ComponentSize::Type Component::GetHeightSizeType() const
+  GUISize::Type Component::GetHeightType() const
   {
-    return size.heightType;
+    return height.type;
   }
 
-  Component& Component::SetWidth(float width)
+  Component& Component::SetWidth(float size)
   {
-    size.value.w = width;
+    width.value = size;
     Remeasure();
     return *this;
   }
 
-  Component& Component::SetHeight(float height)
+  Component& Component::SetHeight(float size)
   {
-    size.value.h = height;
+    height.value = size;
     Remeasure();
     return *this;
   }
 
-  Component& Component::SetWidthSizeType(ComponentSize::Type width)
+  Component& Component::SetWidthType(GUISize::Type type)
   {
-    size.widthType = width;
+    width.type = type;
     Remeasure();
     return *this;
   }
 
-  Component& Component::SetHeightSizeType(ComponentSize::Type height)
+  Component& Component::SetHeightType(GUISize::Type type)
   {
-    size.heightType = height;
+    height.type = type;
     Remeasure();
     return *this;
   }
 
-  Component& Component::SetSize(float width, float height, ComponentSize::Type widthType, ComponentSize::Type heightType, bool remeasure)
+  Component& Component::SetSize(float widthSize, float heightSize, GUISize::Type widthType, GUISize::Type heightType)
   {
-    size.value.w = width;
-    size.value.h = height;
-    size.widthType = widthType;
-    size.heightType = heightType;
-    if(remeasure)
-      Remeasure();
+    width.value = widthSize;
+    width.type = widthType;
+    height.value = heightSize;
+    height.type = heightType;
+    Remeasure();
     return *this;
   }
 
@@ -336,19 +347,80 @@ namespace Greet
     guiScene = scene;
   }
 
-  const Style& Component::GetStyle(const std::string& stylename) const
+  const ComponentStyle& Component::GetStyle(const std::string& stylename) const
   {
     auto it = styles.find(stylename);
     if(it != styles.end())
       return it->second;
     Log::Error("Style does not exist within component: ", name, ", ", stylename);
-    static Style style;
-    return style;
+    return styles.find("normal")->second;
   }
 
-  Component& Component::AddStyle(const std::string& stylename, const Style& style)
+  ComponentStyle& Component::GetStyle(const std::string& stylename)
   {
-    styles[stylename] = style;
+    auto it = styles.find(stylename);
+    if(it != styles.end())
+      return it->second;
+    Log::Error("Style does not exist within component: ", name, ", ", stylename);
+    return styles.find("normal")->second;
+  }
+
+  Component& Component::AddStyle(const std::string& stylename, const std::string& inherit)
+  {
+    auto it = styles.find(stylename);
+    if(it != styles.end())
+    {
+      Log::Error("Style already exist: ", stylename, " in ", name);
+      return *this;
+    }
+    ComponentStyle* inheritStyle = nullptr;
+    if(inherit != "")
+    {
+      inheritStyle = &GetStyle(inherit);
+    }
+    it = styles.emplace(stylename, ComponentStyle{styleVariables, inheritStyle}).first;
+    return *this;
+  }
+
+  Component& Component::AddStyleVariables(const StylingVariables& variables)
+  {
+    styleVariables.Merge(variables);
+    for(auto&& style : styles)
+    {
+      style.second.AddVariables(variables);
+    }
+    return *this;
+  }
+
+  void Component::LoadStyles(const XMLObject& xmlObject)
+  {
+    for(auto&& style : styles)
+    {
+      style.second.Load(style.first, xmlObject);
+    }
+    // Update style variables
+    SetCurrentStyle(currentStyle);
+  }
+
+  void Component::LoadFrameStyle(const MetaFile& metaFile)
+  {
+    for(auto&& style : styles)
+    {
+      style.second.Load(componentType, GetName(), style.first, metaFile);
+    }
+    // Update style variables
+    SetCurrentStyle(currentStyle);
+  }
+
+  Component& Component::LoadStyle(const std::string& stylename, const Styling& styling)
+  {
+    auto it = styles.find(stylename);
+    if(it == styles.end())
+    {
+      Log::Error("Style does not exist within component: ", name, ", ", stylename);
+      return *this;
+    }
+    it->second.Load(styling);
     return *this;
   }
 
@@ -357,16 +429,17 @@ namespace Greet
     auto it = styles.find(stylename);
     if(it != styles.end())
     {
-      currentStylename = stylename;
-      currentStyle = &it->second;
+      currentStyle = stylename;
+      it->second.SetStyling();
+      Remeasure();
       return;
     }
     Log::Error("Style does not exist within component: ", name, ", ", stylename);
   }
 
-  const Vec2& Component::GetSizeValue() const
+  Vec2 Component::GetSizeValue() const
   {
-    return size.value;
+    return Vec2{width.value, height.value};
   }
 
   Component* Component::GetComponentByNameNoCast(const std::string& name)
@@ -378,7 +451,7 @@ namespace Greet
 
   bool Component::IsMouseInside(const Vec2& translatedPos) const
   {
-    return AABBUtils::PointInsideBox(translatedPos, Vec2{0,0}, size.size);
+    return AABBUtils::PointInsideBox(translatedPos, Vec2{0,0}, {width.size, height.size});
   }
 
   Component* Component::GetRootNode()
@@ -408,7 +481,7 @@ namespace Greet
 
   Vec2 Component::GetContentSize() const
   {
-    return size.size - GetPadding().GetSize() - GetBorder().GetSize();
+    return GetSize() - GetPadding().GetSize() - GetBorder().GetSize();
   }
 
   const std::string& Component::GetName() const
@@ -418,16 +491,16 @@ namespace Greet
 
   const TLBR& Component::GetMargin() const
   {
-    return currentStyle->margin;
+    return margin;
   }
 
   const TLBR& Component::GetPadding() const
   {
-    return currentStyle->padding;
+    return padding;
   }
 
   const TLBR& Component::GetBorder() const
   {
-    return currentStyle->border;
+    return border;
   }
 }

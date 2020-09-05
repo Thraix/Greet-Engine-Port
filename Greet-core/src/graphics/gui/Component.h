@@ -1,6 +1,9 @@
 #pragma once
 
+#include <unordered_map>
+
 #include <graphics/gui/Style.h>
+#include <utils/MetaFile.h>
 #include <graphics/renderers/GUIRenderer.h>
 #include <event/MouseEvent.h>
 #include <event/KeyEvent.h>
@@ -22,21 +25,39 @@ namespace Greet
       typedef std::function<void(Component* c)> OnPressCallback;
       typedef std::function<void(Component* c)> OnReleaseCallback;
 
+    private:
+      StylingVariables styleVariables;
+
     protected:
       std::string name;
+      std::string componentType;
 
-      Style* currentStyle;
-      std::string currentStylename;
-      std::map<std::string, Style> styles;
+      //////////////////
+      // Styles
+      std::unordered_map<std::string, ComponentStyle> styles;
+      std::string currentStyle = "";
+
+      //////////////////
+      // Style variables
+      Color backgroundColor{0};
+      float backgroundRadius = 0;
+      int backgroundRoundedPrecision = 3;
+      Color borderColor = {0};
+      float borderRadius = 0;
+      int borderRoundedPrecision = 3;
+      TLBR border = {0, 0, 0, 0};
+      TLBR margin = {0, 0, 0, 0};
+      TLBR padding = {0, 0, 0, 0};
+      GUISize width = GUISize{0, 1, GUISize::Type::Wrap};
+      GUISize height = GUISize{0, 1, GUISize::Type::Wrap};
 
     protected:
       GUIScene* guiScene;
       Component* parent;
+      bool remeasure = true;
 
       Vec2 pos;
-      ComponentSize size;
 
-      bool m_isFocusable;
       bool isFocused;
       bool isHovered;
       bool pressed;
@@ -47,16 +68,13 @@ namespace Greet
       OnReleaseCallback onReleaseCallback;
 
     public:
-      Component(const std::string& name, Component* parent);
+      Component(const std::string& name, Component* parent, const std::string& componentType);
       Component(const XMLObject& object, Component* parent);
 
       virtual void PostConstruction(){}
 
-      // Measurements that doesn't depend on the parent
-      virtual void Measure();
-      // Measurements that does depend on the parent
-      void MeasureFill();
-      virtual void MeasureFill(const Vec2& emptyParentSpace, const Vec2& percentageFill);
+      virtual void Measure(const Vec2& emptyParentSpace, const Vec2& percentageFill);
+
       void Remeasure();
 
       // Size has updated
@@ -98,28 +116,34 @@ namespace Greet
       Vec2 GetSize() const;
       Component* GetParent() const;
 
-      virtual Vec2 GetWrapSize() const;
+      virtual float GetWrapWidth() const { return 100; };
+      virtual float GetWrapHeight() const { return 100; };
 
       // Will return the stored value
       virtual float GetWidth() const;
       virtual float GetHeight() const;
-      ComponentSize::Type GetWidthSizeType() const;
-      ComponentSize::Type GetHeightSizeType() const;
+      GUISize::Type GetWidthType() const;
+      GUISize::Type GetHeightType() const;
 
       // Value of the sizeType, 1w will return 1 and not the size of the component
-      const Vec2& GetSizeValue() const;
+      Vec2 GetSizeValue() const;
 
       // Sets the sizeType size and not the actuall component size.
       Component& SetWidth(float width);
       Component& SetHeight(float height);
-      Component& SetWidthSizeType(ComponentSize::Type width);
-      Component& SetHeightSizeType(ComponentSize::Type height);
+      Component& SetWidthType(GUISize::Type width);
+      Component& SetHeightType(GUISize::Type height);
 
       // Faster to use since it sets all values and does a single remeasure.
-      Component& SetSize(float width, float height, ComponentSize::Type widthType, ComponentSize::Type heightType, bool remeasure = true);
+      Component& SetSize(float width, float height, GUISize::Type widthType, GUISize::Type heightType);
 
-      const Style& GetStyle(const std::string& stylename) const;
-      Component& AddStyle(const std::string& stylename, const Style& style);
+      ComponentStyle& GetStyle(const std::string& stylename);
+      const ComponentStyle& GetStyle(const std::string& stylename) const;
+      Component& AddStyle(const std::string& stylename, const std::string& inherit = "");
+      Component& AddStyleVariables(const StylingVariables& variables);
+      void LoadStyles(const XMLObject& xmlObject);
+      virtual void LoadFrameStyle(const MetaFile& metaFile);
+      Component& LoadStyle(const std::string& stylename, const Styling& styling);
       void SetCurrentStyle(const std::string& stylename);
 
       virtual bool IsMouseInside(const Vec2& parentMouse) const;

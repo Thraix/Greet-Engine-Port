@@ -13,10 +13,12 @@ namespace Greet
       float* valueReference;
       float min;
       float max;
-      bool vertical;
-      bool reverse;
 
-      Vec4 progressColor;
+      //////////////////
+      // Style variables
+      bool vertical = false;
+      bool reverse = false;
+      Color progressColor{1,1,1,1};
 
     public:
       ProgressBar(const XMLObject& object, Component* parent);

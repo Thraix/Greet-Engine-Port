@@ -1,173 +1,94 @@
 <Frame
-  name="LeftComponent"
-  width="fill_parent" height="fill_parent" minWidth="100" spacing="10"
-  resizeTop="false" resizeLeft="false" resizeBottom="false" resizeRight="true"
-  borderColor="#37474f"
-  backgroundColor="#ffffff">
-<Docker width="1w" height="1w" name="docker" backgroundColor="#323232" edgeColor="#323232" edgeSize="10" edgeBorder="2" edgeBorderColor="#626262" border="2" borderColor="#626262">
-  <TabButton width="100" height="25" font="noto" fontSize="12" color="#ffffff" hoverbackgroundColor="#424242" backgroundColor="#323232" activebackgroundColor="#424242" activeborder="0 0 2 0" activeborderColor="#4CAF50"/>
+  name="Main"
+  styling="res/styling/styling.meta"
+  width="fill_parent" height="fill_parent"
+  resizeTop="false" resizeLeft="false" resizeBottom="false" resizeRight="false">
+<Docker name="docker">
+  <TabButton align="left"/>
   <SplitIcon width="30" height="30" backgroundColor="#424242" border="5 2 2 2" borderColor="#626262"/>
   <DockerSplit>
     <DockerContainer weight="0.35">
       <DockerTab title="Settings">
-        <Container name="container" width="fill_parent" height="fill_parent" backgroundColor="#424242" padding="10">
-          <Label
-            fontSize="18" font="noto" color="#E0E0E0">Frame header</Label>
-          <Divider name="divider" backgroundColor="#E0E0E0"/>
-          <Label color="#E0E0E0" font="noto" fontSize="16">Radio Buttons</Label>
-
+        <Container name="container" width="fill_parent" height="fill_parent" padding="10">
+          <Label font="noto:18">Frame header</Label>
+          <Divider/>
+          <Label font="noto:16">Radio Buttons</Label>
           <RadioGroup name="Radio" width="fill_parent" height="wrap_content" margin="0" spacing="10">
-            <Container verticalAlign="false">
-              <RadioButton width="16" height="16"
-                radius="8" activeradius="8"
-                backgroundColor="#424242" borderColor="#4CAF50" border="1"
-                activebackgroundColor="#424242" activeborderColor="#4CAF50" activeborder="5"/>
-              <Label color="#E0E0E0" font="noto" fontSize="12">Yes</Label>
+            <Container vertical="false" spacing="5">
+              <RadioButton/>
+              <Label height="fill_parent">Yes</Label>
             </Container>
-            <Container verticalAlign="false">
-              <RadioButton width="16" height="16"
-                radius="8" activeradius="8"
-                backgroundColor="#424242" borderColor="#4CAF50" border="1"
-                activebackgroundColor="#424242" activeborderColor="#4CAF50" activeborder="5"/>
-              <Label color="#E0E0E0" font="noto" fontSize="12">No</Label>
+            <Container vertical="false" spacing="5">
+              <RadioButton/>
+              <Label height="fill_parent">No</Label>
             </Container>
-            <Container verticalAlign="false">
-              <RadioButton width="16" height="16"
-                radius="8" activeradius="8"
-                backgroundColor="#424242" borderColor="#4CAF50" border="1"
-                activebackgroundColor="#424242" activeborderColor="#4CAF50" activeborder="5"/>
-              <Label color="#E0E0E0" font="noto" fontSize="12">Maybe</Label>
+            <Container vertical="false" spacing="5">
+              <RadioButton/>
+              <Label height="fill_parent">Maybe</Label>
             </Container>
           </RadioGroup>
 
-          <Button width="fill_parent" height="30" name="button"
-            backgroundColor="#4CAF50"
-            borderColor="#1B5E20"
-            hoverbackgroundColor="#4b994e"
-            color="#ffffff" fontSize="16" font="noto">Button!</Button>
+          <Button name="button">Button!</Button>
+          <TextBox hintText="Username"/>
+          <TextBox hintText="Password" password="true"/>
 
-          <TextBox
-            width="200" height="20"
-            backgroundColor="#424242" borderColor="#4CAF50"
-            border="0 0 1 0" font="noto" fontSize="16" color="#E0E0E0"
-            hintColor="#757575" hintText="Username"
-            padding="0 0"></TextBox>
+          <Slider name="slider" minValue="10" maxValue="90" defaultValue="30" indicatorInside="true"/>
 
-          <TextBox
-            width="200" height="20"
-            backgroundColor="#424242" borderColor="#4CAF50"
-            border="0 0 1 0" font="noto" fontSize="16" color="#E0E0E0"
-            hintColor="#757575" hintText="Password"
-            padding="0 0" password="true" ></TextBox>
+          <Label>Test label</Label>
+          <Container width="fill_parent" height="100" vertical="false" indicatorInside="true">
 
-          <Slider
-            name="Slider"
-            backgroundColor="#757575"
-            width="fill_parent" height="10" margin="0" radius="5"
-            minValue="10" maxValue="90" defaultValue="30" stepSize="10" indicatorInside="true">
-          <Component
-            backgroundColor="#4CAF50"
-            width="20" height="20" margin="0"
-            radius="10"
-            />
-        </Slider>
+            <ProgressBar width="12" height="fill_parent" name="progressBarVertical" minValue="0.25" maxValue="1.25" vertical="true"/>
 
-        <Label
-          padding="0"
-          fontSize="12" font="noto" color="#E0E0E0">Test label</Label>
+            <Divider name="dividerVertical"/>
 
-        <Container
-          width="fill_parent"
-          height="100"
-          verticalAlign="false" padding="0">
+            <ProgressBar width="12" height="fill_parent" name="progressBarVerticalReverse" minValue="0.25" maxValue="1.25" vertical="true" reverse="true"/>
 
-        <ProgressBar
-          width="12" height="fill_parent" name="progressBarVertical"
-          backgroundColor="#757575"
-          progressColor="#4CAF50"
-          radius="6"
-          minValue="0.25" maxValue="1.25" vertical="true"/>
+            <Divider name="dividerVertical"/>
 
-        <Divider backgroundColor="#757575" vertical="true"/>
+            <Slider name="sliderVertical" minValue="10" maxValue="90" defaultValue="30" stepSize="10" indicatorInside="true"/>
 
-        <ProgressBar
-          width="12" height="fill_parent" name="progressBarVerticalReverse"
-          backgroundColor="#757575"
-          progressColor="#4CAF50"
-          radius="6"
-          minValue="0.25" maxValue="1.25" vertical="true" reverseProgress="true"/>
+          </Container>
 
-        <Divider backgroundColor="#757575" vertical="true"/>
+          <ProgressBar name="progressBar" minValue="0.25" maxValue="1.25"/>
+          <ProgressBar name="progressBarReverse" reverse="true" minValue="0.25" maxValue="1.25"/>
 
-        <Slider
-          backgroundColor="#757575"
-          width="12" height="1w" margin="0" radius="5"
-          minValue="10" maxValue="90" defaultValue="30" stepSize="10" indicatorInside="true"
-          vertical="true">
-        <Component
-          backgroundColor="#4CAF50"
-          width="20" height="20" margin="0"
-          radius="10"
-          />
-      </Slider>
-
-    </Container>
-
-    <ProgressBar
-      width="fill_parent" height="12" name="progressBar"
-      backgroundColor="#757575"
-      progressColor="#4CAF50"
-      radius="6"
-      minValue="0.25" maxValue="1.25"/>
-
-    <ProgressBar
-      width="fill_parent" height="12" name="progressBarReverse"
-      backgroundColor="#757575"
-      progressColor="#4CAF50"
-      radius="6"
-      minValue="0.25" maxValue="1.25" reverseProgress="true"/>
-
-    <Container width="fill_parent" verticalAlign="false">
-      <Label width="wrap_content" height="fill_parent" fontSize="16" font="noto" color="#E0E0E0">Background Color: </Label>
-
-      <ColorPicker
-        width="48" height="30" name="backgroundChanger"
-        backgroundColor="#455a64"
-        borderColor="#757575"
-        border="1"
-        />
-    </Container>
-    </Container>
-  </DockerTab>
-  <DockerTab title="Project Explorer">
-    <Component width="fill_parent" height="fill_parent" backgroundColor="#424242"/>
-  </DockerTab>
-</DockerContainer>
-<DockerSplit vertical="true">
-  <DockerSplit>
-    <DockerContainer>
-      <DockerTab title="Editor">
-        <Component width="fill_parent" height="fill_parent" backgroundColor="#424242"/>
+          <Container width="fill_parent" vertical="false">
+            <Label height="fill_parent" font="noto:16">Background Color: </Label>
+            <ColorPicker name="backgroundChanger" color="#22ff22"/>
+          </Container>
+        </Container>
+      </DockerTab>
+      <DockerTab title="Project Explorer">
+        <Container width="fill_parent" height="fill_parent"/>
       </DockerTab>
     </DockerContainer>
-    <DockerContainer>
-      <DockerTab title="Debugger">
-        <Component width="fill_parent" height="fill_parent" backgroundColor="#424242"/>
-      </DockerTab>
-      <DockerTab title="Profiler">
-        <Component width="fill_parent" height="fill_parent" backgroundColor="#424242"/>
-      </DockerTab>
-    </DockerContainer>
-  </DockerSplit>
-  <DockerContainer>
-    <DockerTab title="Console">
-      <Component width="fill_parent" height="fill_parent" backgroundColor="#424242"/>
-    </DockerTab>
-    <DockerTab title="Variables">
-      <Component width="fill_parent" height="fill_parent" backgroundColor="#424242"/>
-    </DockerTab>
-  </DockerContainer>
-</DockerSplit>
+    <DockerSplit vertical="true">
+      <DockerSplit>
+        <DockerContainer>
+          <DockerTab title="Editor">
+            <SceneView name="EditorView" width="fill_parent" height="fill_parent"/>
+          </DockerTab>
+        </DockerContainer>
+        <DockerContainer>
+          <DockerTab title="Debugger">
+            <Container name="debugger" width="fill_parent" height="fill_parent" padding="10">
+              <Label name="lorem" width="fill_parent" gravity="top" align="center" backgroundColor="#000000" hover-font="noto:16" overlap="wrap">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</Label>
+          </Container>
+          </DockerTab>
+          <DockerTab title="Profiler">
+            <Container width="fill_parent" height="fill_parent"/>
+          </DockerTab>
+        </DockerContainer>
+      </DockerSplit>
+      <DockerContainer>
+        <DockerTab title="Console">
+          <Container width="fill_parent" height="fill_parent"/>
+        </DockerTab>
+        <DockerTab title="Variables">
+          <Container width="fill_parent" height="fill_parent"/>
+        </DockerTab>
+      </DockerContainer>
+    </DockerSplit>
   </DockerSplit>
 </Docker>
 </Frame>

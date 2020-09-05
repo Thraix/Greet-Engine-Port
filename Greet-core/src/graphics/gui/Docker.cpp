@@ -7,9 +7,16 @@ namespace Greet
   REGISTER_COMPONENT_DEFINITION(Docker);
 
   Docker::Docker(const XMLObject& object, Component* parent)
-    : Component(object, parent), split{nullptr}, grabbedTab{nullptr}, tabButton{}
+    : Component(object, parent), split{nullptr}, grabbedTab{nullptr}, tabButton{nullptr}, splitIcon{nullptr}
   {
-    m_isFocusable = true;
+    AddStyleVariables(StylingVariables{
+      .colors = {{"edgeColor", &edgeColor}, {"edgeBorderColor", &edgeBorderColor}},
+      .floats = {{"edgeWidth", &edgeWidth}, {"edgeBorder", &edgeBorderSize}}
+    });
+    LoadStyles(object);
+
+    splitIcon = new Component({"StyleIcon", {}, ""}, nullptr);
+    tabButton = new Button({"TabButton", {}, ""}, nullptr);
     for(auto&& child : object.GetObjects())
     {
       if(child.GetName() == "DockerSplit")
@@ -34,11 +41,14 @@ namespace Greet
       }
       else if(child.GetName() == "TabButton")
       {
-        tabButton = child;
+        delete tabButton;
+        tabButton = new Button(child, nullptr);
       }
       else if(child.GetName() == "SplitIcon")
       {
-        splitIconStyle = child;
+        delete splitIcon;
+        splitIcon = new Component(child, nullptr);
+        splitIcon->Measure({0, 0}, {0, 0});
       }
       else
       {
@@ -50,10 +60,10 @@ namespace Greet
       Log::Error("No DockerSplit found in Docker");
       split = new DockerSplit({"DockerSplit",{},""}, this, nullptr);
     }
-    edgeColor = GUIUtils::GetColorFromXML(object, "edgeColor", currentStyle->backgroundColor);
-    edgeWidth = GUIUtils::GetIntFromXML(object, "edgeSize", 10);
-    edgeBorderSize  = GUIUtils::GetIntFromXML(object, "edgeBorder", 0);
-    edgeBorderColor = GUIUtils::GetColorFromXML(object, "edgeBorderColor", Vec4{1,1,1,1});
+
+    tabButton->AddStyle("active", "normal");
+    tabButton->Measure({0, 0}, {1, 1});
+    splitIcon->Measure({0, 0}, {1, 1});
   }
 
   void Docker::GrabDockerTab(DockerTab* tab)
@@ -62,19 +72,19 @@ namespace Greet
     grabbedTab = tab;
   }
 
-  const XMLObject& Docker::GetTabButton() const
+  Button* Docker::GetTabButton() const
   {
     return tabButton;
   }
 
-  const XMLObject& Docker::GetSplitIconStyle() const
+  Component* Docker::GetSplitIcon() const
   {
-    return splitIconStyle;
+    return splitIcon;
   }
 
   void Docker::HandleDroppedTab(MouseReleaseEvent& event, const Vec2& componentPos)
   {
-    Vec2 mousePos = event.GetPosition() - componentPos - GetTotalPadding();
+    Vec2 mousePos = event.GetPosition() - componentPos;
 
     int splitLimit = 0;
 
@@ -103,7 +113,9 @@ namespace Greet
 
   void Docker::Render(GUIRenderer* renderer) const
   {
+    renderer->PushTranslation(GetTotalPadding());
     split->Render(renderer);
+    renderer->PopTranslation();
   }
 
   void Docker::Update(float timeElapsed)
@@ -126,7 +138,7 @@ namespace Greet
       {
         if(e.GetButton() == GREET_MOUSE_1)
         {
-          HandleDroppedTab(e, componentPos);
+          HandleDroppedTab(e, componentPos + GetTotalPadding());
         }
         return;
       }
@@ -135,7 +147,7 @@ namespace Greet
         grabbedTab = nullptr;
         return;
       }
-      split->OnEvent(event, componentPos);
+      split->OnEvent(event, componentPos + GetTotalPadding());
     }
     else if(EVENT_IS_TYPE(event, EventType::MOUSE_MOVE))
     {
@@ -145,14 +157,24 @@ namespace Greet
         grabbedDistance += e.GetDeltaPosition().Length();
       }
     }
-    split->OnEvent(event, componentPos);
+    split->OnEvent(event, componentPos + GetTotalPadding());
   }
 
   void Docker::OnMeasured()
   {
-    split->SetSize(GetContentSize());
+    split->SetSize(GetContentSize(), true);
     // Update positions of child dockers
-    split->SetPosition(GetTotalPadding());
+    split->SetPosition({0, 0});
+  }
+
+  void Docker::LoadFrameStyle(const MetaFile& metaFile)
+  {
+    Component::LoadFrameStyle(metaFile);
+    split->LoadFrameStyle(metaFile);
+    tabButton->LoadFrameStyle(metaFile);
+    tabButton->Measure({0, 0}, {1, 1});
+    splitIcon->LoadFrameStyle(metaFile);
+    splitIcon->Measure({0, 0}, {1, 1});
   }
 
   Component* Docker::GetComponentByNameNoCast(const std::string& name)

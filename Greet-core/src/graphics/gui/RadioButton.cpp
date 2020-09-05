@@ -9,12 +9,13 @@ namespace Greet
   RadioButton::RadioButton(const XMLObject& xmlObject, Component* parent)
     : Component(xmlObject, parent), active(false), radioParent{nullptr}
   {
-    m_isFocusable = true;
-    AddStyle("active", Style{"active", xmlObject, &GetStyle("normal")});
+    AddStyle("active", "normal");
+    LoadStyles(xmlObject);
   }
 
   void RadioButton::PostConstruction()
   {
+    Component::PostConstruction();
     radioParent = FindRadioGroupParent();
     if(!radioParent)
       Log::Warning("RadioButton is not inside a RadioGroup");
