@@ -158,7 +158,7 @@ namespace Greet
     // Only move inside the current container
     if(tab->GetContainer() == this)
     {
-      int tabIndex = GetTab(event.GetPosition() - componentPos);
+      int tabIndex = GetTab(event.GetPosition() - position - componentPos);
       if(tabIndex < children.size())
       {
         int current = GetTabIndex(tab);
