@@ -59,7 +59,8 @@
         </Container>
       </DockerTab>
       <DockerTab title="Project Explorer">
-        <Container width="fill_parent" height="fill_parent"/>
+        <Container width="fill_parent" height="fill_parent">
+          </Container>
       </DockerTab>
     </DockerContainer>
     <DockerSplit vertical="true">
@@ -82,7 +83,9 @@
       </DockerSplit>
       <DockerContainer>
         <DockerTab title="Console">
-          <Container width="fill_parent" height="fill_parent"/>
+          <Container width="fill_parent" height="fill_parent" padding="10">
+            <TreeView name="treeview" backgroundColor="#ff00ff"/>
+          </Container>
         </DockerTab>
         <DockerTab title="Variables">
           <Container width="fill_parent" height="fill_parent"/>

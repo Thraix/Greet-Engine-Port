@@ -10,8 +10,8 @@ textSecondaryColor=#757575
 transparent=#00000000
 
 [Frame]
-width=fill_parent 
-height=fill_parent 
+width=fill_parent
+height=fill_parent
 spacing=10
 backgroundColor=$darkGray
 
@@ -32,6 +32,12 @@ backgroundColor=$lightGray
 [Label]
 font=noto:12
 textColor=$textPrimaryColor
+
+[TreeView]
+font=noto:11
+textColor=$textPrimaryColor
+spacing=2
+indentSize=5
 
 [Button]
 width=fill_parent

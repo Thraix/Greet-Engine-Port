@@ -53,10 +53,10 @@ class Core : public App
 
       guiScene = new GUIScene(new GUIRenderer());
 
-      guiScene->AddFrameQueued(FrameFactory::GetFrame("res/guis/gui.xml"));
+      Frame* frame = FrameFactory::GetFrame("res/guis/gui.xml");
+      guiScene->AddFrameQueued(frame);
 
 #if 1
-      Frame* frame = guiScene->GetFrame("Main");
       if(frame != nullptr)
       {
         editorView = frame->GetComponentByName<SceneView>("EditorView");
@@ -86,6 +86,36 @@ class Core : public App
           ->SetOnColorChangeCallback(BIND_MEMBER_FUNC(OnColorChangeCallback));
         frame->GetComponentByName<Button>("button")
           ->SetOnClickCallback(BIND_MEMBER_FUNC(OnButtonPressCallback));
+        frame->GetComponentByName<TreeView>("treeview")
+          ->SetTreeNode(new TreeNode("Root", {
+                          TreeNode("Entity1", {
+                              TreeNode("Translation", {
+                                  TreeNode("X"),
+                                  TreeNode("Y"),
+                                  }),
+                              TreeNode("Tag", {
+                                  TreeNode("str")
+                                  })
+                              }),
+                          TreeNode("Entity2", {
+                              TreeNode("Translation", {
+                                  TreeNode("X"),
+                                  TreeNode("Y"),
+                                  }),
+                              TreeNode("Tag", {
+                                  TreeNode("str")
+                                  })
+                              }),
+                          TreeNode("Entity3", {
+                              TreeNode("Translation", {
+                                  TreeNode("X"),
+                                  TreeNode("Y"),
+                                  }),
+                              TreeNode("Tag", {
+                                  TreeNode("str")
+                                  })
+                              })
+                          }));
 
         editorView->Add2DScene(layer, "2dScene");
 
@@ -135,7 +165,6 @@ class Core : public App
     void OnColorChangeCallback(Component* component, const Color& oldValue, const Color& current)
     {
       RenderCommand::SetClearColor(Vec4(current.r,current.g,current.b,1));
-      Component* editorView = guiScene->GetFrame("Main")->GetComponentByName<Component>("EditorView");
       editorView->LoadStyle("normal", Styling{.colors={{"backgroundColor", current}}});
     }
 
