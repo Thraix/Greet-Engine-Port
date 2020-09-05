@@ -37,7 +37,7 @@ textColor=$textPrimaryColor
 font=noto:11
 textColor=$textPrimaryColor
 spacing=2
-indentSize=5
+indentSize=20
 
 [Button]
 width=fill_parent

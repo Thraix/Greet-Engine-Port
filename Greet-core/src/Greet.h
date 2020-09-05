@@ -76,6 +76,7 @@
 #include <graphics/gui/TLBR.h>
 #include <graphics/gui/Text.h>
 #include <graphics/gui/TextBox.h>
+#include <graphics/gui/TreeNode.h>
 #include <graphics/gui/TreeView.h>
 #include <graphics/gui/docker/DockerContainer.h>
 #include <graphics/gui/docker/DockerInterface.h>

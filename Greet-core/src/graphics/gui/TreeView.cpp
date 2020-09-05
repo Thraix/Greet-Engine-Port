@@ -29,12 +29,11 @@ namespace Greet
 
   float TreeView::GetWrapWidth() const
   {
-    return 100.0f;
+    return tree->GetWidth(text, indentSize);
   }
 
   float TreeView::GetWrapHeight() const
   {
-
-    return 100.0f;
+    return tree->GetHeight(text, spacing);
   }
 }
