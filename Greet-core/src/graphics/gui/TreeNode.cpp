@@ -37,12 +37,42 @@ namespace Greet
       text.str = node.name;
       renderer->PushTranslation(Vec2{indent * indentSize, offset});
       float wrap = text.GetWrapWidth();
+      if(node.hovered)
+        renderer->DrawRect({0, 0}, {text.GetWrapWidth(), text.GetWrapHeight(wrap)}, Color(0xff323232), false);
       text.Render(renderer, {text.GetWrapWidth(), text.GetWrapHeight(wrap)});
       renderer->PopTranslation();
       offset += text.font.GetSize() + spacing;
       if(open)
         node.Render(renderer, text, spacing, indentSize, offset, indent+1);
     }
+  }
+
+  TreeNode* TreeNode::GetTreeNodeAt(const Vec2& position, const Text& text, float spacing, float indentSize)
+  {
+    float width = GetWidth(text, indentSize);
+    float height = GetHeight(text, spacing);
+    if(!Utils::IsInside(position, {0, 0}, {width, height}))
+      return nullptr;
+    float yPos = position.y;
+    return GetTreeNodeAt(yPos, text, spacing, indentSize);
+  }
+
+  TreeNode* TreeNode::GetTreeNodeAt(float& yPos, const Text& text, float spacing, float indentSize)
+  {
+    if(!IsOpen())
+      return nullptr;
+
+    float offset = 0.0f;
+    for(auto&& node : childNodes)
+    {
+      if(yPos < text.font.GetSize())
+        return &node;
+      yPos -= spacing + text.font.GetSize();
+      TreeNode* n = node.GetTreeNodeAt(yPos, text, spacing, indentSize);
+      if(n != nullptr)
+        return n;
+    }
+    return nullptr;
   }
 
   void TreeNode::AddChildNode(TreeNode&& node)

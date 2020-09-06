@@ -16,6 +16,9 @@ namespace Greet
       TreeNode* parent = nullptr;
       std::string name;
       bool open = true;
+      bool selected = false;
+      bool hovered = false;
+
 
       bool dirty = false;
       // Sprite icon;
@@ -27,6 +30,8 @@ namespace Greet
       void Render(GUIRenderer* renderer, Text& text, float spacing, float indentSize) const;
 
       void AddChildNode(TreeNode&& node);
+
+      TreeNode* GetTreeNodeAt(const Vec2& position, const Text& text, float spacing, float indentSize);
 
       float GetWidth(const Text& text, float indentSize) const;
       float GetHeight(const Text& text, float spacing) const;
@@ -43,6 +48,7 @@ namespace Greet
 
     private:
       void Render(GUIRenderer* renderer, Text& text, float spacing, float indentSize, float& offset, int indent) const;
+      TreeNode* GetTreeNodeAt(float& yPos, const Text& text, float spacing, float indentSize);
       float GetWidth(const Text& text, float indentSize, int indent) const;
   };
 }

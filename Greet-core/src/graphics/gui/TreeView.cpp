@@ -27,6 +27,28 @@ namespace Greet
     tree->Render(renderer, tmpText, spacing, indentSize);
   }
 
+  void TreeView::OnEvent(Event& event, const Vec2& componentPos)
+  {
+    if(EVENT_IS_TYPE(event, EventType::MOUSE_MOVE))
+    {
+      MouseMoveEvent& e = static_cast<MouseMoveEvent&>(event);
+      TreeNode* node = tree->GetTreeNodeAt(e.GetPosition() - componentPos, text, spacing, indentSize);
+      if(node != nullptr)
+      {
+        if(hovered)
+          hovered->hovered = false;
+        hovered = node;
+        hovered->hovered = true;
+      }
+    }
+  }
+
+  void TreeView::MouseExited()
+  {
+    if(hovered)
+      hovered->hovered = false;
+  }
+
   float TreeView::GetWrapWidth() const
   {
     return tree->GetWidth(text, indentSize);
