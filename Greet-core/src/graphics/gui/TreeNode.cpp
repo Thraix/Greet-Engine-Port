@@ -32,22 +32,26 @@ namespace Greet
 
   void TreeNode::Render(GUIRenderer* renderer, float& offset, int indent, const TreeView& view) const
   {
-    if(!IsOpen())
-      return;
-
     float indentOffset = indent * view.indentSize;
 
-    for(auto&& node : childNodes)
+    if(!IsRoot())
     {
-      if(node.hovered)
+      if(hovered)
         renderer->DrawRect({indentOffset, offset}, {view.GetWidth() - indentOffset, (float)view.text.font.GetSize()}, Color(0xff323232), false);
       renderer->PushTranslation(Vec2{indentOffset, offset});
       float width = view.text.font.GetWidthOfText(name);
-      renderer->DrawText(node.name, {0, (float)view.text.font.GetBaselineOffset()}, view.text.font, view.text.color, false);
+      renderer->DrawText(name, {0, (float)view.text.font.GetBaselineOffset()}, view.text.font, view.text.color, false);
       renderer->PopTranslation();
       offset += view.text.font.GetSize() + view.spacing;
-      if(open)
-        node.Render(renderer, offset, indent+1, view);
+      indent++;
+    }
+
+    if(IsOpen())
+    {
+      for(auto&& node : childNodes)
+      {
+        node.Render(renderer, offset, indent, view);
+      }
     }
   }
 
@@ -57,24 +61,33 @@ namespace Greet
     float height = GetHeight(view);
     if(!Utils::IsInside(position, {0, 0}, {width, height}))
       return nullptr;
-    float yPos = position.y;
-    return GetTreeNodeAt(yPos, view);
+    Vec2 pos = position;
+    return GetTreeNodeAt(pos, 0, view);
   }
 
-  TreeNode* TreeNode::GetTreeNodeAt(float& yPos, const TreeView& view)
+  TreeNode* TreeNode::GetTreeNodeAt(Vec2& position, int indent, const TreeView& view)
   {
-    if(!IsOpen())
-      return nullptr;
-
-    float offset = 0.0f;
-    for(auto&& node : childNodes)
+    if(!IsRoot())
     {
-      if(yPos < view.text.font.GetSize())
-        return &node;
-      yPos -= view.spacing + view.text.font.GetSize();
-      TreeNode* n = node.GetTreeNodeAt(yPos, view);
-      if(n != nullptr)
-        return n;
+      if(position.y >= 0 && position.y < view.text.font.GetSize())
+      {
+        position.y -= view.spacing + view.text.font.GetSize();
+        if(position.x >= indent * view.indentSize)
+          return this;
+        return nullptr;
+      }
+      position.y -= view.spacing + view.text.font.GetSize();
+      indent++;
+    }
+
+    if(IsOpen())
+    {
+      for(auto&& node : childNodes)
+      {
+        TreeNode* at = node.GetTreeNodeAt(position, indent, view);
+        if(at)
+          return at;
+      }
     }
     return nullptr;
   }
@@ -93,31 +106,40 @@ namespace Greet
 
   float TreeNode::GetWidth(int indent, const TreeView& view) const
   {
-    if(!IsOpen())
-      return 0.0f;
-
     float width = 0;
-    for(auto&& node : childNodes)
+    if(!IsRoot())
     {
-      width = std::max(width, (float)view.text.font.GetWidthOfText(node.name) + indent * view.indentSize);
-      width = std::max(width, node.GetWidth(indent + 1, view));
+      width = std::max(width, (float)view.text.font.GetWidthOfText(name) + indent * view.indentSize);
+      indent++;
+    }
+
+    if(IsOpen())
+    {
+      for(auto&& node : childNodes)
+      {
+        width = std::max(width, node.GetWidth(indent, view));
+      }
     }
     return width;
   }
 
   float TreeNode::GetHeight(const TreeView& view) const
   {
-    if(!IsOpen())
-      return 0.0f;
-
-    float height = 0;
-    for(auto&& node : childNodes)
+    float height = 0.0f;
+    if(!IsRoot())
     {
-      height += node.GetHeight(view) + view.text.font.GetSize();
-      height += view.spacing;
+      height += view.text.font.GetSize();
     }
-    if(IsRoot())
+    else
       height -= view.spacing;
+
+    if(IsOpen())
+    {
+      for(auto&& node : childNodes)
+      {
+        height += node.GetHeight(view) + view.spacing;
+      }
+    }
     return height;
   }
 

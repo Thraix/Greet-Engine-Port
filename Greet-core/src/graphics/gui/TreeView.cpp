@@ -32,13 +32,13 @@ namespace Greet
     {
       MouseMoveEvent& e = static_cast<MouseMoveEvent&>(event);
       TreeNode* node = tree->GetTreeNodeAt(e.GetPosition() - componentPos, *this);
-      if(node != nullptr)
-      {
-        if(hovered)
-          hovered->hovered = false;
-        hovered = node;
+
+      if(hovered)
+        hovered->hovered = false;
+
+      hovered = node;
+      if(hovered)
         hovered->hovered = true;
-      }
     }
   }
 
