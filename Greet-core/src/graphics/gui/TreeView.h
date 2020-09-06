@@ -14,6 +14,7 @@ namespace Greet
   {
     private:
       REGISTER_COMPONENT_DECLARATION(TreeView);
+      friend class TreeNode;
     private:
       Text text;
       TreeNode* tree;

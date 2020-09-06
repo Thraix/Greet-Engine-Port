@@ -8,9 +8,12 @@
 
 namespace Greet
 {
+  class TreeView;
+
   class TreeNode
   {
     friend class TreeView;
+
     private:
       std::vector<TreeNode> childNodes;
       TreeNode* parent = nullptr;
@@ -27,14 +30,14 @@ namespace Greet
       TreeNode(const std::string& name);
       TreeNode(const std::string& name, const std::initializer_list<TreeNode>& nodes);
 
-      void Render(GUIRenderer* renderer, Text& text, float spacing, float indentSize) const;
+      void Render(GUIRenderer* renderer, const TreeView& view) const;
 
       void AddChildNode(TreeNode&& node);
 
-      TreeNode* GetTreeNodeAt(const Vec2& position, const Text& text, float spacing, float indentSize);
+      TreeNode* GetTreeNodeAt(const Vec2& position, const TreeView& view);
 
-      float GetWidth(const Text& text, float indentSize) const;
-      float GetHeight(const Text& text, float spacing) const;
+      float GetWidth(const TreeView& view) const;
+      float GetHeight(const TreeView& view) const;
 
       void MarkDirty();
       bool IsLeaf() const { return childNodes.empty(); }
@@ -47,9 +50,9 @@ namespace Greet
       std::vector<TreeNode>::const_iterator end() const { return childNodes.cend(); }
 
     private:
-      void Render(GUIRenderer* renderer, Text& text, float spacing, float indentSize, float& offset, int indent) const;
-      TreeNode* GetTreeNodeAt(float& yPos, const Text& text, float spacing, float indentSize);
-      float GetWidth(const Text& text, float indentSize, int indent) const;
+      void Render(GUIRenderer* renderer, float& offset, int indent, const TreeView& view) const;
+      TreeNode* GetTreeNodeAt(float& yPos, const TreeView& view);
+      float GetWidth(int indent, const TreeView& view) const;
   };
 }
 
