@@ -51,8 +51,11 @@ namespace Greet
 
     private:
       void Render(GUIRenderer* renderer, float& offset, int indent, const TreeView& view) const;
+      void RenderFlowController(GUIRenderer* renderer, const TreeView& view) const;
+
       TreeNode* GetTreeNodeAt(Vec2& position, int indent, const TreeView& view);
       float GetWidth(int indent, const TreeView& view) const;
+      float GetFlowControllerWidth(const TreeView& view) const;
   };
 }
 

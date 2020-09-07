@@ -19,6 +19,7 @@ namespace Greet
   {
     delete tree;
     tree = node;
+    Remeasure();
   }
 
   void TreeView::Render(GUIRenderer* renderer) const
