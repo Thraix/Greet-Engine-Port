@@ -32,13 +32,13 @@ namespace Greet
 
   void TreeNode::Render(GUIRenderer* renderer, float& offset, int indent, const TreeView& view) const
   {
-    float indentOffset = indent * view.indentSize;
+    float indentOffset = indent * GetFlowControllerWidth(view);
 
     if(!IsRoot())
     {
-      if(hovered)
-        renderer->DrawRect({indentOffset, offset}, {view.GetWidth() - indentOffset, (float)view.text.font.GetSize()}, Color(0xff323232), false);
       renderer->PushTranslation(Vec2{indentOffset, offset});
+      if(hovered)
+        renderer->DrawRect({0, 0}, {view.GetWidth() - indentOffset, (float)view.text.font.GetSize()}, Color(0xff323232), false);
       RenderFlowController(renderer, view);
       float width = view.text.font.GetWidthOfText(name);
       renderer->DrawText(name, {GetFlowControllerWidth(view), (float)view.text.font.GetBaselineOffset()}, view.text.font, view.text.color, false);
@@ -58,12 +58,19 @@ namespace Greet
 
   void TreeNode::RenderFlowController(GUIRenderer* renderer, const TreeView& view) const
   {
+    float posY = view.text.font.GetMedianOffset();
+    float size = view.text.font.GetMedianHeight();
+
     if(!IsLeaf())
     {
       if(IsOpen())
-        renderer->DrawTriangle({0, view.text.font.GetSize() * 0.25f}, {view.text.font.GetSize() * 0.5f, view.text.font.GetSize() * 0.25f}, {view.text.font.GetSize() * 0.25f, view.text.font.GetSize() * 0.75f}, view.text.color, false);
+        renderer->DrawTriangle({0, posY}, {size, posY}, {size * 0.5f, posY + size}, view.text.color, false);
       else
-        renderer->DrawTriangle({0, view.text.font.GetSize() * 0.25f},{0, view.text.font.GetSize() * 0.75f}, {view.text.font.GetSize() * 0.5f, view.text.font.GetSize() * 0.5f}, view.text.color, false);
+        renderer->DrawTriangle({0, posY}, {0, posY + size}, {size, posY + size * 0.5f}, view.text.color, false);
+    }
+    else
+    {
+      renderer->DrawLine({0, posY + size * 0.5f}, size, 1, false , view.text.color, false);
     }
   }
 
@@ -84,7 +91,7 @@ namespace Greet
       if(position.y >= 0 && position.y < view.text.font.GetSize())
       {
         position.y -= view.spacing + view.text.font.GetSize();
-        if(position.x >= indent * view.indentSize)
+        if(position.x >= indent * GetFlowControllerWidth(view))
           return this;
         return nullptr;
       }
@@ -121,7 +128,7 @@ namespace Greet
     float width = 0;
     if(!IsRoot())
     {
-      width = std::max(width, (float)view.text.font.GetWidthOfText(name) + indent * view.indentSize + GetFlowControllerWidth(view));
+      width = std::max(width, (float)view.text.font.GetWidthOfText(name) + (indent + 1) * GetFlowControllerWidth(view));
       indent++;
     }
 
@@ -137,10 +144,7 @@ namespace Greet
 
   float TreeNode::GetFlowControllerWidth(const TreeView& view) const
   {
-    if(IsLeaf())
-      return 0.0f;
-    else
-      return view.text.font.GetSize() * 0.5 + view.text.font.GetWidthOfText(std::string(" "));
+    return view.text.font.GetMedianHeight() + view.text.font.GetWidthOfText(std::string(" "));
   }
 
   float TreeNode::GetHeight(const TreeView& view) const

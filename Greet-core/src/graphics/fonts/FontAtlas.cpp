@@ -20,6 +20,12 @@ namespace Greet
     FT_Set_Pixel_Sizes(mFace, 0, aiFontSize);
 
     memset(mvPixels.data(), 0, miWidth * miHeight * 4);
+
+    miBaselineOffset = (mFace->size->metrics.ascender + mFace->size->metrics.descender) / 64;
+
+    const Glyph& g = GetGlyph('o'); // This character usually has median bearing and height
+    miMedianOffset = miBaselineOffset - g.miBearingY;
+    miMedianHeight = g.miHeight;
   }
 
   FontAtlas::~FontAtlas()
@@ -91,7 +97,17 @@ namespace Greet
 
   uint FontAtlas::GetBaselineOffset() const
   {
-    return (mFace->size->metrics.descender + mFace->size->metrics.ascender) / 64.0f;
+    return miBaselineOffset;
+  }
+
+  uint FontAtlas::GetMedianOffset() const
+  {
+    return miMedianOffset;
+  }
+
+  uint FontAtlas::GetMedianHeight() const
+  {
+    return miMedianHeight;
   }
 
   Ref<FontAtlas> FontAtlas::Create(const std::string& asFontname, uint aiFontSize)

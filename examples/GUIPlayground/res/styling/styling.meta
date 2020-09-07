@@ -34,7 +34,7 @@ font=noto:12
 textColor=$textPrimaryColor
 
 [TreeView]
-font=noto:11
+font=noto:32
 textColor=$textPrimaryColor
 spacing=2
 indentSize=20

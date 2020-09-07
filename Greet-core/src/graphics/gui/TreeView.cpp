@@ -41,6 +41,14 @@ namespace Greet
       if(hovered)
         hovered->hovered = true;
     }
+    else if(EVENT_IS_TYPE(event, EventType::MOUSE_PRESS))
+    {
+      MousePressEvent& e = static_cast<MousePressEvent&>(event);
+      if(hovered)
+      {
+        hovered->open = !hovered->open;
+      }
+    }
   }
 
   void TreeView::MouseExited()

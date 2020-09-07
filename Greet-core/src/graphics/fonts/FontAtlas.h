@@ -38,6 +38,10 @@ namespace Greet
       uint miXPos;
       uint miNextYPos;
 
+      uint miBaselineOffset;
+      uint miMedianOffset;
+      uint miMedianHeight;
+
     private:
       FontAtlas(const std::string& asFilename, uint aiFontSize);
 
@@ -50,6 +54,8 @@ namespace Greet
       const Glyph& GetGlyph(char acCharacter);
       uint GetTextureId() const;
       uint GetBaselineOffset() const;
+      uint GetMedianOffset() const;
+      uint GetMedianHeight() const;
 
       static Ref<FontAtlas> Create(const std::string& asFontname, uint aiFontSize);
     private:

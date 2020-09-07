@@ -34,6 +34,16 @@ namespace Greet{
     return mAtlas->GetBaselineOffset();
   }
 
+  uint Font::GetMedianOffset() const
+  {
+    return mAtlas->GetMedianOffset();
+  }
+
+  uint Font::GetMedianHeight() const
+  {
+    return mAtlas->GetMedianHeight();
+  }
+
   uint Font::GetWidthOfText(const std::string_view& asText) const
   {
     uint width = 0;

@@ -23,8 +23,11 @@ namespace Greet{
 
 
       const std::string& GetName() const;
+
       uint GetSize() const;
       uint GetBaselineOffset() const;
+      uint GetMedianOffset() const;
+      uint GetMedianHeight() const;
 
       uint GetWidthOfText(const std::string& asText, uint startPos, uint endPos) const;
       uint GetWidthOfText(const std::string& asText) const;
