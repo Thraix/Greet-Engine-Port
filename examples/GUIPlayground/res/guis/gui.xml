@@ -8,6 +8,35 @@
   <SplitIcon width="30" height="30" backgroundColor="#424242" border="5 2 2 2" borderColor="#626262"/>
   <DockerSplit>
     <DockerContainer weight="0.35">
+      <DockerTab title="Scene Heirarchy">
+        <Container width="fill_parent" height="fill_parent" padding="10">
+          <TreeView name="treeview"/>
+        </Container>
+      </DockerTab>
+    </DockerContainer>
+    <DockerSplit vertical="true">
+      <DockerSplit>
+        <DockerContainer>
+          <DockerTab title="Editor">
+            <SceneView name="EditorView" width="fill_parent" height="fill_parent"/>
+          </DockerTab>
+          <DockerTab title="Debugger">
+            <Container name="debugger" width="fill_parent" height="fill_parent" padding="10">
+              <Label name="lorem" width="fill_parent" gravity="top" align="center" backgroundColor="#000000" hover-font="noto:16" overlap="wrap">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</Label>
+          </Container>
+          </DockerTab>
+          <DockerTab title="Profiler">
+            <Container width="fill_parent" height="fill_parent"/>
+          </DockerTab>
+        </DockerContainer>
+      </DockerSplit>
+      <DockerContainer>
+        <DockerTab title="Variables">
+          <Container width="fill_parent" height="fill_parent"/>
+        </DockerTab>
+      </DockerContainer>
+    </DockerSplit>
+    <DockerContainer weight="0.45">
       <DockerTab title="Settings">
         <Container name="container" width="fill_parent" height="fill_parent" padding="10">
           <Label font="noto:18">Frame header</Label>
@@ -63,35 +92,6 @@
           </Container>
       </DockerTab>
     </DockerContainer>
-    <DockerSplit vertical="true">
-      <DockerSplit>
-        <DockerContainer>
-          <DockerTab title="Editor">
-            <SceneView name="EditorView" width="fill_parent" height="fill_parent"/>
-          </DockerTab>
-        </DockerContainer>
-        <DockerContainer>
-          <DockerTab title="Debugger">
-            <Container name="debugger" width="fill_parent" height="fill_parent" padding="10">
-              <Label name="lorem" width="fill_parent" gravity="top" align="center" backgroundColor="#000000" hover-font="noto:16" overlap="wrap">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</Label>
-          </Container>
-          </DockerTab>
-          <DockerTab title="Profiler">
-            <Container width="fill_parent" height="fill_parent"/>
-          </DockerTab>
-        </DockerContainer>
-      </DockerSplit>
-      <DockerContainer>
-        <DockerTab title="Console">
-          <Container width="fill_parent" height="fill_parent" padding="10">
-            <TreeView name="treeview" backgroundColor="#ff00ff"/>
-          </Container>
-        </DockerTab>
-        <DockerTab title="Variables">
-          <Container width="fill_parent" height="fill_parent"/>
-        </DockerTab>
-      </DockerContainer>
-    </DockerSplit>
   </DockerSplit>
 </Docker>
 </Frame>

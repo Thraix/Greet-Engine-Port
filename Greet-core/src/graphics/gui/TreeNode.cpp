@@ -15,13 +15,6 @@ namespace Greet
   {
     for(auto&& node : childNodes)
       node.parent = this;
-
-    // TODO: Remove these testing cases before merging
-    if(name == "Entity2")
-      open = false;
-    if(name == "Translation")
-      open = false;
-
   }
 
   void TreeNode::Render(GUIRenderer* renderer, const TreeView& view) const
@@ -38,7 +31,7 @@ namespace Greet
     {
       renderer->PushTranslation(Vec2{indentOffset, offset});
       if(hovered)
-        renderer->DrawRect({0, 0}, {view.GetWidth() - indentOffset, (float)view.text.font.GetSize()}, Color(0xff323232), false);
+        renderer->DrawRect({0, 0}, {view.GetContentSize().w - indentOffset, (float)view.text.font.GetSize()}, Color(0xff626262), false);
       RenderFlowController(renderer, view);
       float width = view.text.font.GetWidthOfText(name);
       renderer->DrawText(name, {GetFlowControllerWidth(view), (float)view.text.font.GetBaselineOffset()}, view.text.font, view.text.color, false);
@@ -76,9 +69,7 @@ namespace Greet
 
   TreeNode* TreeNode::GetTreeNodeAt(const Vec2& position, const TreeView& view)
   {
-    float width = GetWidth(view);
-    float height = GetHeight(view);
-    if(!Utils::IsInside(position, {0, 0}, {width, height}))
+    if(!Utils::IsInside(position, {0, 0}, view.GetContentSize()))
       return nullptr;
     Vec2 pos = position;
     return GetTreeNodeAt(pos, 0, view);

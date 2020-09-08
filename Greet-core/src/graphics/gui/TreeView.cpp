@@ -24,7 +24,11 @@ namespace Greet
 
   void TreeView::Render(GUIRenderer* renderer) const
   {
+    renderer->PushTranslation(GetTotalPadding());
+    renderer->PushViewport({0, 0}, GetContentSize(), false);
     tree->Render(renderer, *this);
+    renderer->PopTranslation();
+    renderer->PopViewport();
   }
 
   void TreeView::OnEvent(Event& event, const Vec2& componentPos)
@@ -32,7 +36,7 @@ namespace Greet
     if(EVENT_IS_TYPE(event, EventType::MOUSE_MOVE))
     {
       MouseMoveEvent& e = static_cast<MouseMoveEvent&>(event);
-      TreeNode* node = tree->GetTreeNodeAt(e.GetPosition() - componentPos, *this);
+      TreeNode* node = tree->GetTreeNodeAt(e.GetPosition() - componentPos - GetTotalPadding(), *this);
 
       if(hovered)
         hovered->hovered = false;

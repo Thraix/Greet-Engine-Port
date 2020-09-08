@@ -13,7 +13,10 @@ transparent=#00000000
 width=fill_parent
 height=fill_parent
 spacing=10
-backgroundColor=$darkGray
+borderColor=$lighterGray
+backgroundColor=$lightGray
+border=2
+padding=10
 
 [Docker]
 width=fill_parent
