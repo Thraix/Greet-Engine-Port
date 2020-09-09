@@ -2,6 +2,7 @@
 
 #include <graphics/renderers/GUIRenderer.h>
 #include <graphics/gui/Text.h>
+#include <graphics/gui/TLBR.h>
 
 #include <vector>
 #include <string>
@@ -22,13 +23,24 @@ namespace Greet
       bool selected = false;
       bool hovered = false;
 
-
       bool dirty = false;
       // Sprite icon;
+      //
+
+      ////////////////////
+      // Styling variables
+      TLBR padding;
+
     public:
 
       TreeNode(const std::string& name);
       TreeNode(const std::string& name, const std::initializer_list<TreeNode>& nodes);
+
+      TreeNode(const TreeNode& node);
+      TreeNode(TreeNode&& node);
+
+      TreeNode& operator=(const TreeNode& node);
+      TreeNode& operator=(TreeNode&& node);
 
       void Render(GUIRenderer* renderer, const TreeView& view) const;
 
@@ -40,9 +52,15 @@ namespace Greet
       float GetHeight(const TreeView& view) const;
 
       void MarkDirty();
+      void UnmarkDirty();
+
       bool IsLeaf() const { return childNodes.empty(); }
       bool IsRoot() const { return parent == nullptr; }
       bool IsOpen() const { return open && !IsLeaf(); }
+
+      void ToggleOpen(const TreeView& view);
+      void SetHovered(bool hover, const TreeView& view);
+      void SetSelected(bool hover, const TreeView& view);
 
       std::vector<TreeNode>::iterator begin() { return childNodes.begin(); }
       std::vector<TreeNode>::iterator end() { return childNodes.end(); }
@@ -56,6 +74,9 @@ namespace Greet
       TreeNode* GetTreeNodeAt(Vec2& position, int indent, const TreeView& view);
       float GetWidth(int indent, const TreeView& view) const;
       float GetFlowControllerWidth(const TreeView& view) const;
+
+      void SetStyling(const std::string& styleName, const TreeView& view);
+      void UpdateStyling(const TreeView& view);
   };
 }
 

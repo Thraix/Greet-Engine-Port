@@ -18,8 +18,11 @@ namespace Greet
     private:
       Text text;
       TreeNode* tree;
+
+      ////////////////////
+      // Styling variables
       float spacing = 5;
-      float indentSize = 20;
+      TLBR itemPadding = TLBR{5};
 
       TreeNode* hovered = nullptr;
       TreeNode* selected = nullptr;
@@ -32,6 +35,8 @@ namespace Greet
 
       virtual void OnEvent(Event& event, const Vec2& componentPos) override;
       virtual void MouseExited() override;
+
+      virtual void LoadFrameStyle(const MetaFile& metaFile) override;
 
       virtual float GetWrapWidth() const override;
       virtual float GetWrapHeight() const override;

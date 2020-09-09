@@ -5,7 +5,7 @@ namespace Greet
   REGISTER_COMPONENT_DEFINITION(Label);
 
   Label::Label(const std::string& name, Component* parent)
-    : Label{name,parent, "", "", 20}
+    : Label{name, parent, "", "", 20}
   {
     AddStyleVariables(StylingVariables{
         .colors={{"textColor", &text.color}},

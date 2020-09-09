@@ -75,6 +75,9 @@ namespace Greet
       StyleMap<GUISize, GUISizeStyle> sizes;
     public:
 
+      ComponentStyle()
+      {}
+
       ComponentStyle(const StylingVariables& variables, ComponentStyle* inherit)
       {
         SetInherit(inherit);

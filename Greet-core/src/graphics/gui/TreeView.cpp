@@ -9,7 +9,8 @@ namespace Greet
   {
     AddStyleVariables(StylingVariables{
         .colors={{"textColor", &text.color}},
-        .floats={{"spacing", &spacing}, {"indentSize", &indentSize}},
+        .tlbrs={{"itemPadding", &itemPadding}},
+        .floats={{"spacing", &spacing}},
         .fonts={{"font", &text.font}}
         });
     LoadStyles(object);
@@ -19,6 +20,7 @@ namespace Greet
   {
     delete tree;
     tree = node;
+    tree->UpdateStyling(*this);
     Remeasure();
   }
 
@@ -38,27 +40,35 @@ namespace Greet
       MouseMoveEvent& e = static_cast<MouseMoveEvent&>(event);
       TreeNode* node = tree->GetTreeNodeAt(e.GetPosition() - componentPos - GetTotalPadding(), *this);
 
-      if(hovered)
-        hovered->hovered = false;
-
-      hovered = node;
-      if(hovered)
-        hovered->hovered = true;
+      if(node != hovered)
+      {
+        if(hovered)
+          hovered->SetHovered(false, *this);
+        hovered = node;
+        if(hovered)
+          hovered->SetHovered(true, *this);
+      }
     }
     else if(EVENT_IS_TYPE(event, EventType::MOUSE_PRESS))
     {
       MousePressEvent& e = static_cast<MousePressEvent&>(event);
       if(hovered)
-      {
-        hovered->open = !hovered->open;
-      }
+        hovered->ToggleOpen(*this);
     }
+    if(tree->dirty)
+      Remeasure();
   }
 
   void TreeView::MouseExited()
   {
     if(hovered)
-      hovered->hovered = false;
+      hovered->SetHovered(false, *this);
+  }
+
+  void TreeView::LoadFrameStyle(const MetaFile& metaFile)
+  {
+    Component::LoadFrameStyle(metaFile);
+    tree->UpdateStyling(*this);
   }
 
   float TreeView::GetWrapWidth() const

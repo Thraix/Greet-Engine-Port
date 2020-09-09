@@ -36,9 +36,10 @@ textColor=$textPrimaryColor
 [TreeView]
 width=fill_parent
 height=fill_parent
+spacing=0
 font=noto:12
 textColor=$textPrimaryColor
-spacing=4
+itemPadding=4
 
 [Button]
 width=fill_parent
