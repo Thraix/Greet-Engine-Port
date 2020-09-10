@@ -66,10 +66,11 @@ namespace Greet
       bool IsLeaf() const { return childNodes.empty(); }
       bool IsRoot() const { return parent == nullptr; }
       bool IsOpen() const { return open && !IsLeaf(); }
+      const std::string& GetName() const { return name; }
 
-      void ToggleOpen(const TreeView& view);
+      void ToggleOpen(TreeView& view);
       void SetHovered(bool hover, const TreeView& view, bool hoverFlowController);
-      void SetSelected(bool hover, const TreeView& view);
+      void SetSelected(bool hover, TreeView& view);
 
       std::vector<TreeNode>::iterator begin() { return childNodes.begin(); }
       std::vector<TreeNode>::iterator end() { return childNodes.end(); }

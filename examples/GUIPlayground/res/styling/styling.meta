@@ -1,7 +1,8 @@
 [Variables]
-lighterGray=#626262
-lightGray=#424242
-darkGray=#323232
+gray-1=#323232
+gray-2=#424242
+gray-3=#525252
+gray-4=#626262
 primaryColor=#4CAF50
 darkPrimaryColor=#4b994e
 darkerPrimaryColor=#307c33
@@ -13,7 +14,7 @@ transparent=#00000000
 width=fill_parent
 height=fill_parent
 spacing=10
-backgroundColor=$darkGray
+backgroundColor=$gray-1
 
 [Docker]
 width=fill_parent
@@ -27,7 +28,7 @@ border=2
 borderColor=#626262
 
 [Container]
-backgroundColor=$lightGray
+backgroundColor=$gray-2
 
 [Label]
 font=noto:12
@@ -40,9 +41,9 @@ spacing=0
 font=noto:12
 textColor=$textPrimaryColor
 itemPadding=5
-hover-itemBackgroundColor=$lighterGray
-active-itemBackgroundColor=$darkGray
-active-itemBorderColor=$lighterGray
+hover-itemBackgroundColor=$gray-4
+active-itemBackgroundColor=$gray-3
+active-itemBorderColor=$gray-4
 active-itemBorder=1
 active-itemPadding=4
 
@@ -58,7 +59,7 @@ font=noto:16
 [TextBox]
 width=200
 height=20
-backgroundColor=$lightGray
+backgroundColor=$gray-2
 borderColor=$primaryColor
 border=0 0 1 0
 font=noto:16
@@ -68,7 +69,7 @@ hintTextColor=$textSecondaryColor
 [ProgressBar]
 width=fill_parent
 height=12
-backgroundColor=$lighterGray
+backgroundColor=$gray-3
 progressColor=$primaryColor
 radius=6
 
@@ -77,9 +78,9 @@ width=100
 height=25
 font=noto:12
 textColor=$textPrimaryColor
-backgroundColor=$darkGray
-hover-backgroundColor=$lightGray
-active-backgroundColor=$lightGray
+backgroundColor=$gray-1
+hover-backgroundColor=$gray-2
+active-backgroundColor=$gray-2
 active-border=0 0 2 0
 active-borderColor=$primaryColor
 padding="0 5 0 0"
@@ -87,19 +88,19 @@ padding="0 5 0 0"
 [SplitIcon]
 width=30
 height=30
-backgroundColor=$lightGray
+backgroundColor=$gray-2
 border=5 2 2 2
-borderColor=$lighterGray
+borderColor=$gray-3
 
 [ColorPicker]
 width=48
 height=30
 backgroundColor=$primaryColor
-borderColor=$lighterGray
+borderColor=$gray-3
 border=1
 
 [Divider]
-backgroundColor=$lighterGray
+backgroundColor=$gray-3
 width=fill_parent
 height=2
 
@@ -112,7 +113,7 @@ vertical=true
 width=16
 height=16
 borderRadius=8
-backgroundColor=$lightGray
+backgroundColor=$gray-2
 borderColor=$primaryColor
 border=2
 radius=6
@@ -122,7 +123,7 @@ active-border=0
 active-radius=8
 
 [Slider]
-backgroundColor=$lighterGray
+backgroundColor=$gray-3
 width=fill_parent
 height=16
 radius=8

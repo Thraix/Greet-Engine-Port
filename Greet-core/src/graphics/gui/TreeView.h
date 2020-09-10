@@ -16,6 +16,8 @@ namespace Greet
     private:
       REGISTER_COMPONENT_DECLARATION(TreeView);
       friend class TreeNode;
+      typedef std::function<void(TreeView* view, TreeNode* node, bool selected)> OnNodeSelected;
+      typedef std::function<void(TreeView* view, TreeNode* node)> OnNodeFlowChanged;
     private:
       Timer doubleClickTimer;
       Text text;
@@ -36,9 +38,11 @@ namespace Greet
       int itemBackgroundRoundedPrecision = 3;
       int itemBorderRoundedPrecision = 3;
 
-
       TreeNode* hovered = nullptr;
       TreeNode* selected = nullptr;
+
+      OnNodeSelected onNodeSelectedCallback;
+      OnNodeFlowChanged onNodeFlowChangedCallback;
     public:
       TreeView(const XMLObject& object, Component* parent);
 
@@ -53,6 +57,12 @@ namespace Greet
 
       virtual float GetWrapWidth() const override;
       virtual float GetWrapHeight() const override;
+
+      void SetOnNodeSelectedCallback(OnNodeSelected callback);
+      void SetOnNodeFlowChangedCallback(OnNodeFlowChanged callback);
+
+      void CallOnNodeSelectedCallback(TreeNode* node, bool selected);
+      void CallOnNodeFlowChangeCallback(TreeNode* node);
   };
 }
 

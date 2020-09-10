@@ -74,7 +74,9 @@ namespace Greet
           if(selected && hovered == selected)
           {
             if(!selected->hoverFlowController)
+            {
               selected->ToggleOpen(*this);
+            }
           }
         }
         doubleClickTimer.Reset();
@@ -82,13 +84,18 @@ namespace Greet
         if(hovered)
         {
           if(hovered->hoverFlowController)
+          {
             hovered->ToggleOpen(*this);
+          }
           else
           {
-            if(selected)
-              selected->SetSelected(false, *this);
-            selected = hovered;
-            selected->SetSelected(true, *this);
+            if(selected != hovered)
+            {
+              if(selected)
+                selected->SetSelected(false, *this);
+              selected = hovered;
+              selected->SetSelected(true, *this);
+            }
           }
         }
         else
@@ -128,5 +135,29 @@ namespace Greet
   float TreeView::GetWrapHeight() const
   {
     return tree->GetHeight(*this);
+  }
+
+  void TreeView::SetOnNodeSelectedCallback(OnNodeSelected callback)
+  {
+    onNodeSelectedCallback = callback;
+    if(selected)
+      CallOnNodeSelectedCallback(selected, true);
+  }
+
+  void TreeView::SetOnNodeFlowChangedCallback(OnNodeFlowChanged callback)
+  {
+    onNodeFlowChangedCallback = callback;
+  }
+
+  void TreeView::CallOnNodeSelectedCallback(TreeNode* node, bool selected)
+  {
+    if(onNodeSelectedCallback)
+      onNodeSelectedCallback(this, node, selected);
+  }
+
+  void TreeView::CallOnNodeFlowChangeCallback(TreeNode* node)
+  {
+    if(onNodeFlowChangedCallback)
+      onNodeFlowChangedCallback(this, node);
   }
 }

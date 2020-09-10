@@ -116,6 +116,10 @@ class Core : public App
                                   })
                               })
                           }));
+        frame->GetComponentByName<TreeView>("treeview")
+          ->SetOnNodeSelectedCallback(BIND_MEMBER_FUNC(OnTreeNodeSelected));
+        frame->GetComponentByName<TreeView>("treeview")
+          ->SetOnNodeFlowChangedCallback(BIND_MEMBER_FUNC(OnTreeNodeFlowChanged));
 
         editorView->Add2DScene(layer, "2dScene");
 
@@ -140,6 +144,19 @@ class Core : public App
       }
 #endif
       GlobalSceneManager::GetSceneManager().Add2DScene(guiScene, "GUIScene");
+    }
+
+    void OnTreeNodeSelected(TreeView* view, TreeNode* node, bool selected)
+    {
+      if(selected)
+        Log::Info("TreeView node selected ", node->GetName());
+      else
+        Log::Info("TreeView node unselected ", node->GetName());
+    }
+
+    void OnTreeNodeFlowChanged(TreeView* view, TreeNode* node)
+    {
+      Log::Info("TreeView node flow changed ", node->GetName(), " ", node->IsOpen() ? "true" : "false");
     }
 
     void OnRadioChangeCallback(RadioButton* button)

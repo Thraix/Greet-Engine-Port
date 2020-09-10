@@ -225,10 +225,11 @@ namespace Greet
     dirty = false;
   }
 
-  void TreeNode::ToggleOpen(const TreeView& view)
+  void TreeNode::ToggleOpen(TreeView& view)
   {
     open = !open;
     MarkDirty();
+    view.CallOnNodeFlowChangeCallback(this);
   }
 
   void TreeNode::SetHovered(bool hover, const TreeView& view, bool hoverFlowController)
@@ -247,7 +248,7 @@ namespace Greet
     }
   }
 
-  void TreeNode::SetSelected(bool select, const TreeView& view)
+  void TreeNode::SetSelected(bool select, TreeView& view)
   {
     if(select != selected)
     {
@@ -263,6 +264,7 @@ namespace Greet
         else
           SetStyling("normal", view);
       }
+      view.CallOnNodeSelectedCallback(this, select);
     }
   }
 
