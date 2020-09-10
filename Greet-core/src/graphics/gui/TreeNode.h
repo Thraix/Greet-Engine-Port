@@ -35,6 +35,7 @@ namespace Greet
       bool open = true;
       bool selected = false;
       bool hovered = false;
+      bool hoverFlowController = false;
 
       bool dirty = false;
       Styling styling;
@@ -54,7 +55,7 @@ namespace Greet
 
       void AddChildNode(TreeNode&& node);
 
-      TreeNode* GetTreeNodeAt(const Vec2& position, const TreeView& view);
+      std::pair<TreeNode*, bool> GetTreeNodeAt(const Vec2& position, const TreeView& view);
 
       float GetWidth(const TreeView& view) const;
       float GetHeight(const TreeView& view) const;
@@ -67,7 +68,7 @@ namespace Greet
       bool IsOpen() const { return open && !IsLeaf(); }
 
       void ToggleOpen(const TreeView& view);
-      void SetHovered(bool hover, const TreeView& view);
+      void SetHovered(bool hover, const TreeView& view, bool hoverFlowController);
       void SetSelected(bool hover, const TreeView& view);
 
       std::vector<TreeNode>::iterator begin() { return childNodes.begin(); }
@@ -79,7 +80,7 @@ namespace Greet
       void Render(GUIRenderer* renderer, float& offset, int indent, const TreeView& view) const;
       void RenderFlowController(GUIRenderer* renderer, const TreeView& view) const;
 
-      TreeNode* GetTreeNodeAt(Vec2& position, int indent, const TreeView& view);
+      std::pair<TreeNode*, bool> GetTreeNodeAt(Vec2& position, int indent, const TreeView& view);
       float GetWidth(int indent, const TreeView& view) const;
       float GetFlowControllerWidth(const TreeView& view) const;
 

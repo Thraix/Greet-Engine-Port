@@ -5,6 +5,7 @@
 #include <graphics/gui/Component.h>
 #include <graphics/gui/Text.h>
 #include <graphics/gui/TreeNode.h>
+#include <utils/Timer.h>
 
 namespace Greet
 {
@@ -16,6 +17,7 @@ namespace Greet
       REGISTER_COMPONENT_DECLARATION(TreeView);
       friend class TreeNode;
     private:
+      Timer doubleClickTimer;
       Text text;
       TreeNode* tree;
 

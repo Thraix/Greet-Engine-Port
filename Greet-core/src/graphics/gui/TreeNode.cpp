@@ -119,15 +119,15 @@ namespace Greet
     }
   }
 
-  TreeNode* TreeNode::GetTreeNodeAt(const Vec2& position, const TreeView& view)
+  std::pair<TreeNode*, bool> TreeNode::GetTreeNodeAt(const Vec2& position, const TreeView& view)
   {
     if(!Utils::IsInside(position, {0, 0}, view.GetContentSize()))
-      return nullptr;
+      return {nullptr, false};
     Vec2 pos = position;
     return GetTreeNodeAt(pos, 0, view);
   }
 
-  TreeNode* TreeNode::GetTreeNodeAt(Vec2& position, int indent, const TreeView& view)
+  std::pair<TreeNode*, bool> TreeNode::GetTreeNodeAt(Vec2& position, int indent, const TreeView& view)
   {
     if(!IsRoot())
     {
@@ -135,8 +135,8 @@ namespace Greet
       {
         position.y -= view.spacing + view.text.font.GetSize() + styling.padding.GetHeight() + styling.border.GetHeight();
         if(position.x >= indent * GetFlowControllerWidth(view))
-          return this;
-        return nullptr;
+          return {this, position.x < (indent + 1) * GetFlowControllerWidth(view)};
+        return {nullptr, false};
       }
       position.y -= view.spacing + view.text.font.GetSize() + styling.padding.GetHeight() + styling.border.GetHeight();
       indent++;
@@ -146,12 +146,12 @@ namespace Greet
     {
       for(auto&& node : childNodes)
       {
-        TreeNode* at = node.GetTreeNodeAt(position, indent, view);
-        if(at)
+        std::pair<TreeNode*, bool> at = node.GetTreeNodeAt(position, indent, view);
+        if(at.first)
           return at;
       }
     }
-    return nullptr;
+    return {nullptr, false};
   }
 
   void TreeNode::AddChildNode(TreeNode&& node)
@@ -231,8 +231,9 @@ namespace Greet
     MarkDirty();
   }
 
-  void TreeNode::SetHovered(bool hover, const TreeView& view)
+  void TreeNode::SetHovered(bool hover, const TreeView& view, bool hoverFlowController)
   {
+    this->hoverFlowController = hoverFlowController;
     if(hover != hovered)
     {
       hovered = hover;

@@ -1,5 +1,7 @@
 #include "TreeView.h"
 
+#include <input/InputDefines.h>
+
 namespace Greet
 {
   REGISTER_COMPONENT_DEFINITION(TreeView);
@@ -7,6 +9,7 @@ namespace Greet
   TreeView::TreeView(const XMLObject& object, Component* parent)
     : Component{object, parent}, text{""}, tree{new TreeNode{""}}
   {
+    AddStyle("active", "normal");
     AddStyleVariables(StylingVariables{
         .colors={
           {"textColor", &text.color},
@@ -53,32 +56,60 @@ namespace Greet
     if(EVENT_IS_TYPE(event, EventType::MOUSE_MOVE))
     {
       MouseMoveEvent& e = static_cast<MouseMoveEvent&>(event);
-      TreeNode* node = tree->GetTreeNodeAt(e.GetPosition() - componentPos - GetTotalPadding(), *this);
+      std::pair<TreeNode*, bool> ret = tree->GetTreeNodeAt(e.GetPosition() - componentPos - GetTotalPadding(), *this);
 
-      if(node != hovered)
-      {
-        if(hovered)
-          hovered->SetHovered(false, *this);
-        hovered = node;
-        if(hovered)
-          hovered->SetHovered(true, *this);
-      }
+      if(hovered)
+        hovered->SetHovered(false, *this, false);
+      hovered = ret.first;
+      if(hovered)
+        hovered->SetHovered(true, *this, ret.second);
     }
     else if(EVENT_IS_TYPE(event, EventType::MOUSE_PRESS))
     {
       MousePressEvent& e = static_cast<MousePressEvent&>(event);
-      if(hovered)
-        hovered->ToggleOpen(*this);
+      if(e.GetButton() == GREET_MOUSE_1)
+      {
+        if(doubleClickTimer.Elapsed() < 0.5)
+        {
+          if(selected && hovered == selected)
+          {
+            if(!selected->hoverFlowController)
+              selected->ToggleOpen(*this);
+          }
+        }
+        doubleClickTimer.Reset();
+
+        if(hovered)
+        {
+          if(hovered->hoverFlowController)
+            hovered->ToggleOpen(*this);
+          else
+          {
+            if(selected)
+              selected->SetSelected(false, *this);
+            selected = hovered;
+            selected->SetSelected(true, *this);
+          }
+        }
+        else
+        {
+          if(selected)
+            selected->SetSelected(false, *this);
+        }
+      }
     }
     if(tree->dirty)
+    {
+      tree->dirty = false;
       Remeasure();
+    }
   }
 
   void TreeView::MouseExited()
   {
     if(hovered)
     {
-      hovered->SetHovered(false, *this);
+      hovered->SetHovered(false, *this, false);
       hovered = nullptr;
     }
   }

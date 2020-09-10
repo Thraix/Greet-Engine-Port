@@ -39,13 +39,12 @@ height=fill_parent
 spacing=0
 font=noto:12
 textColor=$textPrimaryColor
-itemPadding=4
-hover-itemBorder=5
-hover-itemBorderColor=$darkGray
+itemPadding=5
 hover-itemBackgroundColor=$lighterGray
-hover-itemBorderRoundedPrecision=1
-hover-itemBorderRadius=10
-itemBackgroundRadius=6
+active-itemBackgroundColor=$darkGray
+active-itemBorderColor=$lighterGray
+active-itemBorder=1
+active-itemPadding=4
 
 [Button]
 width=fill_parent
