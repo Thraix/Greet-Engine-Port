@@ -37,6 +37,7 @@ namespace Greet {
 
       void AddDocker(int index, DockerInterface* docker);
       DockerInterface* RemoveDocker(int index);
+      void ReplaceDocker(int index, DockerInterface* docker);
       void MergeSimilarSplits();
 
       int GetDockerIndex(DockerInterface* interface);

@@ -53,10 +53,10 @@ class Core : public App
 
       guiScene = new GUIScene(new GUIRenderer());
 
-      guiScene->AddFrameQueued(FrameFactory::GetFrame("res/guis/gui.xml"));
+      Frame* frame = FrameFactory::GetFrame("res/guis/gui.xml");
+      guiScene->AddFrameQueued(frame);
 
 #if 1
-      Frame* frame = guiScene->GetFrame("Main");
       if(frame != nullptr)
       {
         editorView = frame->GetComponentByName<SceneView>("EditorView");
@@ -86,6 +86,40 @@ class Core : public App
           ->SetOnColorChangeCallback(BIND_MEMBER_FUNC(OnColorChangeCallback));
         frame->GetComponentByName<Button>("button")
           ->SetOnClickCallback(BIND_MEMBER_FUNC(OnButtonPressCallback));
+        frame->GetComponentByName<TreeView>("treeview")
+          ->SetTreeNode(new TreeNode("Root", {
+                          TreeNode("Entity1", {
+                              TreeNode("Translation", {
+                                  TreeNode("X"),
+                                  TreeNode("Y"),
+                                  }),
+                              TreeNode("Tag", {
+                                  TreeNode("str")
+                                  })
+                              }),
+                          TreeNode("Entity2", {
+                              TreeNode("Translation", {
+                                  TreeNode("X"),
+                                  TreeNode("Y"),
+                                  }),
+                              TreeNode("Tag", {
+                                  TreeNode("str")
+                                  })
+                              }),
+                          TreeNode("Entity3", {
+                              TreeNode("Translation", {
+                                  TreeNode("X"),
+                                  TreeNode("Y"),
+                                  }),
+                              TreeNode("Tag", {
+                                  TreeNode("str")
+                                  })
+                              })
+                          }));
+        frame->GetComponentByName<TreeView>("treeview")
+          ->SetOnNodeSelectedCallback(BIND_MEMBER_FUNC(OnTreeNodeSelected));
+        frame->GetComponentByName<TreeView>("treeview")
+          ->SetOnNodeFlowChangedCallback(BIND_MEMBER_FUNC(OnTreeNodeFlowChanged));
 
         editorView->Add2DScene(layer, "2dScene");
 
@@ -112,6 +146,19 @@ class Core : public App
       GlobalSceneManager::GetSceneManager().Add2DScene(guiScene, "GUIScene");
     }
 
+    void OnTreeNodeSelected(TreeView* view, TreeNode* node, bool selected)
+    {
+      if(selected)
+        Log::Info("TreeView node selected ", node->GetName());
+      else
+        Log::Info("TreeView node unselected ", node->GetName());
+    }
+
+    void OnTreeNodeFlowChanged(TreeView* view, TreeNode* node)
+    {
+      Log::Info("TreeView node flow changed ", node->GetName(), " ", node->IsOpen() ? "true" : "false");
+    }
+
     void OnRadioChangeCallback(RadioButton* button)
     {
       Log::Info("Radio changed to ", button->GetName());
@@ -135,7 +182,6 @@ class Core : public App
     void OnColorChangeCallback(Component* component, const Color& oldValue, const Color& current)
     {
       RenderCommand::SetClearColor(Vec4(current.r,current.g,current.b,1));
-      Component* editorView = guiScene->GetFrame("Main")->GetComponentByName<Component>("EditorView");
       editorView->LoadStyle("normal", Styling{.colors={{"backgroundColor", current}}});
     }
 

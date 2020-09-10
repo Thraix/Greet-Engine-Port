@@ -158,7 +158,7 @@ namespace Greet
     // Only move inside the current container
     if(tab->GetContainer() == this)
     {
-      int tabIndex = GetTab(event.GetPosition() - componentPos);
+      int tabIndex = GetTab(event.GetPosition() - position - componentPos);
       if(tabIndex < children.size())
       {
         int current = GetTabIndex(tab);
@@ -418,6 +418,8 @@ namespace Greet
 
   void DockerContainer::AddSplit(DockerTab* tab, bool vertical, bool before)
   {
+    float oldWeight = weight;
+
     DockerSplit* split = static_cast<DockerSplit*>(parent);
     int index = split->GetDockerIndex(this);
 
@@ -435,12 +437,11 @@ namespace Greet
     else
       newSplit = new DockerSplit({this, container}, docker, split, vertical);
 
-    container->SetWeight(1);
-    SetWeight(1);
+    split->ReplaceDocker(index, newSplit);
     newSplit->SetPosition(position);
     newSplit->SetSize(size, true);
-    newSplit->SetWeight(weight);
-    split->AddDocker(index, newSplit);
-    split->RemoveDocker(index+1);
+    newSplit->SetWeight(oldWeight);
+    container->SetWeight(1);
+    SetWeight(1);
   }
 }

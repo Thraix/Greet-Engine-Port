@@ -118,6 +118,14 @@ namespace Greet
       return *this;
     }
 
+    uint AsUInt() const
+    {
+      return (((uint)(a * 255) & 0xff) << 24) |
+        (((uint)(r * 255) & 0xff) << 16) |
+        (((uint)(g * 255) & 0xff) << 8) |
+        ((uint)(b * 255) & 0xff);
+    }
+
     Color& Invert()
     {
       r = 1 - r;

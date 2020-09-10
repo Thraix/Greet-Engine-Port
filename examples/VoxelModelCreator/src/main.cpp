@@ -33,17 +33,17 @@ namespace vmc
       void Init() override
       {
         using namespace std::placeholders;
-        FontManager::Add(new FontContainer("res/fonts/NotoSansUI-Regular.ttf","noto"));
+        FontManager::Add("noto", FontContainer("res/fonts/NotoSansUI-Regular.ttf"));
         SetFrameCap(144);
 
         guiScene = new GUIScene(new GUIRenderer());
-        guiScene->AddFrame(FrameFactory::GetFrame("res/guis/editor.xml"));
+        Frame* frame = FrameFactory::GetFrame("res/guis/editor.xml");
+        guiScene->AddFrameQueued(frame);
 
-        FontManager::Add(new FontContainer("Anonymous Pro.ttf", "anonymous"));
+        FontManager::Add("anonymous", FontContainer("Anonymous Pro.ttf"));
 
         grid = new Grid();
         GlobalSceneManager::GetSceneManager().Add2DScene(guiScene, "GUIScene");
-        Frame* frame = guiScene->GetFrame("Frame");
         if(!frame)
         {
           Log::Error("No frame called \"Frame\" in GUI");
@@ -65,9 +65,9 @@ namespace vmc
           return;
         }
         colorPicker->SetOnColorChangeCallback(
-            [=](Component*, const Vec3<float>& prev, const Vec3<float>& cur) -> void
+            [=](Component*, const Color& prev, const Color& cur) -> void
             {
-            grid->SetColor(ColorUtils::Vec3ToColorHex(cur));
+            grid->SetColor(cur.AsUInt());
             });
       }
 

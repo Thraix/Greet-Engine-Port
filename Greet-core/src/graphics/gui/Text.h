@@ -42,6 +42,7 @@ namespace Greet
       }
 
       std::vector<std::string> GetStringLines(float maxWidth) const;
+
       float GetWrapWidth() const;
       float GetWrapHeight(float maxWidth) const;
 

@@ -84,7 +84,8 @@ class Core : public App
       FontManager::Add("noto", FontContainer("res/fonts/NotoSansUI-Regular.ttf"));
 
       GUIScene* guiScene = new GUIScene(new GUIRenderer());
-      guiScene->AddFrame(FrameFactory::GetFrame("res/guis/header.xml"));
+      Frame* frame = FrameFactory::GetFrame("res/guis/header.xml");
+      guiScene->AddFrameQueued(frame);
 
       //camera = new TPCamera(vec3(-3.5, -7.8, 5.5), 18, 0.66, 38.5, 15, 80, 0, 0.8f); // Profile shot
       camera = new TPCamera(90, 0.01f,1000.0f, Vec3<float>(0, 0, 0), 15, 0, 0, 0, 80, -0.8f, 0.8f);
@@ -206,7 +207,6 @@ class Core : public App
       layer3d = new Layer3D(camera, skybox);
       layer3d->AddRenderer(renderer3d);
       layer3d->AddRenderer(waterRenderer);
-      Frame* frame = guiScene->GetFrame("FrameHeader");
       if(!frame)
       {
         GlobalSceneManager::GetSceneManager().Add3DScene(layer3d, "World");

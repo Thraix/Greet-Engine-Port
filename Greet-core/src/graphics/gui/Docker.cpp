@@ -123,7 +123,6 @@ namespace Greet
     if(childrenChanged)
     {
       split->MergeSimilarSplits();
-      /* split->DebugPrint(0); */
       childrenChanged = false;
     }
     split->Update(timeElapsed);

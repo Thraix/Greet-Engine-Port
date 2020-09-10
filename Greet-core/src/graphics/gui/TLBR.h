@@ -21,6 +21,14 @@ namespace Greet
         : top{0}, left{0}, bottom{0},right{0}
       {}
 
+      TLBR(float topLeftBottomRight)
+        : top{topLeftBottomRight}, left{topLeftBottomRight}, bottom{topLeftBottomRight},right{topLeftBottomRight}
+      {}
+
+      TLBR(float topBottom, float leftRight)
+        : top{topBottom}, left{leftRight}, bottom{topBottom},right{leftRight}
+      {}
+
       TLBR(float top, float left, float bottom, float right)
         : top{top}, left{left}, bottom{bottom},right{right}
       {}
