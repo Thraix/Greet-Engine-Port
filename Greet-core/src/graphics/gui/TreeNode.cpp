@@ -18,14 +18,14 @@ namespace Greet
   }
 
   TreeNode::TreeNode(const TreeNode& node)
-    : childNodes{node.childNodes}, parent{node.parent}, name{node.name}, open{node.open}, selected{node.selected}, hovered{node.hovered}, dirty{node.dirty}, padding{node.padding}
+    : childNodes{node.childNodes}, parent{node.parent}, name{node.name}, open{node.open}, selected{node.selected}, hovered{node.hovered}, dirty{node.dirty}, styling{node.styling}
   {
     for(auto&& node : childNodes)
       node.parent = this;
   }
 
   TreeNode::TreeNode(TreeNode&& node)
-    : childNodes{std::move(node.childNodes)}, parent{node.parent}, name{std::move(node.name)}, open{node.open}, selected{node.selected}, hovered{node.hovered}, dirty{node.dirty}, padding{std::move(node.padding)}
+    : childNodes{std::move(node.childNodes)}, parent{node.parent}, name{std::move(node.name)}, open{node.open}, selected{node.selected}, hovered{node.hovered}, dirty{node.dirty}, styling{std::move(node.styling)}
   {
     for(auto&& node : childNodes)
       node.parent = this;
@@ -40,7 +40,7 @@ namespace Greet
     selected = node.selected;
     hovered = node.hovered;
     dirty = node.dirty;
-    padding = node.padding;
+    styling = node.styling;
 
     for(auto&& node : childNodes)
       node.parent = this;
@@ -57,7 +57,7 @@ namespace Greet
     selected = node.selected;
     hovered = node.hovered;
     dirty = node.dirty;
-    padding = std::move(node.padding);
+    styling = std::move(node.styling);
 
     for(auto&& node : childNodes)
       node.parent = this;
@@ -77,15 +77,18 @@ namespace Greet
 
     if(!IsRoot())
     {
-      if(hovered)
-        renderer->DrawRect({indentOffset, offset}, {view.GetContentSize().w - indentOffset + padding.GetHeight(), (float)view.text.font.GetSize() + padding.GetWidth()}, Color(0xff626262), false);
+      if(styling.borderColor.a > 0)
+        renderer->DrawRoundedRect({indentOffset, offset}, {view.GetContentSize().w - indentOffset, (float)view.text.font.GetSize() + styling.padding.GetHeight() + styling.border.GetHeight()}, styling.borderColor, styling.borderRadius, styling.borderRoundedPrecision, false);
 
-      renderer->PushTranslation(Vec2{indentOffset + padding.left, offset + padding.top});
+      if(styling.backgroundColor.a > 0)
+        renderer->DrawRoundedRect({indentOffset + styling.border.left, offset + styling.border.top}, {view.GetContentSize().w - indentOffset - styling.border.GetWidth(), (float)view.text.font.GetSize() + styling.padding.GetHeight()}, styling.backgroundColor, styling.backgroundRadius, styling.backgroundRoundedPrecision, false);
+
+      renderer->PushTranslation(Vec2{indentOffset + styling.padding.left + styling.border.left, offset + styling.padding.top + styling.border.top});
       RenderFlowController(renderer, view);
       float width = view.text.font.GetWidthOfText(name);
       renderer->DrawText(name, {GetFlowControllerWidth(view), (float)view.text.font.GetBaselineOffset()}, view.text.font, view.text.color, false);
       renderer->PopTranslation();
-      offset += view.text.font.GetSize() + view.spacing + padding.GetHeight();
+      offset += view.text.font.GetSize() + view.spacing + styling.padding.GetHeight() + styling.border.GetHeight();
       indent++;
     }
 
@@ -128,14 +131,14 @@ namespace Greet
   {
     if(!IsRoot())
     {
-      if(position.y >= 0 && position.y < view.text.font.GetSize() + padding.GetHeight())
+      if(position.y >= 0 && position.y < view.text.font.GetSize() + styling.padding.GetHeight() + styling.border.GetHeight())
       {
-        position.y -= view.spacing + view.text.font.GetSize() + padding.GetHeight();
+        position.y -= view.spacing + view.text.font.GetSize() + styling.padding.GetHeight() + styling.border.GetHeight();
         if(position.x >= indent * GetFlowControllerWidth(view))
           return this;
         return nullptr;
       }
-      position.y -= view.spacing + view.text.font.GetSize() + padding.GetHeight();
+      position.y -= view.spacing + view.text.font.GetSize() + styling.padding.GetHeight() + styling.border.GetHeight();
       indent++;
     }
 
@@ -168,7 +171,7 @@ namespace Greet
     float width = 0;
     if(!IsRoot())
     {
-      width = std::max(width, (float)view.text.font.GetWidthOfText(name) + (indent + 1) * GetFlowControllerWidth(view) + padding.GetWidth());
+      width = std::max(width, (float)view.text.font.GetWidthOfText(name) + (indent + 1) * GetFlowControllerWidth(view) + styling.padding.GetWidth());
       indent++;
     }
 
@@ -192,7 +195,7 @@ namespace Greet
     float height = 0.0f;
     if(!IsRoot())
     {
-      height += view.text.font.GetSize() + padding.GetHeight();
+      height += view.text.font.GetSize() + styling.padding.GetHeight() + styling.border.GetHeight();
     }
     else
       height -= view.spacing;
@@ -265,7 +268,14 @@ namespace Greet
   void TreeNode::SetStyling(const std::string& styleName, const TreeView& view)
   {
     const ComponentStyle& style = view.GetStyle(styleName);
-    padding = style.GetTLBR("itemPadding");
+    styling.padding = style.GetTLBR("itemPadding");
+    styling.border = style.GetTLBR("itemBorder");
+    styling.backgroundColor = style.GetColor("itemBackgroundColor");
+    styling.borderColor = style.GetColor("itemBorderColor");
+    styling.backgroundRadius = style.GetFloat("itemBackgroundRadius");
+    styling.borderRadius = style.GetFloat("itemBorderRadius");
+    styling.backgroundRoundedPrecision = style.GetInt("itemBackgroundRoundedPrecision");
+    styling.borderRoundedPrecision = style.GetInt("itemBorderRoundedPrecision");
     MarkDirty();
   }
 

@@ -8,9 +8,24 @@ namespace Greet
     : Component{object, parent}, text{""}, tree{new TreeNode{""}}
   {
     AddStyleVariables(StylingVariables{
-        .colors={{"textColor", &text.color}},
-        .tlbrs={{"itemPadding", &itemPadding}},
-        .floats={{"spacing", &spacing}},
+        .colors={
+          {"textColor", &text.color},
+          {"itemBackgroundColor", &itemBackgroundColor},
+          {"itemBorderColor", &itemBorderColor}
+        },
+        .tlbrs={
+          {"itemPadding", &itemPadding},
+          {"itemBorder", &itemBorder}
+        },
+        .floats={
+          {"spacing", &spacing},
+          {"itemBackgroundRadius", &itemBackgroundRadius},
+          {"itemBorderRadius", &itemBackgroundRadius}
+        },
+        .ints={
+          {"itemBackgroundRoundedPrecision", &itemBackgroundRoundedPrecision},
+          {"itemBorderRoundedPrecision", &itemBorderRoundedPrecision},
+        },
         .fonts={{"font", &text.font}}
         });
     LoadStyles(object);
@@ -62,7 +77,10 @@ namespace Greet
   void TreeView::MouseExited()
   {
     if(hovered)
+    {
       hovered->SetHovered(false, *this);
+      hovered = nullptr;
+    }
   }
 
   void TreeView::LoadFrameStyle(const MetaFile& metaFile)

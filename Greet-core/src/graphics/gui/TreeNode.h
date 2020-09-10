@@ -14,6 +14,19 @@ namespace Greet
   class TreeNode
   {
     friend class TreeView;
+    struct Styling
+    {
+      ////////////////////
+      // Styling variables
+      TLBR padding;
+      TLBR border;
+      Color backgroundColor;
+      Color borderColor;
+      float backgroundRadius;
+      float borderRadius;
+      int backgroundRoundedPrecision;
+      int borderRoundedPrecision;
+    };
 
     private:
       std::vector<TreeNode> childNodes;
@@ -24,12 +37,7 @@ namespace Greet
       bool hovered = false;
 
       bool dirty = false;
-      // Sprite icon;
-      //
-
-      ////////////////////
-      // Styling variables
-      TLBR padding;
+      Styling styling;
 
     public:
 

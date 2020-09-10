@@ -22,7 +22,18 @@ namespace Greet
       ////////////////////
       // Styling variables
       float spacing = 5;
+
+      ////////////////////
+      // Item Styling variables
       TLBR itemPadding = TLBR{5};
+      TLBR itemBorder = TLBR{0};
+      Color itemBackgroundColor = Color{0, 0, 0, 0};
+      Color itemBorderColor = Color{0, 0, 0, 0};
+      float itemBackgroundRadius = 0;
+      float itemBorderRadius = 0;
+      int itemBackgroundRoundedPrecision = 3;
+      int itemBorderRoundedPrecision = 3;
+
 
       TreeNode* hovered = nullptr;
       TreeNode* selected = nullptr;

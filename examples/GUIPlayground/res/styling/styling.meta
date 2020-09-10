@@ -40,6 +40,12 @@ spacing=0
 font=noto:12
 textColor=$textPrimaryColor
 itemPadding=4
+hover-itemBorder=5
+hover-itemBorderColor=$darkGray
+hover-itemBackgroundColor=$lighterGray
+hover-itemBorderRoundedPrecision=1
+hover-itemBorderRadius=10
+itemBackgroundRadius=6
 
 [Button]
 width=fill_parent
