@@ -218,6 +218,13 @@ namespace Greet
     return interface;
   }
 
+  void DockerSplit::ReplaceDocker(int index, DockerInterface* interface)
+  {
+    ASSERT(index >= 0 && index < children.size(), "Index out of bound");
+    children[index] = interface;
+    docker->MarkDirty();
+  }
+
   void DockerSplit::MergeSimilarSplits()
   {
     // It is probably possible to merge these two for loops into a single one
