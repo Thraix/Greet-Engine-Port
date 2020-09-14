@@ -348,11 +348,16 @@ namespace Greet{
     template <typename Real>
     static float SignedAngle(const Vec3<Real>& vec1, const Vec3<Real>& vec2, const Vec3<Real>& normal)
     {
-      float angle = acos(Dot(Normalize(vec1), Normalize(vec2)));
-      Vec3<Real> cross = Cross(vec1, vec2);
-      if (Dot(normal, cross) < 0)
-        angle = -angle;
-      return angle;
+    float dot = Dot(Normalize(vec1), Normalize(vec2));
+    float angle = acos(dot);
+    if(dot > 1.0f)
+      angle = 0;
+    else if(dot < -1.0f)
+      angle = M_PI;
+    Greet::Vec3<float> cross = Cross(vec1, vec2);
+    if (Dot(normal, cross) > 0)
+      angle = -angle;
+    return angle;
     }
   }
 }

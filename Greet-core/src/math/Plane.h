@@ -16,24 +16,24 @@ namespace Greet
     {}
 
     Plane(const Vec3<float>& normal, float d)
-      : normal{normal}, d{d}
+      : normal{Vec::Normalize(normal)}, d{d}
     {}
 
     Plane(const Vec3<float>& normal, const Vec3<float>& p)
-      : normal{normal}, d{Vec::Dot(normal, p)}
+      : normal{Vec::Normalize(normal)}, d{Vec::Dot(Vec::Normalize(normal), p)}
     {}
 
-    Plane Vertices(const Vec3<float>& p1, const Vec3<float>& p2, const Vec3<float>& p3)
+    static Plane Vertices(const Vec3<float>& p1, const Vec3<float>& p2, const Vec3<float>& p3)
     {
-      normal = Vec::Cross(p2 - p1, p3 - p1);
-      d = Vec::Dot(normal, p1);
+      Vec3<float> normal = Vec::Cross(p2 - p1, p3 - p1).Normalize();
+      float d = Vec::Dot(normal, p1);
       return Plane(normal, d);
     }
 
-    Plane Span(const Vec3<float>& p1, const Vec3<float>& v1, const Vec3<float>& v2)
+    static Plane Span(const Vec3<float>& p1, const Vec3<float>& v1, const Vec3<float>& v2)
     {
-      normal = Vec::Cross(v1, v2);
-      d = Vec::Dot(normal, p1);
+      Vec3<float> normal = Vec::Cross(v1, v2).Normalize();
+      float d = Vec::Dot(normal, p1);
       return Plane(normal, d);
     }
 
