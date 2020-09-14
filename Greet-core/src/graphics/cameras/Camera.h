@@ -20,9 +20,10 @@ namespace Greet {
 
     public:
       Camera(float fov, float near, float far) :
-        projectionMatrix{Mat4::ProjectionMatrix(RenderCommand::GetViewportAspect(), fov, near, far)},
+        projectionMatrix{Mat4::Perspective(RenderCommand::GetViewportAspect(), fov, near, far)},
         fov{fov}, near{near}, far{far}
       {}
+
       virtual const Mat4& GetViewMatrix() const { return viewMatrix;}
       virtual const Mat4& GetProjectionMatrix() const { return projectionMatrix;}
       virtual void SetProjectionMatrix(const Mat4& projectionMatrix)
@@ -32,7 +33,7 @@ namespace Greet {
       virtual void Update(float timeElapsed) {};
       virtual void ViewportResize(ViewportResizeEvent& event)
       {
-        projectionMatrix = Mat4::ProjectionMatrix(event.GetWidth() / event.GetHeight(), fov, near, far);
+        projectionMatrix = Mat4::Perspective(event.GetWidth() / event.GetHeight(), fov, near, far);
       }
       virtual void OnEvent(Event& event) {};
 

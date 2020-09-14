@@ -1,5 +1,7 @@
 #pragma once
 
+#include <ostream>
+
 namespace Greet {
 
   template <typename Real>
@@ -21,13 +23,20 @@ namespace Greet {
       Quaternion& Conjugate();
 
       Quaternion& Multiply(const Quaternion& other);
-      Quaternion& Multiply(const Vec3<float>& other);
+      Vec3<float> Multiply(const Vec3<float>& other);
+
+      static Quaternion AxisAngle(const Vec3<float>& axis, float angle);
 
       friend Quaternion operator*(const Quaternion& first, const Quaternion& second);
-      friend Quaternion operator*(const Quaternion& first, const Vec3<float>& second);
+      friend Vec3<float> operator*(const Quaternion& first, const Vec3<float>& second);
 
       Quaternion& operator*=(const Quaternion &other);
       Quaternion& operator*=(const Vec3<float>  &other);
+
+      friend std::ostream& operator<<(std::ostream& stream, const Quaternion& q)
+      {
+        return stream << "(" << q.x << ", " << q.y << ", " << q.z << ", " << q.w << ")";
+      }
   };
 
 }

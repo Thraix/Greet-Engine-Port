@@ -61,7 +61,7 @@ namespace Greet {
     return result;
   }
 
-  Mat4 Mat4::ProjectionMatrix(float aspect, float fov, float near, float far)
+  Mat4 Mat4::Perspective(float aspect, float fov, float near, float far)
   {
     Mat4 result(1.0f);
     float tan2 = 1.0f / tan(Math::ToRadians(fov * 0.5f));

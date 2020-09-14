@@ -315,6 +315,13 @@ namespace Greet{
   namespace Vec
   {
     template <typename Real>
+    static Vec3<Real> Normalize(const Vec3<Real>& vec)
+    {
+      Vec3<Real> ret = vec;
+      return ret.Normalize();
+    }
+
+    template <typename Real>
     static Real Dot(const Vec3<Real>& lhs, const Vec3<Real>& rhs)
     {
       return lhs.x * rhs.x + lhs.y * rhs.y + lhs.z  * rhs.z;
@@ -337,6 +344,15 @@ namespace Greet{
     {
       return Vec3<Real>{std::min(lhs.x,rhs.x),std::min(lhs.y,rhs.y),std::min(lhs.z,rhs.z)};
     }
-  }
 
+    template <typename Real>
+    static float SignedAngle(const Vec3<Real>& vec1, const Vec3<Real>& vec2, const Vec3<Real>& normal)
+    {
+      float angle = acos(Dot(Normalize(vec1), Normalize(vec2)));
+      Vec3<Real> cross = Cross(vec1, vec2);
+      if (Dot(normal, cross) < 0)
+        angle = -angle;
+      return angle;
+    }
+  }
 }

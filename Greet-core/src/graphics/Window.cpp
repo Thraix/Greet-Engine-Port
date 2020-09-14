@@ -56,6 +56,7 @@ namespace Greet {
   {
     FontManager::Destroy();
     AtlasManager::Destroy();
+    TextureManager::CleanupUnused();
     ComponentFactory::Cleanup();
     FrameFactory::Cleanup();
     joysticks.clear();
