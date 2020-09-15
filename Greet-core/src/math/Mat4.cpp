@@ -96,11 +96,15 @@ namespace Greet {
 
   Mat4 Mat4::AlignAxis(const Vec3<float>& point, const Vec3<float>& normal, const Vec3<float>& forward)
   {
+    if(Vec::Dot(normal, forward) >= 0.9999)
+      return Translate(point);
+
     Vec3<float> yaxis = normal;
     yaxis.Normalize();
 
     Vec3<float> xaxis = (forward.Cross(yaxis)).Normalize();
     Vec3<float> zaxis = xaxis.Cross(yaxis);
+
 
     Mat4 result(1.0f);
 
