@@ -8,11 +8,11 @@ namespace Greet {
   class Light
   {
     public:
-      Vec3<float> position;
+      Vec3f position;
       uint color;
 
     public:
-      Light(Vec3<float> position, uint color) : position(position) , color(color) {}
+      Light(Vec3f position, uint color) : position(position) , color(color) {}
 
       void SetToUniform(const Ref<Shader>& shader, const std::string& prefix)
       {

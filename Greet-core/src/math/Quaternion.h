@@ -4,8 +4,9 @@
 
 namespace Greet {
 
-  template <typename Real>
+  template <typename T>
   struct Vec3;
+  typedef Vec3<float> Vec3f;
 
   class Quaternion
   {
@@ -23,15 +24,15 @@ namespace Greet {
       Quaternion& Conjugate();
 
       Quaternion& Multiply(const Quaternion& other);
-      Vec3<float> Multiply(const Vec3<float>& other);
+      Vec3f Multiply(const Vec3f& other);
 
-      static Quaternion AxisAngle(const Vec3<float>& axis, float angle);
+      static Quaternion AxisAngle(const Vec3f& axis, float angle);
 
       friend Quaternion operator*(const Quaternion& first, const Quaternion& second);
-      friend Vec3<float> operator*(const Quaternion& first, const Vec3<float>& second);
+      friend Vec3f operator*(const Quaternion& first, const Vec3f& second);
 
-      Quaternion& operator*=(const Quaternion &other);
-      Quaternion& operator*=(const Vec3<float>  &other);
+      Quaternion& operator*=(const Quaternion& other);
+      Quaternion& operator*=(const Vec3f & other);
 
       friend std::ostream& operator<<(std::ostream& stream, const Quaternion& q)
       {

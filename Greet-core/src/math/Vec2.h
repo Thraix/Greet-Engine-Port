@@ -38,11 +38,16 @@ namespace Greet{
         : x{x}, y{y}
       {}
 
-      Vec2(const Vec3<T>& vec3)
+      template <typename S>
+      explicit Vec2(const Vec2<S>& v)
+        : x{(S)v.x}, y{(S)v.y}
+      {}
+
+      explicit Vec2(const Vec3<T>& vec3)
         : x(vec3.x), y(vec3.y)
       {}
 
-      Vec2(const Vec4<T>& vec4)
+      explicit Vec2(const Vec4<T>& vec4)
         : x(vec4.x), y(vec4.y)
       {}
 

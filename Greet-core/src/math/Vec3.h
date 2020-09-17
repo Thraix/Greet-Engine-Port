@@ -41,6 +41,11 @@ namespace Greet{
       : x{v}, y{v}, z{v}
     {}
 
+    template <typename S>
+    explicit Vec3(const Vec3<S>& v)
+      : x{(S)v.x}, y{(S)v.y}, z{(S)v.z}
+    {}
+
     explicit Vec3(const Vec4<T>& vec4)
       : x{vec4.x}, y{vec4.y}, z{vec4.z}
     {}
@@ -345,7 +350,7 @@ namespace Greet{
         angle = 0;
       else if(dot < -1.0f)
         angle = M_PI;
-      Greet::Vec3<float> cross = Cross(vec1, vec2);
+      Vec3<T> cross = Cross(vec1, vec2);
       if (Dot(normal, cross) > 0)
         angle = -angle;
       return angle;

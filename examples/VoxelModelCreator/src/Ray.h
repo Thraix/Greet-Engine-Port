@@ -6,7 +6,7 @@
 
 namespace vmc { namespace Ray
 {
-	std::vector<Cube> GetCubeRay(Greet::Vec3<float> near, Greet::Vec3<float> direction, uint gridSize);
+	std::vector<Cube> GetCubeRay(Greet::Vec3f near, Greet::Vec3f direction, uint gridSize);
 	bool RayInside(float plane1, float plane2, float min1, float max1, float min2, float max2);
 	float GetIntersectionT(float planePos, float start, float invDirection);
 

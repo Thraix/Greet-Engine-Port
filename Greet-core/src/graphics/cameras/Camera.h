@@ -37,7 +37,7 @@ namespace Greet {
       }
       virtual void OnEvent(Event& event) {};
 
-      Vec3<float> GetWorldToScreenCoordinate(const Vec3<float>& coordinate) const
+      Vec3f GetWorldToScreenCoordinate(const Vec3f& coordinate) const
       {
         return projectionMatrix * (viewMatrix * coordinate);
       }
@@ -50,8 +50,8 @@ namespace Greet {
           return Log::Error("Direction vector is NULL");
 
         Mat4 pvInv = ~(projectionMatrix * viewMatrix);
-        *near = pvInv * Vec3<float>(screenPos.x, screenPos.y, -1.0);
-        Vec3<float> far = pvInv * Vec3<float>(screenPos.x, screenPos.y, 1.0);
+        *near = pvInv * Vec3f(screenPos.x, screenPos.y, -1.0);
+        Vec3f far = pvInv * Vec3f(screenPos.x, screenPos.y, 1.0);
         *direction = (far - *near).Normalize();
       }
   };

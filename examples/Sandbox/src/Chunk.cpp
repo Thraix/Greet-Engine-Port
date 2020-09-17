@@ -25,7 +25,7 @@ Chunk::~Chunk()
   delete mesh;
 }
 
-void Chunk::RecalcPositions(Vec3<float>& vertex)
+void Chunk::RecalcPositions(Vec3f& vertex)
 {
   float y = vertex.y;
   if (y < 0.45)
@@ -51,7 +51,7 @@ void Chunk::RecalcPositions(Vec3<float>& vertex)
   vertex.y = y * 20.0;
 }
 
-void RecalcColors(const Vec3<float>& v1, const Vec3<float>& v2, const Vec3<float>& v3, uint* color)
+void RecalcColors(const Vec3f& v1, const Vec3f& v2, const Vec3f& v3, uint* color)
 {
   float y = (v1.y + v2.y + v3.y) / 3.0f / 20.0f;
   if (y < 0.45+0.01f)
@@ -81,14 +81,14 @@ void RecalcColors(const Vec3<float>& v1, const Vec3<float>& v2, const Vec3<float
 
 void Chunk::CalcGridVertexOffset(MeshData* data)
 {
-  const Pointer<Vec3<float>>& vertices = data->GetVertices();
+  const Pointer<Vec3f>& vertices = data->GetVertices();
   const Pointer<uint>& indices = data->GetIndices();
 
   Pointer<byte> offsets(4 * vertices.Size());
   for (int i = 0;i < indices.Size();i+=3)
   {
-    Vec3<float> v1 = vertices[indices[i+1]] - vertices[indices[i]];
-    Vec3<float> v2 = vertices[indices[i+2]] - vertices[indices[i]];
+    Vec3f v1 = vertices[indices[i+1]] - vertices[indices[i]];
+    Vec3f v2 = vertices[indices[i+2]] - vertices[indices[i]];
     offsets[indices[i]*4] = round(v1.x);
     offsets[indices[i]*4 + 1] = round(v1.z);
     offsets[indices[i]*4 + 2] = round(v2.x);
@@ -100,9 +100,9 @@ void Chunk::CalcGridVertexOffset(MeshData* data)
 void Chunk::RecalcGrid(MeshData& data)
 {
   Pointer<uint> colors(data.GetVertexCount());
-  Pointer<Vec3<float>>& vertices = data.GetVertices();
+  Pointer<Vec3f>& vertices = data.GetVertices();
   Pointer<uint>& indices = data.GetIndices();
-  Pointer<Vec3<float>> normals = data.GetAttribute(MESH_NORMALS_LOCATION)->second;
+  Pointer<Vec3f> normals = data.GetAttribute(MESH_NORMALS_LOCATION)->second;
 
   for (int i = 0;i < indices.Size();i+=3)
   {

@@ -7,15 +7,15 @@ namespace Greet {
   class FPCamera : public Camera
   {
     public:
-      Vec3<float> position;
+      Vec3f position;
       float yaw;
       float pitch;
       float roll;
       Mat4 viewMatrix;
 
-      FPCamera(float fov, float near, float far, const Vec3<float>& position, const Vec3<float>& rotation)
+      FPCamera(float fov, float near, float far, const Vec3f& position, const Vec3f& rotation)
         : Camera(fov, near, far), position(position), yaw(rotation.x), pitch(rotation.y), roll(rotation.z),
-        viewMatrix(Mat4::ViewMatrix(position, Vec3<float>(yaw,pitch, roll)))
+        viewMatrix(Mat4::ViewMatrix(position, Vec3f(yaw,pitch, roll)))
       {
 
       }

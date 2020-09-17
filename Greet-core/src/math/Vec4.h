@@ -41,6 +41,11 @@ namespace Greet{
       : x{x}, y{y}, z{z}, w{w}
     {}
 
+    template <typename S>
+    explicit Vec4(const Vec4<S>& v)
+      : x{(S)v.x}, y{(S)v.y}, z{(S)v.z}, w{(S)v.w}
+    {}
+
     T Length() const
     {
       return sqrt(x*x + y*y + z*z+ w*w);

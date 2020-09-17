@@ -123,7 +123,7 @@ namespace Greet {
         }
         else if(it->type == GL_FLOAT_VEC3)
         {
-          Vec3<float> f;
+          Vec3f f;
           GLCall(glGetnUniformfv(oldProgram, found->second, sizeof(Vec3f), (float*)&f));
           SetUniform3f(it->name, f);
         }

@@ -228,12 +228,12 @@ namespace Greet{
     return Vec2f(x/z, y/z);
   }
 
-  Vec3<float> Mat3::Multiply(const Vec3<float> &other) const
+  Vec3f Mat3::Multiply(const Vec3f &other) const
   {
     float x = columns[0].x * other.x + columns[1].x * other.y + columns[2].x * other.z;
     float y = columns[0].y * other.x + columns[1].y * other.y + columns[2].y * other.z;
     float z = columns[0].z * other.x + columns[1].z * other.y + columns[2].z * other.z;
-    return Vec3<float>(x,y,z);
+    return Vec3f(x,y,z);
   }
 
   Mat3 operator*(Mat3 first, const Mat3 &second)
@@ -250,7 +250,7 @@ namespace Greet{
     return first.Multiply(second);
   }
 
-  Vec3<float> operator*(const Mat3 &first, const Vec3<float> &second)
+  Vec3f operator*(const Mat3 &first, const Vec3f &second)
   {
     return first.Multiply(second);
   }

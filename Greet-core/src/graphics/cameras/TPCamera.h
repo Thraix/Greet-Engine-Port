@@ -24,12 +24,12 @@ namespace Greet {
       float m_heightSpeed;
       float m_distanceSpeed;
 
-      Vec3<float> m_position;
+      Vec3f m_position;
       float m_distance;
       float m_height;
       float m_rotation;
 
-      Vec3<float> m_positionWanted;
+      Vec3f m_positionWanted;
       float m_distanceWanted;
       float m_heightWanted;
       float m_rotationWanted;
@@ -39,14 +39,14 @@ namespace Greet {
       void CalculateInformation();
     public:
       TPCamera(float fov, float near, float far);
-      TPCamera(float fov, float near, float far, const Vec3<float>& position, float distance, float height, float rotation);
-      TPCamera(float fov, float near, float far, const Vec3<float>& position, float distance, float height, float rotation, float distanceMin, float distanceMax, float heightMin, float heightMax);
-      TPCamera(float fov, float near, float far, const Vec3<float>& position, float distance, float height, float rotation, float distanceMin, float distanceMax, float heightMin, float heightMax, float rotationSpeed, float heightSpeed, float distanceSpeed);
+      TPCamera(float fov, float near, float far, const Vec3f& position, float distance, float height, float rotation);
+      TPCamera(float fov, float near, float far, const Vec3f& position, float distance, float height, float rotation, float distanceMin, float distanceMax, float heightMin, float heightMax);
+      TPCamera(float fov, float near, float far, const Vec3f& position, float distance, float height, float rotation, float distanceMin, float distanceMax, float heightMin, float heightMax, float rotationSpeed, float heightSpeed, float distanceSpeed);
       virtual ~TPCamera();
 
       void Update(float timeElapsed) override;
 
-      const Vec3<float>& GetPosition() const { return m_position; }
+      const Vec3f& GetPosition() const { return m_position; }
       float GetHeight() const { return m_height; }
       float GetRotation() const { return m_rotation; }
       float GetDistance() const { return m_distance; }
@@ -56,7 +56,7 @@ namespace Greet {
       float GetMaxHeight() const { return m_heightMax; }
 
 
-      void SetPosition(const Vec3<float>& pos);
+      void SetPosition(const Vec3f& pos);
       void SetHeight(float height);
       void SetRotation(float rotation);
       void SetDistance(float distance);

@@ -7,22 +7,22 @@
 namespace Greet {
 
   TPCamera::TPCamera(float fov, float near, float far)
-    : TPCamera(fov, near, far, Vec3<float>(0,0,0), 1, 0, 0)
+    : TPCamera(fov, near, far, Vec3f(0,0,0), 1, 0, 0)
   {
   }
 
-  TPCamera::TPCamera(float fov, float near, float far, const Vec3<float>& position, float distance, float height, float rotation)
+  TPCamera::TPCamera(float fov, float near, float far, const Vec3f& position, float distance, float height, float rotation)
     : TPCamera(fov, near, far, position, distance, height, rotation, 1, 100, -1,1)
   {
 
   }
 
-  TPCamera::TPCamera(float fov, float near, float far, const Vec3<float>& position, float distance, float height, float rotation, float distanceMin, float distanceMax, float heightMin, float heightMax)
+  TPCamera::TPCamera(float fov, float near, float far, const Vec3f& position, float distance, float height, float rotation, float distanceMin, float distanceMax, float heightMin, float heightMax)
     : TPCamera(fov, near, far, position, distance, height, rotation, distanceMin, distanceMax, heightMin, heightMax, 10, 10, 10)
   {
   }
 
-  TPCamera::TPCamera(float fov, float near, float far, const Vec3<float>& position, float distance, float height, float rotation, float distanceMin, float distanceMax, float heightMin, float heightMax, float rotationSpeed, float heightSpeed, float distanceSpeed)
+  TPCamera::TPCamera(float fov, float near, float far, const Vec3f& position, float distance, float height, float rotation, float distanceMin, float distanceMax, float heightMin, float heightMax, float rotationSpeed, float heightSpeed, float distanceSpeed)
     : Camera(fov, near, far), m_position(position), m_distance(distance), m_height(height), m_rotation(rotation), m_rotationSpeed(rotationSpeed), m_heightSpeed(heightSpeed), m_distanceSpeed(distanceSpeed)
   {
     m_rotationWanted = m_rotation;
@@ -49,7 +49,7 @@ namespace Greet {
     CalculateInformation();
   }
 
-  void TPCamera::SetPosition(const Vec3<float>& pos)
+  void TPCamera::SetPosition(const Vec3f& pos)
   {
     m_positionWanted = pos;
   }

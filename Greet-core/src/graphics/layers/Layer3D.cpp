@@ -76,12 +76,12 @@ namespace Greet {
     Log::Warning("Could not remove the renderer");
   }
 
-  Vec3<float> Layer3D::GetWorldToScreenCoordinate(const Vec3<float>& coordinate) const
+  Vec3f Layer3D::GetWorldToScreenCoordinate(const Vec3f& coordinate) const
   {
     return camera->GetWorldToScreenCoordinate(coordinate);
   }
 
-  void Layer3D::GetScreenToWorldCoordinate(const Vec2f& screenPos, Vec3<float>* near, Vec3<float>* direction) const
+  void Layer3D::GetScreenToWorldCoordinate(const Vec2f& screenPos, Vec3f* near, Vec3f* direction) const
   {
     camera->GetScreenToWorldCoordinate(screenPos, near, direction);
   }

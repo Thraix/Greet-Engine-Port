@@ -11,7 +11,7 @@ namespace Greet{
       float elements[3 * 3];
       struct
       {
-        Vec3<float> columns[3];
+        Vec3f columns[3];
       };
     };
 
@@ -19,7 +19,7 @@ namespace Greet{
     Mat3(float diagonal);
     Mat3(float* elem);
 
-    const Vec3<float>& getColumn(int index)
+    const Vec3f& getColumn(int index)
     {
       return columns[index];
     }
@@ -44,13 +44,13 @@ namespace Greet{
 
     Mat3& Multiply(const Mat3& other);
     Vec2f Multiply(const Vec2f& other) const;
-    Vec3<float> Multiply(const Vec3<float>& other) const;
+    Vec3f Multiply(const Vec3f& other) const;
 
     friend Mat3 operator*(Mat3 first, const Mat3 &second);
     Mat3& operator*=(const Mat3 &other);
 
     friend Vec2f operator*(const Mat3& first, const Vec2f& second);
-    friend Vec3<float> operator*(const Mat3& first, const Vec3<float>& second);
+    friend Vec3f operator*(const Mat3& first, const Vec3f& second);
     friend Mat3 operator~(const Mat3& first);
   };
 }

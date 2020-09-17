@@ -88,7 +88,7 @@ class Core : public App
       guiScene->AddFrameQueued(frame);
 
       //camera = new TPCamera(vec3(-3.5, -7.8, 5.5), 18, 0.66, 38.5, 15, 80, 0, 0.8f); // Profile shot
-      camera = new TPCamera(90, 0.01f,1000.0f, Vec3<float>(0, 0, 0), 15, 0, 0, 0, 80, -0.8f, 0.8f);
+      camera = new TPCamera(90, 0.01f,1000.0f, Vec3f(0, 0, 0), 15, 0, 0, 0, 80, -0.8f, 0.8f);
 
       Skybox* skybox = new Skybox(TextureManager::LoadCubeMap("res/textures/skybox.meta"));
       renderer3d = new BatchRenderer3D();
@@ -118,37 +118,37 @@ class Core : public App
         std::vector<float> noise = Noise::GenNoise(gridWidth+1, gridWidth + 1,5,8, 8,0.5f);
         MeshData gridMesh = MeshFactory::GridLowPoly(Vec2i{gridWidth, gridLength}, noise, {0, 0, 0}, Vec3f{gridWidth+1, 1.0f, gridLength+1});
         RecalcGrid(gridMesh, gridWidth, gridLength);
-        terrain = new EntityModel(new Mesh(gridMesh), terrainMaterial, Vec3<float>(0, -15, 0), Vec3<float>(1.0f, 1.0f, 1.0f), Vec3<float>(0.0f, 0.0f, 0.0f));
+        terrain = new EntityModel(new Mesh(gridMesh), terrainMaterial, Vec3f(0, -15, 0), Vec3f(1.0f, 1.0f, 1.0f), Vec3f(0.0f, 0.0f, 0.0f));
         gridMesh.RemoveAttribute(MESH_NORMALS_LOCATION);
         gridMesh.RemoveAttribute(MESH_COLORS_LOCATION);
         CalcGridVertexOffset(gridMesh);
 
-        water = new EntityModel(new Mesh(gridMesh), waterMaterial, Vec3<float>(0, -15, 0), Vec3<float>(1.0f, 1.0f, 1.0f), Vec3<float>(0.0f, 0.0f, 0.0f));
+        water = new EntityModel(new Mesh(gridMesh), waterMaterial, Vec3f(0, -15, 0), Vec3f(1.0f, 1.0f, 1.0f), Vec3f(0.0f, 0.0f, 0.0f));
 #endif
       }
 
       MeshData polygonMesh = MeshFactory::Polygon(6, MeshFactory::PolygonSizeFormat::SIDE_LENGTH, {0, 0, 0}, 10);
-      polygon = new EntityModel(new Mesh(polygonMesh), terrainMaterial, Vec3<float>(0,1,0), Vec3<float>(1,1,1), Vec3<float>(0,0,0));
+      polygon = new EntityModel(new Mesh(polygonMesh), terrainMaterial, Vec3f(0,1,0), Vec3f(1,1,1), Vec3f(0,0,0));
 
 
       MeshData cubeMesh = MeshFactory::Cube();
-      cube = new EntityModel(new Mesh(cubeMesh), modelMaterial, Vec3<float>(1,0,0), Vec3<float>(1, 1, 1), Vec3<float>(0, 0, 0));
+      cube = new EntityModel(new Mesh(cubeMesh), modelMaterial, Vec3f(1,0,0), Vec3f(1, 1, 1), Vec3f(0, 0, 0));
 
       MeshData sphereMeshData = MeshFactory::Sphere(20, 20, {0, 0, 0}, 0.5f);
       sphereMeshData.GenerateNormals();
       //sphereMeshData->LowPolify();
       Mesh* sphereMesh = new Mesh(sphereMeshData);
       //sphereMesh->SetEnableWireframe(true);
-      sphere = new EntityModel(sphereMesh, modelMaterial, Vec3<float>(0,0,0), Vec3<float>(1, 1, 1), Vec3<float>(0, 0, 0));
+      sphere = new EntityModel(sphereMesh, modelMaterial, Vec3f(0,0,0), Vec3f(1, 1, 1), Vec3f(0, 0, 0));
 
       MeshData tetrahedronMesh = MeshFactory::Tetrahedron({0, 0, 0}, 10);
-      tetrahedron = new EntityModel(new Mesh(tetrahedronMesh), modelMaterial, Vec3<float>(30, 0, 10), Vec3<float>(1, 1, 1), Vec3<float>(0, 0, 0));
+      tetrahedron = new EntityModel(new Mesh(tetrahedronMesh), modelMaterial, Vec3f(30, 0, 10), Vec3f(1, 1, 1), Vec3f(0, 0, 0));
 
       MeshData stallMeshData = OBJUtils::LoadObj("res/objs/stall.obj");
       //
       Mesh* stallMesh = new Mesh(stallMeshData);
       stallMaterial->SetSpecularStrength(0.1)->SetSpecularExponent(1);
-      stall = new EntityModel(stallMesh, stallMaterial, Vec3<float>(0.0f, 0.0f, -25), Vec3(3.0f, 3.0f, 3.0f), Vec3(0.0f, 0.0f, 0.0f));
+      stall = new EntityModel(stallMesh, stallMaterial, Vec3f(0.0f, 0.0f, -25), Vec3(3.0f, 3.0f, 3.0f), Vec3(0.0f, 0.0f, 0.0f));
 
       // MEMORY LEAK WITH MESHDATA
       //MeshData data = MeshData::ReadFromFile("res/objs/dragon.gobj");
@@ -157,7 +157,7 @@ class Core : public App
       data.GenerateNormals();
       data.WriteToFile("res/objs/dragon.gobj");
       Mesh* dragonMesh = new Mesh(data);
-      dragon = new EntityModel(dragonMesh, flatMaterial, Vec3<float>(20.0f, 0.0f, -25), Vec3(1.0f, 1.0f, 1.0f), Vec3(0.0f, 0.0f, 0.0f));
+      dragon = new EntityModel(dragonMesh, flatMaterial, Vec3f(20.0f, 0.0f, -25), Vec3(1.0f, 1.0f, 1.0f), Vec3(0.0f, 0.0f, 0.0f));
 
       //Mesh* gridMesh = MeshFactory::cube(0,0,0,10,10,10);
       //gridMesh->setEnableCulling(false);
@@ -169,7 +169,7 @@ class Core : public App
       //	models.push_back(EntityModel(*modelModelMaterial, vec3(random()*100, random() * 100, random() * 100), vec3(1.0f, 1.0f, 1.0f), vec3(random() * 360, random() * 360, random() * 360)));
       //}
 
-      light = new Light(Vec3<float>(10, 20, 10), 0xffffffff);
+      light = new Light(Vec3f(10, 20, 10), 0xffffffff);
       const Ref<Shader>& modelShader = modelMaterial->GetShader();
       modelShader->Enable();
       light->SetToUniform(modelShader, "light");
@@ -227,7 +227,7 @@ class Core : public App
       //GlobalSceneManager::GetSceneManager().Add3DScene(new World(camera, 10, 10), "WorldTerrain");
     }
 
-    void RecalcPositions(Vec3<float>& vertex)
+    void RecalcPositions(Vec3f& vertex)
     {
       float y = vertex.y;
       if (y < 0.45)
@@ -253,7 +253,7 @@ class Core : public App
       vertex.y = y * 20.0;
     }
 
-    void RecalcColors(const Vec3<float>& v1, const Vec3<float>& v2, const Vec3<float>& v3, uint* color)
+    void RecalcColors(const Vec3f& v1, const Vec3f& v2, const Vec3f& v3, uint* color)
     {
       float y = (v1.y + v2.y + v3.y) / 3.0f / 20.0f;
       if (y < 0.45+0.01f)
@@ -283,7 +283,7 @@ class Core : public App
 
     void CalcGridVertexOffset(MeshData& data)
     {
-      Pointer<Vec3<float>>& vertices = data.GetVertices();
+      Pointer<Vec3f>& vertices = data.GetVertices();
       uint vertexCount = data.GetVertexCount();
       uint indexCount = data.GetIndexCount();
       Pointer<uint>& indices = data.GetIndices();
@@ -291,8 +291,8 @@ class Core : public App
       Pointer<byte> offsets(4 * vertexCount);
       for (int i = 0;i < indexCount;i+=3)
       {
-        Vec3<float> v1 = vertices[indices[i+1]] - vertices[indices[i]];
-        Vec3<float> v2 = vertices[indices[i+2]] - vertices[indices[i]];
+        Vec3f v1 = vertices[indices[i+1]] - vertices[indices[i]];
+        Vec3f v2 = vertices[indices[i+2]] - vertices[indices[i]];
         offsets[indices[i]*4] = round(v1.x);
         offsets[indices[i]*4 + 1] = round(v1.z);
         offsets[indices[i]*4 + 2] = round(v2.x);
@@ -304,10 +304,10 @@ class Core : public App
     void RecalcGrid(MeshData& data, uint gridWidth, uint gridLength)
     {
       Pointer<uint> colors(data.GetVertexCount());
-      Pointer<Vec3<float>>& vertices = data.GetVertices();
+      Pointer<Vec3f>& vertices = data.GetVertices();
       uint indexCount = data.GetIndexCount();
       Pointer<uint>& indices = data.GetIndices();
-      Pointer<Vec3<float>> normals = data.GetAttribute(MESH_NORMALS_LOCATION)->second;
+      Pointer<Vec3f> normals = data.GetAttribute(MESH_NORMALS_LOCATION)->second;
       for (int i = 0;i < indexCount;i+=3)
       {
         RecalcPositions(vertices[indices[i]]);
@@ -338,8 +338,8 @@ class Core : public App
     }
 
     float hue = 0;
-    Vec3<float> velocityPos;
-    Vec3<float> velocityNeg;
+    Vec3f velocityPos;
+    Vec3f velocityNeg;
     float waterTime = 0.0;
 
     void Update(float elapsedTime) override
@@ -421,7 +421,7 @@ class Core : public App
         }
         if (e.GetButton() == GLFW_KEY_F2)
         {
-          camera->SetPosition(Vec3<float>(-3.5, -7.8, 5.5));
+          camera->SetPosition(Vec3f(-3.5, -7.8, 5.5));
           camera->SetDistance(18);
           camera->SetHeight(0.66);
           camera->SetRotation(38.5);
@@ -432,7 +432,7 @@ class Core : public App
         }
         if (e.GetButton() == GLFW_KEY_X)
         {
-          Vec2f p = camera->GetWorldToScreenCoordinate(Vec3<float>(0, 0, 0));
+          Vec2f p = Vec2f{camera->GetWorldToScreenCoordinate(Vec3f(0, 0, 0))};
           Window::TransformScreenToWindowPos(p);
           Log::Info(p);
         }
