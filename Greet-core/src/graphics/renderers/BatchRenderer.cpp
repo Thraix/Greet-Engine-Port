@@ -111,7 +111,7 @@ namespace Greet {
     }
   }
 
-  void BatchRenderer::DrawRect(const Transform2D& transform, uint texID, Vec2f texPos, Vec2f texSize, uint color, uint maskTexId, const Vec2f& maskTexPos, const Vec2f& maskTexSize)
+  void BatchRenderer::DrawRect(const Mat3& transform, uint texID, Vec2f texPos, Vec2f texSize, uint color, uint maskTexId, const Vec2f& maskTexPos, const Vec2f& maskTexSize)
   {
     Draw(transform, texPos, texSize, GetTextureSlot(texID), color, GetTextureSlot(maskTexId),maskTexPos,maskTexSize);
   }
@@ -149,9 +149,9 @@ namespace Greet {
     m_iboSize += 6;
   }
 
-  void BatchRenderer::Draw(const Transform2D& transform, const Vec2f& texPos, const Vec2f& texSize, const uint textureSlot, const uint& color, const uint& maskTexSlot, const Vec2f& maskTexPos, const Vec2f& maskTexSize)
+  void BatchRenderer::Draw(const Mat3& transform, const Vec2f& texPos, const Vec2f& texSize, const uint textureSlot, const uint& color, const uint& maskTexSlot, const Vec2f& maskTexPos, const Vec2f& maskTexSize)
   {
-    PushMatrix(transform.GetMatrix());
+    PushMatrix(transform);
 
     AppendVertexBuffer(Vec2f(0, 0),Vec2f(texPos.x, texPos.y),textureSlot,color, maskTexSlot,Vec2f(maskTexPos.x, maskTexPos.y));
     AppendVertexBuffer(Vec2f(0, 1),Vec2f(texPos.x, texPos.y + texSize.y),textureSlot,color, maskTexSlot, Vec2f(maskTexPos.x, maskTexPos.y+maskTexSize.y));

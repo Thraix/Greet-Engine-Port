@@ -48,11 +48,11 @@ namespace Greet {
 #if 0
       void Submit(const RenderablePoly* renderable);
 #endif
-      void DrawRect(const Transform2D& transform, uint texID, Vec2f texPos, Vec2f texSize, uint color, uint maskTexId, const Vec2f& maskTexPos, const Vec2f& maskTexSize);
+      void DrawRect(const Mat3& transform, uint texID, Vec2f texPos, Vec2f texSize, uint color, uint maskTexId, const Vec2f& maskTexPos, const Vec2f& maskTexSize);
       void DrawRect(const Vec2f& position, const Vec2f& size, uint texID, Vec2f texPos, Vec2f texSize, uint color, uint maskTexId, const Vec2f& maskTexPos, const Vec2f& maskTexSize);
       void DrawRect(const Vec2f& position, const Vec2f& size, uint texID, Vec2f texPos, Vec2f texSize, uint color);
       void DrawText(const std::string& text, const Vec2f& position, const Font& font, const uint& color);
-      void Draw(const Transform2D& transform, const Vec2f& texPos, const Vec2f& texSize, const uint textureSlot, const uint& color, const uint& maskTexSlot, const Vec2f& maskTexPos, const Vec2f& maskTexSize);
+      void Draw(const Mat3& transform, const Vec2f& texPos, const Vec2f& texSize, const uint textureSlot, const uint& color, const uint& maskTexSlot, const Vec2f& maskTexPos, const Vec2f& maskTexSize);
       void Draw(const Vec2f& position, const Vec2f& size, const Vec2f& texPos, const Vec2f& texSize, const uint textureSlot, const uint color, const uint& maskTexSlot, const Vec2f& maskTexPos, const Vec2f& maskTexSize);
       void Draw(const Vec2f& position, const Vec2f* vertices, const uint amount, const uint color);
       void DrawRect(const Vec2f& position, const Vec2f& size, const uint& color);
