@@ -105,12 +105,12 @@ namespace vmc
   {
     Layer3D::Render();
     glLineWidth(2.0f);
-    renderer->DrawLineCube(camera, Vec3<float>(-0.5f, -0.5f, -0.5f), Vec3<float>(GRID_SIZE + 1, GRID_SIZE + 1, GRID_SIZE + 1), Vec4(0, 0, 0, 1));
+    renderer->DrawLineCube(camera, Vec3<float>(-0.5f, -0.5f, -0.5f), Vec3<float>(GRID_SIZE + 1, GRID_SIZE + 1, GRID_SIZE + 1), Vec4f(0, 0, 0, 1));
     GLCall(glPolygonMode(GL_FRONT_AND_BACK, GL_LINE));
     if (hasSelected)
     {
       float outline = 0.01f;
-      renderer->DrawLineCube(camera, selected.GetPosition() - outline, Vec3<float>(1, 1, 1) + outline*2, Vec4(0,0,0,1));
+      renderer->DrawLineCube(camera, selected.GetPosition() - outline, Vec3<float>(1, 1, 1) + outline*2, Vec4f(0,0,0,1));
       //renderer->DrawCube(selected.GetPosition() - outline, Vec3(1.0f, 1.0f, 1.0f) + outline * 2, 0xff000000, true);
     }
 
@@ -127,9 +127,9 @@ namespace vmc
       const TPCamera& cam = (const TPCamera&)camera;
       Vec3 pos = cam.GetPosition();
       float length = cam.GetDistance() * 0.6;
-      renderer->DrawLine(camera, pos, pos + Vec3<float>(length, 0, 0), Vec4(1, 0, 0, 1));
-      renderer->DrawLine(camera, pos, pos + Vec3<float>(0, length, 0), Vec4(0, 1, 0, 1));
-      renderer->DrawLine(camera, pos, pos + Vec3<float>(0, 0, length), Vec4(0, 0, 1, 1));
+      renderer->DrawLine(camera, pos, pos + Vec3<float>(length, 0, 0), Vec4f(1, 0, 0, 1));
+      renderer->DrawLine(camera, pos, pos + Vec3<float>(0, length, 0), Vec4f(0, 1, 0, 1));
+      renderer->DrawLine(camera, pos, pos + Vec3<float>(0, 0, length), Vec4f(0, 0, 1, 1));
     }
     renderer->End(camera);
   }

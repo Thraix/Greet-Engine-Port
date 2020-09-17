@@ -21,12 +21,12 @@ namespace Greet
       Vec2f texCoord;
       float texId;
       Color color;
-      Vec4 viewport;
+      Vec4f viewport;
       float isHSV;
     };
 
     private:
-      std::stack<Vec4> m_viewports;
+      std::stack<Vec4f> m_viewports;
       std::stack<Vec2f> translationStack;
       uint m_bufferSize;
       uint m_iboSize;
@@ -70,12 +70,12 @@ namespace Greet
     private:
       float GetTextureSlot(uint Id);
       bool NeedFlush(uint indices, uint vertices);
-      Vec4 GetViewport(const Vec2f& pos1, const Vec2f& pos2) const;
+      Vec4f GetViewport(const Vec2f& pos1, const Vec2f& pos2) const;
       void AppendTriangle(const Vec2f& pos1, const Vec2f& pos2, const Vec2f& pos3, const Color& color, bool isHsv);
       void AppendRoundedQuad(const Vec2f& position, const Vec2f& size, const Color& color, bool hsb, float radius, uint precision);
       void AppendQuaterCircle(const Vec2f& center, const Color& color, bool isHsv, float radius, uint precision, bool top, bool left);
       void AppendQuad(const Vec2f& position, const Vec2f& size, const Vec2f& texCoord1, const Vec2f& texCoord2, float texID, const Color& color1, const Color& color2, const Color& color3, const Color& color4, bool isHsv);
       void AppendQuad(const Vec2f& position, const Vec2f& size, const Vec2f& texCoord1, const Vec2f& texCoord2, float texID, const Color& color, bool isHsv);
-      void AppendVertexBuffer(const Vec2f& position, const Vec2f& texCoord, float texID, const Color& color, const Vec4& viewport, bool isHsv);
+      void AppendVertexBuffer(const Vec2f& position, const Vec2f& texCoord, float texID, const Color& color, const Vec4f& viewport, bool isHsv);
   };
 }

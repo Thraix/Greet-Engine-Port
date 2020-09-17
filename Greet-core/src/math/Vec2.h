@@ -15,55 +15,53 @@ namespace Greet{
       {
         struct
         {
-          float x, y;
+          T x, y;
         };
         struct
         {
-          float w, h;
+          T w, h;
         };
         struct
         {
-          float s, t;
+          T s, t;
         };
       };
       Vec2()
         : x{0}, y{0}
       {}
 
-      Vec2(float f)
+      Vec2(const T& f)
         : x{f}, y{f}
       {}
 
-      Vec2(float x, float y)
+      Vec2(const T& x, const T& y)
         : x{x}, y{y}
       {}
 
-      Vec2(const Vec3<float>& vec3)
+      Vec2(const Vec3<T>& vec3)
         : x(vec3.x), y(vec3.y)
       {}
 
-      Vec2(const Vec4& vec4)
+      Vec2(const Vec4<T>& vec4)
         : x(vec4.x), y(vec4.y)
-      {
+      {}
 
-      }
-
-      float Length() const
+      T Length() const
       {
         return sqrt(x*x + y*y);
       }
 
-      float LengthSQ() const
+      T LengthSQ() const
       {
         return x*x + y*y;
       }
 
-      float Dot(const Vec2& vec) const
+      T Dot(const Vec2& vec) const
       {
         return x*vec.x + y*vec.y;
       }
 
-      float Cross(const Vec2& vec) const
+      T Cross(const Vec2& vec) const
       {
         return x * vec.y - y * vec.x;
       }
@@ -82,7 +80,7 @@ namespace Greet{
 
       Vec2& Normalize()
       {
-        float len = Length();
+        T len = Length();
         if(len == 0)
           return *this;
         x /= len;
@@ -90,13 +88,14 @@ namespace Greet{
         return *this;
       }
 
-      Vec2& Rotate(float rad)
+      template <typename std::enable_if<std::is_floating_point<T>::value>* = nullptr>
+      Vec2& Rotate(T rad)
       {
-        float c = cos(rad);
-        float s = sin(rad);
+        T c = cos(rad);
+        T s = sin(rad);
 
-        float tempX = x*c - y*s;
-        float tempY = x*s + y*c;
+        T tempX = x*c - y*s;
+        T tempY = x*s + y*c;
         x = tempX;
         y = tempY;
 

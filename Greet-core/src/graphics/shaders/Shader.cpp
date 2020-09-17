@@ -129,14 +129,14 @@ namespace Greet {
         }
         else if(it->type == GL_FLOAT_VEC4)
         {
-          Vec4 f;
-          GLCall(glGetnUniformfv(oldProgram, found->second, sizeof(Vec4), (float*)&f));
+          Vec4f f;
+          GLCall(glGetnUniformfv(oldProgram, found->second, sizeof(Vec4f), (float*)&f));
           SetUniform4f(it->name, f);
         }
         else if(it->type == GL_FLOAT)
         {
-          Vec4 f;
-          GLCall(glGetnUniformfv(oldProgram, found->second, sizeof(Vec4), (float*)&f));
+          Vec4f f;
+          GLCall(glGetnUniformfv(oldProgram, found->second, sizeof(Vec4f), (float*)&f));
           SetUniform4f(it->name, f);
         }
         else if(it->type == GL_INT ||
@@ -495,7 +495,7 @@ namespace Greet {
     GLCall(glUniform3f(GetUniformLocation(name), value.x, value.y, value.z));
   }
 
-  void Shader::SetUniform4f(const std::string& name, const Vec4& value) const
+  void Shader::SetUniform4f(const std::string& name, const Vec4f& value) const
   {
     GLCall(glUniform4f(GetUniformLocation(name), value.x, value.y, value.z, value.w));
   }

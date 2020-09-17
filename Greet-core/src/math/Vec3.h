@@ -41,7 +41,7 @@ namespace Greet{
       : x{v}, y{v}, z{v}
     {}
 
-    explicit Vec3(const Vec4& vec4)
+    explicit Vec3(const Vec4<T>& vec4)
       : x{vec4.x}, y{vec4.y}, z{vec4.z}
     {}
 

@@ -1,11 +1,11 @@
 #pragma once
 
+#include <graphics/Color.h>
 #include <graphics/layers/Scene.h>
 #include <graphics/renderers/BatchRenderer.h>
 #include <graphics/shaders/ShaderFactory.h>
 #include <graphics/Window.h>
 #include <utils/LogUtils.h>
-#include <utils/ColorUtils.h>
 
 enum Type
 {
@@ -122,7 +122,7 @@ struct Lab : public Comp
     int yPos = 0;
     for(int i = 0; i < length; i++)
     {
-      uint textColor = Greet::ColorUtils::Vec4ToColorHex(Greet::ColorUtils::HSVtoRGB(1.0 * i / length, 1, 1, 1));
+      uint textColor = Greet::Color(1.0 * i / length, 1, 1, 1).ToRGB().AsUInt();
       renderer->FillRect({(float)(x + xPos + xOffset), (float)(y + yPos + yOffset)}, {20.0f, 20.0f}, textColor);
       xPos += 30;
       if(xPos + 20 > width.size)

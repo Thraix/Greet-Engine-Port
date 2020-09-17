@@ -113,13 +113,13 @@ namespace Greet
     Vec2f p2 = GetMatrix() * (translationStack.top() + pos + size);
     if (!m_viewports.empty() && !overwrite)
     {
-      Vec4 top = m_viewports.top();
+      Vec4f top = m_viewports.top();
       p1.x = p1.x < top.x ? top.x : p1.x;
       p1.y = p1.y < top.y ? top.y : p1.y;
       p2.x = p2.x > top.z ? top.z : p2.x;
       p2.y = p2.y > top.w ? top.w : p2.y;
     }
-    m_viewports.push(Vec4(p1.x, p1.y, p2.x, p2.y));
+    m_viewports.push(Vec4f(p1.x, p1.y, p2.x, p2.y));
   }
 
   void GUIRenderer::PopViewport()
@@ -239,14 +239,14 @@ namespace Greet
     return false;
   }
 
-  Vec4 GUIRenderer::GetViewport(const Vec2f& pos1, const Vec2f& pos2) const
+  Vec4f GUIRenderer::GetViewport(const Vec2f& pos1, const Vec2f& pos2) const
   {
     if (!m_viewports.empty())
       return m_viewports.top();
     else
     {
       //Log::Warning("No viewport");
-      Vec4 viewport;;
+      Vec4f viewport;;
       Vec2f temp = GetMatrix() * (translationStack.top() + Vec2f(pos1.x, pos1.y));
       viewport.x = temp.x;
       viewport.y = temp.y;
@@ -262,7 +262,7 @@ namespace Greet
     if (NeedFlush(3, 3))
       Flush();
 
-    Vec4 viewport = GetViewport(Vec2f(std::min(std::min(pos1.x,pos2.x),pos3.x), std::min(std::min(pos1.y, pos2.y), pos3.y)), Vec2f(std::max(std::max(pos1.x, pos2.x), pos3.x), std::max(std::max(pos1.y, pos2.y), pos3.y)));
+    Vec4f viewport = GetViewport(Vec2f(std::min(std::min(pos1.x,pos2.x),pos3.x), std::min(std::min(pos1.y, pos2.y), pos3.y)), Vec2f(std::max(std::max(pos1.x, pos2.x), pos3.x), std::max(std::max(pos1.y, pos2.y), pos3.y)));
 
     AppendVertexBuffer(pos1, Vec2f(0, 0), 0.0f, color, viewport, isHsv);
     AppendVertexBuffer(pos2, Vec2f(0, 0), 0.0f, color, viewport, isHsv);
@@ -280,7 +280,7 @@ namespace Greet
     if (NeedFlush(6, 4))
       Flush();
 
-    Vec4 viewport = GetViewport(position, position + size);
+    Vec4f viewport = GetViewport(position, position + size);
 
     AppendVertexBuffer(position, texCoord1, texId, color1, viewport, isHsv);
     AppendVertexBuffer(Vec2f(position.x, position.y + size.y), Vec2f(texCoord1.x, texCoord2.y), texId, color3, viewport, isHsv);
@@ -326,7 +326,7 @@ namespace Greet
     if(aEnd < aStart)
       return;
 
-    Vec4 viewport{GetViewport(position, position+size)};
+    Vec4f viewport{GetViewport(position, position+size)};
 
     // Center vertex (to make things easier)
     // TODO: Remove this and make another vertex the main one
@@ -409,7 +409,7 @@ namespace Greet
 
   void GUIRenderer::AppendQuaterCircle(const Vec2f& center, const Color& color, bool isHsv, float radius, uint precision, bool left, bool top)
   {
-    Vec4 viewport = GetViewport(center-radius, center + radius);
+    Vec4f viewport = GetViewport(center-radius, center + radius);
     float xRad = radius;
     float yRad = radius;
     if(left)
@@ -447,7 +447,7 @@ namespace Greet
     AppendQuad(position, size, texCoord1, texCoord2, texId, color, color, color, color, isHsv);
   }
 
-  void GUIRenderer::AppendVertexBuffer(const Vec2f& position, const Vec2f& texCoord, float texId, const Color& color, const Vec4& viewport, bool isHsv)
+  void GUIRenderer::AppendVertexBuffer(const Vec2f& position, const Vec2f& texCoord, float texId, const Color& color, const Vec4f& viewport, bool isHsv)
   {
     m_buffer->pos = GetMatrix() * (translationStack.top() + position);
     m_buffer->texCoord = texCoord;

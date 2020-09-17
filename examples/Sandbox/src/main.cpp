@@ -355,7 +355,7 @@ class Core : public App
       hue += elapsedTime / 3.0f;
       while (hue >= 1)
         hue--;
-      cursor->m_color = ColorUtils::Vec3ToColorHex(Vec3<float>(ColorUtils::HSVtoRGB(hue, 1, 1,1.0)));
+      cursor->m_color = Color(hue, 1, 1, 1.0).ToRGB().AsUInt();
       sphere->SetPosition(light->position);
     }
 

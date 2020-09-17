@@ -1,6 +1,9 @@
 #pragma once
 
 #include <common/Types.h>
+#include <math/Vec3.h>
+#include <math/Vec4.h>
+
 #include <ostream>
 
 namespace Greet
@@ -36,6 +39,14 @@ namespace Greet
 
     Color(float r, float g, float b, float a)
       : r{r}, g{g}, b{b}, a{a}
+    {}
+
+    Color(const Vec3f& color)
+      : r{color.x}, g{color.y}, b{color.z}, a{1}
+    {}
+
+    Color(const Vec4f& color)
+      : r{color.x}, g{color.y}, b{color.z}, a{color.w}
     {}
 
     Color(uint argb32)

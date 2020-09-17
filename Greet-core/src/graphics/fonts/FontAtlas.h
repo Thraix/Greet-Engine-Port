@@ -20,7 +20,7 @@ namespace Greet
     float miHeight;
     float miBearingY;
     float miDescending;
-    Vec4 mvTextureCoords;
+    Vec4f mvTextureCoords;
   };
 
   class FontAtlas final

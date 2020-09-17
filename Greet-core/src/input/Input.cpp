@@ -70,7 +70,7 @@ namespace Greet
 
   Vec2f Input::ConvertMousePosToViewport(const Vec2f& pos)
   {
-    const Vec4& viewport = RenderCommand::TopViewportStack();
+    const Vec4f& viewport = RenderCommand::TopViewportStack();
     // Transform viewport to screen pos
     Vec2f pos1 {
       2 * viewport.x / Window::GetWidth() - 1.0f,

@@ -48,7 +48,7 @@ namespace vmc
 
   void GridRenderer3D::DrawCube(Camera* camera, const Vec3<float>& pos, const Vec3<float>& size, uint color, bool culling)
   {
-    material->SetColor(ColorUtils::ColorHexToVec4(color));
+    material->SetColor(Color{color});
     mesh->SetEnableCulling(false);
     emodel->SetScale(size);
     emodel->SetPosition(pos);
@@ -63,7 +63,7 @@ namespace vmc
 
   void GridRenderer3D::Submit(Camera* camera, const Cube& cube)
   {
-    material->SetColor(ColorUtils::ColorHexToVec4(cube.color));
+    material->SetColor(Color{cube.color});
     mesh->SetEnableCulling(false);
     emodel->SetScale(Vec3<float>(1, 1, 1));
     emodel->SetPosition(cube.GetPosition());
@@ -82,7 +82,7 @@ namespace vmc
     //emodel->PostRender(this, camera);
   }
 
-  void GridRenderer3D::DrawLineCube(Camera* camera, const Vec3<float>& pos, const Vec3<float>& size, const Vec4& color)
+  void GridRenderer3D::DrawLineCube(Camera* camera, const Vec3<float>& pos, const Vec3<float>& size, const Vec4f& color)
   {
     DrawLine(camera, Vec3(pos.x, pos.y, pos.z), Vec3(pos.x + size.x, pos.y, pos.z), color);
     DrawLine(camera, Vec3(pos.x, pos.y + size.y, pos.z), Vec3(pos.x + size.x, pos.y + size.y, pos.z), color);
@@ -100,7 +100,7 @@ namespace vmc
     DrawLine(camera, Vec3(pos.x + size.x, pos.y, pos.z), Vec3(pos.x + size.x, pos.y, pos.z + size.z), color);
   }
 
-  void GridRenderer3D::DrawLine(Camera* camera, const Vec3<float>& start, const Vec3<float>& end, const Vec4& color)
+  void GridRenderer3D::DrawLine(Camera* camera, const Vec3<float>& start, const Vec3<float>& end, const Vec4f& color)
   {
     lineShader->Enable();
     lineShader->SetUniformMat4("projectionMatrix", camera->GetProjectionMatrix());

@@ -28,7 +28,7 @@ namespace Greet {
       bool wireframe = false;
 
     public:
-      Mesh(const Pointer<Vec3<float>>& vertices, const Pointer<uint>& indices);
+      Mesh(const Pointer<Vec3f>& vertices, const Pointer<uint>& indices);
       Mesh(const MeshData& data);
 
       void Render() const;
@@ -48,8 +48,8 @@ namespace Greet {
 
       void AddAttribute(const BufferAttribute& attribute, const Pointer<char>& data);
 
-      void SetDefaultAttribute4f(uint location, const Vec4& data);
-      void SetDefaultAttribute3f(uint location, const Vec3<float>& data);
+      void SetDefaultAttribute4f(uint location, const Vec4f& data);
+      void SetDefaultAttribute3f(uint location, const Vec3f& data);
     private:
       bool HasVBO(uint location) const;
   };
