@@ -75,7 +75,7 @@ namespace Greet {
     return result;
   }
 
-  Mat4 Mat4::TransformationMatrix(const Vec3<float>& position, const Vec3<float>& rotation, const Vec3<float>& scale)
+  Mat4 Mat4::TransformationMatrix(const Vec3f& position, const Vec3f& rotation, const Vec3f& scale)
   {
     return
       Mat4::Translate(position) *
@@ -85,7 +85,7 @@ namespace Greet {
       Mat4::Scale(scale);
   }
 
-  Mat4 Mat4::ViewMatrix(const Vec3<float>& position, const Vec3<float>& rotation)
+  Mat4 Mat4::ViewMatrix(const Vec3f& position, const Vec3f& rotation)
   {
     return
       Mat4::RotateX(rotation.x) *
@@ -94,16 +94,16 @@ namespace Greet {
       Mat4::Translate(-position.x, -position.y, -position.z);
   }
 
-  Mat4 Mat4::AlignAxis(const Vec3<float>& point, const Vec3<float>& normal, const Vec3<float>& forward)
+  Mat4 Mat4::AlignAxis(const Vec3f& point, const Vec3f& normal, const Vec3f& forward)
   {
     if(Vec::Dot(normal, forward) >= 0.9999)
       return Translate(point);
 
-    Vec3<float> yaxis = normal;
+    Vec3f yaxis = normal;
     yaxis.Normalize();
 
-    Vec3<float> xaxis = (forward.Cross(yaxis)).Normalize();
-    Vec3<float> zaxis = xaxis.Cross(yaxis);
+    Vec3f xaxis = (forward.Cross(yaxis)).Normalize();
+    Vec3f zaxis = xaxis.Cross(yaxis);
 
 
     Mat4 result(1.0f);
@@ -124,18 +124,18 @@ namespace Greet {
     return result;
   }
 
-  Mat4 Mat4::TPCamera(const Vec3<float>& position, float distance, float height, float rotation)
+  Mat4 Mat4::TPCamera(const Vec3f& position, float distance, float height, float rotation)
   {
     return
-      RotateRX(asin(height)) *
-      Mat4::RotateY(90) *
-      Mat4::Translate(Vec3<float>(sqrt(1 - height*height) * distance, -height * distance, 0)) *
+      RotateX(asin(height)) *
+      Mat4::RotateY(M_PI / 2) *
+      Mat4::Translate(Vec3f(sqrt(1 - height*height) * distance, -height * distance, 0)) *
       Mat4::RotateY(rotation) *
       Mat4::Translate(-position.x, -position.y, -position.z);
   }
 
 
-  Mat4 Mat4::Translate(const Vec3<float>& translation)
+  Mat4 Mat4::Translate(const Vec3f& translation)
   {
     Mat4 result(1.0f);
 
@@ -156,7 +156,7 @@ namespace Greet {
     return result;
   }
 
-  Mat4 Mat4::Scale(const Vec3<float>& scaling)
+  Mat4 Mat4::Scale(const Vec3f& scaling)
   {
     Mat4 result(1.0f);
 
@@ -178,21 +178,7 @@ namespace Greet {
     return result;
   }
 
-  Mat4 Mat4::RotateX(float deg)
-  {
-    return RotateRX(Math::ToRadians(deg));
-  }
-
-  Mat4 Mat4::RotateY(float deg)
-  {
-    return RotateRY(Math::ToRadians(deg));
-  }
-
-  Mat4 Mat4::RotateZ(float deg)
-  {
-    return RotateRZ(Math::ToRadians(deg));
-  }
-  Mat4 Mat4::RotateRX(float rad)
+  Mat4 Mat4::RotateX(float rad)
   {
     Mat4 result(1.0f);
     float c = cos(rad);
@@ -204,7 +190,7 @@ namespace Greet {
     return result;
   }
 
-  Mat4 Mat4::RotateRY(float rad)
+  Mat4 Mat4::RotateY(float rad)
   {
     Mat4 result(1.0f);
     float c = cos(rad);
@@ -215,7 +201,8 @@ namespace Greet {
     result.elements[_2_2] = c;
     return result;
   }
-  Mat4 Mat4::RotateRZ(float rad)
+
+  Mat4 Mat4::RotateZ(float rad)
   {
     Mat4 result(1.0f);
     float c = cos(rad);
@@ -227,12 +214,7 @@ namespace Greet {
     return result;
   }
 
-  Mat4 Mat4::Rotate(float deg, const Vec3<float>& axis)
-  {
-    return RotateR(Math::ToRadians(deg), axis);
-  }
-
-  Mat4 Mat4::RotateR(float rad, const Vec3<float>& axis)
+  Mat4 Mat4::Rotate(float rad, const Vec3f& axis)
   {
     Mat4 result(1.0f);
 
@@ -416,7 +398,7 @@ namespace Greet {
     return *this;
   }
 
-  Vec3<float> Mat4::Multiply(const Vec3<float> &other) const
+  Vec3f Mat4::Multiply(const Vec3f &other) const
   {
     float x = columns[0].x * other.x + columns[1].x * other.y + columns[2].x * other.z + columns[3].x;
     float y = columns[0].y * other.x + columns[1].y * other.y + columns[2].y * other.z + columns[3].y;
@@ -443,7 +425,7 @@ namespace Greet {
     return Multiply(other);
   }
 
-  Vec3<float> operator*(const Mat4 &first, const Vec3<float> &second)
+  Vec3f operator*(const Mat4 &first, const Vec3f &second)
   {
     return first.Multiply(second);
   }

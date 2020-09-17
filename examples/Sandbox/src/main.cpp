@@ -112,11 +112,11 @@ class Core : public App
         terrainMaterial->SetSpecularStrength(0.5f);
         terrainMaterial->SetSpecularExponent(5.0f);
 
-        uint gridWidth = 99;
-        uint gridLength = 99;
+        int gridWidth = 99;
+        int gridLength = 99;
 #if 1
         std::vector<float> noise = Noise::GenNoise(gridWidth+1, gridWidth + 1,5,8, 8,0.5f);
-        MeshData gridMesh = MeshFactory::LowPolyGrid(0, 0, 0, gridWidth+1, gridLength+1, gridWidth, gridLength, noise,1);
+        MeshData gridMesh = MeshFactory::GridLowPoly(Vec2i{gridWidth, gridLength}, noise, {0, 0, 0}, Vec3f{gridWidth+1, 1.0f, gridLength+1});
         RecalcGrid(gridMesh, gridWidth, gridLength);
         terrain = new EntityModel(new Mesh(gridMesh), terrainMaterial, Vec3<float>(0, -15, 0), Vec3<float>(1.0f, 1.0f, 1.0f), Vec3<float>(0.0f, 0.0f, 0.0f));
         gridMesh.RemoveAttribute(MESH_NORMALS_LOCATION);
@@ -127,21 +127,21 @@ class Core : public App
 #endif
       }
 
-      MeshData polygonMesh = MeshFactory::Polygon(6, 10, MeshFactory::PolygonSizeFormat::SIDE_LENGTH);
+      MeshData polygonMesh = MeshFactory::Polygon(6, MeshFactory::PolygonSizeFormat::SIDE_LENGTH, {0, 0, 0}, 10);
       polygon = new EntityModel(new Mesh(polygonMesh), terrainMaterial, Vec3<float>(0,1,0), Vec3<float>(1,1,1), Vec3<float>(0,0,0));
 
 
-      MeshData cubeMesh = MeshFactory::Cube(0,0,0,1,1,1);
+      MeshData cubeMesh = MeshFactory::Cube();
       cube = new EntityModel(new Mesh(cubeMesh), modelMaterial, Vec3<float>(1,0,0), Vec3<float>(1, 1, 1), Vec3<float>(0, 0, 0));
 
-      MeshData sphereMeshData = MeshFactory::Sphere(Vec3<float>(0,0,0), 0.5f, 20, 20);
+      MeshData sphereMeshData = MeshFactory::Sphere(20, 20, {0, 0, 0}, 0.5f);
       sphereMeshData.GenerateNormals();
       //sphereMeshData->LowPolify();
       Mesh* sphereMesh = new Mesh(sphereMeshData);
       //sphereMesh->SetEnableWireframe(true);
       sphere = new EntityModel(sphereMesh, modelMaterial, Vec3<float>(0,0,0), Vec3<float>(1, 1, 1), Vec3<float>(0, 0, 0));
 
-      MeshData tetrahedronMesh = MeshFactory::Tetrahedron(0,0,0,10);
+      MeshData tetrahedronMesh = MeshFactory::Tetrahedron({0, 0, 0}, 10);
       tetrahedron = new EntityModel(new Mesh(tetrahedronMesh), modelMaterial, Vec3<float>(30, 0, 10), Vec3<float>(1, 1, 1), Vec3<float>(0, 0, 0));
 
       MeshData stallMeshData = OBJUtils::LoadObj("res/objs/stall.obj");

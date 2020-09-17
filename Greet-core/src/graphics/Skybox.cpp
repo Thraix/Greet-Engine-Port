@@ -14,7 +14,7 @@ namespace Greet {
   Skybox::Skybox(const Ref<CubeMap>& map, const Ref<Shader>& shader)
     : m_map(map), m_shader(shader)
   {
-    MeshData data{MeshFactory::Cube(0,0,0, 1,1,1)};
+    MeshData data{MeshFactory::Cube()};
     m_mesh = new Mesh(data);
     m_mesh->SetClockwiseRender(true);
   }

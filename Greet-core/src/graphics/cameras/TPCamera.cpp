@@ -18,7 +18,7 @@ namespace Greet {
   }
 
   TPCamera::TPCamera(float fov, float near, float far, const Vec3<float>& position, float distance, float height, float rotation, float distanceMin, float distanceMax, float heightMin, float heightMax)
-    : TPCamera(fov, near, far, position, distance, height, rotation, distanceMin, distanceMax, heightMin, heightMax, 1000, 10, 10)
+    : TPCamera(fov, near, far, position, distance, height, rotation, distanceMin, distanceMax, heightMin, heightMax, 10, 10, 10)
   {
   }
 
@@ -140,12 +140,12 @@ namespace Greet {
     }
     if (m_mouse2)
     {
-      m_positionWanted.y += delta.y * 0.1f;
+      m_positionWanted.y += delta.y * 10.0f;
     }
     else if (m_mouse1)
     {
-      Vec2 deltaR = Vec2(delta).Rotate(-m_rotation);
-      m_positionWanted.x -= deltaR.y * m_distanceSpeed * m_distance /RenderCommand::GetViewportAspect();
+      Vec2 deltaR = Vec2f(delta).Rotate(-m_rotation);
+      m_positionWanted.x -= deltaR.y * m_distanceSpeed * m_distance / RenderCommand::GetViewportAspect();
       m_positionWanted.z -= deltaR.x * m_distanceSpeed * m_distance;
     }
   }

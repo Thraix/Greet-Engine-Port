@@ -7,7 +7,7 @@ namespace vmc
   GridRenderer3D::GridRenderer3D()
     : Renderer3D(), lineShader(Shader::FromFile("res/shaders/simple.shader"))
   {
-    MeshData meshdata = MeshFactory::Cube2(0.5f, 0.5f, 0.5f, 1, 1, 1);
+    MeshData meshdata = MeshFactory::Cube({0.5f}, {1.0f});
     Pointer<Vec2f> texCoords(6 * 4);
     for (int i = 0;i < 6;i++)
     {

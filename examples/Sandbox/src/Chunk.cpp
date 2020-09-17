@@ -15,7 +15,7 @@ void Chunk::Initialize(uint posX, uint posY)
   this->posX = posX;
   this->posY = posY;
   std::vector<float> noise = Noise::GenNoise(CHUNK_WIDTH+1, CHUNK_HEIGHT+1,4,16, 16,0.75f, posX * CHUNK_WIDTH, posY * CHUNK_HEIGHT);
-  MeshData data = MeshFactory::LowPolyGrid(0,0,0,CHUNK_WIDTH, CHUNK_HEIGHT,CHUNK_WIDTH, CHUNK_HEIGHT,noise, 1.0f);
+  MeshData data = MeshFactory::GridLowPoly(Vec2i{CHUNK_WIDTH, CHUNK_HEIGHT}, noise, {0, 0, 0}, {CHUNK_WIDTH, 1.0f, CHUNK_HEIGHT});
   RecalcGrid(data);
   mesh = new Mesh(data);
 }

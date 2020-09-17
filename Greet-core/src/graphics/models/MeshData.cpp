@@ -200,7 +200,7 @@ namespace Greet {
     if(fileSize < 0)
     {
       Log::Error("Could not read MESH file, file is too small to contain signature.");
-      return MeshFactory::Cube(0,0,0,1,1,1);
+      return MeshFactory::Cube();
     }
 
     // Read signature
@@ -209,7 +209,7 @@ namespace Greet {
     if(std::string(buffer, 4) != "MESH")
     {
       Log::Error("Could not read MESH file, signature invalid.");
-      return MeshFactory::Cube(0,0,0,1,1,1);
+      return MeshFactory::Cube();
     }
     // Read how many attributes we have.
     uint vertexCount;
@@ -218,7 +218,7 @@ namespace Greet {
     if(fileSize < 0)
     {
       Log::Error("Could not read MESH file, file is too small to contain vertex data");
-      return MeshFactory::Cube(0,0,0,1,1,1);
+      return MeshFactory::Cube();
     }
 
     // Read how many attributes we have.
@@ -228,7 +228,7 @@ namespace Greet {
     if(fileSize < 0)
     {
       Log::Error("Could not read MESH file, file is too small to contain vertex data");
-      return MeshFactory::Cube(0,0,0,1,1,1);
+      return MeshFactory::Cube();
     }
 
     // Read how many attributes we have.
@@ -245,7 +245,7 @@ namespace Greet {
     if(fileSize < 0)
     {
       Log::Error("Could not read MESH file, file is too small to contain attribute parameters");
-      return MeshFactory::Cube(0,0,0,1,1,1);
+      return MeshFactory::Cube();
     }
 
     std::vector<BufferAttribute> attributeParameters;
@@ -253,7 +253,7 @@ namespace Greet {
     if(attribLength > 1024)
     {
       Log::Error("Could not read MESH file, too many attributes.");
-      return MeshFactory::Cube(0,0,0,1,1,1);
+      return MeshFactory::Cube();
     }
     fin.read(buffer,attribsLength);
 
@@ -278,7 +278,7 @@ namespace Greet {
       if(fileSize < 0)
       {
         Log::Error("Could not read MESH file, file is too small to contain attribute data");
-        return MeshFactory::Cube(0,0,0,1,1,1);
+        return MeshFactory::Cube();
       }
     }
     if(fileSize != 0)
