@@ -1,4 +1,5 @@
 #include "MeshFactory.h"
+#include "graphics/models/MeshData.h"
 #include <logging/Log.h>
 namespace Greet {
 
@@ -110,9 +111,16 @@ namespace Greet {
     normals[2]  = Vec3f(0.0f, 1.0f, 0.0f);
     normals[3]  = Vec3f(0.0f, 1.0f, 0.0f);
 
+    Pointer<Vec2f> texCoords = Pointer<Vec2f>(4);
+    texCoords[0] = Vec2f(0.0f, 0.0f);
+    texCoords[1] = Vec2f(1.0f, 0.0f);
+    texCoords[2] = Vec2f(1.0f, 1.0f);
+    texCoords[3] = Vec2f(0.0f, 1.0f);
+
     Pointer<uint> indices{0,2,1,0,3,2};
     MeshData meshdata(vertices,indices);
-    meshdata.AddAttribute({MESH_NORMALS_LOCATION, BufferAttributeType::VEC3},normals);
+    meshdata.AddAttribute({MESH_NORMALS_LOCATION, BufferAttributeType::VEC3}, normals);
+    meshdata.AddAttribute({MESH_TEXCOORDS_LOCATION, BufferAttributeType::VEC2}, texCoords);
     return meshdata;
   }
   // x, y, z
@@ -186,6 +194,37 @@ namespace Greet {
     normals[22] = Vec3f(0.0f, 0.0f, 1.0f);
     normals[23] = Vec3f(0.0f, 0.0f, 1.0f);
 
+    Pointer<Vec2f> texCoords = Pointer<Vec2f>(24);
+    texCoords[0] = Vec2f(0.00f, 0.33f);
+    texCoords[1] = Vec2f(0.00f, 0.67f);
+    texCoords[2] = Vec2f(0.25f, 0.67f);
+    texCoords[3] = Vec2f(0.25f, 0.33f);
+
+    texCoords[4] = Vec2f(0.50f, 0.33f);
+    texCoords[5] = Vec2f(0.50f, 0.67f);
+    texCoords[6] = Vec2f(0.75f, 0.67f);
+    texCoords[7] = Vec2f(0.75f, 0.33f);
+
+    texCoords[8]  = Vec2f(0.25f, 0.33f);
+    texCoords[9]  = Vec2f(0.25f, 0.00f);
+    texCoords[10] = Vec2f(0.50f, 0.00f);
+    texCoords[11] = Vec2f(0.50f, 0.33f);
+
+    texCoords[12] = Vec2f(0.25f, 1.00f);
+    texCoords[13] = Vec2f(0.25f, 0.67f);
+    texCoords[14] = Vec2f(0.50f, 0.67f);
+    texCoords[15] = Vec2f(0.50f, 1.00f);
+
+    texCoords[16] = Vec2f(1.00f, 0.33f);
+    texCoords[17] = Vec2f(0.75f, 0.33f);
+    texCoords[18] = Vec2f(0.75f, 0.67f);
+    texCoords[19] = Vec2f(1.00f, 0.67f);
+
+    texCoords[20] = Vec2f(0.25f, 0.33f);
+    texCoords[21] = Vec2f(0.50f, 0.33f);
+    texCoords[22] = Vec2f(0.50f, 0.67f);
+    texCoords[23] = Vec2f(0.25f, 0.67f);
+
 
     Pointer<uint> indices{
       0, 2, 1, 0, 3, 2,
@@ -196,7 +235,8 @@ namespace Greet {
         20, 21, 22, 20, 22, 23 };
 
     MeshData meshdata(vertices, indices);
-    meshdata.AddAttribute({MESH_NORMALS_LOCATION, BufferAttributeType::VEC3},normals);
+    meshdata.AddAttribute({MESH_NORMALS_LOCATION, BufferAttributeType::VEC3}, normals);
+    meshdata.AddAttribute({MESH_TEXCOORDS_LOCATION, BufferAttributeType::VEC2}, texCoords);
     return meshdata;
   }
 
@@ -429,68 +469,69 @@ namespace Greet {
       return Cube(pos, {radius, radius, radius});
     }
 
-    uint vertexCount = 2 + longitudes * latitudes;
+    uint vertexCount = (longitudes + 1) * (latitudes + 2);
     Pointer<Vec3f> vertices = Pointer<Vec3f>(vertexCount);
-    vertices[0] = pos + Vec3f(0,-radius, 0);
-    vertices[vertexCount - 1] = pos + Vec3f(0,radius, 0);
+    Pointer<Vec2f> texCoords = Pointer<Vec2f>(vertexCount);
 
-    float angleY = M_PI / (latitudes + 1);
-    float angleLong = 2 * M_PI / longitudes;
-    float ay = angleY;
-    uint i = 1;
-    for(uint lat = 0; lat < latitudes; ++lat)
+    float anglePitch = M_PI / (latitudes + 1);
+    float angleYaw = 2 * M_PI / longitudes;
+    uint i = 0;
+    for(uint lon = 0; lon <= longitudes; ++lon)
     {
-      float y = pos.y + radius * sin(ay - M_PI * 0.5f);
-      for(uint lon = 0; lon< longitudes; ++lon)
+      float angleYaw = 2 * M_PI * lon / longitudes;
+      vertices[i] = pos + Vec3f{0, radius, 0};
+      texCoords[i++] = Vec2f{-angleYaw / (float)M_PI / 2.0f, 1};
+      for(uint lat = 0; lat < latitudes; ++lat)
       {
+        float anglePitch = (lat + 1) / (float)(latitudes + 2) * M_PI;
+        float y = pos.y + radius * cos(anglePitch);
         float r = sqrt(radius*radius - y * y);
-        float x = pos.x + r * cos(angleLong * lon);
-        float z = pos.z + r * sin(angleLong * lon);
-        vertices[i] = {x,y,z};
-        i++;
+        float x = r * cos(angleYaw);
+        float z = r * sin(angleYaw);
+        vertices[i] = pos + Vec3f{x, y, z};
+        texCoords[i++] = Vec2f{-angleYaw / (float)M_PI / 2.0f, (cos(anglePitch) + 1) * 0.5f};
       }
-      ay += angleY;
+      vertices[i] = pos + Vec3f{0, -radius, 0};
+      texCoords[i++] = Vec2f{-angleYaw / (float)M_PI / 2.0f, 0};
     }
 
-    // TRIANGLES = 2 * LONGITUDES
-    // QUADS = (LATITUDES - 1) * LONGITUDES
+    uint indexCount = 2 * 3 * (longitudes) + 2 * 3 * longitudes * (latitudes - 1);
 
-
-    uint indexCount = 3 * (2 + 2 * (latitudes - 1)) * longitudes;
     Pointer<uint> indices = Pointer<uint>(indexCount);
-    for(uint i = 0;i<longitudes;i++)
-    {
-      indices[i*3] = 0;
-      indices[i*3 + 1] = i+1;
-      // Allow the last index to wrap
-      indices[i*3 + 2] = ((i+1) % longitudes) + 1;
+    uint index = 0;
 
-      indices[indexCount - i*3 - 1] = vertexCount - (((i+1) % longitudes) + 1) - 1;
-      indices[indexCount - i*3 - 2] = vertexCount - i - 2;
-      indices[indexCount - i*3 - 3] = vertexCount - 1;
+    for(int lon = 0; lon < longitudes; lon++)
+    {
+      indices[index++] = lon * (latitudes + 2);
+      indices[index++] = (lon + 1) * (latitudes + 2) + 1;
+      indices[index++] = lon * (latitudes + 2) + 1;
     }
 
-    uint index = longitudes * 3;
-    for(uint i = 0; i < latitudes - 1;i++)
+    for(int lon = 0; lon < longitudes; ++lon)
     {
-      uint vertexPos = 1 + i * longitudes;
-
-      for(uint j = 0; j< longitudes; j++)
+      for(int lat = 0; lat < latitudes - 1; ++lat)
       {
-        uint j1 = (j+1) % longitudes;
-        indices[index++] = vertexPos + j;
-        indices[index++] = vertexPos + j + longitudes;
-        indices[index++] = vertexPos + j1;
+        indices[index++] = lon * (latitudes + 2) + 1 + lat;
+        indices[index++] = (lon + 1) * (latitudes + 2) + 1 + lat;
+        indices[index++] = lon * (latitudes + 2) + 1 + lat + 1;
 
-        indices[index++] = vertexPos + j1;
-        indices[index++] = vertexPos + j + longitudes;
-        indices[index++] = vertexPos + j1 + longitudes;
+        indices[index++] = lon * (latitudes + 2) + 1 + lat + 1;
+        indices[index++] = (lon + 1) * (latitudes + 2) + 1 + lat;
+        indices[index++] = (lon + 1) * (latitudes + 2) + 1 + lat + 1;
       }
+    }
+
+    for(int lon = 0; lon < longitudes; lon++)
+    {
+      indices[index++] = (lon) * (latitudes + 2) + latitudes;
+      indices[index++] = (lon + 1) * (latitudes + 2) + latitudes;
+      indices[index++] = lon * (latitudes + 2) + 1 + latitudes;
     }
 
     MeshData data{vertices, indices};
     Pointer<Vec3f> normals = CalculateNormals(vertices, indices);
-    data.AddAttribute({MESH_NORMALS_LOCATION, BufferAttributeType::VEC3},normals);
+    data.AddAttribute({MESH_NORMALS_LOCATION, BufferAttributeType::VEC3}, normals);
+    data.AddAttribute({MESH_TEXCOORDS_LOCATION, BufferAttributeType::VEC2}, texCoords);
 
     return data;
   }

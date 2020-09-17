@@ -95,7 +95,7 @@ class Core : public App
       waterRenderer = new BatchRenderer3D();
 
 
-      modelMaterial = new Material(Shader::FromFile("res/shaders/3dshader.shader"));
+      modelMaterial = new Material(Shader::FromFile("res/shaders/3dshader.shader"), TextureManager::LoadTexture2D("res/textures/debugtexture.meta"));
       flatMaterial = new Material(Shader::FromFile("res/shaders/flat3d.shader"));
       stallMaterial = new Material(Shader::FromFile("res/shaders/3dshader.shader"), TextureManager::LoadTexture2D("res/textures/stall.meta"));
       modelMaterial->SetSpecularStrength(0.25)->SetSpecularExponent(1)->SetDiffuseStrength(0.25);
@@ -132,14 +132,13 @@ class Core : public App
 
 
       MeshData cubeMesh = MeshFactory::Cube();
-      cube = new EntityModel(new Mesh(cubeMesh), modelMaterial, Vec3f(1,0,0), Vec3f(1, 1, 1), Vec3f(0, 0, 0));
+      cube = new EntityModel(new Mesh(cubeMesh), modelMaterial, Vec3f(1,0,0), Vec3f(10, 10, 10), Vec3f(0, 0, 0));
 
       MeshData sphereMeshData = MeshFactory::Sphere(20, 20, {0, 0, 0}, 0.5f);
       sphereMeshData.GenerateNormals();
       //sphereMeshData->LowPolify();
       Mesh* sphereMesh = new Mesh(sphereMeshData);
-      //sphereMesh->SetEnableWireframe(true);
-      sphere = new EntityModel(sphereMesh, modelMaterial, Vec3f(0,0,0), Vec3f(1, 1, 1), Vec3f(0, 0, 0));
+      sphere = new EntityModel(sphereMesh, modelMaterial, Vec3f(0,0,0), Vec3f(10, 10, 10), Vec3f(0, 0, 0));
 
       MeshData tetrahedronMesh = MeshFactory::Tetrahedron({0, 0, 0}, 10);
       tetrahedron = new EntityModel(new Mesh(tetrahedronMesh), modelMaterial, Vec3f(30, 0, 10), Vec3f(1, 1, 1), Vec3f(0, 0, 0));
