@@ -17,7 +17,7 @@ namespace Greet
 
     public:
       Divider(const XMLObject& object, Component* parent);
-      void PreRender(GUIRenderer* renderer, const Vec2& translation) const override;
+      void PreRender(GUIRenderer* renderer, const Vec2f& translation) const override;
 
       virtual void OnMeasured() override;
 

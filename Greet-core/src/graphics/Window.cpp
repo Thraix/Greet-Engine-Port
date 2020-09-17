@@ -18,8 +18,8 @@ namespace Greet {
 
   std::vector<std::unique_ptr<Joystick>> Window::joysticks;
   bool Window::focus;
-  Vec2 Window::mousePos;
-  Vec2 Window::mousePosPixel;
+  Vec2f Window::mousePos;
+  Vec2f Window::mousePosPixel;
   uint Window::width;
   uint Window::height;
   std::string Window::title;
@@ -139,13 +139,13 @@ namespace Greet {
       glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
   }
 
-  void Window::TransformScreenToWindowPos(Vec2& pos)
+  void Window::TransformScreenToWindowPos(Vec2f& pos)
   {
     pos.x = (pos.x + 1.0f) * 0.5f * Greet::Window::GetWidth();
     pos.y = (1.0f - (pos.y + 1.0f) * 0.5f) * Greet::Window::GetHeight();
   }
 
-  void Window::TransformWindowToScreenPos(Vec2& pos)
+  void Window::TransformWindowToScreenPos(Vec2f& pos)
   {
     pos.x = pos.x / (GetWidth() * 0.5) - 1.0f;
     pos.y = -pos.y / GetHeight() * 2 + 1;
@@ -176,7 +176,7 @@ namespace Greet {
     mouseButtonDown[button] = action == GLFW_PRESS;
     Input::SetMouseButton(button, action == GLFW_PRESS);
     if (action == GLFW_RELEASE)
-      EventDispatcher::OnEvent(MouseReleaseEvent(mousePos.x,mousePos.y,button));
+      EventDispatcher::OnEvent(MouseReleaseEvent(mousePos.x, mousePos.y,button));
     else if (action == GLFW_PRESS)
       EventDispatcher::OnEvent(MousePressEvent(mousePos.x, mousePos.y, button));
     isMouseButtonDown = mouseButtonDown[button];
@@ -195,11 +195,11 @@ namespace Greet {
   void Window::mouse_position_callback(GLFWwindow* window, double xpos, double ypos)
   {
     Vec2 mousePosDelta = mousePos;
-    mousePos = Vec2(xpos / width, 1.0f - (ypos / height))*2.0f - 1.0f;
+    mousePos = Vec2f(xpos / width, 1.0f - (ypos / height)) * 2.0f - 1.0f;
     mousePosDelta = mousePos - mousePosDelta;
     Input::SetMousePos(mousePos);
     EventDispatcher::OnEvent(MouseMoveEvent{mousePos.x, mousePos.y, mousePosDelta.x, mousePosDelta.y});
-    mousePosPixel = Vec2(xpos, ypos);
+    mousePosPixel = Vec2f(xpos, ypos);
   }
 
   void Window::mouse_scroll_callback(GLFWwindow* window, double scrollX, double scrollY)

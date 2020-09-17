@@ -46,7 +46,7 @@ namespace Greet
 
     public:
       ColorPickerWindow();
-      ColorPickerWindow(const Vec2& pos, const Color& color);
+      ColorPickerWindow(const Vec2f& pos, const Color& color);
 
       void SetOnColorChangeCallback(OnColorChangeCallback callback);
       void CallOnColorChangeCallback(const Color& previous, const Color& current);

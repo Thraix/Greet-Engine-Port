@@ -50,7 +50,7 @@ namespace Greet {
 
       float GetWidth() const;
       float GetHeight() const;
-      Vec2 GetSize() const;
+      Vec2f GetSize() const;
     private:
       void RequestFocus(Component* component);
 

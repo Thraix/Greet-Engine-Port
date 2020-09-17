@@ -9,19 +9,19 @@ namespace Greet {
   class MouseButtonEvent : public Event
   {
     protected:
-      Vec2 position;
+      Vec2f position;
       uint button;
     protected:
       MouseButtonEvent(float x, float y, uint button)
         : Event(),position(x,y),button(button)
       {}
-      MouseButtonEvent(const Vec2& pos, uint button)
+      MouseButtonEvent(const Vec2f& pos, uint button)
         : Event(),position(pos),button(button)
       {}
     public:
       float GetX() const { return position.x; }
       float GetY() const { return position.y; }
-      const Vec2& GetPosition() const { return position; }
+      const Vec2f& GetPosition() const { return position; }
       uint GetButton() const { return button; }
 
       uint GetCategory() const {return INPUT_EVENT | MOUSE_EVENT;}
@@ -34,7 +34,7 @@ namespace Greet {
         : MouseButtonEvent(x, y, button)
       {}
 
-      MousePressEvent(const Vec2& pos, uint button)
+      MousePressEvent(const Vec2f& pos, uint button)
         : MouseButtonEvent(pos, button)
       {}
       EventType GetType() const {return EventType::MOUSE_PRESS;}
@@ -46,7 +46,7 @@ namespace Greet {
       MouseReleaseEvent(float x, float y, uint button)
         : MouseButtonEvent(x, y, button)
       {}
-      MouseReleaseEvent(const Vec2& pos, uint button)
+      MouseReleaseEvent(const Vec2f& pos, uint button)
         : MouseButtonEvent(pos, button)
       {}
 
@@ -56,15 +56,15 @@ namespace Greet {
   class MouseMoveEvent : public Event
   {
     private:
-      Vec2 position;
-      Vec2 deltaPosition;
+      Vec2f position;
+      Vec2f deltaPosition;
 
     public:
       MouseMoveEvent(float x, float y, float dx, float dy)
-        : position(Vec2(x,y)), deltaPosition(Vec2(dx,dy))
+        : position(Vec2f(x,y)), deltaPosition(Vec2f(dx,dy))
       {}
 
-      MouseMoveEvent(const Vec2& pos, const Vec2& delta)
+      MouseMoveEvent(const Vec2f& pos, const Vec2f& delta)
         : position(pos), deltaPosition(delta)
       {}
 
@@ -72,8 +72,8 @@ namespace Greet {
       float GetY() const { return position.y; }
       float GetDX() const { return deltaPosition.x; }
       float GetDY() const { return deltaPosition.y; }
-      const Vec2& GetPosition() const { return position; }
-      const Vec2& GetDeltaPosition() const { return deltaPosition; }
+      const Vec2f& GetPosition() const { return position; }
+      const Vec2f& GetDeltaPosition() const { return deltaPosition; }
       EventType GetType() const {return EventType::MOUSE_MOVE;}
       uint GetCategory() const {return INPUT_EVENT | MOUSE_EVENT;}
   };

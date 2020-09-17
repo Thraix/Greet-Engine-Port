@@ -43,11 +43,6 @@ namespace Greet{ namespace Math {
     return (numToRound - down) < (up - numToRound) ? down : up;
   }
 
-  inline bool IsPositive(float val)
-  {
-    return -val < val;
-  }
-
   //struct Vec2;
   template<typename T>
   inline void Clamp(T* value, const T& min, const T& max)

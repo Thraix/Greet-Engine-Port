@@ -81,7 +81,7 @@ namespace Greet {
     return camera->GetWorldToScreenCoordinate(coordinate);
   }
 
-  void Layer3D::GetScreenToWorldCoordinate(const Vec2& screenPos, Vec3<float>* near, Vec3<float>* direction) const
+  void Layer3D::GetScreenToWorldCoordinate(const Vec2f& screenPos, Vec3<float>* near, Vec3<float>* direction) const
   {
     camera->GetScreenToWorldCoordinate(screenPos, near, direction);
   }

@@ -181,9 +181,9 @@ class Core : public App
 
       uilayer = new Layer(new BatchRenderer(ShaderFactory::Shader2D()), Mat3::OrthographicViewport());
       Vec4 colorPink = ColorUtils::GetMaterialColorAsHSV(300 /360.0f, 3);
-      cursor = new Renderable2D(Vec2(0,0),Vec2(32,32),0xffffffff, Sprite(TextureManager::LoadTexture2D("res/textures/cursor.meta")), Sprite(TextureManager::LoadTexture2D("res/textures/mask.meta")));
+      cursor = new Renderable2D(Vec2f(0,0),Vec2f(32,32),0xffffffff, Sprite(TextureManager::LoadTexture2D("res/textures/cursor.meta")), Sprite(TextureManager::LoadTexture2D("res/textures/mask.meta")));
       uilayer->Add(cursor);
-      uilayer->Add(new Renderable2D(Vec2(0,0), Vec2(noiseS, noiseS), 0xffffffff, Sprite(TextureManager::LoadTexture2D("noise"))));
+      uilayer->Add(new Renderable2D(Vec2f(0,0), Vec2f(noiseS, noiseS), 0xffffffff, Sprite(TextureManager::LoadTexture2D("noise"))));
 
       renderer3d->Submit(new Portal({1.0f,1.0f,1.0f}));
       renderer3d->Submit(stall);
@@ -364,7 +364,7 @@ class Core : public App
       if(EVENT_IS_TYPE(event, EventType::MOUSE_MOVE))
       {
         // Temporary add viewport since we are not inside the layer
-        RenderCommand::PushViewportStack(sceneView->GetRealPosition(), Vec2(Window::GetWidth(), Window::GetHeight()) - sceneView->GetRealPosition());
+        RenderCommand::PushViewportStack(sceneView->GetRealPosition(), Vec2f(Window::GetWidth(), Window::GetHeight()) - sceneView->GetRealPosition());
         cursor->SetPosition(Input::GetMousePosPixel());
         RenderCommand::PopViewportStack();
       }
@@ -432,7 +432,7 @@ class Core : public App
         }
         if (e.GetButton() == GLFW_KEY_X)
         {
-          Vec2 p = camera->GetWorldToScreenCoordinate(Vec3<float>(0, 0, 0));
+          Vec2f p = camera->GetWorldToScreenCoordinate(Vec3<float>(0, 0, 0));
           Window::TransformScreenToWindowPos(p);
           Log::Info(p);
         }

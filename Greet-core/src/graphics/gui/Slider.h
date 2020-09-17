@@ -36,12 +36,12 @@ namespace Greet
       Slider(const std::string& name, Component* parent);
       Slider(const XMLObject& xmlObject, Component* parent);
 
-      virtual void Measure(const Vec2& emptyParentSpace, const Vec2& percentageFill) override;
+      virtual void Measure(const Vec2f& emptyParentSpace, const Vec2f& percentageFill) override;
       virtual void OnMeasured() override;
 
       virtual void Render(GUIRenderer* renderer) const override;
 
-      virtual void OnEvent(Event& event, const Vec2& componentPos) override;
+      virtual void OnEvent(Event& event, const Vec2f& componentPos) override;
 
       // Callbacks
       virtual void SetOnValueChangeCallback(OnValueChangeCallback callback);

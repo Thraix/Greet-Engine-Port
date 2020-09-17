@@ -34,7 +34,7 @@ namespace Greet
     guiScene->PreRender();
   }
 
-  void SceneView::OnEventHandler(Event& event, const Vec2& componentPos)
+  void SceneView::OnEventHandler(Event& event, const Vec2f& componentPos)
   {
     RenderCommand::PushViewportStack(componentPos, GetContentSize());
     if(EVENT_IS_TYPE(event, EventType::MOUSE_PRESS))

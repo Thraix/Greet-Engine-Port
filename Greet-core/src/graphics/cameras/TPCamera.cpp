@@ -134,7 +134,7 @@ namespace Greet {
     CalculateViewMatrix();
   }
 
-  void TPCamera::Move(const Vec2& delta) {
+  void TPCamera::Move(const Vec2f& delta) {
     if (m_mouse3) {
       Rotate(delta);
     }
@@ -150,7 +150,7 @@ namespace Greet {
     }
   }
 
-  void TPCamera::Rotate(const Vec2& delta)
+  void TPCamera::Rotate(const Vec2f& delta)
   {
     m_heightWanted -= delta.y * m_heightSpeed;
     Math::Clamp(&m_heightWanted, m_heightMin, m_heightMax);
@@ -189,7 +189,7 @@ namespace Greet {
     else if(EVENT_IS_TYPE(event, EventType::MOUSE_MOVE))
     {
       MouseMoveEvent&  mEvent = (MouseMoveEvent&)event;
-      Move(Vec2(mEvent.GetDX(), mEvent.GetDY()));
+      Move(Vec2f{mEvent.GetDX(), mEvent.GetDY()});
     }
     else if(EVENT_IS_TYPE(event, EventType::MOUSE_SCROLL))
     {

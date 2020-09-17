@@ -68,7 +68,7 @@ namespace Greet
     SetValue(GUIUtils::GetFloatFromXML(xmlObject, "defaultValue", (maxValue-minValue)/2.0f));
   }
 
-  void Slider::Measure(const Vec2& emptyParentSpace, const Vec2& percentageFill)
+  void Slider::Measure(const Vec2f& emptyParentSpace, const Vec2f& percentageFill)
   {
     Component::Measure(emptyParentSpace, percentageFill);
     sliderComponent->Measure(GetContentSize(),{1,1});
@@ -95,23 +95,23 @@ namespace Greet
   void Slider::Render(GUIRenderer* renderer) const
   {
     float sliderPos = GetSliderPosFromValue(value);
-    Vec2 sliderOffset = pos + GetTotalPadding() + sliderComponent->GetMargin().LeftTop() - sliderComponent->GetSize()/2;
+    Vec2f sliderOffset = pos + GetTotalPadding() + sliderComponent->GetMargin().LeftTop() - sliderComponent->GetSize()/2;
     if(vertical)
-      sliderComponent->PreRender(renderer,  sliderOffset + Vec2{GetContentSize().w/2, sliderPos});
+      sliderComponent->PreRender(renderer,  sliderOffset + Vec2f{GetContentSize().w/2, sliderPos});
     else
-      sliderComponent->PreRender(renderer,  sliderOffset + Vec2{sliderPos, GetContentSize().h/2});
+      sliderComponent->PreRender(renderer,  sliderOffset + Vec2f{sliderPos, GetContentSize().h/2});
     sliderComponent->RenderHandle(renderer);
     sliderComponent->PostRender(renderer);
   }
 
-  void Slider::OnEvent(Event& event, const Vec2& componentPos)
+  void Slider::OnEvent(Event& event, const Vec2f& componentPos)
   {
     if(EVENT_IS_TYPE(event, EventType::MOUSE_PRESS))
     {
       MousePressEvent& e = static_cast<MousePressEvent&>(event);
       if(e.GetButton() == GREET_MOUSE_1 && pressed)
       {
-        Vec2 translatedPos = e.GetPosition() - componentPos;
+        Vec2f translatedPos = e.GetPosition() - componentPos;
         float oldValue = value;
         if(vertical)
           SetValue(GetSliderValueFromPos(translatedPos.y));
@@ -126,7 +126,7 @@ namespace Greet
       MouseMoveEvent& e = static_cast<MouseMoveEvent&>(event);
       if(pressed)
       {
-        Vec2 translatedPos = e.GetPosition() - componentPos;
+        Vec2f translatedPos = e.GetPosition() - componentPos;
         float oldValue = value;
         if(vertical)
           SetValue(GetSliderValueFromPos(translatedPos.y));

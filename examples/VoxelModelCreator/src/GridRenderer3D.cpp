@@ -8,13 +8,13 @@ namespace vmc
     : Renderer3D(), lineShader(Shader::FromFile("res/shaders/simple.shader"))
   {
     MeshData meshdata = MeshFactory::Cube2(0.5f, 0.5f, 0.5f, 1, 1, 1);
-    Pointer<Vec2> texCoords(6 * 4);
+    Pointer<Vec2f> texCoords(6 * 4);
     for (int i = 0;i < 6;i++)
     {
-      texCoords[i * 4 + 0] = Vec2(0, 0);
-      texCoords[i * 4 + 1] = Vec2(1, 0);
-      texCoords[i * 4 + 2] = Vec2(1, 1);
-      texCoords[i * 4 + 3] = Vec2(0, 1);
+      texCoords[i * 4 + 0] = Vec2f(0, 0);
+      texCoords[i * 4 + 1] = Vec2f(1, 0);
+      texCoords[i * 4 + 2] = Vec2f(1, 1);
+      texCoords[i * 4 + 3] = Vec2f(0, 1);
     }
 
     meshdata.AddAttribute({MESH_TEXCOORDS_LOCATION, BufferAttributeType::VEC2}, texCoords);

@@ -8,10 +8,10 @@ namespace Greet
 overlapMode = OverlapMode::Wrap;
   }
 
-  void Text::Render(GUIRenderer* renderer, const Vec2& contentSize) const
+  void Text::Render(GUIRenderer* renderer, const Vec2f& contentSize) const
   {
     std::vector<std::string> lines = GetStringLines(contentSize.w);
-    Vec2 offset{};
+    Vec2f offset{};
 
     if(gravity == Gravity::Top)
       offset.y = font.GetBaselineOffset();

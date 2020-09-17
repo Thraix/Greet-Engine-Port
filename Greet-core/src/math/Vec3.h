@@ -13,31 +13,31 @@
 
 namespace Greet{
 
-  template<typename Real>
+  template<typename T>
   struct Vec3
   {
     union
     {
-      Real vals[3];
+      T vals[3];
       struct {
-        Real x, y, z;
+        T x, y, z;
       };
       struct {
-        Real r, g, b;
+        T r, g, b;
       };
       struct {
-        Real h, s, v;
+        T h, s, v;
       };
     };
     Vec3()
       : x{}, y{}, z{}
     {}
 
-    Vec3(const Real& x, const Real& y, const Real& z)
+    Vec3(const T& x, const T& y, const T& z)
       : x{x}, y{y}, z{z}
     {}
 
-    Vec3(const Real& v)
+    Vec3(const T& v)
       : x{v}, y{v}, z{v}
     {}
 
@@ -45,22 +45,22 @@ namespace Greet{
       : x{vec4.x}, y{vec4.y}, z{vec4.z}
     {}
 
-    Real Length() const
+    T Length() const
     {
       return sqrt(x * x + y * y + z * z);
     }
 
-    Real LengthSQ() const
+    T LengthSQ() const
     {
       return x * x + y * y + z  * z;
     }
 
-    Real Dot(const Vec3& vec) const
+    T Dot(const Vec3& vec) const
     {
       return x * vec.x + y * vec.y + z  * vec.z;
     }
 
-    Vec3<Real> Cross(const Vec3<Real>& vec) const
+    Vec3<T> Cross(const Vec3<T>& vec) const
     {
       return Vec3(y * vec.z - z * vec.y, z * vec.x - x * vec.z, x * vec.y - y * vec.x);
     }
@@ -74,26 +74,11 @@ namespace Greet{
       return Divide(len);
     }
 
-    template <typename std::enable_if<std::is_floating_point<Real>::value>* = nullptr>
-    Vec3<Real>& Rotate(const Real& angle, const Vec3& axis)
+    template <typename std::enable_if<std::is_floating_point<T>::value>* = nullptr>
+    Vec3<T>& Rotate(const Vec3& axis, const T& angle)
     {
-      Real sh = (Real)sin(Math::ToRadians(angle / 2.0));
-      Real ch = (Real)cos(Math::ToRadians(angle / 2.0));
-
-      Real rX = axis.x * sh;
-      Real rY = axis.y * sh;
-      Real rZ = axis.z * sh;
-      Real rW = ch;
-
-      Quaternion rotation(rX,rY,rZ,rW);
-      Quaternion conjugate = rotation.Conjugate();
-
-      Quaternion w = rotation * (*this) * conjugate;
-
-      x = w.x;
-      y = w.y;
-      z = w.z;
-
+      Quaternion axisRotation = Quaternion::AxisAngle(axis, angle);
+      *this = axisRotation * *this;
       return *this;
     }
 
@@ -129,7 +114,7 @@ namespace Greet{
       return *this;
     }
 
-    Vec3& Add(const Real& other)
+    Vec3& Add(const T& other)
     {
       x += other;
       y += other;
@@ -137,7 +122,7 @@ namespace Greet{
       return *this;
     }
 
-    Vec3& Subtract(const Real& other)
+    Vec3& Subtract(const T& other)
     {
       x -= other;
       y -= other;
@@ -145,7 +130,7 @@ namespace Greet{
       return *this;
     }
 
-    Vec3& Multiply(const Real& other)
+    Vec3& Multiply(const T& other)
     {
       x *= other;
       y *= other;
@@ -153,7 +138,7 @@ namespace Greet{
       return *this;
     }
 
-    Vec3& Divide(const Real& other)
+    Vec3& Divide(const T& other)
     {
       x /= other;
       y /= other;
@@ -186,53 +171,53 @@ namespace Greet{
       return Vec3(first).Divide(second);
     }
 
-    friend Vec3 operator+(const Vec3& vec, const Real& c)
+    friend Vec3 operator+(const Vec3& vec, const T& c)
     {
       return Vec3(vec).Add(c);
     }
 
-    friend Vec3 operator-(const Vec3& vec, const Real& c)
+    friend Vec3 operator-(const Vec3& vec, const T& c)
     {
       return Vec3(vec).Subtract(c);
     }
 
-    friend Vec3 operator*(const Vec3& vec, const Real& c)
+    friend Vec3 operator*(const Vec3& vec, const T& c)
     {
       return Vec3(vec).Multiply(c);
     }
 
-    friend Vec3 operator/(const Vec3& vec, const Real& c)
+    friend Vec3 operator/(const Vec3& vec, const T& c)
     {
       return Vec3(vec).Divide(c);
     }
 
-    friend Vec3 operator+(const Real& c, const Vec3& vec)
+    friend Vec3 operator+(const T& c, const Vec3& vec)
     {
       return Vec3(vec).Add(c);
     }
 
-    friend Vec3 operator-(const Real& c, const Vec3& vec)
+    friend Vec3 operator-(const T& c, const Vec3& vec)
     {
       return Vec3(c - vec.x,c - vec.y,c - vec.z);
     }
 
-    friend Vec3 operator*(const Real& c, const Vec3& vec)
+    friend Vec3 operator*(const T& c, const Vec3& vec)
     {
       return Vec3(vec).Multiply(c);
     }
 
-    friend Vec3 operator/(const Real& c, const Vec3& vec)
+    friend Vec3 operator/(const T& c, const Vec3& vec)
     {
       return Vec3(c / vec.x, c / vec.y, c / vec.z);
     }
 
-    const Real& operator[](uint i) const
+    const T& operator[](uint i) const
     {
       ASSERT(i < 3, "Index out of bound");
       return *((&x)+i);
     }
 
-    Real& operator[](uint i)
+    T& operator[](uint i)
     {
       ASSERT(i < 3, "Index out of bound");
       return *((&x)+i);
@@ -258,22 +243,22 @@ namespace Greet{
       return Divide(other);
     }
 
-    Vec3& operator+=(const Real& c)
+    Vec3& operator+=(const T& c)
     {
       return Add(c);
     }
 
-    Vec3& operator-=(const Real& c)
+    Vec3& operator-=(const T& c)
     {
       return Subtract(c);
     }
 
-    Vec3& operator*=(const Real& c)
+    Vec3& operator*=(const T& c)
     {
       return Multiply(c);
     }
 
-    Vec3& operator/=(const Real& c)
+    Vec3& operator/=(const T& c)
     {
       return Divide(c);
     }
@@ -314,50 +299,59 @@ namespace Greet{
   };
   namespace Vec
   {
-    template <typename Real>
-    static Vec3<Real> Normalize(const Vec3<Real>& vec)
+    template <typename T>
+    static Vec3<T> Normalize(const Vec3<T>& vec)
     {
-      Vec3<Real> ret = vec;
+      Vec3<T> ret = vec;
       return ret.Normalize();
     }
 
-    template <typename Real>
-    static Real Dot(const Vec3<Real>& lhs, const Vec3<Real>& rhs)
+    template <typename T>
+    static T Dot(const Vec3<T>& lhs, const Vec3<T>& rhs)
     {
       return lhs.x * rhs.x + lhs.y * rhs.y + lhs.z  * rhs.z;
     }
 
-    template <typename Real>
-    static Vec3<Real> Cross(const Vec3<Real>& lhs, const Vec3<Real>& rhs)
+    template <typename T>
+    static Vec3<T> Cross(const Vec3<T>& lhs, const Vec3<T>& rhs)
     {
       return Vec3(lhs.y * rhs.z - lhs.z * rhs.y, lhs.z * rhs.x - lhs.x * rhs.z, lhs.x * rhs.y - lhs.y * rhs.x);
     }
 
-    template <typename Real>
-    static Vec3<Real> Max(const Vec3<Real>& lhs, const Vec3<Real>& rhs)
+    template <typename T>
+    static Vec3<T> Max(const Vec3<T>& lhs, const Vec3<T>& rhs)
     {
-      return Vec3<Real>{std::max(lhs.x,rhs.x),std::max(lhs.y,rhs.y),std::max(lhs.z,rhs.z)};
+      return Vec3<T>{std::max(lhs.x,rhs.x),std::max(lhs.y,rhs.y),std::max(lhs.z,rhs.z)};
     }
 
-    template <typename Real>
-    static Vec3<Real> Min(const Vec3<Real>& lhs, const Vec3<Real>& rhs)
+    template <typename T>
+    static Vec3<T> Min(const Vec3<T>& lhs, const Vec3<T>& rhs)
     {
-      return Vec3<Real>{std::min(lhs.x,rhs.x),std::min(lhs.y,rhs.y),std::min(lhs.z,rhs.z)};
+      return Vec3<T>{std::min(lhs.x,rhs.x),std::min(lhs.y,rhs.y),std::min(lhs.z,rhs.z)};
     }
 
-    template <typename Real>
-    static float SignedAngle(const Vec3<Real>& vec1, const Vec3<Real>& vec2, const Vec3<Real>& normal)
+    template <typename T>
+    static Vec3<T> Rotate(const Vec3<T>& vector, const Vec3<T>& axis, float angle)
     {
-    float dot = Dot(Normalize(vec1), Normalize(vec2));
-    float angle = acos(dot);
-    if(dot > 1.0f)
-      angle = 0;
-    else if(dot < -1.0f)
-      angle = M_PI;
-    Greet::Vec3<float> cross = Cross(vec1, vec2);
-    if (Dot(normal, cross) > 0)
-      angle = -angle;
-    return angle;
+      return Vec3<T>{vector}.Rotate(axis, angle);
+    }
+
+    template <typename T>
+    static float SignedAngle(const Vec3<T>& vec1, const Vec3<T>& vec2, const Vec3<T>& normal)
+    {
+      float dot = Dot(Normalize(vec1), Normalize(vec2));
+      float angle = acos(dot);
+      if(dot > 1.0f)
+        angle = 0;
+      else if(dot < -1.0f)
+        angle = M_PI;
+      Greet::Vec3<float> cross = Cross(vec1, vec2);
+      if (Dot(normal, cross) > 0)
+        angle = -angle;
+      return angle;
     }
   }
+
+  typedef Vec3<float> Vec3f;
+  typedef Vec3<int> Vec3i;
 }

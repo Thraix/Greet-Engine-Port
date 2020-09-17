@@ -36,7 +36,7 @@ namespace Greet {
       Docker(const XMLObject& object, Component* parent);
 
       void GrabDockerTab(DockerTab* tab);
-      void HandleDroppedTab(MouseReleaseEvent& event, const Vec2& componentPos);
+      void HandleDroppedTab(MouseReleaseEvent& event, const Vec2f& componentPos);
 
       Button* GetTabButton() const;
       Component* GetSplitIcon() const;
@@ -44,7 +44,7 @@ namespace Greet {
       // Overrided functions
       void Render(GUIRenderer* renderer) const override;
       void Update(float timeElapsed) override;
-      void OnEvent(Event& event, const Vec2& componentPos) override;
+      void OnEvent(Event& event, const Vec2f& componentPos) override;
       void OnMeasured() override;
 
       virtual void LoadFrameStyle(const MetaFile& metaFile) override;

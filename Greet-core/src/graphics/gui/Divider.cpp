@@ -13,9 +13,9 @@ namespace Greet
     LoadStyles(xmlObject);
   }
 
-  void Divider::PreRender(GUIRenderer* renderer, const Vec2& translation) const
+  void Divider::PreRender(GUIRenderer* renderer, const Vec2f& translation) const
   {
-    Vec2 trans = translation;
+    Vec2f trans = translation;
     if(parent)
     {
       if(vertical)

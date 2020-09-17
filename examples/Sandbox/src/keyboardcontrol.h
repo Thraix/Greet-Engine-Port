@@ -9,7 +9,7 @@ namespace Greet {
 	public:
 		
 	private:
-		Vec2 velocity;
+		Vec2f velocity;
 		float speed;
 		bool yPos;
 		bool yNeg;
@@ -30,9 +30,9 @@ namespace Greet {
 			xNeg = false;
 		}
 
-		Vec2 GetVelocity()
+		Vec2f GetVelocity()
 		{
-			velocity = Vec2(0, 0);
+			velocity = Vec2f(0, 0);
 			velocity.x += xPos ? speed : 0;
 			velocity.x -= xNeg ? speed : 0;
 			velocity.y += yPos ? speed : 0;

@@ -38,14 +38,14 @@ namespace Greet
         return stream<< "(" << tlbr.top << ", " << tlbr.left << ", " << tlbr.bottom  << ", "<< tlbr.right << ")";
       }
 
-      Vec2 LeftTop() const
+      Vec2f LeftTop() const
       {
-        return Vec2(left, top);
+        return Vec2f(left, top);
       }
 
-      Vec2 RightBottom() const
+      Vec2f RightBottom() const
       {
-        return Vec2(right, bottom);
+        return Vec2f(right, bottom);
       }
 
       float GetWidth() const
@@ -58,9 +58,9 @@ namespace Greet
         return top + bottom;
       }
 
-      Vec2 GetSize() const
+      Vec2f GetSize() const
       {
-        return Vec2(GetWidth(), GetHeight());
+        return Vec2f(GetWidth(), GetHeight());
       }
   };
 }

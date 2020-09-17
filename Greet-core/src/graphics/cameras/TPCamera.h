@@ -69,8 +69,8 @@ namespace Greet {
       void SetInputY(const std::string& inputName);
       void SetInputMove(const std::string& inputName);
 
-      void Move(const Vec2& delta);
-      void Rotate(const Vec2& delta);
+      void Move(const Vec2f& delta);
+      void Rotate(const Vec2f& delta);
       void Zoom(float delta);
       void OnEvent(Event& event) override;
   };

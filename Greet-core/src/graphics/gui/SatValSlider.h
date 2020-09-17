@@ -20,10 +20,10 @@ namespace Greet
       SatValSlider(const std::string& xmlObject, Component* parent, const std::string& componentType = "SatValSlider");
       SatValSlider(const XMLObject& xmlObject, Component* parent);
 
-      void PreRender(GUIRenderer* renderer, const Vec2& translation) const override;
+      void PreRender(GUIRenderer* renderer, const Vec2f& translation) const override;
       void Render(GUIRenderer* renderer) const override;
 
-      virtual void OnEvent(Event& event, const Vec2& componentPos) override;
+      virtual void OnEvent(Event& event, const Vec2f& componentPos) override;
 
       // Callbacks
       virtual void SetOnSatChangeCallback(OnValueChangeCallback callback);

@@ -82,9 +82,9 @@ namespace Greet
     return splitIcon;
   }
 
-  void Docker::HandleDroppedTab(MouseReleaseEvent& event, const Vec2& componentPos)
+  void Docker::HandleDroppedTab(MouseReleaseEvent& event, const Vec2f& componentPos)
   {
-    Vec2 mousePos = event.GetPosition() - componentPos;
+    Vec2f mousePos = event.GetPosition() - componentPos;
 
     int splitLimit = 0;
 
@@ -128,7 +128,7 @@ namespace Greet
     split->Update(timeElapsed);
   }
 
-  void Docker::OnEvent(Event& event, const Vec2& componentPos)
+  void Docker::OnEvent(Event& event, const Vec2f& componentPos)
   {
     if(EVENT_IS_TYPE(event, EventType::MOUSE_RELEASE))
     {
@@ -163,7 +163,7 @@ namespace Greet
   {
     split->SetSize(GetContentSize(), true);
     // Update positions of child dockers
-    split->SetPosition({0, 0});
+    split->SetPosition(Vec2f{0.0f, 0.0f});
   }
 
   void Docker::LoadFrameStyle(const MetaFile& metaFile)

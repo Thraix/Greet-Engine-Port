@@ -83,7 +83,7 @@ namespace Greet
       if(styling.backgroundColor.a > 0)
         renderer->DrawRoundedRect({indentOffset + styling.border.left, offset + styling.border.top}, {view.GetContentSize().w - indentOffset - styling.border.GetWidth(), (float)view.text.font.GetSize() + styling.padding.GetHeight()}, styling.backgroundColor, styling.backgroundRadius, styling.backgroundRoundedPrecision, false);
 
-      renderer->PushTranslation(Vec2{indentOffset + styling.padding.left + styling.border.left, offset + styling.padding.top + styling.border.top});
+      renderer->PushTranslation(Vec2f{indentOffset + styling.padding.left + styling.border.left, offset + styling.padding.top + styling.border.top});
       RenderFlowController(renderer, view);
       float width = view.text.font.GetWidthOfText(name);
       renderer->DrawText(name, {GetFlowControllerWidth(view), (float)view.text.font.GetBaselineOffset()}, view.text.font, view.text.color, false);
@@ -119,15 +119,15 @@ namespace Greet
     }
   }
 
-  std::pair<TreeNode*, bool> TreeNode::GetTreeNodeAt(const Vec2& position, const TreeView& view)
+  std::pair<TreeNode*, bool> TreeNode::GetTreeNodeAt(const Vec2f& position, const TreeView& view)
   {
     if(!Utils::IsInside(position, {0, 0}, view.GetContentSize()))
       return {nullptr, false};
-    Vec2 pos = position;
+    Vec2f pos = position;
     return GetTreeNodeAt(pos, 0, view);
   }
 
-  std::pair<TreeNode*, bool> TreeNode::GetTreeNodeAt(Vec2& position, int indent, const TreeView& view)
+  std::pair<TreeNode*, bool> TreeNode::GetTreeNodeAt(Vec2f& position, int indent, const TreeView& view)
   {
     if(!IsRoot())
     {

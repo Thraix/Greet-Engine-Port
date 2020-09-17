@@ -107,10 +107,10 @@ namespace Greet
     Begin();
   }
 
-  void GUIRenderer::PushViewport(const Vec2& pos, const Vec2& size, bool overwrite)
+  void GUIRenderer::PushViewport(const Vec2f& pos, const Vec2f& size, bool overwrite)
   {
-    Vec2 p1 = GetMatrix() * (translationStack.top() + pos);
-    Vec2 p2 = GetMatrix() * (translationStack.top() + pos + size);
+    Vec2f p1 = GetMatrix() * (translationStack.top() + pos);
+    Vec2f p2 = GetMatrix() * (translationStack.top() + pos + size);
     if (!m_viewports.empty() && !overwrite)
     {
       Vec4 top = m_viewports.top();
@@ -132,12 +132,12 @@ namespace Greet
     m_viewports.pop();
   }
 
-  void GUIRenderer::PushTranslation(const Vec2& translation, bool override)
+  void GUIRenderer::PushTranslation(const Vec2f& translation, bool override)
   {
     if (override)
       translationStack.push({round(translation.x), round(translation.y)});
     else
-      translationStack.push(translationStack.top() + Vec2{round(translation.x), round(translation.y)});
+      translationStack.push(translationStack.top() + Vec2f{round(translation.x), round(translation.y)});
   }
 
   void GUIRenderer::PopTranslation()
@@ -153,33 +153,33 @@ namespace Greet
     DrawRect(renderable.GetPosition(), renderable.GetSize(), Color(renderable.GetColor()), false);
   }
 
-  void GUIRenderer::DrawLine(const Vec2& pos, float length, float width, bool vertical, const Color& color, bool isHsv)
+  void GUIRenderer::DrawLine(const Vec2f& pos, float length, float width, bool vertical, const Color& color, bool isHsv)
   {
 
-    DrawRect(pos, Vec2(vertical ? width : length, vertical ? length : width), color,isHsv);
+    DrawRect(pos, Vec2f(vertical ? width : length, vertical ? length : width), color,isHsv);
   }
 
-  void GUIRenderer::DrawTriangle(const Vec2& pos1, const Vec2& pos2, const Vec2& pos3, const Color& color, bool isHsv)
+  void GUIRenderer::DrawTriangle(const Vec2f& pos1, const Vec2f& pos2, const Vec2f& pos3, const Color& color, bool isHsv)
   {
     AppendTriangle(pos1,pos2,pos3,color,isHsv);
   }
 
-  void GUIRenderer::DrawRect(const Vec2& pos, const Vec2& size, const Color& color, bool isHsv)
+  void GUIRenderer::DrawRect(const Vec2f& pos, const Vec2f& size, const Color& color, bool isHsv)
   {
-    AppendQuad(pos, size, Vec2(0, 0), Vec2(1, 1), 0, color, isHsv);
+    AppendQuad(pos, size, Vec2f(0, 0), Vec2f(1, 1), 0, color, isHsv);
   }
-  void GUIRenderer::DrawRoundedRect(const Vec2& pos, const Vec2& size, const Color& color, float radius, uint precision, bool isHsv)
+  void GUIRenderer::DrawRoundedRect(const Vec2f& pos, const Vec2f& size, const Color& color, float radius, uint precision, bool isHsv)
   {
     AppendRoundedQuad(pos,size,color,isHsv,radius,precision);
   }
 
-  void  GUIRenderer::DrawRect(const Vec2& pos, const Vec2& size, const Color& color1, const Color& color2, const Color& color3, const Color& color4, bool isHsv)
+  void  GUIRenderer::DrawRect(const Vec2f& pos, const Vec2f& size, const Color& color1, const Color& color2, const Color& color3, const Color& color4, bool isHsv)
   {
-    AppendQuad(pos, size, Vec2(0, 0), Vec2(1, 1), 0, color1, color2, color3, color4, isHsv);
+    AppendQuad(pos, size, Vec2f(0, 0), Vec2f(1, 1), 0, color1, color2, color3, color4, isHsv);
   }
 
 
-  void GUIRenderer::DrawText(const std::string& text, const Vec2& position, const Font& font, const Color& color, bool isHsv)
+  void GUIRenderer::DrawText(const std::string& text, const Vec2f& position, const Font& font, const Color& color, bool isHsv)
   {
     float ts = GetTextureSlot(font.GetFontAtlasId());
     if (ts == 0 && font.GetFontAtlasId() != 0)
@@ -189,11 +189,11 @@ namespace Greet
     }
 
     const Ref<FontAtlas>& atlas = font.GetFontAtlas();
-    Vec2 pos;
-    Vec2 size;
-    Vec2 uv0;
-    Vec2 uv1;
-    Vec2 roundPos = Vec2(round(position.x), round(position.y));
+    Vec2f pos;
+    Vec2f size;
+    Vec2f uv0;
+    Vec2f uv1;
+    Vec2f roundPos = Vec2f(round(position.x), round(position.y));
     float x = roundPos.x;
     for (uint i = 0;i < text.length();i++)
     {
@@ -239,7 +239,7 @@ namespace Greet
     return false;
   }
 
-  Vec4 GUIRenderer::GetViewport(const Vec2& pos1, const Vec2& pos2) const
+  Vec4 GUIRenderer::GetViewport(const Vec2f& pos1, const Vec2f& pos2) const
   {
     if (!m_viewports.empty())
       return m_viewports.top();
@@ -247,26 +247,26 @@ namespace Greet
     {
       //Log::Warning("No viewport");
       Vec4 viewport;;
-      Vec2 temp = GetMatrix() * (translationStack.top() + Vec2(pos1.x, pos1.y));
+      Vec2f temp = GetMatrix() * (translationStack.top() + Vec2f(pos1.x, pos1.y));
       viewport.x = temp.x;
       viewport.y = temp.y;
-      temp = GetMatrix() * (translationStack.top() + Vec2(pos2.x, pos2.y));
+      temp = GetMatrix() * (translationStack.top() + Vec2f(pos2.x, pos2.y));
       viewport.z = temp.x;
       viewport.w = temp.y;
       return viewport;
     }
   }
 
-  void GUIRenderer::AppendTriangle(const Vec2& pos1, const Vec2& pos2, const Vec2& pos3, const Color& color, bool isHsv)
+  void GUIRenderer::AppendTriangle(const Vec2f& pos1, const Vec2f& pos2, const Vec2f& pos3, const Color& color, bool isHsv)
   {
     if (NeedFlush(3, 3))
       Flush();
 
-    Vec4 viewport = GetViewport(Vec2(std::min(std::min(pos1.x,pos2.x),pos3.x), std::min(std::min(pos1.y, pos2.y), pos3.y)), Vec2(std::max(std::max(pos1.x, pos2.x), pos3.x), std::max(std::max(pos1.y, pos2.y), pos3.y)));
+    Vec4 viewport = GetViewport(Vec2f(std::min(std::min(pos1.x,pos2.x),pos3.x), std::min(std::min(pos1.y, pos2.y), pos3.y)), Vec2f(std::max(std::max(pos1.x, pos2.x), pos3.x), std::max(std::max(pos1.y, pos2.y), pos3.y)));
 
-    AppendVertexBuffer(pos1, Vec2(0, 0), 0.0f, color, viewport, isHsv);
-    AppendVertexBuffer(pos2, Vec2(0, 0), 0.0f, color, viewport, isHsv);
-    AppendVertexBuffer(pos3, Vec2(0, 0), 0.0f, color, viewport, isHsv);
+    AppendVertexBuffer(pos1, Vec2f(0, 0), 0.0f, color, viewport, isHsv);
+    AppendVertexBuffer(pos2, Vec2f(0, 0), 0.0f, color, viewport, isHsv);
+    AppendVertexBuffer(pos3, Vec2f(0, 0), 0.0f, color, viewport, isHsv);
 
     m_indices[m_iboCount++] = m_lastIndex;
     m_indices[m_iboCount++] = m_lastIndex + 1;
@@ -275,7 +275,7 @@ namespace Greet
     m_lastIndex += 3;
   }
 
-  void GUIRenderer::AppendQuad(const Vec2& position, const Vec2& size, const Vec2& texCoord1, const Vec2& texCoord2, float texId, const Color& color1, const Color& color2, const Color& color3, const Color& color4, bool isHsv)
+  void GUIRenderer::AppendQuad(const Vec2f& position, const Vec2f& size, const Vec2f& texCoord1, const Vec2f& texCoord2, float texId, const Color& color1, const Color& color2, const Color& color3, const Color& color4, bool isHsv)
   {
     if (NeedFlush(6, 4))
       Flush();
@@ -283,9 +283,9 @@ namespace Greet
     Vec4 viewport = GetViewport(position, position + size);
 
     AppendVertexBuffer(position, texCoord1, texId, color1, viewport, isHsv);
-    AppendVertexBuffer(Vec2(position.x, position.y + size.y), Vec2(texCoord1.x, texCoord2.y), texId, color3, viewport, isHsv);
+    AppendVertexBuffer(Vec2f(position.x, position.y + size.y), Vec2f(texCoord1.x, texCoord2.y), texId, color3, viewport, isHsv);
     AppendVertexBuffer(position + size, texCoord2, texId, color4, viewport, isHsv);
-    AppendVertexBuffer(Vec2(position.x + size.x, position.y), Vec2(texCoord2.x, texCoord1.y), texId, color2, viewport, isHsv);
+    AppendVertexBuffer(Vec2f(position.x + size.x, position.y), Vec2f(texCoord2.x, texCoord1.y), texId, color2, viewport, isHsv);
 
     m_indices[m_iboCount++] = m_lastIndex;
     m_indices[m_iboCount++] = m_lastIndex + 1;
@@ -299,12 +299,12 @@ namespace Greet
 
   // TODO: Improve this code, remove the center vertex and
   // remove unnecessary verticies when width is too small
-  void GUIRenderer::AppendRoundedQuad(const Vec2& position, const Vec2& size, const Color& color, bool isHsv, float radius, uint precision)
+  void GUIRenderer::AppendRoundedQuad(const Vec2f& position, const Vec2f& size, const Color& color, bool isHsv, float radius, uint precision)
   {
     // If precision is 0 or radius is too little, just draw a normal quad
     if(precision == 0 || radius <= 0)
     {
-      AppendQuad(position, size, Vec2(),Vec2(),0, color, isHsv);
+      AppendQuad(position, size, Vec2f(),Vec2f(),0, color, isHsv);
       return;
     }
 
@@ -332,11 +332,11 @@ namespace Greet
     // TODO: Remove this and make another vertex the main one
     // Since the whole thing is non negative curvature any vertex should do
     // however needs to be checked and I was lazy now
-    AppendVertexBuffer(position+size*0.5, Vec2(0,0), 0, color, viewport, isHsv);
+    AppendVertexBuffer(position+size*0.5, Vec2f(0,0), 0, color, viewport, isHsv);
 
     for(int i = 0;i<=precision;i++)
     {
-      Vec2 circlePos{cos(angle*i)*radius,sin(angle*i)*radius};
+      Vec2f circlePos{cos(angle*i)*radius,sin(angle*i)*radius};
 
       float a = angle*i;
       if(angle*i > endAngle)
@@ -345,7 +345,7 @@ namespace Greet
         circlePos.x = radius - size.w*0.5;
 
         a = aEnd;
-        Vec2 nextCirclePos{cos(a)*radius,sin(a)*radius};
+        Vec2f nextCirclePos{cos(a)*radius,sin(a)*radius};
         float t = (circlePos.x - x) / (nextCirclePos.x - x);
         circlePos.y = (nextCirclePos.y - circlePos.y) * t + circlePos.y;
       }
@@ -355,19 +355,19 @@ namespace Greet
         circlePos.y = radius - size.h*0.5;
 
         a = aStart;
-        Vec2 nextCirclePos{cos(a)*radius,sin(a)*radius};
+        Vec2f nextCirclePos{cos(a)*radius,sin(a)*radius};
         float t = (circlePos.y - y) / (nextCirclePos.y - y);
         circlePos.x = (nextCirclePos.x - circlePos.x) * t + circlePos.x;
       }
 
       // Top left
-      AppendVertexBuffer(position+radius - circlePos, Vec2(0,0), 0, color, viewport, isHsv);
+      AppendVertexBuffer(position+radius - circlePos, Vec2f(0,0), 0, color, viewport, isHsv);
       // Top right
-      AppendVertexBuffer(position+Vec2(size.x-radius+circlePos.x,radius-circlePos.y), Vec2(0,0), 0, color, viewport, isHsv);
+      AppendVertexBuffer(position+Vec2f(size.x-radius+circlePos.x,radius-circlePos.y), Vec2f(0,0), 0, color, viewport, isHsv);
       // Bottom right
-      AppendVertexBuffer(position+size-radius + circlePos, Vec2(0,0), 0, color, viewport, isHsv);
+      AppendVertexBuffer(position+size-radius + circlePos, Vec2f(0,0), 0, color, viewport, isHsv);
       // bottom left
-      AppendVertexBuffer(position+Vec2(radius-circlePos.x,size.y-radius+circlePos.y), Vec2(0,0), 0, color, viewport, isHsv);
+      AppendVertexBuffer(position+Vec2f(radius-circlePos.x,size.y-radius+circlePos.y), Vec2f(0,0), 0, color, viewport, isHsv);
 
     }
 
@@ -407,7 +407,7 @@ namespace Greet
     m_lastIndex += (precision+1)*4 + 1;
   }
 
-  void GUIRenderer::AppendQuaterCircle(const Vec2& center, const Color& color, bool isHsv, float radius, uint precision, bool left, bool top)
+  void GUIRenderer::AppendQuaterCircle(const Vec2f& center, const Color& color, bool isHsv, float radius, uint precision, bool left, bool top)
   {
     Vec4 viewport = GetViewport(center-radius, center + radius);
     float xRad = radius;
@@ -420,8 +420,8 @@ namespace Greet
     if(NeedFlush(3*precision, 2+precision))
       Flush();
 
-    AppendVertexBuffer(center, Vec2(0, 0), 0, color, viewport,false);
-    AppendVertexBuffer(Vec2(center.x+xRad, center.y), Vec2(0,0), 0, color, viewport,false);
+    AppendVertexBuffer(center, Vec2f(0, 0), 0, color, viewport,false);
+    AppendVertexBuffer(Vec2f(center.x+xRad, center.y), Vec2f(0,0), 0, color, viewport,false);
 
     float angle = M_PI*0.5 / precision;
     for(int i = 0;i < precision; i++)
@@ -433,7 +433,7 @@ namespace Greet
         s = yRad;
         c = 0;
       }
-      AppendVertexBuffer(Vec2(center.x+c, center.y+s), Vec2(0,0), 0, color, viewport,false);
+      AppendVertexBuffer(Vec2f(center.x+c, center.y+s), Vec2f(0,0), 0, color, viewport,false);
       m_indices[m_iboCount++] = m_lastIndex;
       m_indices[m_iboCount++] = m_lastIndex + i+1;
       m_indices[m_iboCount++] = m_lastIndex + i+2;
@@ -442,12 +442,12 @@ namespace Greet
 
   }
 
-  void GUIRenderer::AppendQuad(const Vec2& position, const Vec2& size, const Vec2& texCoord1, const Vec2& texCoord2, float texId, const Color& color, bool isHsv)
+  void GUIRenderer::AppendQuad(const Vec2f& position, const Vec2f& size, const Vec2f& texCoord1, const Vec2f& texCoord2, float texId, const Color& color, bool isHsv)
   {
     AppendQuad(position, size, texCoord1, texCoord2, texId, color, color, color, color, isHsv);
   }
 
-  void GUIRenderer::AppendVertexBuffer(const Vec2& position, const Vec2& texCoord, float texId, const Color& color, const Vec4& viewport, bool isHsv)
+  void GUIRenderer::AppendVertexBuffer(const Vec2f& position, const Vec2f& texCoord, float texId, const Color& color, const Vec4& viewport, bool isHsv)
   {
     m_buffer->pos = GetMatrix() * (translationStack.top() + position);
     m_buffer->texCoord = texCoord;

@@ -40,8 +40,8 @@ namespace Greet {
       static bool focus;
       static bool mouseButtonDown[MAX_MOUSEBUTTONS];
       static bool isMouseButtonDown;
-      static Vec2 mousePos;
-      static Vec2 mousePosPixel;
+      static Vec2f mousePos;
+      static Vec2f mousePosPixel;
       static bool isMouseGrabbed;
 
     private:
@@ -58,8 +58,6 @@ namespace Greet {
       static void mouse_scroll_callback(GLFWwindow* window, double scrollX, double scrollY);
       static void joystick_callback(int joy, int event);
     public:
-      //Window(const char *title, int width, int height);
-      //~Window();
 
       static void CreateWindow(std::string title, uint width, uint height);
       static void DestroyWindow();
@@ -76,8 +74,8 @@ namespace Greet {
 
       // Screen: (-1, 1)
       // Window: (0, Window size)
-      static void TransformScreenToWindowPos(Vec2& pos);
-      static void TransformWindowToScreenPos(Vec2& pos);
+      static void TransformScreenToWindowPos(Vec2f& pos);
+      static void TransformWindowToScreenPos(Vec2f& pos);
 
       inline static int GetWidth() { return width; };
       inline static int GetHeight() { return height; };

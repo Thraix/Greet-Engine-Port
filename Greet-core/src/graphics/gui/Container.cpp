@@ -65,12 +65,12 @@ namespace Greet
     }
   }
 
-  void Container::MeasureChildren(const Vec2& weightTotals)
+  void Container::MeasureChildren(const Vec2f& weightTotals)
   {
-    Vec2 childPos{0, 0};
+    Vec2f childPos{0, 0};
     int spacings = std::max((int)m_components.size() - 1, 0);
 
-    Vec2 totalSize = GetPadding().GetSize() + GetBorder().GetSize();
+    Vec2f totalSize = GetPadding().GetSize() + GetBorder().GetSize();
     if(vertical)
       totalSize.h += spacing * spacings;
     else
@@ -117,11 +117,11 @@ namespace Greet
     }
   }
 
-  void Container::Measure(const Vec2& emptyParentSpace, const Vec2& percentageFill)
+  void Container::Measure(const Vec2f& emptyParentSpace, const Vec2f& percentageFill)
   {
     bool childHasWidthWeight = false;
     bool childHasHeightWeight = false;
-    Vec2 totalWeights{0, 0};
+    Vec2f totalWeights{0, 0};
 
     for(auto&& child : m_components)
     {
@@ -176,7 +176,7 @@ namespace Greet
     }
   }
 
-  Vec2 Container::GetMeasureFillSize()
+  Vec2f Container::GetMeasureFillSize()
   {
     float usedSpace = 0;
 
@@ -199,14 +199,14 @@ namespace Greet
       float height = GetContentSize().h - usedSpace;
       if(height < 1)
         height = 1;
-      return Vec2(GetContentSize().w, height);
+      return Vec2f(GetContentSize().w, height);
     }
     else
     {
       float width = GetContentSize().w - usedSpace;
       if(width < 1)
         width = 1;
-      return Vec2(width, GetContentSize().h);
+      return Vec2f(width, GetContentSize().h);
     }
   }
 
@@ -401,7 +401,7 @@ namespace Greet
     guiScene = scene;
   }
 
-  void Container::OnMousePressEventHandler(MousePressEvent& event, const Vec2& componentPos)
+  void Container::OnMousePressEventHandler(MousePressEvent& event, const Vec2f& componentPos)
   {
     for(auto it = m_components.rbegin(); it != m_components.rend();++it)
     {
@@ -415,7 +415,7 @@ namespace Greet
     Component::OnMousePressEventHandler(event, componentPos);
   }
 
-  void Container::OnMouseMoveEventHandler(MouseMoveEvent& event, const Vec2& componentPos)
+  void Container::OnMouseMoveEventHandler(MouseMoveEvent& event, const Vec2f& componentPos)
   {
     Component::OnMouseMoveEventHandler(event, componentPos);
     if(!UsingMouse())

@@ -42,7 +42,7 @@ namespace Greet {
         return projectionMatrix * (viewMatrix * coordinate);
       }
 
-      void GetScreenToWorldCoordinate(const Vec2& screenPos, Vec3<float>* near, Vec3<float>* direction) const
+      void GetScreenToWorldCoordinate(const Vec2f& screenPos, Vec3f* near, Vec3f* direction) const
       {
         if (near == NULL)
           return Log::Error("Near vector is NULL");

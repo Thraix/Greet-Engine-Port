@@ -27,7 +27,7 @@ namespace Greet
     PushViewportStack({x,y,width,height}, ignoreParent);
   }
 
-  void RenderCommand::PushViewportStack(const Vec2& pos, const Vec2& size, bool ignoreParent)
+  void RenderCommand::PushViewportStack(const Vec2f& pos, const Vec2f& size, bool ignoreParent)
   {
     PushViewportStack({pos.x,pos.y,size.w,size.h}, ignoreParent);
   }

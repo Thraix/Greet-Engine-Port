@@ -31,7 +31,7 @@ namespace Greet {
       Component* component;
       bool shown = false;
       bool remeasure = false;
-      Vec2 size;
+      Vec2f size;
 
     public:
       DockerTab(const std::string& title, Component* component);
@@ -42,7 +42,7 @@ namespace Greet {
     public:
       void Render(GUIRenderer* renderer) const;
       void Update(float timeElapsed);
-      void OnEvent(Event& event, const Vec2& componentPos);
+      void OnEvent(Event& event, const Vec2f& componentPos);
 
       Component* GetComponentByNameNoCast(const std::string& name);
       DockerContainer* GetContainer() const;
@@ -53,8 +53,8 @@ namespace Greet {
 
       void SetContainer(DockerContainer* parentContainer);
       void SetGUIScene(GUIScene* scene);
-      void SetPosition(const Vec2& position);
-      void SetSize(const Vec2& avSize, bool abRemeasure);
+      void SetPosition(const Vec2f& position);
+      void SetSize(const Vec2f& avSize, bool abRemeasure);
 
       Docker* GetDocker() const;
       void SetDocker(Docker* docker);

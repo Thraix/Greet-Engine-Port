@@ -33,7 +33,7 @@ namespace Greet {
     }
     m_resizableFlags = RESIZING_LEFT | RESIZING_RIGHT | RESIZING_TOP | RESIZING_BOTTOM;
     m_resizing = 0;
-    minSize = Vec2(100, 100);
+    minSize = Vec2f(100, 100);
 
     pos.x = GUIUtils::GetFloatFromXML(object, "x", 0);
     pos.y = GUIUtils::GetFloatFromXML(object, "y", 0);
@@ -56,7 +56,7 @@ namespace Greet {
   {
   }
 
-  bool Frame::IsHoverResize(const Vec2& mousePos)
+  bool Frame::IsHoverResize(const Vec2f& mousePos)
   {
     if ((m_resizableFlags & RESIZING_LEFT) != 0 && mousePos.x >= -RESIZING_MARGIN && mousePos.x < RESIZING_MARGIN)
     {
@@ -77,7 +77,7 @@ namespace Greet {
     return false;
   }
 
-  void Frame::SetResizeFlags(const Vec2& mousePos)
+  void Frame::SetResizeFlags(const Vec2f& mousePos)
   {
     m_resizingFlags = 0;
     if ((m_resizableFlags & RESIZING_LEFT) != 0 && mousePos.x >= -RESIZING_MARGIN && mousePos.x < RESIZING_MARGIN)
@@ -99,9 +99,9 @@ namespace Greet {
     m_resizing = m_resizingFlags != 0;
   }
 
-  void Frame::Resize(const Vec2& mousePos)
+  void Frame::Resize(const Vec2f& mousePos)
   {
-    Vec2 oldSize = GetSizeValue();
+    Vec2f oldSize = GetSizeValue();
     if (m_resizingFlags & RESIZING_LEFT)
     {
       pos.x = m_posOrigin.x - (m_clickPos.x - mousePos.x);
@@ -139,7 +139,7 @@ namespace Greet {
         height.value = minSize.h;
     }
     ResizeScreenClamp();
-    if(oldSize != Vec2{width.value, height.value})
+    if(oldSize != Vec2f{width.value, height.value})
     {
       Remeasure();
       GetStyle("normal").SetGUISize("width", width);
@@ -170,9 +170,9 @@ namespace Greet {
     }
   }
 
-  void Frame::OnMousePressEventHandler(MousePressEvent& event, const Vec2& componentPos)
+  void Frame::OnMousePressEventHandler(MousePressEvent& event, const Vec2f& componentPos)
   {
-    Vec2 translatedPos = event.GetPosition() - componentPos;
+    Vec2f translatedPos = event.GetPosition() - componentPos;
     if (event.GetButton() == GREET_MOUSE_1)
     {
       if(IsHoverResize(translatedPos))
@@ -192,14 +192,14 @@ namespace Greet {
       Container::OnMousePressEventHandler(event, componentPos);
   }
 
-  void Frame::OnMouseReleaseEventHandler(MouseReleaseEvent& event, const Vec2& componentPos)
+  void Frame::OnMouseReleaseEventHandler(MouseReleaseEvent& event, const Vec2f& componentPos)
   {
     if (event.GetButton() == GREET_MOUSE_1)
       m_resizing = false;
     Container::OnMouseReleaseEventHandler(event, componentPos);
   }
 
-  void Frame::OnMouseMoveEventHandler(MouseMoveEvent& event, const Vec2& componentPos)
+  void Frame::OnMouseMoveEventHandler(MouseMoveEvent& event, const Vec2f& componentPos)
   {
     if (m_resizing)
       Resize(event.GetPosition() - m_posOrigin);
@@ -217,17 +217,17 @@ namespace Greet {
     Remeasure();
   }
 
-  bool Frame::IsMouseInside(const Vec2& mousePos) const
+  bool Frame::IsMouseInside(const Vec2f& mousePos) const
   {
-    Vec2 resizeMargin = Vec2(RESIZING_MARGIN, RESIZING_MARGIN);
+    Vec2f resizeMargin = Vec2f(RESIZING_MARGIN, RESIZING_MARGIN);
     return AABBUtils::PointInsideBox(mousePos, -resizeMargin, GetSize() + resizeMargin*2);
   }
 
-  void Frame::SetPosition(const Vec2& pos)
+  void Frame::SetPosition(const Vec2f& pos)
   {
     if(m_stayInsideWindow)
     {
-      Vec2 p = pos;
+      Vec2f p = pos;
       if(p.x + width.size > guiScene->GetWidth())
       {
         p.x = guiScene->GetWidth() - width.size;

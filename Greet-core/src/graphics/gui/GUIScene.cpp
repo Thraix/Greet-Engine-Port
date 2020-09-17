@@ -39,7 +39,7 @@ namespace Greet {
 
   void GUIScene::OnMousePressEventHandler(MousePressEvent& event)
   {
-    Vec2 mousePos = ~projectionMatrix * event.GetPosition();
+    Vec2f mousePos = ~projectionMatrix * event.GetPosition();
     MousePressEvent transformedEvent{mousePos, event.GetButton()};
 
     for (auto it = frames.rbegin(); it != frames.rend(); ++it)
@@ -58,8 +58,8 @@ namespace Greet {
 
   void GUIScene::OnMouseMoveEventHandler(MouseMoveEvent& event)
   {
-    Vec2 mousePos = ~projectionMatrix * event.GetPosition();
-    Vec2 mouseDelta  = ~projectionMatrix * (event.GetPosition() + event.GetDeltaPosition()) - mousePos;
+    Vec2f mousePos = ~projectionMatrix * event.GetPosition();
+    Vec2f mouseDelta  = ~projectionMatrix * (event.GetPosition() + event.GetDeltaPosition()) - mousePos;
     MouseMoveEvent transformedEvent{mousePos, mouseDelta};
 
     if (focused && focused->UsingMouse())
@@ -77,7 +77,7 @@ namespace Greet {
 
   void GUIScene::OnMouseReleaseEventHandler(MouseReleaseEvent& event)
   {
-    Vec2 mousePos = ~projectionMatrix * event.GetPosition();
+    Vec2f mousePos = ~projectionMatrix * event.GetPosition();
     MouseReleaseEvent transformedEvent{mousePos, event.GetButton()};
     if (focused)
     {
@@ -107,7 +107,7 @@ namespace Greet {
   {
     for (auto it = frames.begin(); it != frames.end(); ++it)
     {
-      (*it)->PreRender(renderer, Vec2(0,0));
+      (*it)->PreRender(renderer, Vec2f(0,0));
       (*it)->RenderHandle(renderer);
       (*it)->PostRender(renderer);
     }
@@ -256,7 +256,7 @@ namespace Greet {
     return RenderCommand::GetViewportHeight();
   }
 
-  Vec2 GUIScene::GetSize() const
+  Vec2f GUIScene::GetSize() const
   {
     return {RenderCommand::GetViewportWidth(), RenderCommand::GetViewportHeight()};
   }

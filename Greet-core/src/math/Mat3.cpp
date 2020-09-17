@@ -80,7 +80,7 @@ namespace Greet{
     return result;
   }
 
-  Mat3 Mat3::Quad(const Vec2& pos, const Vec2& size)
+  Mat3 Mat3::Quad(const Vec2f& pos, const Vec2f& size)
   {
     Mat3 result(1.0f);
 
@@ -92,7 +92,7 @@ namespace Greet{
     return result;
   }
 
-  Mat3 Mat3::Translate(const Vec2& translation)
+  Mat3 Mat3::Translate(const Vec2f& translation)
   {
     Mat3 result(1.0f);
 
@@ -112,7 +112,7 @@ namespace Greet{
     return result;
   }
 
-  Mat3 Mat3::Scale(const Vec2& scaling)
+  Mat3 Mat3::Scale(const Vec2f& scaling)
   {
     Mat3 result(1.0f);
 
@@ -132,22 +132,7 @@ namespace Greet{
     return result;
   }
 
-  Mat3 Mat3::Rotate(float deg)
-  {
-    Mat3 result(1.0f);
-    float r = Math::ToRadians(deg);
-    float s = sin(r);
-    float c = cos(r);
-
-    result.elements[0] = c;
-    result.elements[1] = s;
-    result.elements[3] = -s;
-    result.elements[4] = c;
-
-    return result;
-  }
-
-  Mat3 Mat3::RotateR(float rad)
+  Mat3 Mat3::Rotate(float rad)
   {
     Mat3 result(1.0f);
     float s = sin(rad);
@@ -161,7 +146,7 @@ namespace Greet{
     return result;
   }
 
-  Mat3 Mat3::Shear(const Vec2& shearing)
+  Mat3 Mat3::Shear(const Vec2f& shearing)
   {
     Mat3 result(1.0f);
 
@@ -235,12 +220,12 @@ namespace Greet{
     return *this;
   }
 
-  Vec2 Mat3::Multiply(const Vec2 &other) const
+  Vec2f Mat3::Multiply(const Vec2f &other) const
   {
     float x = columns[0].x * other.x + columns[1].x * other.y + columns[2].x;
     float y = columns[0].y * other.x + columns[1].y * other.y + columns[2].y;
     float z = columns[0].z * other.x + columns[1].z * other.y + columns[2].z;
-    return Vec2(x/z, y/z);
+    return Vec2f(x/z, y/z);
   }
 
   Vec3<float> Mat3::Multiply(const Vec3<float> &other) const
@@ -260,7 +245,7 @@ namespace Greet{
     return Multiply(other);
   }
 
-  Vec2 operator*(const Mat3 &first, const Vec2 &second)
+  Vec2f operator*(const Mat3 &first, const Vec2f &second)
   {
     return first.Multiply(second);
   }

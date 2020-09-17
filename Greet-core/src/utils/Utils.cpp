@@ -20,7 +20,7 @@ namespace Greet {
     delete[] pixels;
   }
 
-  bool Utils::IsInside(const Vec2& point, const Vec2& pos, const Vec2& size)
+  bool Utils::IsInside(const Vec2f& point, const Vec2f& pos, const Vec2f& size)
   {
     return point.x >= pos.x && point.x < pos.x + size.w && point.y >= pos.y && point.y < pos.y + size.h;
   }

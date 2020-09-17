@@ -21,11 +21,11 @@ namespace Greet
     public:
       static void Init();
       /*
-         Values relative to the current viewport
-         position is from the top-left of the screen
-         */
+       Values relative to the current viewport
+       position is from the top-left of the screen
+       */
       static void PushViewportStack(float x, float y, float width, float height, bool ignoreParent=false);
-      static void PushViewportStack(const Vec2& pos, const Vec2& size, bool ignoreParent=false);
+      static void PushViewportStack(const Vec2f& pos, const Vec2f& size, bool ignoreParent=false);
       static void PushViewportStack(const Vec4& viewport, bool ignoreParent=false);
       static void PushViewportDefaultStack();
 

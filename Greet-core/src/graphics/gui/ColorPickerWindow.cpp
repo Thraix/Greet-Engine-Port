@@ -20,7 +20,7 @@ namespace Greet
     )
   };
 
-  ColorPickerWindow::ColorPickerWindow(const Vec2& pos, const Color& color)
+  ColorPickerWindow::ColorPickerWindow(const Vec2f& pos, const Color& color)
     : Frame(frameLook)
   {
     LoadFrameStyle(frameStyle);

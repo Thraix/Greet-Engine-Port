@@ -3,74 +3,68 @@
 #include <math/Mat3.h>
 
 namespace Greet {
-  class Transform
+  class Transform2D
   {
     public:
       Mat3 m_matrix;
     private:
 
     public:
-      Transform()
+      Transform2D()
         : m_matrix(Mat3(1))
       {
 
       }
 
-      Transform(Mat3 matrix)
+      Transform2D(Mat3 matrix)
 
       {
         m_matrix = matrix;
       }
 
-      Transform& Init(float diagonal = 1)
+      Transform2D& Init(float diagonal = 1)
       {
         m_matrix = Mat3(diagonal);
         return *this;
       }
 
-      Transform& Scale(float x, float y)
+      Transform2D& Scale(float x, float y)
       {
         m_matrix *= Mat3::Scale(x, y);
         return *this;
       }
 
-      Transform& Scale(Vec2 scale)
+      Transform2D& Scale(const Vec2f& scale)
       {
         m_matrix *= Mat3::Scale(scale);
         return *this;
       }
 
-      Transform& Translate(float x, float y)
+      Transform2D& Translate(float x, float y)
       {
         m_matrix *= Mat3::Translate(x,y);
         return *this;
       }
 
-      Transform& Translate(Vec2 translate)
+      Transform2D& Translate(const Vec2f& translate)
       {
         m_matrix *= Mat3::Translate(translate);
         return *this;
       }
 
-      Transform& Rotate(float deg)
+      Transform2D& Rotate(float rad)
       {
-        m_matrix *= Mat3::Rotate(deg);
+        m_matrix *= Mat3::Rotate(rad);
         return *this;
       }
 
-      Transform& RotateR(float rad)
-      {
-        m_matrix *= Mat3::RotateR(rad);
-        return *this;
-      }
-
-      Transform& Shear(float x, float y)
+      Transform2D& Shear(float x, float y)
       {
         m_matrix *= Mat3::Shear(x, y);
         return *this;
       }
 
-      Transform& Shear(Vec2 shear)
+      Transform2D& Shear(const Vec2f& shear)
       {
         m_matrix *= Mat3::Shear(shear);
         return *this;
