@@ -1,6 +1,7 @@
 #include "Mat4.h"
 
 #include <math/MathFunc.h>
+#include <graphics/RenderCommand.h>
 #include <cstring>
 
 #define _0_0 0
@@ -47,6 +48,20 @@ namespace Greet {
     return Mat4(1.0f);
   }
 
+  Mat4 Mat4::OrthographicViewport(float near, float far)
+  {
+    Mat4 result(1.0f);
+
+    result.elements[_0_0] = 2.0f / (RenderCommand::GetViewportWidth());
+    result.elements[_1_1] = 2.0f / (-RenderCommand::GetViewportHeight());
+    result.elements[_2_2] = -2.0f / (far - near);
+    result.elements[_3_0] = -(2 * RenderCommand::GetViewportX() + RenderCommand::GetViewportWidth()) / RenderCommand::GetViewportWidth();
+    result.elements[_3_1] = -(2 * RenderCommand::GetViewportY() + RenderCommand::GetViewportHeight()) / -RenderCommand::GetViewportHeight();
+    result.elements[_3_2] = -(far + near) / (far - near);
+
+    return result;
+  }
+
   Mat4 Mat4::Orthographic(float left, float right, float top, float bottom, float near, float far)
   {
     Mat4 result(1.0f);
@@ -57,6 +72,20 @@ namespace Greet {
     result.elements[_3_0] = -(right + left) / (right - left);
     result.elements[_3_1] = -(top + bottom) / (top - bottom);
     result.elements[_3_2] = -(far + near) / (far - near);
+
+    return result;
+  }
+
+  Mat4 Mat4::PerspectiveViewport(float fov, float near, float far)
+  {
+    Mat4 result(1.0f);
+    float tan2 = 1.0f / tan(Math::ToRadians(fov * 0.5f));
+    result.elements[_0_0] = tan2 / RenderCommand::GetViewportAspect();
+    result.elements[_1_1] = tan2;
+    result.elements[_2_2] = (far + near) / (near - far);
+    result.elements[_3_2] = 2 * (far * near) / (near - far);
+    result.elements[_2_3] = -1;
+    result.elements[_3_3] = 0;
 
     return result;
   }

@@ -78,10 +78,9 @@ namespace vmc
     Layer3D::Update(timeElapsed);
     renderer->Update(timeElapsed);
 
-    Vec3f near, direction;
-    camera->GetScreenToWorldCoordinate(Input::GetMousePos(), &near, &direction);
+    Line line = camera->GetScreenToWorldCoordinate(Input::GetMousePos());
 
-    m_ray = Ray::GetCubeRay(near,direction, GRID_SIZE);
+    m_ray = Ray::GetCubeRay(line.pos, line.dir, GRID_SIZE);
     auto lastIt = m_ray.begin();
     hasSelected = false;
     hasAdjacent = false;

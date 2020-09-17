@@ -26,7 +26,10 @@ namespace Greet {
     }
 
     static Mat4 Identity();
+    static Mat4 OrthographicViewport(float near, float far);
     static Mat4 Orthographic(float left, float right, float top, float bottom, float near, float far);
+
+    static Mat4 PerspectiveViewport(float fov, float near, float far);
     static Mat4 Perspective(float aspect, float fov, float near, float far);
 
     static Mat4 TransformationMatrix(const Vec3f& position, const Vec3f& rotation, const Vec3f& scale);

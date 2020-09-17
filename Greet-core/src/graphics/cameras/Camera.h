@@ -6,6 +6,7 @@
 #include <graphics/RenderCommand.h>
 #include <graphics/Window.h>
 #include <logging/Log.h>
+#include <math/Line.h>
 #include <math/Maths.h>
 
 namespace Greet {
@@ -20,7 +21,7 @@ namespace Greet {
 
     public:
       Camera(float fov, float near, float far) :
-        projectionMatrix{Mat4::Perspective(RenderCommand::GetViewportAspect(), fov, near, far)},
+        projectionMatrix{Mat4::PerspectiveViewport(fov, near, far)},
         fov{fov}, near{near}, far{far}
       {}
 
@@ -42,17 +43,15 @@ namespace Greet {
         return projectionMatrix * (viewMatrix * coordinate);
       }
 
-      void GetScreenToWorldCoordinate(const Vec2f& screenPos, Vec3f* near, Vec3f* direction) const
+      Line GetScreenToWorldCoordinate(const Vec2f& screenPos) const
       {
-        if (near == NULL)
-          return Log::Error("Near vector is NULL");
-        if (direction == NULL)
-          return Log::Error("Direction vector is NULL");
+        Line line;
 
         Mat4 pvInv = ~(projectionMatrix * viewMatrix);
-        *near = pvInv * Vec3f(screenPos.x, screenPos.y, -1.0);
+        line.pos = pvInv * Vec3f(screenPos.x, screenPos.y, -1.0);
         Vec3f far = pvInv * Vec3f(screenPos.x, screenPos.y, 1.0);
-        *direction = (far - *near).Normalize();
+        line.dir = far - line.pos;
+        return line;
       }
   };
 }
