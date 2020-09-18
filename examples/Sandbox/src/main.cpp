@@ -33,7 +33,7 @@ class Core : public App
     EntityModel* sphere;
     EntityModel* tetrahedron;
     std::vector<EntityModel> models;
-    Light* light;
+    Light light{{}, 0x0};
 
     SceneView* sceneView;
 
@@ -68,7 +68,6 @@ class Core : public App
       delete uilayer;
       delete movement;
       delete rotation;
-      delete light;
     }
 
     void Init() override
@@ -92,14 +91,14 @@ class Core : public App
       waterRenderer = new BatchRenderer3D();
 
 
-      modelMaterial = new Material(Shader::FromFile("res/shaders/3dshader.shader"), TextureManager::LoadTexture2D("res/textures/debugtexture.meta"));
-      flatMaterial = new Material(Shader::FromFile("res/shaders/flat3d.shader"));
-      stallMaterial = new Material(Shader::FromFile("res/shaders/3dshader.shader"), TextureManager::LoadTexture2D("res/textures/stall.meta"));
-      modelMaterial->SetSpecularStrength(0.25)->SetSpecularExponent(1)->SetDiffuseStrength(0.25);
+      modelMaterial = new Material(ShaderFactory::Shader3D(), TextureManager::LoadTexture2D("res/textures/debugtexture.meta"));
+      flatMaterial = new Material(Shader::FromFile("res/shaders/flat3d.glsl"));
+      stallMaterial = new Material(ShaderFactory::Shader3D(), TextureManager::LoadTexture2D("res/textures/stall.meta"));
+      modelMaterial->SetSpecularStrength(1.0)->SetSpecularExponent(10)->SetDiffuseStrength(0.5);
 
       {
-        terrainMaterial = new Material(Shader::FromFile("res/shaders/terrain.shader"));
-        waterMaterial = new Material(Shader::FromFile("res/shaders/water.shader"));
+        terrainMaterial = new Material(Shader::FromFile("res/shaders/terrain.glsl"));
+        waterMaterial = new Material(Shader::FromFile("res/shaders/water.glsl"));
         waterMaterial->SetSpecularExponent(50);
         waterMaterial->SetSpecularStrength(0.4);
         waterMaterial->GetShader()->Enable();
@@ -165,14 +164,14 @@ class Core : public App
       //	models.push_back(EntityModel(*modelModelMaterial, vec3(random()*100, random() * 100, random() * 100), vec3(1.0f, 1.0f, 1.0f), vec3(random() * 360, random() * 360, random() * 360)));
       //}
 
-      light = new Light(Vec3f(10, 20, 10), 0xffffffff);
+      light = Light(Vec3f(10, 20, 10), 0xffffffff);
       const Ref<Shader>& modelShader = modelMaterial->GetShader();
       modelShader->Enable();
-      light->SetToUniform(modelShader, "light");
+      light.SetToUniform(modelShader, "Light");
       modelShader->Disable();
       const Ref<Shader>& flatShader = flatMaterial->GetShader();
       flatShader->Enable();
-      light->SetToUniform(flatShader, "light");
+      light.SetToUniform(flatShader, "Light");
       flatShader->Disable();
 
       uilayer = new Layer(new BatchRenderer(ShaderFactory::Shader2D()), Mat3::OrthographicViewport());
@@ -354,7 +353,7 @@ class Core : public App
       while (hue >= 1)
         hue--;
       cursor->m_color = Color(hue, 1, 1, 1.0).ToRGB().AsUInt();
-      sphere->SetPosition(light->position);
+      sphere->SetPosition(light.position);
     }
 
     void OnEvent(Event& event) override
@@ -404,10 +403,10 @@ class Core : public App
           terrainMaterial->SetShader(Shader::FromFile("res/shaders/terrain.shader"));
           flatMaterial->SetShader(Shader::FromFile("res/shaders/flat3d.shader"));
           modelMaterial->GetShader()->Enable();
-          light->SetToUniform(modelMaterial->GetShader(), "light");
+          light.SetToUniform(modelMaterial->GetShader(), "Light");
           modelMaterial->GetShader()->Disable();
           flatMaterial->GetShader()->Enable();
-          light->SetToUniform(flatMaterial->GetShader(), "light");
+          light.SetToUniform(flatMaterial->GetShader(), "Light");
           flatMaterial->GetShader()->Disable();
           //terrainShader->enable();
           //l->setToUniform(terrainShader, "light");

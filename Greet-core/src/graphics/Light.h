@@ -12,13 +12,13 @@ namespace Greet {
       uint color;
 
     public:
-      Light(Vec3f position, uint color) : position(position) , color(color) {}
+      Light(const Vec3f& position, uint color) : position(position) , color(color) {}
 
       void SetToUniform(const Ref<Shader>& shader, const std::string& prefix)
       {
-        shader->SetUniform3f((prefix + "_position").c_str(), position);
-        Vec3 color1 = Vec3(((color & 0xff0000) >> 16) / 255.0f, ((color & 0xff00) >> 8) / 255.0f, (color & 0xff) / 255.0f);
-        shader->SetUniform3f((prefix + "_color").c_str(), color1);
+        shader->SetUniform3f(("u" + prefix + "Position").c_str(), position);
+        Color c{color};
+        shader->SetUniformColor3(("u" + prefix + "Color").c_str(), color);
       }
 
   };

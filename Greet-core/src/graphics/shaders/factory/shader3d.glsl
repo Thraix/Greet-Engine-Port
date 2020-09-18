@@ -2,74 +2,74 @@ R"(
 //vertex
 #version 330 core
 
-layout(location = 0) in vec3 position;
-layout(location = 1) in vec2 texCoord;
-layout(location = 2) in vec4 color;
-layout(location = 3) in vec3 normal;
+layout(location = 0) in vec3 aPosition;
+layout(location = 1) in vec2 aTexCoord;
+layout(location = 2) in vec4 aColor;
+layout(location = 3) in vec3 aNormal;
 
-out vec4 vert_color;
-out vec2 vert_texCoord;
-out vec3 surfaceNormal;
-out vec3 toLightVector;
-out vec3 toCameraVector;
+out vec4 vColor;
+out vec2 vTexCoord;
+out vec3 vSurfaceNormal;
+out vec3 vToLightVector;
+out vec3 vToCameraVector;
 
-uniform mat4 transformationMatrix;
-uniform mat4 projectionMatrix;
-uniform mat4 viewMatrix;
-uniform vec3 light_position = vec3(0.0, 10.0, -10.0);
-uniform vec4 mat_color = vec4(1,1,1,1);
+uniform vec3 uCameraPos;
+uniform mat4 uTransformationMatrix;
+uniform mat4 uProjectionMatrix;
+uniform mat4 uViewMatrix;
+uniform vec3 uLightPosition = vec3(0.0, 10.0, -10.0);
+uniform vec4 uMaterialColor = vec4(1,1,1,1);
 
 void main()
 {
-	vec4 worldPosition = transformationMatrix * vec4(position, 1.0f);
-	vec4 positionRelativeToCamera = viewMatrix * worldPosition;
-	gl_Position = projectionMatrix * positionRelativeToCamera;
-	vert_color = mat_color * vec4(color.b, color.g, color.r, color.a);
+	vec4 worldPosition = uTransformationMatrix * vec4(aPosition, 1.0f);
+	vec4 positionRelativeToCamera = uViewMatrix * worldPosition;
+	gl_Position = uProjectionMatrix * positionRelativeToCamera;
+	vColor = uMaterialColor * vec4(aColor.b, aColor.g, aColor.r, aColor.a);
 
-	vert_texCoord = texCoord;
-	surfaceNormal = mat3(transformationMatrix) * normal;
-	toLightVector = light_position - worldPosition.xyz;
-	toCameraVector = (inverse(viewMatrix) * vec4(0, 0, 0, 1)).xyz - worldPosition.xyz;
+	vTexCoord = aTexCoord;
+	vSurfaceNormal = mat3(uTransformationMatrix) * aNormal;
+	vToLightVector = uLightPosition - worldPosition.xyz;
+	vToCameraVector = uCameraPos - worldPosition.xyz;
 }
 
 //fragment
 #version 330 core
 
-in vec4 vert_color;
-in vec2 vert_texCoord;
-in vec3 surfaceNormal;
-in vec3 toLightVector;
-in vec3 toCameraVector;
+in vec4 vColor;
+in vec2 vTexCoord;
+in vec3 vSurfaceNormal;
+in vec3 vToLightVector;
+in vec3 vToCameraVector;
 
-layout(location = 0) out vec4 out_color;
-layout(location = 1) out vec4 out_brightColor;
+out vec4 fColor;
 
-uniform sampler2D textureSampler;
-uniform vec3 light_color = vec3(1.0f, 1.0f, 1.0f);
-uniform vec3 fogColor;
-uniform float hasTexture = 1.0;
-uniform float specularExponent = 10.0;
-uniform float specularStrength = 1;
-uniform float diffuseStrength = 1;
-uniform float ambient = 0.3;
+uniform sampler2D uTexture;
+uniform vec3 uLightColor = vec3(1.0f, 1.0f, 1.0f);
+uniform vec3 uFogColor;
+uniform float uHasColor = 1.0;
+uniform float uSpecularExponent = 10.0;
+uniform float uSpecularStrength = 1;
+uniform float uDiffuseStrength = 1;
+uniform float uAmbient = 0.3;
 
 void main()
 {
-	out_color = vert_color;
-	if (hasTexture > 0.5)
+	fColor = vColor;
+	if (uHasColor > 0.5)
 	{
-		out_color *= texture(textureSampler, vert_texCoord);
-		if (out_color.a < 0.1)
+		fColor *= texture(uTexture, vTexCoord);
+		if (fColor.a < 0.1)
 			discard;
 	}
-	vec3 unitNormal = normalize(surfaceNormal);
-	vec3 unitLightVector = normalize(toLightVector);
-	vec3 unitVectorToCamera = normalize(toCameraVector);
+	vec3 unitNormal = normalize(vSurfaceNormal);
+	vec3 unitLightVector = normalize(vToLightVector);
+	vec3 unitVectorToCamera = normalize(vToCameraVector);
 	vec3 lightDirection = -unitLightVector;
 
-	float diffuse = diffuseStrength * max(dot(unitNormal, unitLightVector), 0.0);
-	float specular = specularStrength * pow(max(dot(reflect(lightDirection, unitNormal), unitVectorToCamera), 0.0f), specularExponent);
+	float uDiffuse = uDiffuseStrength * max(dot(unitNormal, unitLightVector), 0.0);
+	float uSpecular = uSpecularStrength * pow(max(dot(reflect(lightDirection, unitNormal), unitVectorToCamera), 0.0f), uSpecularExponent);
 
-	out_color *= vec4((ambient + (diffuse + specular) * light_color), 1.0f);
+	fColor *= vec4((uAmbient + (uDiffuse + uSpecular) * uLightColor), 1.0f);
 }
 )"
