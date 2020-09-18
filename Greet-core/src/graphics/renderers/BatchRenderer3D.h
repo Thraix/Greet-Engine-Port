@@ -3,7 +3,6 @@
 #include <map>
 #include <vector>
 #include <graphics/models/EntityModel.h>
-#include <graphics/cameras/Camera.h>
 #include <utils/OBJUtils.h>
 #include <utils/Utils.h>
 #include <graphics/textures/TextureManager.h>
@@ -22,7 +21,7 @@ namespace Greet {
         : Renderer3D(){}
 
       void Submit(EntityModel* model);
-      void Render(Camera* camera) const override;
+      void Render(const Ref<Camera3D>& camera) const override;
       void Update(float timeElapsed) override;
   };
 }

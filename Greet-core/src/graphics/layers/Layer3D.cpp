@@ -2,15 +2,14 @@
 
 namespace Greet {
 
-  Layer3D::Layer3D(Camera* camera, Skybox* skybox)
+  Layer3D::Layer3D(const Ref<Camera3D>& camera, const Ref<Skybox>& skybox)
     : camera{camera}, skybox{skybox}
   {
   }
 
-  Layer3D::Layer3D(Camera* camera)
-    :camera{camera}, skybox{nullptr}
+  Layer3D::Layer3D(const Ref<Camera3D>& camera)
+    : camera{camera}, skybox{nullptr}
   {
-
   }
 
   Layer3D::~Layer3D()
@@ -20,7 +19,7 @@ namespace Greet {
   void Layer3D::PreRender()
   {
     if(skybox)
-      skybox->Render(*camera);
+      skybox->Render(camera);
   }
 
   void Layer3D::Render() const

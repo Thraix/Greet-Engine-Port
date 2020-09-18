@@ -4,6 +4,6 @@
 
 namespace Greet
 {
-  template <class T>
+  template <typename T>
   using Ref = std::shared_ptr<T>;
 }

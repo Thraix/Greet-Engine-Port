@@ -8,8 +8,8 @@ namespace vmc
 
   Grid::Grid()
     : Layer3D(
-        new TPCamera(90, 0.01f, 1000.0f,Vec3f(GRID_SIZE / 2+0.5f, GRID_SIZE / 2 + 0.5f, GRID_SIZE / 2 + 0.5f), 15, 0, 0, 1, 80, -0.8, 0.8f),
-        new Skybox(TextureManager::LoadCubeMap("res/textures/skybox.meta"))),
+        Ref<TPCamera3D>{new TPCamera3D(90, 0.01f, 1000.0f,Vec3f(GRID_SIZE / 2+0.5f, GRID_SIZE / 2 + 0.5f, GRID_SIZE / 2 + 0.5f), 15, 0, 0, 1, 80, -0.8, 0.8f)},
+        Ref<Skybox>{new Skybox(TextureManager::LoadCubeMap("res/textures/skybox.meta"))}),
     toolBox(this), m_color{0xffffffff}
   {
     renderer = new GridRenderer3D();
@@ -123,9 +123,9 @@ namespace vmc
 
     if (renderAxis)
     {
-      const TPCamera& cam = (const TPCamera&)camera;
-      Vec3 pos = cam.GetPosition();
-      float length = cam.GetDistance() * 0.6;
+      Ref<TPCamera3D> cam = std::static_pointer_cast<TPCamera3D>(camera);
+      Vec3 pos = cam->GetPosition();
+      float length = cam->GetDistance() * 0.6;
       renderer->DrawLine(camera, pos, pos + Vec3f(length, 0, 0), Vec4f(1, 0, 0, 1));
       renderer->DrawLine(camera, pos, pos + Vec3f(0, length, 0), Vec4f(0, 1, 0, 1));
       renderer->DrawLine(camera, pos, pos + Vec3f(0, 0, length), Vec4f(0, 0, 1, 1));

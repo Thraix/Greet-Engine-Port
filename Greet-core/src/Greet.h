@@ -43,9 +43,9 @@
 #include <graphics/buffers/Buffer.h>
 #include <graphics/buffers/VertexArray.h>
 #include <graphics/buffers/VertexBuffer.h>
-#include <graphics/cameras/Camera.h>
-#include <graphics/cameras/FPCamera.h>
-#include <graphics/cameras/TPCamera.h>
+#include <graphics/cameras/Camera3D.h>
+#include <graphics/cameras/FPCamera3D.h>
+#include <graphics/cameras/TPCamera3D.h>
 #include <graphics/fonts/Font.h>
 #include <graphics/fonts/FontAtlas.h>
 #include <graphics/fonts/FontContainer.h>

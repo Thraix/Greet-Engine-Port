@@ -3,7 +3,6 @@
 #include <graphics/shaders/Shader.h>
 #include <graphics/shaders/ShaderFactory.h>
 #include <graphics/textures/Texture2D.h>
-#include <graphics/cameras/Camera.h>
 
 namespace Greet {
 
@@ -23,7 +22,7 @@ namespace Greet {
       Material(const Ref<Shader>& shader);
       virtual ~Material();
 
-      void Bind(const Camera* camera) const;
+      void Bind() const;
       void Unbind() const;
       void SetShader(const Ref<Shader>& shader);
       Material* SetSpecularExponent(float specularExponent) { this->specularExponent = specularExponent; return this; }

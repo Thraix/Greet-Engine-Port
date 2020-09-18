@@ -2,12 +2,10 @@
 
 namespace Greet{
 
-  void Renderer3D::BindMatrices(const Ref<Shader>& shader, const Camera* camera, bool shouldBindShader) const
+  void Renderer3D::BindMatrices(const Ref<Shader>& shader, const Ref<Camera3D>& camera, bool shouldBindShader) const
   {
     if(shouldBindShader)
       shader->Enable();
-
-    shader->SetUniformMat4("viewMatrix", camera->GetViewMatrix());
-    shader->SetUniformMat4("projectionMatrix",camera->GetProjectionMatrix());
+    camera->SetShaderUniforms(shader);
   }
 }

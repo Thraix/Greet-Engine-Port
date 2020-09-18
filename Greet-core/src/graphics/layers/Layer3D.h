@@ -8,13 +8,15 @@ namespace Greet {
   {
     protected:
       std::vector<Renderer3D*> renderers;
-      Camera* camera;
-      Skybox* skybox;
+      Ref<Camera3D> camera;
+      Ref<Skybox> skybox;
 
     public:
-      Layer3D(Camera* camera, Skybox* skybox);
-      Layer3D(Camera* camera);
+      Layer3D(const Ref<Camera3D>& camera, const Ref<Skybox>& skybox);
+      Layer3D(const Ref<Camera3D>& camera);
+
       virtual ~Layer3D();
+
       virtual void PreRender() override;
       virtual void Render() const override;
       virtual void PostRender() override;
@@ -27,5 +29,8 @@ namespace Greet {
 
       Vec3f GetWorldToScreenCoordinate(const Vec3f& coordinate) const;
       Line GetScreenToWorldCoordinate(const Vec2f& screenPos) const;
+
+      Ref<Camera3D>& GetCamera3D() { return camera; }
+      const Ref<Camera3D>& GetCamera3D() const { return camera; }
   };
 }

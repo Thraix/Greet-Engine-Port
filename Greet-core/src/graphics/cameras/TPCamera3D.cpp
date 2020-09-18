@@ -1,4 +1,4 @@
-#include "TPCamera.h"
+#include "TPCamera3D.h"
 
 #include <graphics/Window.h>
 #include <event/MouseEvent.h>
@@ -6,24 +6,24 @@
 
 namespace Greet {
 
-  TPCamera::TPCamera(float fov, float near, float far)
-    : TPCamera(fov, near, far, Vec3f(0,0,0), 1, 0, 0)
+  TPCamera3D::TPCamera3D(float fov, float near, float far)
+    : TPCamera3D(fov, near, far, Vec3f(0,0,0), 1, 0, 0)
   {
   }
 
-  TPCamera::TPCamera(float fov, float near, float far, const Vec3f& position, float distance, float height, float rotation)
-    : TPCamera(fov, near, far, position, distance, height, rotation, 1, 100, -1,1)
+  TPCamera3D::TPCamera3D(float fov, float near, float far, const Vec3f& position, float distance, float height, float rotation)
+    : TPCamera3D(fov, near, far, position, distance, height, rotation, 1, 100, -1,1)
   {
 
   }
 
-  TPCamera::TPCamera(float fov, float near, float far, const Vec3f& position, float distance, float height, float rotation, float distanceMin, float distanceMax, float heightMin, float heightMax)
-    : TPCamera(fov, near, far, position, distance, height, rotation, distanceMin, distanceMax, heightMin, heightMax, 10, 10, 10)
+  TPCamera3D::TPCamera3D(float fov, float near, float far, const Vec3f& position, float distance, float height, float rotation, float distanceMin, float distanceMax, float heightMin, float heightMax)
+    : TPCamera3D(fov, near, far, position, distance, height, rotation, distanceMin, distanceMax, heightMin, heightMax, 10, 10, 10)
   {
   }
 
-  TPCamera::TPCamera(float fov, float near, float far, const Vec3f& position, float distance, float height, float rotation, float distanceMin, float distanceMax, float heightMin, float heightMax, float rotationSpeed, float heightSpeed, float distanceSpeed)
-    : Camera(fov, near, far), m_position(position), m_distance(distance), m_height(height), m_rotation(rotation), m_rotationSpeed(rotationSpeed), m_heightSpeed(heightSpeed), m_distanceSpeed(distanceSpeed)
+  TPCamera3D::TPCamera3D(float fov, float near, float far, const Vec3f& position, float distance, float height, float rotation, float distanceMin, float distanceMax, float heightMin, float heightMax, float rotationSpeed, float heightSpeed, float distanceSpeed)
+    : Camera3D(fov, near, far), m_position(position), m_distance(distance), m_height(height), m_rotation(rotation), m_rotationSpeed(rotationSpeed), m_heightSpeed(heightSpeed), m_distanceSpeed(distanceSpeed)
   {
     m_rotationWanted = m_rotation;
     m_distanceWanted = m_distance;
@@ -31,14 +31,14 @@ namespace Greet {
     m_positionWanted = m_position;
     SetDistanceClamp(distanceMin, distanceMax);
     SetHeightClamp(heightMin, heightMax);
-    CalculateInformation();
+    UpdateViewMatrix();
   }
 
-  TPCamera::~TPCamera()
+  TPCamera3D::~TPCamera3D()
   {
   }
 
-  void TPCamera::Update(float timeElapsed)
+  void TPCamera3D::Update(float timeElapsed)
   {
     float factor1 = (timeElapsed * 10.0f); // 0.33 ish
     float factor2 = (timeElapsed * 30.0f);
@@ -46,15 +46,15 @@ namespace Greet {
     m_position += (m_positionWanted - m_position) * factor2;
     m_distance += (m_distanceWanted - m_distance) * factor1;
     m_height += (m_heightWanted - m_height) * factor2;
-    CalculateInformation();
+    UpdateViewMatrix();
   }
 
-  void TPCamera::SetPosition(const Vec3f& pos)
+  void TPCamera3D::SetPosition(const Vec3f& pos)
   {
     m_positionWanted = pos;
   }
 
-  void TPCamera::SetHeight(float height)
+  void TPCamera3D::SetHeight(float height)
   {
     m_heightWanted = height;
     Math::Clamp(&m_heightWanted, m_heightMin, m_heightMax);
@@ -64,13 +64,13 @@ namespace Greet {
     }
   }
 
-  void TPCamera::SetRotation(float rotation)
+  void TPCamera3D::SetRotation(float rotation)
   {
     //m_rotation = rotation;
     m_rotationWanted = rotation; // smooth transition
   }
 
-  void TPCamera::SetDistance(float distance)
+  void TPCamera3D::SetDistance(float distance)
   {
     m_distanceWanted = distance;
     Math::Clamp(&m_distanceWanted, m_distanceMin, m_distanceMax);
@@ -80,7 +80,7 @@ namespace Greet {
     }
   }
 
-  void TPCamera::SetDistanceClamp(float min, float max)
+  void TPCamera3D::SetDistanceClamp(float min, float max)
   {
     if (min > max)
     {
@@ -101,7 +101,7 @@ namespace Greet {
     }
   }
 
-  void TPCamera::SetHeightClamp(float min, float max)
+  void TPCamera3D::SetHeightClamp(float min, float max)
   {
     if (min > max)
     {
@@ -124,17 +124,12 @@ namespace Greet {
     }
   }
 
-  void TPCamera::CalculateViewMatrix()
+  void TPCamera3D::UpdateViewMatrix()
   {
-    viewMatrix = Mat4::TPCamera(m_position, m_distance, m_height, m_rotation);
+    SetViewMatrix(Mat4::TPCamera(m_position, m_distance, m_height, m_rotation));
   }
 
-  void TPCamera::CalculateInformation()
-  {
-    CalculateViewMatrix();
-  }
-
-  void TPCamera::Move(const Vec2f& delta) {
+  void TPCamera3D::Move(const Vec2f& delta) {
     if (m_mouse3) {
       Rotate(delta);
     }
@@ -150,21 +145,21 @@ namespace Greet {
     }
   }
 
-  void TPCamera::Rotate(const Vec2f& delta)
+  void TPCamera3D::Rotate(const Vec2f& delta)
   {
     m_heightWanted -= delta.y * m_heightSpeed;
     Math::Clamp(&m_heightWanted, m_heightMin, m_heightMax);
     m_rotationWanted += m_rotationSpeed * delta.x;
   }
 
-  void TPCamera::Zoom(float delta)
+  void TPCamera3D::Zoom(float delta)
   {
     m_distanceWanted -= delta;
     Math::Clamp(&m_distanceWanted, m_distanceMin, m_distanceMax);
   }
 
 
-  void TPCamera::OnEvent(Event& event)
+  void TPCamera3D::OnEvent(Event& event)
   {
     if(EVENT_IS_TYPE(event, EventType::MOUSE_PRESS))
     {

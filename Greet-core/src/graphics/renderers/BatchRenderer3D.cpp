@@ -20,17 +20,17 @@ namespace Greet {
       (*it).second.push_back(model);
   }
 
-  void BatchRenderer3D::Render(Camera* camera) const
+  void BatchRenderer3D::Render(const Ref<Camera3D>& camera) const
   {
     for (auto&& entityModels : m_map)
     {
-      entityModels.first->Bind(camera);
-      BindMatrices(entityModels.first->GetShader(),camera);
+      entityModels.first->Bind();
+      camera->SetShaderUniforms(entityModels.first->GetShader());
       for (auto&& entityModel : entityModels.second)
       {
-        entityModel->GetMaterial()->GetShader()->SetUniformMat4("transformationMatrix", entityModel->GetTransformationMatrix());
+        entityModel->GetMaterial()->GetShader()->SetUniformMat4("uTransformationMatrix", entityModel->GetTransformationMatrix());
         entityModel->PreRender();
-        entityModel->Render(this, camera);
+        entityModel->Render();
         entityModel->PostRender();
       }
       entityModels.first->Unbind();

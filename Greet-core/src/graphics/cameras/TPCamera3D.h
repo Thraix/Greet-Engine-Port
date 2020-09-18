@@ -1,12 +1,12 @@
 #pragma once
 
-#include <graphics/cameras/Camera.h>
+#include <graphics/cameras/Camera3D.h>
 #include <math/Maths.h>
 #include <event/EventDispatcher.h>
 
 namespace Greet {
 
-  class TPCamera : public Camera
+  class TPCamera3D : public Camera3D
   {
     private:
       bool m_mouse1 = false;
@@ -35,14 +35,13 @@ namespace Greet {
       float m_rotationWanted;
 
     private:
-      void CalculateViewMatrix();
-      void CalculateInformation();
+      void UpdateViewMatrix();
     public:
-      TPCamera(float fov, float near, float far);
-      TPCamera(float fov, float near, float far, const Vec3f& position, float distance, float height, float rotation);
-      TPCamera(float fov, float near, float far, const Vec3f& position, float distance, float height, float rotation, float distanceMin, float distanceMax, float heightMin, float heightMax);
-      TPCamera(float fov, float near, float far, const Vec3f& position, float distance, float height, float rotation, float distanceMin, float distanceMax, float heightMin, float heightMax, float rotationSpeed, float heightSpeed, float distanceSpeed);
-      virtual ~TPCamera();
+      TPCamera3D(float fov, float near, float far);
+      TPCamera3D(float fov, float near, float far, const Vec3f& position, float distance, float height, float rotation);
+      TPCamera3D(float fov, float near, float far, const Vec3f& position, float distance, float height, float rotation, float distanceMin, float distanceMax, float heightMin, float heightMax);
+      TPCamera3D(float fov, float near, float far, const Vec3f& position, float distance, float height, float rotation, float distanceMin, float distanceMax, float heightMin, float heightMax, float rotationSpeed, float heightSpeed, float distanceSpeed);
+      virtual ~TPCamera3D();
 
       void Update(float timeElapsed) override;
 

@@ -23,11 +23,11 @@ namespace Greet {
       EntityModel(Mesh* mesh, Material* material);
 
       virtual void PreRender() const;
-      virtual void Render(const Renderer3D* renderer, const Camera* camera) const;
+      virtual void Render() const;
       virtual void PostRender() const;
 
-      virtual void BindShader(const Renderer3D* renderer, const Camera* camera) const;
-      virtual void UnbindShader(const Renderer3D* renderer, const Camera* camera) const;
+      virtual void BindShader() const;
+      virtual void UnbindShader() const;
       virtual void BindTransformation() const;
 
       Material* GetMaterial() const { return material; }

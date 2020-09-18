@@ -21,15 +21,15 @@ namespace Greet {
     UpdateTransformation();
   }
 
-  void EntityModel::BindShader(const Renderer3D* renderer, const Camera* camera) const
+  void EntityModel::BindShader() const
   {
-    material->Bind(camera);
+    material->Bind();
     BindTransformation();
   }
 
   void EntityModel::BindTransformation() const
   {
-    material->GetShader()->SetUniformMat4("transformationMatrix", m_transformationMatrix);
+    material->GetShader()->SetUniformMat4("uTransformationMatrix", m_transformationMatrix);
 
   }
   void EntityModel::PreRender() const
@@ -37,7 +37,7 @@ namespace Greet {
     mesh->Bind();
   }
 
-  void EntityModel::Render(const Renderer3D* renderer, const Camera* camera) const
+  void EntityModel::Render() const
   {
     mesh->Render();
   }
@@ -47,7 +47,7 @@ namespace Greet {
     mesh->Unbind();
   }
 
-  void EntityModel::UnbindShader(const Renderer3D* renderer, const Camera* camera) const
+  void EntityModel::UnbindShader() const
   {
     GetMaterial()->Unbind();
   }

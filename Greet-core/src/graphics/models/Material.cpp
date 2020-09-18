@@ -21,15 +21,13 @@ namespace Greet {
   {
   }
 
-  void Material::Bind(const Camera* camera) const
+  void Material::Bind() const
   {
     m_shader->Enable();
-    m_shader->SetUniform1f("specularStrength", specularStrength);
-    m_shader->SetUniform1f("specularExponent", specularExponent);
-    m_shader->SetUniform1f("diffuseStrength", diffuseStrength);
-    m_shader->SetUniformColor4("mat_color", color);
-    m_shader->SetUniformMat4("projectionMatrix", camera->GetProjectionMatrix());
-    m_shader->SetUniformMat4("viewMatrix", camera->GetViewMatrix());
+    m_shader->SetUniform1f("uSpecularStrength", specularStrength);
+    m_shader->SetUniform1f("uSpecularExponent", specularExponent);
+    m_shader->SetUniform1f("uDiffuseStrength", diffuseStrength);
+    m_shader->SetUniformColor4("uMaterialColor", color);
     if(m_texture)
       m_texture->Enable();
   }
@@ -50,7 +48,7 @@ namespace Greet {
   void Material::UpdateTexture()
   {
     m_shader->Enable();
-    m_shader->SetUniformBoolean("hasTexture", m_texture.get() != nullptr);
+    m_shader->SetUniformBoolean("uHasTexture", m_texture.get() != nullptr);
     m_shader->Disable();
   }
 }

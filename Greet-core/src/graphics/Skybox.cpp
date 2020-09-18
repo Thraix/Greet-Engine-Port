@@ -24,12 +24,11 @@ namespace Greet {
     delete m_mesh;
   }
 
-  void Skybox::Render(const Mat4& projectionMatrix, const Mat4& viewMatrix) const
+  void Skybox::Render(const Ref<Camera3D>& camera) const
   {
     RenderCommand::EnableDepthTest(false);
     m_shader->Enable();
-    m_shader->SetUniformMat4("projectionMatrix", projectionMatrix);
-    m_shader->SetUniformMat4("viewMatrix", viewMatrix);
+    camera->SetShaderUniforms(m_shader);
     m_map->Enable(0);
     m_mesh->Bind();
     m_mesh->Render();
@@ -37,10 +36,5 @@ namespace Greet {
     m_map->Disable();
     m_shader->Disable();
     RenderCommand::ResetDepthTest();
-  }
-
-  void Skybox::Render(const Camera& camera) const
-  {
-    Render(camera.GetProjectionMatrix(), camera.GetViewMatrix());
   }
 }

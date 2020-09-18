@@ -5,13 +5,12 @@ layout(location = 0) in vec3 position;
 
 out vec3 vert_texCoord;
 
-uniform mat4 transformationMatrix;
-uniform mat4 projectionMatrix;
-uniform mat4 viewMatrix;
+uniform mat4 uProjectionMatix;
+uniform mat4 uViewMatix;
 
 void main()
 {
-	gl_Position = (projectionMatrix * viewMatrix *  vec4(position, 0.0f));
+	gl_Position = (uProjectionMatix * uViewMatix *  vec4(position, 0.0f));
 	vert_texCoord = position;
 }
 

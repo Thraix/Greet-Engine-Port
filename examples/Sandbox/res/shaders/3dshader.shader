@@ -13,9 +13,11 @@ out vec3 toLightVector;
 out vec3 toCameraVector;
 out float visibility;
 
-uniform mat4 transformationMatrix;
-uniform mat4 projectionMatrix;
-uniform mat4 viewMatrix;
+uniform mat4 uTransformationMatrix;
+uniform mat4 uProjectionMatrix;
+uniform mat4 uViewMatrix;
+uniform mat4 uInvPVMatrix;
+uniform vec3 uCameraPos;
 uniform vec3 light_position = vec3(0.0, 0.0, -10.0);
 uniform vec4 mat_color = vec4(1,1,1,1);
 
@@ -24,15 +26,15 @@ const float gradient = 1.5;
 
 void main()
 {
-	vec4 worldPosition = transformationMatrix * vec4(position, 1.0f);
-	vec4 positionRelativeToCamera = viewMatrix * worldPosition;
-	gl_Position = projectionMatrix * positionRelativeToCamera;
+	vec4 worldPosition = uTransformationMatrix * vec4(position, 1.0f);
+	vec4 positionRelativeToCamera = uViewMatrix * worldPosition;
+	gl_Position = uProjectionMatrix * positionRelativeToCamera;
 	vert_color = mat_color * vec4(color.b, color.g, color.r, color.a);
 
 	vert_texCoord = texCoord;
-	surfaceNormal = mat3(transformationMatrix) * normal;
+	surfaceNormal = mat3(uTransformationMatrix) * normal;
 	toLightVector = light_position - worldPosition.xyz;
-	toCameraVector = (inverse(viewMatrix) * vec4(0, 0, 0, 1)).xyz - worldPosition.xyz;
+	toCameraVector = uCameraPos - worldPosition.xyz;
 
 	float distance = length(positionRelativeToCamera.xyz);
 	visibility = exp(-pow((distance*density), gradient));
@@ -80,4 +82,5 @@ void main()
 
 	out_color *= vec4((ambient + (diffuse + specular) * light_color), 1.0f);
 	out_color = mix(vec4(fogColor.xyz, 1.0), vec4(out_color.rgb, 1.0), visibility);
+  out_color = vec4(specular, specular, specular, 1.0f);
 }

@@ -40,8 +40,6 @@ class Core : public App
 
     float progressFloat;
 
-    TPCamera* camera;
-    Layer* scene3d;
     Layer* uilayer;
     Layer3D* layer3d;
     Button* button;
@@ -87,10 +85,9 @@ class Core : public App
       Frame* frame = FrameFactory::GetFrame("res/guis/header.xml");
       guiScene->AddFrameQueued(frame);
 
-      //camera = new TPCamera(vec3(-3.5, -7.8, 5.5), 18, 0.66, 38.5, 15, 80, 0, 0.8f); // Profile shot
-      camera = new TPCamera(90, 0.01f,1000.0f, Vec3f(0, 0, 0), 15, 0, 0, 0, 80, -0.8f, 0.8f);
+      //camera = new TPCamera3D(vec3(-3.5, -7.8, 5.5), 18, 0.66, 38.5, 15, 80, 0, 0.8f); // Profile shot
 
-      Skybox* skybox = new Skybox(TextureManager::LoadCubeMap("res/textures/skybox.meta"));
+      Ref<Skybox> skybox{new Skybox(TextureManager::LoadCubeMap("res/textures/skybox.meta"))};
       renderer3d = new BatchRenderer3D();
       waterRenderer = new BatchRenderer3D();
 
@@ -106,7 +103,7 @@ class Core : public App
         waterMaterial->SetSpecularExponent(50);
         waterMaterial->SetSpecularStrength(0.4);
         waterMaterial->GetShader()->Enable();
-        waterMaterial->GetShader()->SetUniform1f("waterLevel",0.45f * 20.0f);
+        waterMaterial->GetShader()->SetUniform1f("uWaterLevel", 0.45f * 20.0f);
         waterMaterial->GetShader()->Disable();
 
         terrainMaterial->SetSpecularStrength(0.5f);
@@ -116,7 +113,7 @@ class Core : public App
         int gridLength = 99;
 #if 1
         std::vector<float> noise = Noise::GenNoise(gridWidth+1, gridWidth + 1,5,8, 8,0.5f);
-        MeshData gridMesh = MeshFactory::GridLowPoly(Vec2i{gridWidth, gridLength}, noise, {0, 0, 0}, Vec3f{gridWidth+1, 1.0f, gridLength+1});
+        MeshData gridMesh = MeshFactory::GridLowPoly(Vec2i{gridWidth, gridLength}, noise, {0, 0, 0}, Vec3f{gridWidth+1.0f, 1.0f, gridLength+1.0f});
         RecalcGrid(gridMesh, gridWidth, gridLength);
         terrain = new EntityModel(new Mesh(gridMesh), terrainMaterial, Vec3f(0, -15, 0), Vec3f(1.0f, 1.0f, 1.0f), Vec3f(0.0f, 0.0f, 0.0f));
         gridMesh.RemoveAttribute(MESH_NORMALS_LOCATION);
@@ -203,6 +200,8 @@ class Core : public App
       uint pos = 0;
       //		Log::Info(JSONLoader::isNumber("0.1234s",pos));
       GlobalSceneManager::GetSceneManager().Add2DScene(guiScene, "guiScene");
+
+      Ref<TPCamera3D> camera{new TPCamera3D{90, 0.01f,1000.0f, Vec3f(0, 0, 0), 15, 0, 0, 0, 80, -0.8f, 0.8f}};
       layer3d = new Layer3D(camera, skybox);
       layer3d->AddRenderer(renderer3d);
       layer3d->AddRenderer(waterRenderer);
@@ -345,7 +344,7 @@ class Core : public App
     {
       waterTime += elapsedTime;
       waterMaterial->GetShader()->Enable();
-      waterMaterial->GetShader()->SetUniform1f("time", waterTime);
+      waterMaterial->GetShader()->SetUniform1f("uTime", waterTime);
       waterMaterial->GetShader()->Disable();
 
       progressFloat++;
@@ -414,6 +413,8 @@ class Core : public App
           //l->setToUniform(terrainShader, "light");
           //terrainShader->disable();
         }
+
+        Ref<TPCamera3D> camera = std::static_pointer_cast<TPCamera3D>(layer3d->GetCamera3D());
         if (e.GetButton() == GLFW_KEY_F1)
         {
           Log::Info("pos=", camera->GetPosition(), " height=", camera->GetHeight(), " distance=", camera->GetDistance(), ", rotation=", camera->GetRotation());

@@ -23,6 +23,7 @@ namespace Greet
       float GetY() const { return pos.h; }
       float GetWidth() const { return size.w; }
       float GetHeight() const { return size.h; }
+      float GetAspect() const { return size.w / size.h; }
       const Vec2f& GetPosition() const { return pos; }
       const Vec2f& GetSize() const { return size; }
 
