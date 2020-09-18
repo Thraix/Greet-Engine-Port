@@ -17,6 +17,13 @@
 #include <drivers/DriverListener.h>
 #include <drivers/LinearDriver.h>
 #include <drivers/RectDriver.h>
+#include <ecs/ComponentPool.h>
+#include <ecs/Config.h>
+#include <ecs/ECSComponents.h>
+#include <ecs/ECSManager.h>
+#include <ecs/Entity.h>
+#include <ecs/EntityContainer.h>
+#include <ecs/EntitySet.h>
 #include <event/Event.h>
 #include <event/EventDispatcher.h>
 #include <event/JoystickEvent.h>

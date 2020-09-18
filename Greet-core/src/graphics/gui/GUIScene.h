@@ -22,14 +22,14 @@ namespace Greet {
       Mat3 projectionMatrix;
       std::list<Frame*> frames;
       Component* focused;
-      GUIRenderer* renderer;
+      Ref<GUIRenderer> renderer;
 
       std::queue<Frame*> addQueue;
       std::queue<Frame*> removeQueue;
       Component* focusQueue;
 
     public:
-      GUIScene(GUIRenderer* renderer);
+      GUIScene();
 
       void OnEvent(Event& event);
       void OnMousePressEventHandler(MousePressEvent& event);

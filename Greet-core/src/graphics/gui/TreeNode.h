@@ -67,6 +67,7 @@ namespace Greet
       bool IsRoot() const { return parent == nullptr; }
       bool IsOpen() const { return open && !IsLeaf(); }
       const std::string& GetName() const { return name; }
+      TreeNode* GetParent() const { return parent; }
 
       void ToggleOpen(TreeView& view);
       void SetHovered(bool hover, const TreeView& view, bool hoverFlowController);

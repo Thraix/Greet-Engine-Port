@@ -1,6 +1,4 @@
-**/bin/*.a
-**/bin/*.so*
-**/bin/intermediates/*
+**/bin/*
 **screenshot*.png
 *.logging
 *.swp

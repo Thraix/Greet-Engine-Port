@@ -4,18 +4,6 @@
 #include <logging/LogLevel.h>
 #include <string.h>
 
-#define __FILENAME__ (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)
-#if _DEBUG
-#define ASSERT(x,...) \
-if(!(x)) \
-{ \
-  Greet::Log::LogAt(LogLevel::Error(),"[ASSERT]","[",__FILENAME__, "::", __func__,":", __LINE__, "] " __VA_ARGS__);\
-  abort();\
-}
-#else
-#define ASSERT(x,...)
-#endif
-
 namespace Greet {
   /*
      Singleton class for logging
@@ -89,3 +77,15 @@ namespace Greet {
       }
   };
 }
+
+#define __FILENAME__ (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)
+#if _DEBUG
+#define ASSERT(x,...) \
+if(!(x)) \
+{ \
+  Greet::Log::LogAt(Greet::LogLevel::Error(),"[ASSERT]","[",__FILENAME__, "::", __func__,":", __LINE__, "] " __VA_ARGS__);\
+  abort();\
+}
+#else
+#define ASSERT(x,...)
+#endif
