@@ -11,19 +11,19 @@ namespace Greet {
       SIDE_LENGTH, INSCRIBED_RADIUS, CIRCUMSCRIBED_RADIUS
     };
 
-    static Vec3<float> CalculateNormal(const Vec3<float>& p1, const Vec3<float>& p2, const Vec3<float>& p3);
-    static void CalculateNormals(const Pointer<Vec3<float>>& vertices, const Pointer<uint>& indices, Pointer<Vec3<float>>& normals);
-    static Pointer<Vec3<float>> CalculateNormals(const Pointer<Vec3<float>> vertices, const Pointer<uint>& indices);
-    static MeshData Polygon(uint count, float size, PolygonSizeFormat format);
-    static MeshData Quad(float x, float y, float z, float width, float length);
-    static MeshData Cube(float x, float y, float z, float width, float height, float length);
-    // This Cube generator works better for voxel rendering since the normals work better.
-    static MeshData Cube2(float x, float y, float z, float width, float height, float length);
-    static MeshData Tetrahedron(float x, float y, float z, float size);
-    static MeshData Grid(float x, float y, float z, float width, float length, uint gridWidth, uint gridLength, const Pointer<float>& heightMap, float height);
+    static Vec3f CalculateNormal(const Vec3f& p1, const Vec3f& p2, const Vec3f& p3);
+    static void CalculateNormals(const Pointer<Vec3f>& vertices, const Pointer<uint>& indices, Pointer<Vec3f>& normals);
+    static Pointer<Vec3f> CalculateNormals(const Pointer<Vec3f> vertices, const Pointer<uint>& indices);
+
+    static MeshData Polygon(uint count, PolygonSizeFormat format, const Vec3f& pos = {0, 0, 0}, float size = 1);
+
+    static MeshData Plane(const Vec3f& pos = {0, 0, 0}, const Vec2f& size = {1, 1});
+    static MeshData Cube(const Vec3f& pos = {0, 0, 0}, const Vec3f& size = {1, 1, 1});
+    static MeshData Tetrahedron(const Vec3f& pos = {0, 0, 0}, float size = 1);
+    static MeshData Grid(const Vec2i& gridSize, const Vec3f& pos = {0, 0, 0}, const Vec2f& size = {1, 1});
+    static MeshData Grid(const Vec2i& gridSize, const Pointer<float>& heightMap, const Vec3f& pos = {0, 0, 0}, const Vec3f& size = {1, 1, 1});
+    static MeshData GridLowPoly(const Vec2i& gridSize, const Pointer<float>& heightMap, const Vec3f& pos = {0, 0, 0}, const Vec3f& size = {1, 1, 1});
     static uint IndexGrid(uint x, uint z, uint gridWidth, uint gridLength);
-    static MeshData LowPolyGrid(float x, float y, float z, float width, float length, uint gridWidth, uint gridLength, const Pointer<float>& heightMap, float height);
-    static MeshData Grid(float x, float y, float z, float width, float length, uint gridWidth, uint gridLength);
-    static MeshData Sphere(const Vec3<float>& position, float radius, uint latitudes, uint longitudes);
+    static MeshData Sphere(uint latitudes = 20, uint longitudes = 20, const Vec3f& position = {0, 0, 0}, float radius = 1);
   };
 }

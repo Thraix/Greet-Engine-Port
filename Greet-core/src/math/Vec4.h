@@ -5,69 +5,222 @@
 #endif
 
 #include <iostream>
+#include <math.h>
+#include <logging/Log.h>
 
 namespace Greet{
 
+  template <typename T>
   struct Vec4
   {
     union
     {
-      float vals[4];
+      T vals[4];
       struct {
-        float x, y, z, w;
+        T x, y, z, w;
       };
       struct {
-        float r, g, b, a;
+        T r, g, b, a;
       };
       struct {
-        float h, s, v, hsv_a;
+        T h, s, v, hsv_a;
       };
       struct {
-        float top, left, bottom, right;
+        T top, left, bottom, right;
       };
     };
-    Vec4();
-    //Vec4(const Vec4& copy);
-    Vec4(float f);
-    Vec4(float x, float y, float z, float w);
+    Vec4()
+      : x{0}, y{0}, z{0}, w{0}
+    {}
 
-    float Length() const;
-    float LengthSQ() const;
+    Vec4(const T& f)
+      : x{f}, y{f}, z{f}, w{f}
+    {}
 
-    Vec4& Add(const Vec4& other);
-    Vec4& Subtract(const Vec4& other);
-    Vec4& Multiply(const Vec4& other);
-    Vec4& Divide(const Vec4& other);
+    Vec4(const T& x, const T& y, const T& z, const T& w)
+      : x{x}, y{y}, z{z}, w{w}
+    {}
 
-    Vec4& Add(const float other);
-    Vec4& Subtract(const float other);
-    Vec4& Multiply(const float other);
-    Vec4& Divide(const float other);
+    template <typename S>
+    explicit Vec4(const Vec4<S>& v)
+      : x{(S)v.x}, y{(S)v.y}, z{(S)v.z}, w{(S)v.w}
+    {}
 
-    bool Compare(const Vec4& other);
+    T Length() const
+    {
+      return sqrt(x*x + y*y + z*z+ w*w);
+    }
 
-    friend Vec4 operator+(const Vec4& first, const Vec4 &second);
-    friend Vec4 operator-(const Vec4& first, const Vec4 &second);
-    friend Vec4 operator*(const Vec4& first, const Vec4 &second);
-    friend Vec4 operator/(const Vec4& first, const Vec4 &second);
+    T LengthSQ() const
+    {
+      return x*x + y*y + z*z+ w*w;
+    }
 
-    friend Vec4 operator+(const Vec4& first, const float c);
-    friend Vec4 operator-(const Vec4& first, const float c);
-    friend Vec4 operator*(const Vec4& first, const float c);
-    friend Vec4 operator/(const Vec4& first, const float c);
+    Vec4& Add(const Vec4& other)
+    {
+      x += other.x;
+      y += other.y;
+      z += other.z;
+      w += other.w;
+      return *this;
+    }
 
-    float& operator[](uint i);
-    const float& operator[](uint i) const;
+    Vec4& Subtract(const Vec4& other)
+    {
+      x -= other.x;
+      y -= other.y;
+      z -= other.z;
+      w -= other.w;
+      return *this;
+    }
 
-    Vec4& operator+=(const Vec4 &other);
-    Vec4& operator-=(const Vec4 &other);
-    Vec4& operator*=(const Vec4 &other);
-    Vec4& operator/=(const Vec4 &other);
+    Vec4& Multiply(const Vec4& other)
+    {
+      x *= other.x;
+      y *= other.y;
+      z *= other.z;
+      w *= other.w;
+      return *this;
+    }
 
-    bool operator!=(const Vec4 &second);
-    bool operator==(const Vec4 &second);
+    Vec4& Divide(const Vec4& other)
+    {
+      x /= other.x;
+      y /= other.y;
+      z /= other.z;
+      w /= other.w;
+      return *this;
+    }
 
-    friend std::ostream& operator<<(std::ostream& stream, const Vec4& vec);
+    Vec4& Add(const T& c)
+    {
+      x += c;
+      y += c;
+      z += c;
+      w += c;
+      return *this;
+    }
 
+    Vec4& Subtract(const T& c)
+    {
+      x -= c;
+      y -= c;
+      z -= c;
+      w -= c;
+      return *this;
+    }
+
+    Vec4& Multiply(const T& c)
+    {
+      x *= c;
+      y *= c;
+      z *= c;
+      w *= c;
+      return *this;
+    }
+
+    Vec4& Divide(const T& c)
+    {
+      x /= c;
+      y /= c;
+      z /= c;
+      w /= c;
+      return *this;
+    }
+
+    bool Compare(const Vec4& other)
+    {
+      return x == other.x& & y == other.y& & z == other.z& & w == other.w;
+    }
+
+    friend Vec4 operator+(const Vec4& first, const Vec4& second)
+    {
+      return Vec4(first).Add(second);
+    }
+
+    friend Vec4 operator-(const Vec4& first, const Vec4& second)
+    {
+      return Vec4(first).Subtract(second);
+    }
+
+    friend Vec4 operator*(const Vec4& first, const Vec4& second)
+    {
+      return Vec4(first).Multiply(second);
+    }
+
+    friend Vec4 operator/(const Vec4& first, const Vec4& second)
+    {
+      return Vec4(first).Divide(second);
+    }
+
+    friend Vec4 operator+(const Vec4& first, const T& c)
+    {
+      return Vec4(first).Add(c);
+    }
+
+    friend Vec4 operator-(const Vec4& first, const T& c)
+    {
+      return Vec4(first).Subtract(c);
+    }
+
+    friend Vec4 operator*(const Vec4&  first, const T& c)
+    {
+      return Vec4(first).Multiply(c);
+    }
+
+    friend Vec4 operator/(const Vec4& first, const T& c)
+    {
+      return Vec4(first).Divide(c);
+    }
+
+    T& operator[](uint i)
+    {
+      ASSERT(i < 4, "Index out of bound");
+      return *((&x)+i);
+    }
+
+    const T& operator[](uint i) const
+    {
+      ASSERT(i < 4, "Index out of bound");
+      return *((&x)+i);
+    }
+
+    Vec4& operator+=(const Vec4& other)
+    {
+      return Add(other);
+    }
+
+    Vec4& operator-=(const Vec4& other)
+    {
+      return Subtract(other);
+    }
+
+    Vec4& operator*=(const Vec4& other)
+    {
+      return Multiply(other);
+    }
+
+    Vec4& operator/=(const Vec4& other)
+    {
+      return Divide(other);
+    }
+
+    bool operator==(const Vec4& other)
+    {
+      return Compare(other);
+    }
+
+    bool operator!=(const Vec4& other)
+    {
+      return !Compare(other);
+    }
+
+    friend std::ostream& operator<<(std::ostream& stream, const Vec4& vec)
+    {
+      return stream << "(" << vec.x << ", " << vec.y << ", " << vec.z << ", " << vec.w << ")";
+    }
   };
+
+  typedef Vec4<float> Vec4f;
+  typedef Vec4<int> Vec4i;
 }

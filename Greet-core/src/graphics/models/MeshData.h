@@ -17,11 +17,11 @@ namespace Greet {
   {
     friend class Mesh;
     private:
-      Pointer<Vec3<float>> m_vertices;
+      Pointer<Vec3f> m_vertices;
       Pointer<uint> m_indices;
       std::vector<std::pair<BufferAttribute, Pointer<char>>> m_data;
     public:
-      MeshData(const Pointer<Vec3<float>>& vertices, const Pointer<uint>& indices);
+      MeshData(const Pointer<Vec3f>& vertices, const Pointer<uint>& indices);
       ~MeshData() {}
 
       void AddAttribute(const BufferAttribute& attribute, const Pointer<char>& data)
@@ -39,9 +39,9 @@ namespace Greet {
       const std::pair<BufferAttribute, Pointer<char>>* GetAttribute(int location) const;
       std::pair<BufferAttribute, Pointer<char>>* RemoveAttribute(int location);
 
-      const Pointer<Vec3<float>>& GetVertices() const { return m_vertices; }
+      const Pointer<Vec3f>& GetVertices() const { return m_vertices; }
       const Pointer<uint>& GetIndices() const { return m_indices; }
-      Pointer<Vec3<float>>& GetVertices() { return m_vertices; }
+      Pointer<Vec3f>& GetVertices() { return m_vertices; }
       Pointer<uint>& GetIndices() { return m_indices; }
       uint GetVertexCount() const { return m_vertices.Size(); }
       uint GetIndexCount() const { return m_indices.Size(); }

@@ -8,6 +8,7 @@
 #include <utils/Utils.h>
 #include <utils/FileUtils.h>
 #include <utils/HotSwapping.h>
+#include <graphics/Color.h>
 #include <common/Memory.h>
 
 namespace Greet {
@@ -68,9 +69,11 @@ namespace Greet {
       void SetUniform1iv(const std::string& name, uint count, int* value) const;
       void SetUniform1ui(const std::string& name, uint value) const;
       void SetUniform1uiv(const std::string& name, uint count, uint* values) const;
-      void SetUniform2f(const std::string& name, const Vec2& value) const;
-      void SetUniform3f(const std::string& name, const Vec3<float>& value) const;
-      void SetUniform4f(const std::string& name, const Vec4& value) const;
+      void SetUniform2f(const std::string& name, const Vec2f& value) const;
+      void SetUniform3f(const std::string& name, const Vec3f& value) const;
+      void SetUniform4f(const std::string& name, const Vec4f& value) const;
+      void SetUniformColor3(const std::string& name, const Color& value) const;
+      void SetUniformColor4(const std::string& name, const Color& value) const;
       void SetUniformMat3(const std::string& name, const Mat3 &value) const;
       void SetUniformMat4(const std::string& name, const Mat4 &value) const;
       bool operator<(const Shader& s);

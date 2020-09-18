@@ -9,7 +9,7 @@ namespace Greet
   ColorPicker::ColorPicker(const XMLObject& object, Component* parent)
     : Component{object, parent}, attachedColor{nullptr}
   {
-    picker = new ColorPickerWindow(Vec2(0,0), GUIUtils::GetColorFromXML(object, "color", Color{1,1,1,1}));
+    picker = new ColorPickerWindow(Vec2f(0,0), GUIUtils::GetColorFromXML(object, "color", Color{1,1,1,1}));
     using namespace std::placeholders;
     picker->SetOnColorChangeCallback(BIND_MEMBER_FUNC(OnColorChanged));
   }
@@ -19,17 +19,17 @@ namespace Greet
     delete picker;
   }
 
-  void ColorPicker::PreRender(GUIRenderer* renderer, const Vec2& translation) const
+  void ColorPicker::PreRender(GUIRenderer* renderer, const Vec2f& translation) const
   {
     renderer->PushTranslation(translation);
 
     // Border around Component
     if(borderColor.a != 0.0)
-      //renderer->SubmitRect(pos + Vec2(0,0), size, currentStyle->borderColor, false);
-      renderer->DrawRoundedRect(pos+Vec2(0,0), {width.size, height.size}, borderColor, borderRadius, borderRoundedPrecision, false);
+      //renderer->SubmitRect(pos + Vec2f(0,0), size, currentStyle->borderColor, false);
+      renderer->DrawRoundedRect(pos+Vec2f(0,0), {width.size, height.size}, borderColor, borderRadius, borderRoundedPrecision, false);
 
     // Component background
-    renderer->DrawRoundedRect(pos + border.LeftTop(), Vec2{width.size, height.size} - GetBorder().LeftTop()-GetBorder().RightBottom(), GetColor(), backgroundRadius, backgroundRoundedPrecision, false);
+    renderer->DrawRoundedRect(pos + border.LeftTop(), Vec2f{width.size, height.size} - GetBorder().LeftTop()-GetBorder().RightBottom(), GetColor(), backgroundRadius, backgroundRoundedPrecision, false);
   }
 
   void ColorPicker::AttachColor(Color* color)
@@ -37,7 +37,7 @@ namespace Greet
     attachedColor = color;
   }
 
-  void ColorPicker::OnEvent(Event& event, const Vec2& componentPos)
+  void ColorPicker::OnEvent(Event& event, const Vec2f& componentPos)
   {
     if(EVENT_IS_TYPE(event, EventType::MOUSE_PRESS))
     {

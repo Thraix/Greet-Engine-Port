@@ -24,10 +24,10 @@ namespace vmc
 
 		GridRenderer3D();
 
-		void Begin(Greet::Camera* camera) override;
-		void DrawCube(Greet::Camera* camera, const Greet::Vec3<float>& pos, const Greet::Vec3<float>& size, uint color, bool culling);
-		virtual void Submit(Greet::Camera* camera, const Cube& cube);
-		void DrawLineCube(Greet::Camera* camera, const Greet::Vec3<float>& pos, const Greet::Vec3<float>& size, const Greet::Vec4& color);
-		void DrawLine(Greet::Camera* camera, const Greet::Vec3<float>& start, const Greet::Vec3<float>& end, const Greet::Vec4& color);
+		void Begin(const Greet::Ref<Greet::Camera3D>& camera) override;
+		void DrawCube(const Greet::Ref<Greet::Camera3D>& camera, const Greet::Vec3f& pos, const Greet::Vec3f& size, uint color, bool culling);
+		virtual void Submit(const Greet::Ref<Greet::Camera3D>& camera, const Cube& cube);
+		void DrawLineCube(const Greet::Ref<Greet::Camera3D>& camera, const Greet::Vec3f& pos, const Greet::Vec3f& size, const Greet::Vec4f& color);
+		void DrawLine(const Greet::Ref<Greet::Camera3D>& camera, const Greet::Vec3f& start, const Greet::Vec3f& end, const Greet::Vec4f& color);
 	};
 }

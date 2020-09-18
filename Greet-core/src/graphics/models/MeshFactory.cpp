@@ -1,20 +1,21 @@
 #include "MeshFactory.h"
+#include "graphics/models/MeshData.h"
 #include <logging/Log.h>
 namespace Greet {
 
   // Calculate a normal of 3 points in space
-  Vec3<float> MeshFactory::CalculateNormal(const Vec3<float>& p1, const Vec3<float>& p2, const Vec3<float>& p3)
+  Vec3f MeshFactory::CalculateNormal(const Vec3f& p1, const Vec3f& p2, const Vec3f& p3)
   {
-    Vec3<float> v1 = p2 - p1;
-    Vec3<float> v2 = p3 - p1;
-    Vec3<float> normal = v1.Cross(v2);
+    Vec3f v1 = p2 - p1;
+    Vec3f v2 = p3 - p1;
+    Vec3f normal = v1.Cross(v2);
     return normal;
   }
 
-  void MeshFactory::CalculateNormals(const Pointer<Vec3<float>>& vertices, const Pointer<uint>& indices, Pointer<Vec3<float>>& normals)
+  void MeshFactory::CalculateNormals(const Pointer<Vec3f>& vertices, const Pointer<uint>& indices, Pointer<Vec3f>& normals)
   {
-    Vec3<float> faceNormal;
-    Vec3<float> p1, p2, p3;
+    Vec3f faceNormal;
+    Vec3f p1, p2, p3;
     memset(normals.Data(), 0, sizeof(float) * 3 * vertices.Size());
     for (uint i = 0; i < indices.Size(); i += 3)
     {
@@ -40,14 +41,14 @@ namespace Greet {
   }
 
   // Calculate normals for a mesh
-  Pointer<Vec3<float>> MeshFactory::CalculateNormals(const Pointer<Vec3<float>> vertices, const Pointer<uint>& indices)
+  Pointer<Vec3f> MeshFactory::CalculateNormals(const Pointer<Vec3f> vertices, const Pointer<uint>& indices)
   {
-    Pointer<Vec3<float>> normals(vertices.Size());
+    Pointer<Vec3f> normals(vertices.Size());
     CalculateNormals(vertices, indices, normals);
     return normals;
   }
 
-  MeshData MeshFactory::Polygon(uint count, float Size, PolygonSizeFormat format)
+  MeshData MeshFactory::Polygon(uint count, PolygonSizeFormat format, const Vec3f& pos, float size)
   {
     if(count < 3)
     {
@@ -55,8 +56,8 @@ namespace Greet {
       count = 4;
     }
     uint indexCount = 3 * (count - 2);
-    Pointer<Vec3<float>> vertices = Pointer<Vec3<float>>(count);
-    Pointer<Vec3<float>> normals(count);
+    Pointer<Vec3f> vertices = Pointer<Vec3f>(count);
+    Pointer<Vec3f> normals(count);
     Pointer<uint> indices = Pointer<uint>(indexCount);
     float radius = 0;
 
@@ -66,20 +67,20 @@ namespace Greet {
     switch(format)
     {
       case SIDE_LENGTH:
-        radius = Size / (2 * cos(cornerAngle/2));
+        radius = size / (2 * cos(cornerAngle/2));
         break;
       case CIRCUMSCRIBED_RADIUS:
-        radius = Size;
+        radius = size;
         break;
       case INSCRIBED_RADIUS:
-        radius = Size / sin(cornerAngle/2);
+        radius = size / sin(cornerAngle/2);
         break;
     }
     float angle = 2 * M_PI / (float)count;
     for(uint i = 0; i < count;i++)
     {
-      vertices[i] = Vec3<float>(cos(angle/2 + angle*i), 0, sin(angle/2 + angle*i)) * radius;
-      normals[i] = Vec3<float>(0,1,0);
+      vertices[i] = pos + Vec3f(cos(angle/2 + angle*i), 0, sin(angle/2 + angle*i)) * radius;
+      normals[i] = Vec3f(0,1,0);
     }
 
     for(uint i = 0;i < count - 2; i++)
@@ -94,138 +95,135 @@ namespace Greet {
     return data;
   }
 
-  MeshData MeshFactory::Quad(float x, float y, float z, float width, float length)
+  MeshData MeshFactory::Plane(const Vec3f& pos, const Vec2f& size)
   {
-    Pointer<Vec3<float>> vertices = Pointer<Vec3<float>>(4);
-    float halfWidth = width / 2.0f;
-    float halfLength = length / 2.0f;
-    vertices[0]  = Vec3<float>(x-halfWidth, y, z-halfLength);
-    vertices[1]  = Vec3<float>(x+halfWidth, y, z-halfLength);
-    vertices[2]  = Vec3<float>(x+halfWidth, y, z+halfLength);
-    vertices[3]  = Vec3<float>(x-halfWidth, y, z+halfLength);
+    Pointer<Vec3f> vertices = Pointer<Vec3f>(4);
+    float halfWidth = size.w / 2.0f;
+    float halfLength = size.h / 2.0f;
+    vertices[0]  = Vec3f(pos.x-halfWidth, pos.y, pos.z-halfLength);
+    vertices[1]  = Vec3f(pos.x+halfWidth, pos.y, pos.z-halfLength);
+    vertices[2]  = Vec3f(pos.x+halfWidth, pos.y, pos.z+halfLength);
+    vertices[3]  = Vec3f(pos.x-halfWidth, pos.y, pos.z+halfLength);
 
-    Pointer<Vec3<float>> normals = Pointer<Vec3<float>>(4);
-    normals[0]  = Vec3<float>(0.0f, 1.0f, 0.0f);
-    normals[1]  = Vec3<float>(0.0f, 1.0f, 0.0f);
-    normals[2]  = Vec3<float>(0.0f, 1.0f, 0.0f);
-    normals[3]  = Vec3<float>(0.0f, 1.0f, 0.0f);
+    Pointer<Vec3f> normals = Pointer<Vec3f>(4);
+    normals[0]  = Vec3f(0.0f, 1.0f, 0.0f);
+    normals[1]  = Vec3f(0.0f, 1.0f, 0.0f);
+    normals[2]  = Vec3f(0.0f, 1.0f, 0.0f);
+    normals[3]  = Vec3f(0.0f, 1.0f, 0.0f);
+
+    Pointer<Vec2f> texCoords = Pointer<Vec2f>(4);
+    texCoords[0] = Vec2f(0.0f, 0.0f);
+    texCoords[1] = Vec2f(1.0f, 0.0f);
+    texCoords[2] = Vec2f(1.0f, 1.0f);
+    texCoords[3] = Vec2f(0.0f, 1.0f);
 
     Pointer<uint> indices{0,2,1,0,3,2};
     MeshData meshdata(vertices,indices);
-    meshdata.AddAttribute({MESH_NORMALS_LOCATION, BufferAttributeType::VEC3},normals);
-    return meshdata;
-  }
-  // x, y, z
-  MeshData MeshFactory::Cube(float x, float y, float z, float width, float height, float length)
-  {
-    Pointer<Vec3<float>> vertices = Pointer<Vec3<float>>(8);
-    float halfWidth = width / 2.0f;
-    float halfHeight = height / 2.0f;
-    float halfLength = length / 2.0f;
-
-    vertices[0]  = Vec3<float>(x-halfWidth, y-halfHeight, z-halfLength);
-    vertices[1]  = Vec3<float>(x-halfWidth, y+halfHeight, z-halfLength);
-    vertices[2]  = Vec3<float>(x-halfWidth, y+halfHeight, z+halfLength);
-    vertices[3]  = Vec3<float>(x-halfWidth, y-halfHeight, z+halfLength);
-
-    vertices[4]  = Vec3<float>(x+halfWidth, y-halfHeight, z-halfLength);
-    vertices[5]  = Vec3<float>(x+halfWidth, y+halfHeight, z-halfLength);
-    vertices[6]  = Vec3<float>(x+halfWidth, y+halfHeight, z+halfLength);
-    vertices[7]  = Vec3<float>(x+halfWidth, y-halfHeight, z+halfLength);
-
-    Pointer<Vec3<float>> normals(8);
-    normals[0] = Vec3<float>(-1.0f, -1.0f, -1.0f);
-    normals[1] = Vec3<float>(-1.0f,  1.0f, -1.0f);
-    normals[2] = Vec3<float>(-1.0f,  1.0f,  1.0f);
-    normals[3] = Vec3<float>(-1.0f, -1.0f,  1.0f);
-    normals[4] = Vec3<float>( 1.0f, -1.0f, -1.0f);
-    normals[5] = Vec3<float>( 1.0f,  1.0f, -1.0f);
-    normals[6] = Vec3<float>( 1.0f,  1.0f,  1.0f);
-    normals[7] = Vec3<float>( 1.0f, -1.0f,  1.0f);
-
-    Pointer<uint> indices{
-      0, 2, 1, 0, 3, 2,
-      3, 6, 2, 3, 7, 6,
-      7, 5, 6, 7, 4, 5,
-      4, 1, 5, 4, 0, 1,
-      2, 5, 1, 2, 6, 5,
-      3, 0, 4, 3, 4, 7 };
-
-    MeshData meshdata(vertices,indices);
     meshdata.AddAttribute({MESH_NORMALS_LOCATION, BufferAttributeType::VEC3}, normals);
+    meshdata.AddAttribute({MESH_TEXCOORDS_LOCATION, BufferAttributeType::VEC2}, texCoords);
     return meshdata;
   }
-
   // x, y, z
-  MeshData MeshFactory::Cube2(float x, float y, float z, float width, float height, float length)
+  MeshData MeshFactory::Cube(const Vec3f& pos, const Vec3f& size)
   {
-    Pointer<Vec3<float>> vertices = Pointer<Vec3<float>>(24);
-    float halfWidth = width / 2.0f;
-    float halfHeight = height / 2.0f;
-    float halfLength = length / 2.0f;
+    Pointer<Vec3f> vertices = Pointer<Vec3f>(24);
+    float halfWidth = size.x / 2.0f;
+    float halfHeight = size.y / 2.0f;
+    float halfLength = size.z / 2.0f;
 
 
-    vertices[0] = Vec3<float>(x - halfWidth, y - halfHeight, z - halfLength);
-    vertices[1] = Vec3<float>(x - halfWidth, y + halfHeight, z - halfLength);
-    vertices[2] = Vec3<float>(x - halfWidth, y + halfHeight, z + halfLength);
-    vertices[3] = Vec3<float>(x - halfWidth, y - halfHeight, z + halfLength);
+    vertices[0] = Vec3f(pos.x - halfWidth, pos.y - halfHeight, pos.z - halfLength);
+    vertices[1] = Vec3f(pos.x - halfWidth, pos.y + halfHeight, pos.z - halfLength);
+    vertices[2] = Vec3f(pos.x - halfWidth, pos.y + halfHeight, pos.z + halfLength);
+    vertices[3] = Vec3f(pos.x - halfWidth, pos.y - halfHeight, pos.z + halfLength);
 
-    vertices[4] = Vec3<float>(x + halfWidth, y - halfHeight, z - halfLength);
-    vertices[5] = Vec3<float>(x + halfWidth, y + halfHeight, z - halfLength);
-    vertices[6] = Vec3<float>(x + halfWidth, y + halfHeight, z + halfLength);
-    vertices[7] = Vec3<float>(x + halfWidth, y - halfHeight, z + halfLength);
+    vertices[4] = Vec3f(pos.x + halfWidth, pos.y - halfHeight, pos.z - halfLength);
+    vertices[5] = Vec3f(pos.x + halfWidth, pos.y + halfHeight, pos.z - halfLength);
+    vertices[6] = Vec3f(pos.x + halfWidth, pos.y + halfHeight, pos.z + halfLength);
+    vertices[7] = Vec3f(pos.x + halfWidth, pos.y - halfHeight, pos.z + halfLength);
 
-    vertices[8] = Vec3<float>(x - halfWidth, y - halfHeight, z - halfLength);
-    vertices[9] = Vec3<float>(x - halfWidth, y - halfHeight, z + halfLength);
-    vertices[10] = Vec3<float>(x + halfWidth, y - halfHeight, z + halfLength);
-    vertices[11] = Vec3<float>(x + halfWidth, y - halfHeight, z - halfLength);
+    vertices[8] = Vec3f(pos.x - halfWidth, pos.y - halfHeight, pos.z - halfLength);
+    vertices[9] = Vec3f(pos.x - halfWidth, pos.y - halfHeight, pos.z + halfLength);
+    vertices[10] = Vec3f(pos.x + halfWidth, pos.y - halfHeight, pos.z + halfLength);
+    vertices[11] = Vec3f(pos.x + halfWidth, pos.y - halfHeight, pos.z - halfLength);
 
-    vertices[12] = Vec3<float>(x - halfWidth, y + halfHeight, z - halfLength);
-    vertices[13] = Vec3<float>(x - halfWidth, y + halfHeight, z + halfLength);
-    vertices[14] = Vec3<float>(x + halfWidth, y + halfHeight, z + halfLength);
-    vertices[15] = Vec3<float>(x + halfWidth, y + halfHeight, z - halfLength);
+    vertices[12] = Vec3f(pos.x - halfWidth, pos.y + halfHeight, pos.z - halfLength);
+    vertices[13] = Vec3f(pos.x - halfWidth, pos.y + halfHeight, pos.z + halfLength);
+    vertices[14] = Vec3f(pos.x + halfWidth, pos.y + halfHeight, pos.z + halfLength);
+    vertices[15] = Vec3f(pos.x + halfWidth, pos.y + halfHeight, pos.z - halfLength);
 
 
-    vertices[16] = Vec3<float>(x - halfWidth, y - halfHeight, z - halfLength);
-    vertices[17] = Vec3<float>(x + halfWidth, y - halfHeight, z - halfLength);
-    vertices[18] = Vec3<float>(x + halfWidth, y + halfHeight, z - halfLength);
-    vertices[19] = Vec3<float>(x - halfWidth, y + halfHeight, z - halfLength);
+    vertices[16] = Vec3f(pos.x - halfWidth, pos.y - halfHeight, pos.z - halfLength);
+    vertices[17] = Vec3f(pos.x + halfWidth, pos.y - halfHeight, pos.z - halfLength);
+    vertices[18] = Vec3f(pos.x + halfWidth, pos.y + halfHeight, pos.z - halfLength);
+    vertices[19] = Vec3f(pos.x - halfWidth, pos.y + halfHeight, pos.z - halfLength);
 
-    vertices[20] = Vec3<float>(x - halfWidth, y - halfHeight, z + halfLength);
-    vertices[21] = Vec3<float>(x + halfWidth, y - halfHeight, z + halfLength);
-    vertices[22] = Vec3<float>(x + halfWidth, y + halfHeight, z + halfLength);
-    vertices[23] = Vec3<float>(x - halfWidth, y + halfHeight, z + halfLength);
+    vertices[20] = Vec3f(pos.x - halfWidth, pos.y - halfHeight, pos.z + halfLength);
+    vertices[21] = Vec3f(pos.x + halfWidth, pos.y - halfHeight, pos.z + halfLength);
+    vertices[22] = Vec3f(pos.x + halfWidth, pos.y + halfHeight, pos.z + halfLength);
+    vertices[23] = Vec3f(pos.x - halfWidth, pos.y + halfHeight, pos.z + halfLength);
 
-    Pointer<Vec3<float>> normals = Pointer<Vec3<float>>(24);
-    normals[0] = Vec3<float>(-1.0f, 0.0f, 0.0f);
-    normals[1] = Vec3<float>(-1.0f, 0.0f, 0.0f);
-    normals[2] = Vec3<float>(-1.0f, 0.0f, 0.0f);
-    normals[3] = Vec3<float>(-1.0f, 0.0f, 0.0f);
+    Pointer<Vec3f> normals = Pointer<Vec3f>(24);
+    normals[0] = Vec3f(-1.0f, 0.0f, 0.0f);
+    normals[1] = Vec3f(-1.0f, 0.0f, 0.0f);
+    normals[2] = Vec3f(-1.0f, 0.0f, 0.0f);
+    normals[3] = Vec3f(-1.0f, 0.0f, 0.0f);
 
-    normals[4] = Vec3<float>(1.0f, 0.0f, 0.0f);
-    normals[5] = Vec3<float>(1.0f, 0.0f, 0.0f);
-    normals[6] = Vec3<float>(1.0f, 0.0f, 0.0f);
-    normals[7] = Vec3<float>(1.0f, 0.0f, 0.0f);
+    normals[4] = Vec3f(1.0f, 0.0f, 0.0f);
+    normals[5] = Vec3f(1.0f, 0.0f, 0.0f);
+    normals[6] = Vec3f(1.0f, 0.0f, 0.0f);
+    normals[7] = Vec3f(1.0f, 0.0f, 0.0f);
 
-    normals[8] = Vec3<float>(0.0f, -1.0f, 0.0f);
-    normals[9] = Vec3<float>(0.0f, -1.0f, 0.0f);
-    normals[10] = Vec3<float>(0.0f, -1.0f, 0.0f);
-    normals[11] = Vec3<float>(0.0f, -1.0f, 0.0f);
+    normals[8] = Vec3f(0.0f, -1.0f, 0.0f);
+    normals[9] = Vec3f(0.0f, -1.0f, 0.0f);
+    normals[10] = Vec3f(0.0f, -1.0f, 0.0f);
+    normals[11] = Vec3f(0.0f, -1.0f, 0.0f);
 
-    normals[12] = Vec3<float>(0.0f, 1.0f, 0.0f);
-    normals[13] = Vec3<float>(0.0f, 1.0f, 0.0f);
-    normals[14] = Vec3<float>(0.0f, 1.0f, 0.0f);
-    normals[15] = Vec3<float>(0.0f, 1.0f, 0.0f);
+    normals[12] = Vec3f(0.0f, 1.0f, 0.0f);
+    normals[13] = Vec3f(0.0f, 1.0f, 0.0f);
+    normals[14] = Vec3f(0.0f, 1.0f, 0.0f);
+    normals[15] = Vec3f(0.0f, 1.0f, 0.0f);
 
-    normals[16] = Vec3<float>(0.0f, 0.0f, -1.0f);
-    normals[17] = Vec3<float>(0.0f, 0.0f, -1.0f);
-    normals[18] = Vec3<float>(0.0f, 0.0f, -1.0f);
-    normals[19] = Vec3<float>(0.0f, 0.0f, -1.0f);
+    normals[16] = Vec3f(0.0f, 0.0f, -1.0f);
+    normals[17] = Vec3f(0.0f, 0.0f, -1.0f);
+    normals[18] = Vec3f(0.0f, 0.0f, -1.0f);
+    normals[19] = Vec3f(0.0f, 0.0f, -1.0f);
 
-    normals[20] = Vec3<float>(0.0f, 0.0f, 1.0f);
-    normals[21] = Vec3<float>(0.0f, 0.0f, 1.0f);
-    normals[22] = Vec3<float>(0.0f, 0.0f, 1.0f);
-    normals[23] = Vec3<float>(0.0f, 0.0f, 1.0f);
+    normals[20] = Vec3f(0.0f, 0.0f, 1.0f);
+    normals[21] = Vec3f(0.0f, 0.0f, 1.0f);
+    normals[22] = Vec3f(0.0f, 0.0f, 1.0f);
+    normals[23] = Vec3f(0.0f, 0.0f, 1.0f);
+
+    Pointer<Vec2f> texCoords = Pointer<Vec2f>(24);
+    texCoords[0] = Vec2f(0.00f, 0.33f);
+    texCoords[1] = Vec2f(0.00f, 0.67f);
+    texCoords[2] = Vec2f(0.25f, 0.67f);
+    texCoords[3] = Vec2f(0.25f, 0.33f);
+
+    texCoords[4] = Vec2f(0.50f, 0.33f);
+    texCoords[5] = Vec2f(0.50f, 0.67f);
+    texCoords[6] = Vec2f(0.75f, 0.67f);
+    texCoords[7] = Vec2f(0.75f, 0.33f);
+
+    texCoords[8]  = Vec2f(0.25f, 0.33f);
+    texCoords[9]  = Vec2f(0.25f, 0.00f);
+    texCoords[10] = Vec2f(0.50f, 0.00f);
+    texCoords[11] = Vec2f(0.50f, 0.33f);
+
+    texCoords[12] = Vec2f(0.25f, 1.00f);
+    texCoords[13] = Vec2f(0.25f, 0.67f);
+    texCoords[14] = Vec2f(0.50f, 0.67f);
+    texCoords[15] = Vec2f(0.50f, 1.00f);
+
+    texCoords[16] = Vec2f(1.00f, 0.33f);
+    texCoords[17] = Vec2f(0.75f, 0.33f);
+    texCoords[18] = Vec2f(0.75f, 0.67f);
+    texCoords[19] = Vec2f(1.00f, 0.67f);
+
+    texCoords[20] = Vec2f(0.25f, 0.33f);
+    texCoords[21] = Vec2f(0.50f, 0.33f);
+    texCoords[22] = Vec2f(0.50f, 0.67f);
+    texCoords[23] = Vec2f(0.25f, 0.67f);
 
 
     Pointer<uint> indices{
@@ -237,40 +235,41 @@ namespace Greet {
         20, 21, 22, 20, 22, 23 };
 
     MeshData meshdata(vertices, indices);
-    meshdata.AddAttribute({MESH_NORMALS_LOCATION, BufferAttributeType::VEC3},normals);
+    meshdata.AddAttribute({MESH_NORMALS_LOCATION, BufferAttributeType::VEC3}, normals);
+    meshdata.AddAttribute({MESH_TEXCOORDS_LOCATION, BufferAttributeType::VEC2}, texCoords);
     return meshdata;
   }
 
-  MeshData MeshFactory::Tetrahedron(float x, float y, float z, float Size)
+  MeshData MeshFactory::Tetrahedron(const Vec3f& pos, float size)
   {
     float tan30 = 0.5773502f;  //   tan(30/180*PI)
     float cos30 = 1.1547005f; //   1 / cos(30/180*PI)
-    float halfSize = Size * 0.5f;
+    float halfSize = size * 0.5f;
     float l1 = halfSize*cos30;
     float l2 = halfSize*tan30; //
-    float height = Size*0.8164965f;// Height of tetrahedron
-    float corner = Size*0.4082483f; // Size/sqrt(6) -> Center to corner
+    float height = size*0.8164965f;// Height of tetrahedron
+    float corner = size*0.4082483f; // Size/sqrt(6) -> Center to corner
     float face = height - corner; // Center to face
 
-    Vec3<float> v1 = Vec3<float>(x, y-face, z + l1);
-    Vec3<float> v2 = Vec3<float>(x + halfSize, y - face, z - l2);
-    Vec3<float> v3 = Vec3<float>(x - halfSize, y - face, z - l2);
-    Vec3<float> v4 = Vec3<float>(x, y + corner, z);
+    Vec3f v1 = Vec3f(pos.x, pos.y-face, pos.z + l1);
+    Vec3f v2 = Vec3f(pos.x + halfSize, pos.y - face, pos.z - l2);
+    Vec3f v3 = Vec3f(pos.x - halfSize, pos.y - face, pos.z - l2);
+    Vec3f v4 = Vec3f(pos.x, pos.y + corner, pos.z);
 
 
-    Pointer<Vec3<float>> vertices = Pointer<Vec3<float>>(4);
+    Pointer<Vec3f> vertices = Pointer<Vec3f>(4);
     vertices[0] = v1;
     vertices[1] = v2;
     vertices[2] = v3;
     vertices[3] = v4;
 
 
-    Pointer<Vec3<float>> normals = Pointer<Vec3<float>>(4);
+    Pointer<Vec3f> normals = Pointer<Vec3f>(4);
 
-    normals[0] = (v1 - Vec3<float>(x, y, z)).Normalize();
-    normals[1] = (v2 - Vec3<float>(x, y, z)).Normalize();
-    normals[2] = (v3 - Vec3<float>(x, y, z)).Normalize();
-    normals[3] = (v4 - Vec3<float>(x, y, z)).Normalize();
+    normals[0] = (v1 - pos).Normalize();
+    normals[1] = (v2 - pos).Normalize();
+    normals[2] = (v3 - pos).Normalize();
+    normals[3] = (v4 - pos).Normalize();
 
     Pointer<uint> indices{ 0, 2, 1, 1, 3, 0, 2, 0, 3, 1, 2, 3};
     MeshData meshdata(vertices, indices);
@@ -278,68 +277,68 @@ namespace Greet {
     return meshdata;
   }
 
-  MeshData MeshFactory::Grid(float x, float y, float z, float width, float length, uint gridWidth, uint gridLength)
+  MeshData MeshFactory::Grid(const Vec2i& gridSize, const Vec3f& pos, const Vec2f& size)
   {
-    return Grid(x,y,z,width,length,gridWidth,gridLength,{},0);
+    return Grid(gridSize, {}, pos, {size.x, 0, size.y});
   }
 
-  MeshData MeshFactory::Grid(float x, float y, float z, float width, float length, uint gridWidth, uint gridLength, const Pointer<float>& heightMap, float height)
+  MeshData MeshFactory::Grid(const Vec2i& gridSize, const Pointer<float>& heightMap, const Vec3f& pos, const Vec3f& size)
   {
-    if (gridWidth < 1 || gridLength < 1)
-      return Quad(x, y, z, width, length);
+    if (gridSize.w < 1 || gridSize.h < 1)
+      return Plane(pos, Vec2f{size.x, size.z});
 
-    float tileWidth = width / (float)gridWidth;
-    float tileLength = length / (float)gridLength;
+    float tileWidth = size.x / (float)gridSize.x;
+    float tileLength = size.z / (float)gridSize.y;
 
-    uint vertexCount = (gridWidth + 1) * (gridLength+ 1);
+    uint vertexCount = (gridSize.x + 1) * (gridSize.y + 1);
 
-    Pointer<Vec3<float>> vertices(vertexCount);
+    Pointer<Vec3f> vertices(vertexCount);
 
     // decenter x and y
-    x -= width / 2.0f;
-    z -= length / 2.0f;
+    float x = pos.x - size.x / 2.0f;
+    float z = pos.z - size.z / 2.0f;
 
 
-    for (uint iz = 0; iz <= gridLength; iz++)
+    for (uint iz = 0; iz <= gridSize.y; iz++)
     {
-      for (uint ix = 0; ix <= gridWidth; ix++)
+      for (uint ix = 0; ix <= gridSize.x; ix++)
       {
-        float heightM = heightMap.Size() == 0 ? 0 : heightMap[ix + iz*(gridWidth + 1)];
-        vertices[ix + iz*(gridWidth + 1)] = Vec3<float>(x + ix*tileWidth, y + heightM*height, z + iz*tileLength);
+        float heightM = heightMap.Size() == 0 ? 0 : heightMap[ix + iz*(gridSize.x + 1)];
+        vertices[ix + iz*(gridSize.x + 1)] = Vec3f(x + ix*tileWidth, pos.y + heightM * size.y, z + iz*tileLength);
       }
     }
 
-    uint indexCount = 6 * gridWidth * gridLength;
+    uint indexCount = 6 * gridSize.x * gridSize.y;
     Pointer<uint> indices(indexCount);
 
     // Loop through every square
     uint i = 0;
-    for (uint iz = 0; iz < gridLength; iz++)
+    for (uint iz = 0; iz < gridSize.y; iz++)
     {
-      for (uint ix = 0; ix < gridWidth; ix++)
+      for (uint ix = 0; ix < gridSize.x; ix++)
       {
         if (ix % 2 == iz % 2)
         {
-          indices[i++] = ix + iz * (gridWidth + 1);
-          indices[i++] = ix + (iz + 1) * (gridWidth + 1);
-          indices[i++] = ix + 1 + (iz + 1) * (gridWidth + 1);
-          indices[i++] = ix + 1 + iz * (gridWidth + 1);
-          indices[i++] = ix + iz * (gridWidth + 1);
-          indices[i++] = ix + 1 + (iz + 1) * (gridWidth + 1);
+          indices[i++] = ix + iz * (gridSize.x + 1);
+          indices[i++] = ix + (iz + 1) * (gridSize.x + 1);
+          indices[i++] = ix + 1 + (iz + 1) * (gridSize.x + 1);
+          indices[i++] = ix + 1 + iz * (gridSize.x + 1);
+          indices[i++] = ix + iz * (gridSize.x + 1);
+          indices[i++] = ix + 1 + (iz + 1) * (gridSize.x + 1);
         }
         else
         {
-          indices[i++] = ix + iz * (gridWidth + 1);
-          indices[i++] = ix + (iz + 1) * (gridWidth + 1);
-          indices[i++] = ix + 1 + iz * (gridWidth + 1);
-          indices[i++] = ix + 1 + iz * (gridWidth + 1);
-          indices[i++] = ix + (iz + 1) * (gridWidth + 1);
-          indices[i++] = ix + 1 + (iz + 1) * (gridWidth + 1);
+          indices[i++] = ix + iz * (gridSize.x + 1);
+          indices[i++] = ix + (iz + 1) * (gridSize.x + 1);
+          indices[i++] = ix + 1 + iz * (gridSize.x + 1);
+          indices[i++] = ix + 1 + iz * (gridSize.x + 1);
+          indices[i++] = ix + (iz + 1) * (gridSize.x + 1);
+          indices[i++] = ix + 1 + (iz + 1) * (gridSize.x + 1);
         }
       }
     }
 
-    Pointer<Vec3<float>> normals = CalculateNormals(vertices, indices);
+    Pointer<Vec3f> normals = CalculateNormals(vertices, indices);
     MeshData data(vertices, indices);
     data.AddAttribute({MESH_NORMALS_LOCATION, BufferAttributeType::VEC3},normals);
 
@@ -367,171 +366,172 @@ namespace Greet {
     return 0;
   }
 
-  MeshData MeshFactory::LowPolyGrid(float x, float y, float z, float width, float length, uint gridWidth, uint gridLength, const Pointer<float>& heightMap, float height)
+  MeshData MeshFactory::GridLowPoly(const Vec2i& gridSize, const Pointer<float>& heightMap, const Vec3f& pos, const Vec3f& size)
   {
-    if (gridWidth < 1 || gridLength < 1)
-      return Quad(x, y, z, width, length);
+    if (gridSize.x < 1 || gridSize.y < 1)
+      return Plane(pos, Vec2f{size.x, size.z});
 
-    float tileWidth = width / (float)gridWidth;
-    float tileLength = length / (float)gridLength;
+    float tileWidth = size.x / (float)gridSize.x;
+    float tileLength = size.z / (float)gridSize.y;
 
-    uint vertexCount = (gridWidth + 1) * (gridLength + 1) + (gridWidth - 1)*(gridLength - 1);
+    uint vertexCount = (gridSize.x + 1) * (gridSize.y + 1) + (gridSize.x - 1)*(gridSize.y - 1);
 
-    Pointer<Vec3<float>> vertices = Pointer<Vec3<float>>(vertexCount);
+    Pointer<Vec3f> vertices = Pointer<Vec3f>(vertexCount);
 
     // decenter x and y
-    x -= width / 2.0f;
-    z -= length / 2.0f;
+    float x = pos.x - size.x / 2.0f;
+    float z = pos.z - size.z / 2.0f;
 
-    for (uint iz = 0; iz <= gridLength; iz++)
+    for (uint iz = 0; iz <= gridSize.y; iz++)
     {
-      for (uint ix = 0; ix <= gridWidth; ix++)
+      for (uint ix = 0; ix <= gridSize.x; ix++)
       {
-        float heightM = heightMap.Size() == 0 ? 0 : heightMap[ix + iz*(gridWidth + 1)];
-        Vec3<float> vec = Vec3<float>(x + ix*tileWidth, y + heightM*height, z + iz*tileLength);
-        uint index = IndexGrid(ix,iz,gridWidth, gridLength);
+        float heightM = heightMap.Size() == 0 ? 0 : heightMap[ix + iz * (gridSize.x + 1)];
+        Vec3f vec = Vec3f(x + ix*tileWidth, pos.y + heightM * size.y, z + iz*tileLength);
+        uint index = IndexGrid(ix,iz,gridSize.x, gridSize.y);
         vertices[index] = vec;
-        if(iz < gridLength - 1 && ix != 0 && ix != gridWidth)
+        if(iz < gridSize.y - 1 && ix != 0 && ix != gridSize.x)
         {
           vertices[index + 1] = vec;
         }
       }
     }
 
-    uint indexCount = 6 * gridWidth * gridLength;
+    uint indexCount = 6 * gridSize.x * gridSize.y;
     Pointer<uint> indices = Pointer<uint>(indexCount);
 
     // Loop through every square
     uint i = 0;
-    for (uint iz = 0; iz < gridLength; iz++)
+    for (uint iz = 0; iz < gridSize.y; iz++)
     {
-      for (uint ix = 0; ix < gridWidth; ix++)
+      for (uint ix = 0; ix < gridSize.x; ix++)
       {
-        if (iz < gridLength - 1)
+        if (iz < gridSize.y - 1)
         {
           uint add = (ix != 0) ? 1 : 0;
           if (ix % 2 == iz % 2)
           {
-            indices[i++] = IndexGrid(ix, iz,gridWidth,gridLength) + add;
-            indices[i++] = IndexGrid(ix, iz + 1, gridWidth, gridLength);
-            indices[i++] = IndexGrid(ix + 1, iz + 1, gridWidth, gridLength);
-            indices[i++] = IndexGrid(ix + 1, iz, gridWidth, gridLength);
-            indices[i++] = IndexGrid(ix, iz, gridWidth, gridLength);
-            indices[i++] = IndexGrid(ix + 1, iz + 1, gridWidth, gridLength);
+            indices[i++] = IndexGrid(ix, iz,gridSize.x,gridSize.y) + add;
+            indices[i++] = IndexGrid(ix, iz + 1, gridSize.x, gridSize.y);
+            indices[i++] = IndexGrid(ix + 1, iz + 1, gridSize.x, gridSize.y);
+            indices[i++] = IndexGrid(ix + 1, iz, gridSize.x, gridSize.y);
+            indices[i++] = IndexGrid(ix, iz, gridSize.x, gridSize.y);
+            indices[i++] = IndexGrid(ix + 1, iz + 1, gridSize.x, gridSize.y);
           }
           else
           {
-            indices[i++] = IndexGrid(ix, iz, gridWidth, gridLength) + add;
-            indices[i++] = IndexGrid(ix, iz + 1, gridWidth, gridLength);
-            indices[i++] = IndexGrid(ix + 1, iz, gridWidth, gridLength);
-            indices[i++] = IndexGrid(ix + 1, iz, gridWidth, gridLength);
-            indices[i++] = IndexGrid(ix, iz + 1, gridWidth, gridLength);
-            indices[i++] = IndexGrid(ix + 1, iz + 1, gridWidth, gridLength);
+            indices[i++] = IndexGrid(ix, iz, gridSize.x, gridSize.y) + add;
+            indices[i++] = IndexGrid(ix, iz + 1, gridSize.x, gridSize.y);
+            indices[i++] = IndexGrid(ix + 1, iz, gridSize.x, gridSize.y);
+            indices[i++] = IndexGrid(ix + 1, iz, gridSize.x, gridSize.y);
+            indices[i++] = IndexGrid(ix, iz + 1, gridSize.x, gridSize.y);
+            indices[i++] = IndexGrid(ix + 1, iz + 1, gridSize.x, gridSize.y);
           }
         }
         else
         {
           if (ix % 2 == iz % 2)
           {
-            indices[i++] = IndexGrid(ix, iz, gridWidth, gridLength);
-            indices[i++] = IndexGrid(ix, iz + 1, gridWidth, gridLength);
-            indices[i++] = IndexGrid(ix + 1, iz + 1, gridWidth, gridLength);
-            indices[i++] = IndexGrid(ix + 1, iz + 1, gridWidth, gridLength);
-            indices[i++] = IndexGrid(ix + 1, iz, gridWidth, gridLength);
-            indices[i++] = IndexGrid(ix, iz, gridWidth, gridLength);
+            indices[i++] = IndexGrid(ix, iz, gridSize.x, gridSize.y);
+            indices[i++] = IndexGrid(ix, iz + 1, gridSize.x, gridSize.y);
+            indices[i++] = IndexGrid(ix + 1, iz + 1, gridSize.x, gridSize.y);
+            indices[i++] = IndexGrid(ix + 1, iz + 1, gridSize.x, gridSize.y);
+            indices[i++] = IndexGrid(ix + 1, iz, gridSize.x, gridSize.y);
+            indices[i++] = IndexGrid(ix, iz, gridSize.x, gridSize.y);
           }
           else
           {
-            indices[i++] = IndexGrid(ix, iz, gridWidth, gridLength);
-            indices[i++] = IndexGrid(ix, iz + 1, gridWidth, gridLength);
-            indices[i++] = IndexGrid(ix + 1, iz, gridWidth, gridLength);
-            indices[i++] = IndexGrid(ix + 1, iz + 1, gridWidth, gridLength);
-            indices[i++] = IndexGrid(ix + 1, iz, gridWidth, gridLength);
-            indices[i++] = IndexGrid(ix, iz + 1, gridWidth, gridLength);
+            indices[i++] = IndexGrid(ix, iz, gridSize.x, gridSize.y);
+            indices[i++] = IndexGrid(ix, iz + 1, gridSize.x, gridSize.y);
+            indices[i++] = IndexGrid(ix + 1, iz, gridSize.x, gridSize.y);
+            indices[i++] = IndexGrid(ix + 1, iz + 1, gridSize.x, gridSize.y);
+            indices[i++] = IndexGrid(ix + 1, iz, gridSize.x, gridSize.y);
+            indices[i++] = IndexGrid(ix, iz + 1, gridSize.x, gridSize.y);
           }
         }
 
       }
     }
 
-    Pointer<Vec3<float>> normals = CalculateNormals(vertices,indices);
+    Pointer<Vec3f> normals = CalculateNormals(vertices,indices);
     MeshData data(vertices, indices);
     data.AddAttribute({MESH_NORMALS_LOCATION, BufferAttributeType::VEC3},normals);
 
     return data;
   }
 
-  MeshData MeshFactory::Sphere(const Vec3<float>& position, float radius, uint latitudes, uint longitudes)
+  MeshData MeshFactory::Sphere(uint latitudes, uint longitudes, const Vec3f& pos, float radius)
   {
     if(latitudes < 1 || longitudes < 4)
     {
       Log::Error("Creating sphere failed. Latitude or longitude is too small.");
       Log::Error("Has to be atleast 1 and 4 respectivly");
-      return Cube(position.x,position.y,position.z, radius, radius, radius);
+      return Cube(pos, {radius, radius, radius});
     }
 
-    uint vertexCount = 2 + longitudes * latitudes;
-    Pointer<Vec3<float>> vertices = Pointer<Vec3<float>>(vertexCount);
-    vertices[0] = Vec3<float>(0,-radius, 0);
-    vertices[vertexCount - 1] = Vec3<float>(0,radius, 0);
+    uint vertexCount = (longitudes + 1) * (latitudes + 2);
+    Pointer<Vec3f> vertices = Pointer<Vec3f>(vertexCount);
+    Pointer<Vec2f> texCoords = Pointer<Vec2f>(vertexCount);
 
-    float angleY = M_PI / (latitudes + 1);
-    float angleLong = 2 * M_PI / longitudes;
-    float ay = angleY;
-    uint i = 1;
-    for(uint lat = 0; lat < latitudes; ++lat)
+    float anglePitch = M_PI / (latitudes + 1);
+    float angleYaw = 2 * M_PI / longitudes;
+    uint i = 0;
+    for(uint lon = 0; lon <= longitudes; ++lon)
     {
-      float y = radius * sin(ay - M_PI * 0.5f);
-      for(uint lon = 0; lon< longitudes; ++lon)
+      float angleYaw = 2 * M_PI * lon / longitudes;
+      vertices[i] = pos + Vec3f{0, radius, 0};
+      texCoords[i++] = Vec2f{-angleYaw / (float)M_PI / 2.0f, 1};
+      for(uint lat = 0; lat < latitudes; ++lat)
       {
+        float anglePitch = (lat + 1) / (float)(latitudes + 2) * M_PI;
+        float y = pos.y + radius * cos(anglePitch);
         float r = sqrt(radius*radius - y * y);
-        float x = r * cos(angleLong * lon);
-        float z = r * sin(angleLong * lon);
-        vertices[i] = {x,y,z};
-        i++;
+        float x = r * cos(angleYaw);
+        float z = r * sin(angleYaw);
+        vertices[i] = pos + Vec3f{x, y, z};
+        texCoords[i++] = Vec2f{-angleYaw / (float)M_PI / 2.0f, (cos(anglePitch) + 1) * 0.5f};
       }
-      ay += angleY;
+      vertices[i] = pos + Vec3f{0, -radius, 0};
+      texCoords[i++] = Vec2f{-angleYaw / (float)M_PI / 2.0f, 0};
     }
 
-    // TRIANGLES = 2 * LONGITUDES
-    // QUADS = (LATITUDES - 1) * LONGITUDES
+    uint indexCount = 2 * 3 * (longitudes) + 2 * 3 * longitudes * (latitudes - 1);
 
-
-    uint indexCount = 3 * (2 + 2 * (latitudes - 1)) * longitudes;
     Pointer<uint> indices = Pointer<uint>(indexCount);
-    for(uint i = 0;i<longitudes;i++)
-    {
-      indices[i*3] = 0;
-      indices[i*3 + 1] = i+1;
-      // Allow the last index to wrap
-      indices[i*3 + 2] = ((i+1) % longitudes) + 1;
+    uint index = 0;
 
-      indices[indexCount - i*3 - 1] = vertexCount - (((i+1) % longitudes) + 1) - 1;
-      indices[indexCount - i*3 - 2] = vertexCount - i - 2;
-      indices[indexCount - i*3 - 3] = vertexCount - 1;
+    for(int lon = 0; lon < longitudes; lon++)
+    {
+      indices[index++] = lon * (latitudes + 2);
+      indices[index++] = (lon + 1) * (latitudes + 2) + 1;
+      indices[index++] = lon * (latitudes + 2) + 1;
     }
 
-    uint index = longitudes * 3;
-    for(uint i = 0; i < latitudes - 1;i++)
+    for(int lon = 0; lon < longitudes; ++lon)
     {
-      uint vertexPos = 1 + i * longitudes;
-
-      for(uint j = 0; j< longitudes; j++)
+      for(int lat = 0; lat < latitudes - 1; ++lat)
       {
-        uint j1 = (j+1) % longitudes;
-        indices[index++] = vertexPos + j;
-        indices[index++] = vertexPos + j + longitudes;
-        indices[index++] = vertexPos + j1;
+        indices[index++] = lon * (latitudes + 2) + 1 + lat;
+        indices[index++] = (lon + 1) * (latitudes + 2) + 1 + lat;
+        indices[index++] = lon * (latitudes + 2) + 1 + lat + 1;
 
-        indices[index++] = vertexPos + j1;
-        indices[index++] = vertexPos + j + longitudes;
-        indices[index++] = vertexPos + j1 + longitudes;
+        indices[index++] = lon * (latitudes + 2) + 1 + lat + 1;
+        indices[index++] = (lon + 1) * (latitudes + 2) + 1 + lat;
+        indices[index++] = (lon + 1) * (latitudes + 2) + 1 + lat + 1;
       }
+    }
+
+    for(int lon = 0; lon < longitudes; lon++)
+    {
+      indices[index++] = (lon) * (latitudes + 2) + latitudes;
+      indices[index++] = (lon + 1) * (latitudes + 2) + latitudes;
+      indices[index++] = lon * (latitudes + 2) + 1 + latitudes;
     }
 
     MeshData data{vertices, indices};
-    Pointer<Vec3<float>> normals = CalculateNormals(vertices, indices);
-    data.AddAttribute({MESH_NORMALS_LOCATION, BufferAttributeType::VEC3},normals);
+    Pointer<Vec3f> normals = CalculateNormals(vertices, indices);
+    data.AddAttribute({MESH_NORMALS_LOCATION, BufferAttributeType::VEC3}, normals);
+    data.AddAttribute({MESH_TEXCOORDS_LOCATION, BufferAttributeType::VEC2}, texCoords);
 
     return data;
   }

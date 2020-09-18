@@ -11,11 +11,11 @@ class Portal : public Greet::EntityModel
     Greet::Mesh* mesh;
     float delta = 0.0f;
   public:
-    Portal(Greet::Vec3<float> position)
-      : Greet::EntityModel{nullptr, new Greet::Material{Greet::Shader::FromFile("res/shaders/portal.shader"), Greet::TextureManager::LoadTexture2D("res/textures/portal.meta")}, position, {10,10,10}, {0,0,0}}
+    Portal(Greet::Vec3f position)
+      : Greet::EntityModel{nullptr, new Greet::Material{Greet::Shader::FromFile("res/shaders/portal.glsl"), Greet::TextureManager::LoadTexture2D("res/textures/portal.meta")}, position, {10,10,10}, {0,0,0}}
     {
       using namespace Greet;
-      SetMesh(mesh = new Mesh(MeshFactory::Quad(0,0,0,2,2)));
+      SetMesh(mesh = new Mesh(MeshFactory::Plane({0, 0, 0}, {2, 2})));
     }
 
     virtual ~Portal()

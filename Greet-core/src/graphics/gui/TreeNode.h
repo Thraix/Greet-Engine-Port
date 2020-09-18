@@ -55,7 +55,7 @@ namespace Greet
 
       void AddChildNode(TreeNode&& node);
 
-      std::pair<TreeNode*, bool> GetTreeNodeAt(const Vec2& position, const TreeView& view);
+      std::pair<TreeNode*, bool> GetTreeNodeAt(const Vec2f& position, const TreeView& view);
 
       float GetWidth(const TreeView& view) const;
       float GetHeight(const TreeView& view) const;
@@ -81,7 +81,7 @@ namespace Greet
       void Render(GUIRenderer* renderer, float& offset, int indent, const TreeView& view) const;
       void RenderFlowController(GUIRenderer* renderer, const TreeView& view) const;
 
-      std::pair<TreeNode*, bool> GetTreeNodeAt(Vec2& position, int indent, const TreeView& view);
+      std::pair<TreeNode*, bool> GetTreeNodeAt(Vec2f& position, int indent, const TreeView& view);
       float GetWidth(int indent, const TreeView& view) const;
       float GetFlowControllerWidth(const TreeView& view) const;
 

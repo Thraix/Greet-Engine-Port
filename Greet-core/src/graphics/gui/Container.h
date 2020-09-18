@@ -25,8 +25,8 @@ namespace Greet {
 
       virtual ~Container();
 
-      void Measure(const Vec2& emptyParentSpace, const Vec2& percentageFill) override;
-      Vec2 GetMeasureFillSize() override;
+      void Measure(const Vec2f& emptyParentSpace, const Vec2f& percentageFill) override;
+      Vec2f GetMeasureFillSize() override;
       float GetMeasureTotalWeight() override;
 
       virtual void PostConstruction() override;
@@ -49,14 +49,14 @@ namespace Greet {
       virtual float GetWrapWidth() const override;
       virtual float GetWrapHeight() const override;
 
-      void OnMousePressEventHandler(MousePressEvent& event, const Vec2& componentPos) override;
-      void OnMouseMoveEventHandler(MouseMoveEvent& event, const Vec2& componentPos) override;
+      void OnMousePressEventHandler(MousePressEvent& event, const Vec2f& componentPos) override;
+      void OnMouseMoveEventHandler(MouseMoveEvent& event, const Vec2f& componentPos) override;
 
       virtual void SetGUIScene(GUIScene* scene) override;
 
       virtual Component* GetComponentByNameNoCast(const std::string& name) override;
 
     private:
-      void MeasureChildren(const Vec2& weightTotals);
+      void MeasureChildren(const Vec2f& weightTotals);
   };
 }

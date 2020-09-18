@@ -33,15 +33,13 @@ class Core : public App
     EntityModel* sphere;
     EntityModel* tetrahedron;
     std::vector<EntityModel> models;
-    Light* light;
+    Light light{{}, 0x0};
 
     SceneView* sceneView;
 
 
     float progressFloat;
 
-    TPCamera* camera;
-    Layer* scene3d;
     Layer* uilayer;
     Layer3D* layer3d;
     Button* button;
@@ -70,7 +68,6 @@ class Core : public App
       delete uilayer;
       delete movement;
       delete rotation;
-      delete light;
     }
 
     void Init() override
@@ -87,68 +84,66 @@ class Core : public App
       Frame* frame = FrameFactory::GetFrame("res/guis/header.xml");
       guiScene->AddFrameQueued(frame);
 
-      //camera = new TPCamera(vec3(-3.5, -7.8, 5.5), 18, 0.66, 38.5, 15, 80, 0, 0.8f); // Profile shot
-      camera = new TPCamera(90, 0.01f,1000.0f, Vec3<float>(0, 0, 0), 15, 0, 0, 0, 80, -0.8f, 0.8f);
+      //camera = new TPCamera3D(vec3(-3.5, -7.8, 5.5), 18, 0.66, 38.5, 15, 80, 0, 0.8f); // Profile shot
 
-      Skybox* skybox = new Skybox(TextureManager::LoadCubeMap("res/textures/skybox.meta"));
+      Ref<Skybox> skybox{new Skybox(TextureManager::LoadCubeMap("res/textures/skybox.meta"))};
       renderer3d = new BatchRenderer3D();
       waterRenderer = new BatchRenderer3D();
 
 
-      modelMaterial = new Material(Shader::FromFile("res/shaders/3dshader.shader"));
-      flatMaterial = new Material(Shader::FromFile("res/shaders/flat3d.shader"));
-      stallMaterial = new Material(Shader::FromFile("res/shaders/3dshader.shader"), TextureManager::LoadTexture2D("res/textures/stall.meta"));
-      modelMaterial->SetSpecularStrength(0.25)->SetSpecularExponent(1)->SetDiffuseStrength(0.25);
+      modelMaterial = new Material(ShaderFactory::Shader3D(), TextureManager::LoadTexture2D("res/textures/debugtexture.meta"));
+      flatMaterial = new Material(Shader::FromFile("res/shaders/flat3d.glsl"));
+      stallMaterial = new Material(ShaderFactory::Shader3D(), TextureManager::LoadTexture2D("res/textures/stall.meta"));
+      modelMaterial->SetSpecularStrength(1.0)->SetSpecularExponent(10)->SetDiffuseStrength(0.5);
 
       {
-        terrainMaterial = new Material(Shader::FromFile("res/shaders/terrain.shader"));
-        waterMaterial = new Material(Shader::FromFile("res/shaders/water.shader"));
+        terrainMaterial = new Material(Shader::FromFile("res/shaders/terrain.glsl"));
+        waterMaterial = new Material(Shader::FromFile("res/shaders/water.glsl"));
         waterMaterial->SetSpecularExponent(50);
         waterMaterial->SetSpecularStrength(0.4);
         waterMaterial->GetShader()->Enable();
-        waterMaterial->GetShader()->SetUniform1f("waterLevel",0.45f * 20.0f);
+        waterMaterial->GetShader()->SetUniform1f("uWaterLevel", 0.45f * 20.0f);
         waterMaterial->GetShader()->Disable();
 
         terrainMaterial->SetSpecularStrength(0.5f);
         terrainMaterial->SetSpecularExponent(5.0f);
 
-        uint gridWidth = 99;
-        uint gridLength = 99;
+        int gridWidth = 99;
+        int gridLength = 99;
 #if 1
         std::vector<float> noise = Noise::GenNoise(gridWidth+1, gridWidth + 1,5,8, 8,0.5f);
-        MeshData gridMesh = MeshFactory::LowPolyGrid(0, 0, 0, gridWidth+1, gridLength+1, gridWidth, gridLength, noise,1);
+        MeshData gridMesh = MeshFactory::GridLowPoly(Vec2i{gridWidth, gridLength}, noise, {0, 0, 0}, Vec3f{gridWidth+1.0f, 1.0f, gridLength+1.0f});
         RecalcGrid(gridMesh, gridWidth, gridLength);
-        terrain = new EntityModel(new Mesh(gridMesh), terrainMaterial, Vec3<float>(0, -15, 0), Vec3<float>(1.0f, 1.0f, 1.0f), Vec3<float>(0.0f, 0.0f, 0.0f));
+        terrain = new EntityModel(new Mesh(gridMesh), terrainMaterial, Vec3f(0, -15, 0), Vec3f(1.0f, 1.0f, 1.0f), Vec3f(0.0f, 0.0f, 0.0f));
         gridMesh.RemoveAttribute(MESH_NORMALS_LOCATION);
         gridMesh.RemoveAttribute(MESH_COLORS_LOCATION);
         CalcGridVertexOffset(gridMesh);
 
-        water = new EntityModel(new Mesh(gridMesh), waterMaterial, Vec3<float>(0, -15, 0), Vec3<float>(1.0f, 1.0f, 1.0f), Vec3<float>(0.0f, 0.0f, 0.0f));
+        water = new EntityModel(new Mesh(gridMesh), waterMaterial, Vec3f(0, -15, 0), Vec3f(1.0f, 1.0f, 1.0f), Vec3f(0.0f, 0.0f, 0.0f));
 #endif
       }
 
-      MeshData polygonMesh = MeshFactory::Polygon(6, 10, MeshFactory::PolygonSizeFormat::SIDE_LENGTH);
-      polygon = new EntityModel(new Mesh(polygonMesh), terrainMaterial, Vec3<float>(0,1,0), Vec3<float>(1,1,1), Vec3<float>(0,0,0));
+      MeshData polygonMesh = MeshFactory::Polygon(6, MeshFactory::PolygonSizeFormat::SIDE_LENGTH, {0, 0, 0}, 10);
+      polygon = new EntityModel(new Mesh(polygonMesh), terrainMaterial, Vec3f(0,1,0), Vec3f(1,1,1), Vec3f(0,0,0));
 
 
-      MeshData cubeMesh = MeshFactory::Cube(0,0,0,1,1,1);
-      cube = new EntityModel(new Mesh(cubeMesh), modelMaterial, Vec3<float>(1,0,0), Vec3<float>(1, 1, 1), Vec3<float>(0, 0, 0));
+      MeshData cubeMesh = MeshFactory::Cube();
+      cube = new EntityModel(new Mesh(cubeMesh), modelMaterial, Vec3f(1,0,0), Vec3f(10, 10, 10), Vec3f(0, 0, 0));
 
-      MeshData sphereMeshData = MeshFactory::Sphere(Vec3<float>(0,0,0), 0.5f, 20, 20);
+      MeshData sphereMeshData = MeshFactory::Sphere(20, 20, {0, 0, 0}, 0.5f);
       sphereMeshData.GenerateNormals();
       //sphereMeshData->LowPolify();
       Mesh* sphereMesh = new Mesh(sphereMeshData);
-      //sphereMesh->SetEnableWireframe(true);
-      sphere = new EntityModel(sphereMesh, modelMaterial, Vec3<float>(0,0,0), Vec3<float>(1, 1, 1), Vec3<float>(0, 0, 0));
+      sphere = new EntityModel(sphereMesh, modelMaterial, Vec3f(0,0,0), Vec3f(10, 10, 10), Vec3f(0, 0, 0));
 
-      MeshData tetrahedronMesh = MeshFactory::Tetrahedron(0,0,0,10);
-      tetrahedron = new EntityModel(new Mesh(tetrahedronMesh), modelMaterial, Vec3<float>(30, 0, 10), Vec3<float>(1, 1, 1), Vec3<float>(0, 0, 0));
+      MeshData tetrahedronMesh = MeshFactory::Tetrahedron({0, 0, 0}, 10);
+      tetrahedron = new EntityModel(new Mesh(tetrahedronMesh), modelMaterial, Vec3f(30, 0, 10), Vec3f(1, 1, 1), Vec3f(0, 0, 0));
 
       MeshData stallMeshData = OBJUtils::LoadObj("res/objs/stall.obj");
       //
       Mesh* stallMesh = new Mesh(stallMeshData);
       stallMaterial->SetSpecularStrength(0.1)->SetSpecularExponent(1);
-      stall = new EntityModel(stallMesh, stallMaterial, Vec3<float>(0.0f, 0.0f, -25), Vec3(3.0f, 3.0f, 3.0f), Vec3(0.0f, 0.0f, 0.0f));
+      stall = new EntityModel(stallMesh, stallMaterial, Vec3f(0.0f, 0.0f, -25), Vec3(3.0f, 3.0f, 3.0f), Vec3(0.0f, 0.0f, 0.0f));
 
       // MEMORY LEAK WITH MESHDATA
       //MeshData data = MeshData::ReadFromFile("res/objs/dragon.gobj");
@@ -157,7 +152,7 @@ class Core : public App
       data.GenerateNormals();
       data.WriteToFile("res/objs/dragon.gobj");
       Mesh* dragonMesh = new Mesh(data);
-      dragon = new EntityModel(dragonMesh, flatMaterial, Vec3<float>(20.0f, 0.0f, -25), Vec3(1.0f, 1.0f, 1.0f), Vec3(0.0f, 0.0f, 0.0f));
+      dragon = new EntityModel(dragonMesh, flatMaterial, Vec3f(20.0f, 0.0f, -25), Vec3(1.0f, 1.0f, 1.0f), Vec3(0.0f, 0.0f, 0.0f));
 
       //Mesh* gridMesh = MeshFactory::cube(0,0,0,10,10,10);
       //gridMesh->setEnableCulling(false);
@@ -169,21 +164,21 @@ class Core : public App
       //	models.push_back(EntityModel(*modelModelMaterial, vec3(random()*100, random() * 100, random() * 100), vec3(1.0f, 1.0f, 1.0f), vec3(random() * 360, random() * 360, random() * 360)));
       //}
 
-      light = new Light(Vec3<float>(10, 20, 10), 0xffffffff);
+      light = Light(Vec3f(10, 20, 10), 0xffffffff);
       const Ref<Shader>& modelShader = modelMaterial->GetShader();
       modelShader->Enable();
-      light->SetToUniform(modelShader, "light");
+      light.SetToUniform(modelShader, "Light");
       modelShader->Disable();
       const Ref<Shader>& flatShader = flatMaterial->GetShader();
       flatShader->Enable();
-      light->SetToUniform(flatShader, "light");
+      light.SetToUniform(flatShader, "Light");
       flatShader->Disable();
 
       uilayer = new Layer(new BatchRenderer(ShaderFactory::Shader2D()), Mat3::OrthographicViewport());
       Vec4 colorPink = ColorUtils::GetMaterialColorAsHSV(300 /360.0f, 3);
-      cursor = new Renderable2D(Vec2(0,0),Vec2(32,32),0xffffffff, Sprite(TextureManager::LoadTexture2D("res/textures/cursor.meta")), Sprite(TextureManager::LoadTexture2D("res/textures/mask.meta")));
+      cursor = new Renderable2D(Vec2f(0,0),Vec2f(32,32),0xffffffff, Sprite(TextureManager::LoadTexture2D("res/textures/cursor.meta")), Sprite(TextureManager::LoadTexture2D("res/textures/mask.meta")));
       uilayer->Add(cursor);
-      uilayer->Add(new Renderable2D(Vec2(0,0), Vec2(noiseS, noiseS), 0xffffffff, Sprite(TextureManager::LoadTexture2D("noise"))));
+      uilayer->Add(new Renderable2D(Vec2f(0,0), Vec2f(noiseS, noiseS), 0xffffffff, Sprite(TextureManager::LoadTexture2D("noise"))));
 
       renderer3d->Submit(new Portal({1.0f,1.0f,1.0f}));
       renderer3d->Submit(stall);
@@ -204,6 +199,8 @@ class Core : public App
       uint pos = 0;
       //		Log::Info(JSONLoader::isNumber("0.1234s",pos));
       GlobalSceneManager::GetSceneManager().Add2DScene(guiScene, "guiScene");
+
+      Ref<TPCamera3D> camera{new TPCamera3D{90, 0.01f,1000.0f, Vec3f(0, 0, 0), 15, 0, 0, 0, 80, -0.8f, 0.8f}};
       layer3d = new Layer3D(camera, skybox);
       layer3d->AddRenderer(renderer3d);
       layer3d->AddRenderer(waterRenderer);
@@ -227,7 +224,7 @@ class Core : public App
       //GlobalSceneManager::GetSceneManager().Add3DScene(new World(camera, 10, 10), "WorldTerrain");
     }
 
-    void RecalcPositions(Vec3<float>& vertex)
+    void RecalcPositions(Vec3f& vertex)
     {
       float y = vertex.y;
       if (y < 0.45)
@@ -253,7 +250,7 @@ class Core : public App
       vertex.y = y * 20.0;
     }
 
-    void RecalcColors(const Vec3<float>& v1, const Vec3<float>& v2, const Vec3<float>& v3, uint* color)
+    void RecalcColors(const Vec3f& v1, const Vec3f& v2, const Vec3f& v3, uint* color)
     {
       float y = (v1.y + v2.y + v3.y) / 3.0f / 20.0f;
       if (y < 0.45+0.01f)
@@ -283,7 +280,7 @@ class Core : public App
 
     void CalcGridVertexOffset(MeshData& data)
     {
-      Pointer<Vec3<float>>& vertices = data.GetVertices();
+      Pointer<Vec3f>& vertices = data.GetVertices();
       uint vertexCount = data.GetVertexCount();
       uint indexCount = data.GetIndexCount();
       Pointer<uint>& indices = data.GetIndices();
@@ -291,8 +288,8 @@ class Core : public App
       Pointer<byte> offsets(4 * vertexCount);
       for (int i = 0;i < indexCount;i+=3)
       {
-        Vec3<float> v1 = vertices[indices[i+1]] - vertices[indices[i]];
-        Vec3<float> v2 = vertices[indices[i+2]] - vertices[indices[i]];
+        Vec3f v1 = vertices[indices[i+1]] - vertices[indices[i]];
+        Vec3f v2 = vertices[indices[i+2]] - vertices[indices[i]];
         offsets[indices[i]*4] = round(v1.x);
         offsets[indices[i]*4 + 1] = round(v1.z);
         offsets[indices[i]*4 + 2] = round(v2.x);
@@ -304,10 +301,10 @@ class Core : public App
     void RecalcGrid(MeshData& data, uint gridWidth, uint gridLength)
     {
       Pointer<uint> colors(data.GetVertexCount());
-      Pointer<Vec3<float>>& vertices = data.GetVertices();
+      Pointer<Vec3f>& vertices = data.GetVertices();
       uint indexCount = data.GetIndexCount();
       Pointer<uint>& indices = data.GetIndices();
-      Pointer<Vec3<float>> normals = data.GetAttribute(MESH_NORMALS_LOCATION)->second;
+      Pointer<Vec3f> normals = data.GetAttribute(MESH_NORMALS_LOCATION)->second;
       for (int i = 0;i < indexCount;i+=3)
       {
         RecalcPositions(vertices[indices[i]]);
@@ -338,15 +335,15 @@ class Core : public App
     }
 
     float hue = 0;
-    Vec3<float> velocityPos;
-    Vec3<float> velocityNeg;
+    Vec3f velocityPos;
+    Vec3f velocityNeg;
     float waterTime = 0.0;
 
     void Update(float elapsedTime) override
     {
       waterTime += elapsedTime;
       waterMaterial->GetShader()->Enable();
-      waterMaterial->GetShader()->SetUniform1f("time", waterTime);
+      waterMaterial->GetShader()->SetUniform1f("uTime", waterTime);
       waterMaterial->GetShader()->Disable();
 
       progressFloat++;
@@ -355,8 +352,8 @@ class Core : public App
       hue += elapsedTime / 3.0f;
       while (hue >= 1)
         hue--;
-      cursor->m_color = ColorUtils::Vec3ToColorHex(Vec3<float>(ColorUtils::HSVtoRGB(hue, 1, 1,1.0)));
-      sphere->SetPosition(light->position);
+      cursor->m_color = Color(hue, 1, 1, 1.0).ToRGB().AsUInt();
+      sphere->SetPosition(light.position);
     }
 
     void OnEvent(Event& event) override
@@ -364,7 +361,7 @@ class Core : public App
       if(EVENT_IS_TYPE(event, EventType::MOUSE_MOVE))
       {
         // Temporary add viewport since we are not inside the layer
-        RenderCommand::PushViewportStack(sceneView->GetRealPosition(), Vec2(Window::GetWidth(), Window::GetHeight()) - sceneView->GetRealPosition());
+        RenderCommand::PushViewportStack(sceneView->GetRealPosition(), Vec2f(Window::GetWidth(), Window::GetHeight()) - sceneView->GetRealPosition());
         cursor->SetPosition(Input::GetMousePosPixel());
         RenderCommand::PopViewportStack();
       }
@@ -406,22 +403,24 @@ class Core : public App
           terrainMaterial->SetShader(Shader::FromFile("res/shaders/terrain.shader"));
           flatMaterial->SetShader(Shader::FromFile("res/shaders/flat3d.shader"));
           modelMaterial->GetShader()->Enable();
-          light->SetToUniform(modelMaterial->GetShader(), "light");
+          light.SetToUniform(modelMaterial->GetShader(), "Light");
           modelMaterial->GetShader()->Disable();
           flatMaterial->GetShader()->Enable();
-          light->SetToUniform(flatMaterial->GetShader(), "light");
+          light.SetToUniform(flatMaterial->GetShader(), "Light");
           flatMaterial->GetShader()->Disable();
           //terrainShader->enable();
           //l->setToUniform(terrainShader, "light");
           //terrainShader->disable();
         }
+
+        Ref<TPCamera3D> camera = std::static_pointer_cast<TPCamera3D>(layer3d->GetCamera3D());
         if (e.GetButton() == GLFW_KEY_F1)
         {
           Log::Info("pos=", camera->GetPosition(), " height=", camera->GetHeight(), " distance=", camera->GetDistance(), ", rotation=", camera->GetRotation());
         }
         if (e.GetButton() == GLFW_KEY_F2)
         {
-          camera->SetPosition(Vec3<float>(-3.5, -7.8, 5.5));
+          camera->SetPosition(Vec3f(-3.5, -7.8, 5.5));
           camera->SetDistance(18);
           camera->SetHeight(0.66);
           camera->SetRotation(38.5);
@@ -432,7 +431,7 @@ class Core : public App
         }
         if (e.GetButton() == GLFW_KEY_X)
         {
-          Vec2 p = camera->GetWorldToScreenCoordinate(Vec3<float>(0, 0, 0));
+          Vec2f p = Vec2f{camera->GetWorldToScreenCoordinate(Vec3f(0, 0, 0))};
           Window::TransformScreenToWindowPos(p);
           Log::Info(p);
         }

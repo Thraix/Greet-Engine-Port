@@ -3,6 +3,7 @@
 #include <stack>
 #include <math/Vec2.h>
 #include <math/Vec4.h>
+#include <graphics/Color.h>
 
 namespace Greet
 {
@@ -16,21 +17,21 @@ namespace Greet
 
     private:
       RenderCommand() = delete;
-      static std::stack<Vec4> viewportStack;
-      static Vec4 clearColor;
+      static std::stack<Vec4f> viewportStack;
+      static Color clearColor;
     public:
       static void Init();
       /*
-         Values relative to the current viewport
-         position is from the top-left of the screen
-         */
+       Values relative to the current viewport
+       position is from the top-left of the screen
+       */
       static void PushViewportStack(float x, float y, float width, float height, bool ignoreParent=false);
-      static void PushViewportStack(const Vec2& pos, const Vec2& size, bool ignoreParent=false);
-      static void PushViewportStack(const Vec4& viewport, bool ignoreParent=false);
+      static void PushViewportStack(const Vec2f& pos, const Vec2f& size, bool ignoreParent=false);
+      static void PushViewportStack(const Vec4f& viewport, bool ignoreParent=false);
       static void PushViewportDefaultStack();
 
       static void PopViewportStack();
-      static Vec4 TopViewportStack();
+      static Vec4f TopViewportStack();
       static void ResetViewport();
 
       static float GetViewportX();
@@ -39,8 +40,8 @@ namespace Greet
       static float GetViewportHeight();
       static float GetViewportAspect();
 
-      static void SetClearColor(const Vec4& clearColor);
-      static const Vec4& GetClearColor();
+      static void SetClearColor(const Color& clearColor);
+      static const Color& GetClearColor();
       static void Clear();
 
       static void EnableCulling(bool enabled);

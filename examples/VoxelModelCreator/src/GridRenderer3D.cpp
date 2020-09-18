@@ -7,14 +7,14 @@ namespace vmc
   GridRenderer3D::GridRenderer3D()
     : Renderer3D(), lineShader(Shader::FromFile("res/shaders/simple.shader"))
   {
-    MeshData meshdata = MeshFactory::Cube2(0.5f, 0.5f, 0.5f, 1, 1, 1);
-    Pointer<Vec2> texCoords(6 * 4);
+    MeshData meshdata = MeshFactory::Cube({0.5f}, {1.0f});
+    Pointer<Vec2f> texCoords(6 * 4);
     for (int i = 0;i < 6;i++)
     {
-      texCoords[i * 4 + 0] = Vec2(0, 0);
-      texCoords[i * 4 + 1] = Vec2(1, 0);
-      texCoords[i * 4 + 2] = Vec2(1, 1);
-      texCoords[i * 4 + 3] = Vec2(0, 1);
+      texCoords[i * 4 + 0] = Vec2f(0, 0);
+      texCoords[i * 4 + 1] = Vec2f(1, 0);
+      texCoords[i * 4 + 2] = Vec2f(1, 1);
+      texCoords[i * 4 + 3] = Vec2f(0, 1);
     }
 
     meshdata.AddAttribute({MESH_TEXCOORDS_LOCATION, BufferAttributeType::VEC2}, texCoords);
@@ -26,7 +26,7 @@ namespace vmc
 
     // For drawing lines...
     vao = VertexArray::Create();
-    vbo = VertexBuffer::CreateDynamic(nullptr, 2 * sizeof(Vec3<float>));
+    vbo = VertexBuffer::CreateDynamic(nullptr, 2 * sizeof(Vec3f));
     vbo->SetStructure({{{0, BufferAttributeType::VEC3}}});
     vao->AddVertexBuffer(vbo);
     vbo->Disable();
@@ -40,40 +40,42 @@ namespace vmc
     vao->Disable();
   }
 
-  void GridRenderer3D::Begin(Camera* camera)
+  void GridRenderer3D::Begin(const Ref<Camera3D>& camera)
   {
     Renderer3D::Begin(camera);
     glLineWidth(1.0f);
   }
 
-  void GridRenderer3D::DrawCube(Camera* camera, const Vec3<float>& pos, const Vec3<float>& size, uint color, bool culling)
+  void GridRenderer3D::DrawCube(const Ref<Camera3D>& camera, const Vec3f& pos, const Vec3f& size, uint color, bool culling)
   {
-    material->SetColor(ColorUtils::ColorHexToVec4(color));
+    material->SetColor(Color{color});
     mesh->SetEnableCulling(false);
     emodel->SetScale(size);
     emodel->SetPosition(pos);
-    emodel->SetRotation(Vec3<float>(0, 0, 0));
+    emodel->SetRotation(Vec3f(0, 0, 0));
     emodel->UpdateTransformation();
-    emodel->BindShader(this, camera);
+    emodel->BindShader();
+    camera->SetShaderUniforms(emodel->GetMaterial()->GetShader());
     emodel->PreRender();
-    emodel->Render(this, camera);
+    emodel->Render();
     emodel->PostRender();
-    emodel->UnbindShader(this, camera);
+    emodel->UnbindShader();
   }
 
-  void GridRenderer3D::Submit(Camera* camera, const Cube& cube)
+  void GridRenderer3D::Submit(const Ref<Camera3D>& camera, const Cube& cube)
   {
-    material->SetColor(ColorUtils::ColorHexToVec4(cube.color));
+    material->SetColor(Color{cube.color});
     mesh->SetEnableCulling(false);
-    emodel->SetScale(Vec3<float>(1, 1, 1));
+    emodel->SetScale(Vec3f(1, 1, 1));
     emodel->SetPosition(cube.GetPosition());
-    emodel->SetRotation(Vec3<float>(0, 0, 0));
+    emodel->SetRotation(Vec3f(0, 0, 0));
     emodel->UpdateTransformation();
-    emodel->GetMaterial()->Bind(camera);
+    emodel->GetMaterial()->Bind();
+    camera->SetShaderUniforms(emodel->GetMaterial()->GetShader());
     BindMatrices(emodel->GetMaterial()->GetShader(), camera);
     emodel->GetMesh()->Bind();
 
-    emodel->GetMaterial()->GetShader()->SetUniformMat4("transformationMatrix", emodel->GetTransformationMatrix());
+    emodel->GetMaterial()->GetShader()->SetUniformMat4("uTransformationMatrix", emodel->GetTransformationMatrix());
     emodel->GetMesh()->Render();
     emodel->GetMesh()->Unbind();
     emodel->GetMaterial()->GetShader()->Disable();
@@ -82,7 +84,7 @@ namespace vmc
     //emodel->PostRender(this, camera);
   }
 
-  void GridRenderer3D::DrawLineCube(Camera* camera, const Vec3<float>& pos, const Vec3<float>& size, const Vec4& color)
+  void GridRenderer3D::DrawLineCube(const Ref<Camera3D>& camera, const Vec3f& pos, const Vec3f& size, const Vec4f& color)
   {
     DrawLine(camera, Vec3(pos.x, pos.y, pos.z), Vec3(pos.x + size.x, pos.y, pos.z), color);
     DrawLine(camera, Vec3(pos.x, pos.y + size.y, pos.z), Vec3(pos.x + size.x, pos.y + size.y, pos.z), color);
@@ -100,15 +102,14 @@ namespace vmc
     DrawLine(camera, Vec3(pos.x + size.x, pos.y, pos.z), Vec3(pos.x + size.x, pos.y, pos.z + size.z), color);
   }
 
-  void GridRenderer3D::DrawLine(Camera* camera, const Vec3<float>& start, const Vec3<float>& end, const Vec4& color)
+  void GridRenderer3D::DrawLine(const Ref<Camera3D>& camera, const Vec3f& start, const Vec3f& end, const Vec4f& color)
   {
     lineShader->Enable();
-    lineShader->SetUniformMat4("projectionMatrix", camera->GetProjectionMatrix());
-    lineShader->SetUniformMat4("viewMatrix", camera->GetViewMatrix());
-    lineShader->SetUniform4f("mat_color", color);
+    camera->SetShaderUniforms(lineShader);
+    lineShader->SetUniform4f("uMaterialColor", color);
 
     vbo->Enable();
-    Vec3<float>* buffer = (Vec3<float>*)vbo->MapBuffer();
+    Vec3f* buffer = (Vec3f*)vbo->MapBuffer();
 
     buffer[0] = start;
     buffer[1] = end;

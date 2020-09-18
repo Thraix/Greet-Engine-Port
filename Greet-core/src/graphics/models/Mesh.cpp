@@ -8,7 +8,7 @@
 
 namespace Greet {
 
-  Mesh::Mesh(const Pointer<Vec3<float>>& vertices, const Pointer<uint>& indices)
+  Mesh::Mesh(const Pointer<Vec3f>& vertices, const Pointer<uint>& indices)
     : m_clockwise(false)
   {
     m_drawMode = DrawType::TRIANGLES;
@@ -85,14 +85,14 @@ namespace Greet {
     return false;
   }
 
-  void Mesh::SetDefaultAttribute4f(uint location, const Vec4& data)
+  void Mesh::SetDefaultAttribute4f(uint location, const Vec4f& data)
   {
     vao->Enable();
     GLCall(glVertexAttrib4f(location,data.x,data.y,data.z,data.w));
     vao->Disable();
   }
 
-  void Mesh::SetDefaultAttribute3f(uint location, const Vec3<float>& data)
+  void Mesh::SetDefaultAttribute3f(uint location, const Vec3f& data)
   {
     vao->Enable();
     GLCall(glVertexAttrib3f(location,data.x,data.y,data.z));

@@ -59,7 +59,7 @@ namespace Greet
     LoadStyles(xmlObject);
   }
 
-  void Component::Measure(const Vec2& emptyParentSpace, const Vec2& percentageFill)
+  void Component::Measure(const Vec2f& emptyParentSpace, const Vec2f& percentageFill)
   {
     remeasure = false;
     if(width.type == GUISize::Type::Pixels)
@@ -77,7 +77,7 @@ namespace Greet
       height.size = GetWrapHeight();
   }
 
-  Vec2 Component::GetMeasureFillSize()
+  Vec2f Component::GetMeasureFillSize()
   {
     return GetContentSize();
   }
@@ -100,18 +100,18 @@ namespace Greet
   }
 
   // Push translation to renderer
-  void Component::PreRender(GUIRenderer* renderer, const Vec2& translation) const
+  void Component::PreRender(GUIRenderer* renderer, const Vec2f& translation) const
   {
     renderer->PushTranslation(translation);
 
     // Border around Component
     if(borderColor.a != 0.0)
-      //renderer->SubmitRect(pos + Vec2(0,0), size, currentStyle->borderColor, false);
-      renderer->DrawRoundedRect(pos+Vec2(0,0), {width.size, height.size}, borderColor, borderRadius, borderRoundedPrecision, false);
+      //renderer->SubmitRect(pos + Vec2f(0,0), size, currentStyle->borderColor, false);
+      renderer->DrawRoundedRect(pos+Vec2f(0,0), {width.size, height.size}, borderColor, borderRadius, borderRoundedPrecision, false);
 
     // Component background
     if (backgroundColor.a != 0.0)
-      renderer->DrawRoundedRect(pos + border.LeftTop(), Vec2{width.size, height.size} - GetBorder().LeftTop()-GetBorder().RightBottom(), backgroundColor, backgroundRadius, backgroundRoundedPrecision, false);
+      renderer->DrawRoundedRect(pos + border.LeftTop(), Vec2f{width.size, height.size} - GetBorder().LeftTop()-GetBorder().RightBottom(), backgroundColor, backgroundRadius, backgroundRoundedPrecision, false);
   }
 
   // Render component
@@ -132,7 +132,7 @@ namespace Greet
     Update(timeElapsed);
   }
 
-  void Component::OnEventHandler(Event& event, const Vec2& componentPos)
+  void Component::OnEventHandler(Event& event, const Vec2f& componentPos)
   {
     if(EVENT_IS_TYPE(event, EventType::MOUSE_PRESS))
       OnMousePressEventHandler(static_cast<MousePressEvent&>(event), componentPos);
@@ -150,7 +150,7 @@ namespace Greet
       OnEvent(event, componentPos);
   }
 
-  void Component::OnMousePressEventHandler(MousePressEvent& event, const Vec2& componentPos)
+  void Component::OnMousePressEventHandler(MousePressEvent& event, const Vec2f& componentPos)
   {
     if(!guiScene)
       Log::Error("GuiScene not initialized");
@@ -165,7 +165,7 @@ namespace Greet
     OnEvent(event, componentPos);
   }
 
-  void Component::OnMouseMoveEventHandler(MouseMoveEvent& event, const Vec2& componentPos)
+  void Component::OnMouseMoveEventHandler(MouseMoveEvent& event, const Vec2f& componentPos)
   {
     if(IsMouseInside(event.GetPosition() - componentPos) || UsingMouse())
     {
@@ -187,7 +187,7 @@ namespace Greet
     }
   }
 
-  void Component::OnMouseReleaseEventHandler(MouseReleaseEvent& event, const Vec2& componentPos)
+  void Component::OnMouseReleaseEventHandler(MouseReleaseEvent& event, const Vec2f& componentPos)
   {
     if(event.GetButton() == GREET_MOUSE_1)
     {
@@ -258,14 +258,14 @@ namespace Greet
     return pressed;
   }
 
-  Vec2 Component::GetPosition() const
+  Vec2f Component::GetPosition() const
   {
     return pos;
   }
 
-  Vec2 Component::GetRealPosition() const
+  Vec2f Component::GetRealPosition() const
   {
-    return pos + GetMargin().LeftTop() + (parent ? parent->GetTotalPadding() + parent->GetRealPosition() : Vec2(0,0));
+    return pos + GetMargin().LeftTop() + (parent ? parent->GetTotalPadding() + parent->GetRealPosition() : Vec2f(0,0));
   }
 
   Component* Component::GetParent() const
@@ -273,14 +273,14 @@ namespace Greet
     return parent;
   }
 
-  void Component::SetPosition(const Vec2& pos)
+  void Component::SetPosition(const Vec2f& pos)
   {
     this->pos = pos;
   }
 
-  Vec2 Component::GetSize() const
+  Vec2f Component::GetSize() const
   {
-    return Vec2{width.size, height.size};
+    return Vec2f{width.size, height.size};
   }
 
   float Component::GetWidth() const
@@ -436,9 +436,9 @@ namespace Greet
     Log::Error("Style does not exist within component: ", name, ", ", stylename);
   }
 
-  Vec2 Component::GetSizeValue() const
+  Vec2f Component::GetSizeValue() const
   {
-    return Vec2{width.value, height.value};
+    return Vec2f{width.value, height.value};
   }
 
   Component* Component::GetComponentByNameNoCast(const std::string& name)
@@ -448,9 +448,9 @@ namespace Greet
     return nullptr;
   }
 
-  bool Component::IsMouseInside(const Vec2& translatedPos) const
+  bool Component::IsMouseInside(const Vec2f& translatedPos) const
   {
-    return AABBUtils::PointInsideBox(translatedPos, Vec2{0,0}, {width.size, height.size});
+    return AABBUtils::PointInsideBox(translatedPos, Vec2f{0,0}, {width.size, height.size});
   }
 
   Component* Component::GetRootNode()
@@ -473,12 +473,12 @@ namespace Greet
     return depth;
   }
 
-  Vec2 Component::GetTotalPadding() const
+  Vec2f Component::GetTotalPadding() const
   {
     return GetPadding().LeftTop() + GetBorder().LeftTop();
   }
 
-  Vec2 Component::GetContentSize() const
+  Vec2f Component::GetContentSize() const
   {
     return GetSize() - GetPadding().GetSize() - GetBorder().GetSize();
   }

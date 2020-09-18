@@ -26,9 +26,9 @@ namespace Greet {
 
       virtual void SetColor(uint color) = 0;
       virtual inline uint GetColor() const = 0;
-      virtual void SetPosition(const Vec2& pos) = 0;
-      virtual inline const Vec2& GetPosition() const = 0;
-      virtual void SetSize(const Vec2& size) = 0;
-      virtual inline const Vec2& GetSize() const = 0;
+      virtual void SetPosition(const Vec2f& pos) = 0;
+      virtual inline const Vec2f& GetPosition() const = 0;
+      virtual void SetSize(const Vec2f& size) = 0;
+      virtual inline const Vec2f& GetSize() const = 0;
   };
 }

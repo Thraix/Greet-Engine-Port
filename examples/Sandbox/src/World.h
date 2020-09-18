@@ -4,10 +4,11 @@
 #include <common/Types.h>
 #include <graphics/layers/Scene.h>
 #include <graphics/models/EntityModel.h>
+#include <graphics/cameras/Camera3D.h>
 
 class World : public Greet::Scene
 {
-  Greet::Camera* camera;
+  Greet::Camera3D* camera;
   Greet::Material terrainMaterial;
   uint width;
   uint length;
@@ -15,7 +16,7 @@ class World : public Greet::Scene
   Chunk* chunks;
   public:
 
-    World(Greet::Camera* camera, uint width, uint length)
+    World(Greet::Camera3D* camera, uint width, uint length)
       : camera{camera}, width{width}, length{length}, terrainMaterial{Greet::Shader::FromFile("res/shaders/terrain.shader")}
     {
       chunks = new Chunk[width * length];
@@ -24,18 +25,19 @@ class World : public Greet::Scene
         for(int x = 0;x < width; x++)
         {
           chunks[x+z*width].Initialize(x,z);
-        } 
+        }
       }
     }
 
     void Render() const override
     {
-      terrainMaterial.Bind(camera);
+      terrainMaterial.Bind();
+      camera->SetShaderUniforms(terrainMaterial.GetShader());
       for(int z = 0;z < length; z++)
       {
         for(int x = 0;x < width; x++)
         {
-          terrainMaterial.GetShader()->SetUniformMat4("transformationMatrix", Greet::Mat4::Translate((x - width / 2.0f) * Chunk::CHUNK_WIDTH, -15, (z - length / 2.0f) * Chunk::CHUNK_HEIGHT));
+          terrainMaterial.GetShader()->SetUniformMat4("uTransformationMatrix", Greet::Mat4::Translate((x - width / 2.0f) * Chunk::CHUNK_WIDTH, -15, (z - length / 2.0f) * Chunk::CHUNK_HEIGHT));
           Greet::Mesh* mesh = chunks[x + z * width].mesh;
           mesh->Bind();
           mesh->Render();

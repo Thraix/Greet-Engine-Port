@@ -10,38 +10,34 @@ namespace Greet{
   {
     protected:
       Ref<Texture2D> texture;
-      Vec2 texPos;
-      Vec2 texSize;
+      Vec2f texPos;
+      Vec2f texSize;
     public:
       Sprite()
-        : texture(nullptr), texPos(Vec2(0, 0)), texSize(Vec2(1, 1))
+        : texture(nullptr), texPos(Vec2f(0, 0)), texSize(Vec2f(1, 1))
       {
 
       }
 
       virtual bool Update(float timeElapsed) { return false; }
       Sprite(const Ref<Texture2D>& texture)
-        : texture(texture), texPos(Vec2(0, 0)), texSize(Vec2(1, 1))
-      {
+        : texture{texture}, texPos{Vec2f{0, 0}}, texSize{Vec2f{1, 1}}
+      {}
 
-      }
-
-      Sprite(const Ref<Texture2D>& texture, Vec2 texPos, Vec2 texSize)
-        : texture(texture), texPos(texPos), texSize(texSize)
-      {
-
-      }
+      Sprite(const Ref<Texture2D>& texture, const Vec2f& texPos, const Vec2f& texSize)
+        : texture{texture}, texPos{texPos}, texSize{texSize}
+      {}
 
       virtual ~Sprite() {}
 
-
       inline uint GetTextureID() const { return texture->GetTexId(); }
 
-      inline Sprite* FromSpriteSheet(Vec2 texPos, Vec2 texSize) const
+      inline Sprite* FromSpriteSheet(const Vec2f& texPos, const Vec2f& texSize) const
       {
-        return new Sprite(texture, texPos + texPos*texSize, texSize*texSize);
+        return new Sprite(texture, texPos + texPos * texSize, texSize * texSize);
       }
-      virtual inline const Vec2& GetTexPos() const { return texPos; }
-      inline const Vec2& GetTexSize() const { return texSize; }
+
+      virtual inline const Vec2f& GetTexPos() const { return texPos; }
+      virtual inline const Vec2f& GetTexSize() const { return texSize; }
   };
 }

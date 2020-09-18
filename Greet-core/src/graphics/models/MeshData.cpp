@@ -9,7 +9,7 @@
 
 namespace Greet {
 
-  MeshData::MeshData(const Pointer<Vec3<float>>& vertices, const Pointer<uint>& indices)
+  MeshData::MeshData(const Pointer<Vec3f>& vertices, const Pointer<uint>& indices)
     : m_vertices(vertices), m_indices(indices)
   {
     for(auto it = m_indices.begin(); it != m_indices.end(); ++it)
@@ -49,7 +49,7 @@ namespace Greet {
 
   void MeshData::GenerateNormals()
   {
-    Pointer<Vec3<float>> normals = MeshFactory::CalculateNormals(m_vertices, m_indices);
+    Pointer<Vec3f> normals = MeshFactory::CalculateNormals(m_vertices, m_indices);
     AddAttribute({MESH_NORMALS_LOCATION, BufferAttributeType::VEC3}, normals);
   }
 
@@ -57,7 +57,7 @@ namespace Greet {
   {
     std::set<uint> usedProvokingVertices;
     std::map<uint,uint> usedIndices;
-    std::vector<Vec3<float>> newVertices;
+    std::vector<Vec3f> newVertices;
     std::vector<uint> newIndices;
 
     // Loop through all triangles
@@ -88,7 +88,7 @@ namespace Greet {
       if(foundProvoking)
       {
         uint provokingIndex = m_indices[i+provokingOffset];
-        Vec3<float> provokingVertex = m_vertices[provokingIndex];
+        Vec3f provokingVertex = m_vertices[provokingIndex];
         usedProvokingVertices.emplace(provokingIndex);
 
         auto vertex = usedIndices.find(provokingIndex);
@@ -169,7 +169,7 @@ namespace Greet {
     }
 
     // Write all vertex data.
-    fout.write((char*)m_vertices.Data(), vertexCount * sizeof(Vec3<float>));
+    fout.write((char*)m_vertices.Data(), vertexCount * sizeof(Vec3f));
 
     // Write index data.
     fout.write((char*)m_indices.Data(), indexCount * sizeof(uint));
@@ -200,7 +200,7 @@ namespace Greet {
     if(fileSize < 0)
     {
       Log::Error("Could not read MESH file, file is too small to contain signature.");
-      return MeshFactory::Cube(0,0,0,1,1,1);
+      return MeshFactory::Cube();
     }
 
     // Read signature
@@ -209,16 +209,16 @@ namespace Greet {
     if(std::string(buffer, 4) != "MESH")
     {
       Log::Error("Could not read MESH file, signature invalid.");
-      return MeshFactory::Cube(0,0,0,1,1,1);
+      return MeshFactory::Cube();
     }
     // Read how many attributes we have.
     uint vertexCount;
     fin.read((char*)&vertexCount,sizeof(uint));
-    fileSize -= vertexCount * sizeof(Vec3<float>);
+    fileSize -= vertexCount * sizeof(Vec3f);
     if(fileSize < 0)
     {
       Log::Error("Could not read MESH file, file is too small to contain vertex data");
-      return MeshFactory::Cube(0,0,0,1,1,1);
+      return MeshFactory::Cube();
     }
 
     // Read how many attributes we have.
@@ -228,7 +228,7 @@ namespace Greet {
     if(fileSize < 0)
     {
       Log::Error("Could not read MESH file, file is too small to contain vertex data");
-      return MeshFactory::Cube(0,0,0,1,1,1);
+      return MeshFactory::Cube();
     }
 
     // Read how many attributes we have.
@@ -245,7 +245,7 @@ namespace Greet {
     if(fileSize < 0)
     {
       Log::Error("Could not read MESH file, file is too small to contain attribute parameters");
-      return MeshFactory::Cube(0,0,0,1,1,1);
+      return MeshFactory::Cube();
     }
 
     std::vector<BufferAttribute> attributeParameters;
@@ -253,7 +253,7 @@ namespace Greet {
     if(attribLength > 1024)
     {
       Log::Error("Could not read MESH file, too many attributes.");
-      return MeshFactory::Cube(0,0,0,1,1,1);
+      return MeshFactory::Cube();
     }
     fin.read(buffer,attribsLength);
 
@@ -278,15 +278,15 @@ namespace Greet {
       if(fileSize < 0)
       {
         Log::Error("Could not read MESH file, file is too small to contain attribute data");
-        return MeshFactory::Cube(0,0,0,1,1,1);
+        return MeshFactory::Cube();
       }
     }
     if(fileSize != 0)
       Log::Warning("MESH file is larger than expected. Something might be wrong...");
 
     // Read vertices
-    std::vector<Vec3<float>> vertices = std::vector<Vec3<float>>(vertexCount);
-    fin.read((char*)vertices.data(),vertexCount*sizeof(Vec3<float>));
+    std::vector<Vec3f> vertices = std::vector<Vec3f>(vertexCount);
+    fin.read((char*)vertices.data(),vertexCount*sizeof(Vec3f));
 
     // Read indices
     std::vector<uint> indices = std::vector<uint>(indexCount);

@@ -50,7 +50,7 @@ namespace Greet
 
       virtual void Render(GUIRenderer* renderer) const override;
 
-      virtual void OnEvent(Event& event, const Vec2& componentPos) override;
+      virtual void OnEvent(Event& event, const Vec2f& componentPos) override;
       virtual void MouseExited() override;
 
       virtual void LoadFrameStyle(const MetaFile& metaFile) override;

@@ -2,15 +2,14 @@
 
 namespace Greet {
 
-  Layer3D::Layer3D(Camera* camera, Skybox* skybox)
+  Layer3D::Layer3D(const Ref<Camera3D>& camera, const Ref<Skybox>& skybox)
     : camera{camera}, skybox{skybox}
   {
   }
 
-  Layer3D::Layer3D(Camera* camera)
-    :camera{camera}, skybox{nullptr}
+  Layer3D::Layer3D(const Ref<Camera3D>& camera)
+    : camera{camera}, skybox{nullptr}
   {
-
   }
 
   Layer3D::~Layer3D()
@@ -20,7 +19,7 @@ namespace Greet {
   void Layer3D::PreRender()
   {
     if(skybox)
-      skybox->Render(*camera);
+      skybox->Render(camera);
   }
 
   void Layer3D::Render() const
@@ -76,13 +75,13 @@ namespace Greet {
     Log::Warning("Could not remove the renderer");
   }
 
-  Vec3<float> Layer3D::GetWorldToScreenCoordinate(const Vec3<float>& coordinate) const
+  Vec3f Layer3D::GetWorldToScreenCoordinate(const Vec3f& coordinate) const
   {
     return camera->GetWorldToScreenCoordinate(coordinate);
   }
 
-  void Layer3D::GetScreenToWorldCoordinate(const Vec2& screenPos, Vec3<float>* near, Vec3<float>* direction) const
+  Line Layer3D::GetScreenToWorldCoordinate(const Vec2f& screenPos) const
   {
-    camera->GetScreenToWorldCoordinate(screenPos, near, direction);
+    return camera->GetScreenToWorldCoordinate(screenPos);
   }
 }

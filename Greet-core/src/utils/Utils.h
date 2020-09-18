@@ -3,14 +3,13 @@
 #include <string>
 #include <ctime>
 #include <common/Types.h>
+#include <math/Vec2.h>
 
 #define BIT(x) (1 << (x))
 #define BIND_MEMBER_FUNC(fn) [this](auto&&... args){ this->fn(std::forward<decltype(args)>(args)...); }
 #define BIND_GLOBAL_FUNC(fn) &fn
 
 namespace Greet {
-
-  class Vec2;
 
   struct Utils
   {
@@ -122,7 +121,6 @@ namespace Greet {
       return r;
     }
 
-    static bool IsInside(const Vec2& point, const Vec2& pos, const Vec2& size);
+    static bool IsInside(const Vec2f& point, const Vec2f& pos, const Vec2f& size);
   };
-
 }

@@ -90,7 +90,7 @@ namespace Greet
     }
   }
 
-  void DockerContainer::OnEvent(Event& event, const Vec2& componentPos)
+  void DockerContainer::OnEvent(Event& event, const Vec2f& componentPos)
   {
     if(activeTab < 0 || activeTab >= children.size())
       return;
@@ -99,7 +99,7 @@ namespace Greet
       MousePressEvent& e = static_cast<MousePressEvent&>(event);
       if(e.GetButton() == GREET_MOUSE_1)
       {
-        Vec2 pos = e.GetPosition() - componentPos;
+        Vec2f pos = e.GetPosition() - componentPos;
         int tab = GetTab(pos);
         if(tab < children.size())
         {
@@ -112,7 +112,7 @@ namespace Greet
     else if(EVENT_IS_TYPE(event, EventType::MOUSE_MOVE))
     {
       MouseMoveEvent& e = static_cast<MouseMoveEvent&>(event);
-      Vec2 pos = e.GetPosition() - componentPos;
+      Vec2f pos = e.GetPosition() - componentPos;
       int tab = GetTab(pos);
       if(tab < children.size())
       {
@@ -127,9 +127,9 @@ namespace Greet
     children[activeTab]->OnEvent(event, componentPos + GetTabOffset());
   }
 
-  void DockerContainer::HandleDroppedTab(DockerTab* tab, MouseReleaseEvent& event, const Vec2& componentPos)
+  void DockerContainer::HandleDroppedTab(DockerTab* tab, MouseReleaseEvent& event, const Vec2f& componentPos)
   {
-    Vec2 mousePos = event.GetPosition() - position - componentPos;
+    Vec2f mousePos = event.GetPosition() - position - componentPos;
     DockerSplit* split = static_cast<DockerSplit*>(parent);
     int index = split->GetDockerIndex(this);
     bool splitContainer = false;
@@ -260,9 +260,9 @@ namespace Greet
     return nullptr;
   }
 
-  Vec2 DockerContainer::GetMinSize() const
+  Vec2f DockerContainer::GetMinSize() const
   {
-    return Vec2{20, docker->GetTabButton()->GetHeight()+20};
+    return Vec2f{20, docker->GetTabButton()->GetHeight()+20};
   }
 
   int DockerContainer::GetTabIndex(DockerTab* tab)
@@ -276,7 +276,7 @@ namespace Greet
     return children.size();
   }
 
-  int DockerContainer::GetTab(const Vec2& mousePos)
+  int DockerContainer::GetTab(const Vec2f& mousePos)
   {
     if(mousePos.y >= 0 && mousePos.y < docker->GetTabButton()->GetHeight())
     {
@@ -302,7 +302,7 @@ namespace Greet
     }
   }
 
-  void DockerContainer::SetPosition(const Vec2& _position)
+  void DockerContainer::SetPosition(const Vec2f& _position)
   {
     position = _position;
     for(auto&& child : children)
@@ -311,7 +311,7 @@ namespace Greet
     }
   }
 
-  void DockerContainer::SetSize(const Vec2& avSize, bool abRemeasure)
+  void DockerContainer::SetSize(const Vec2f& avSize, bool abRemeasure)
   {
     size = avSize;
     for(auto&& child : children)
@@ -338,60 +338,60 @@ namespace Greet
     }
   }
 
-  const Vec2& DockerContainer::GetTopSplitPos() const
+  const Vec2f& DockerContainer::GetTopSplitPos() const
   {
     // TODO: Store all this in a variable
-    Vec2 center = size*0.5;
-    const Vec2& dockerSize = GetSplitSize();
+    Vec2f center = size*0.5;
+    const Vec2f& dockerSize = GetSplitSize();
     float spacing = 10;
-    static Vec2 pos;
-    pos = center - dockerSize*0.5 - Vec2{0, dockerSize.h + spacing};
+    static Vec2f pos;
+    pos = center - dockerSize*0.5 - Vec2f{0, dockerSize.h + spacing};
     return pos;
   }
 
-  const Vec2& DockerContainer::GetBottomSplitPos() const
+  const Vec2f& DockerContainer::GetBottomSplitPos() const
   {
     // TODO: Store all this in a variable
-    Vec2 center = size*0.5;
-    const Vec2& dockerSize = GetSplitSize();
+    Vec2f center = size*0.5;
+    const Vec2f& dockerSize = GetSplitSize();
     float spacing = 10;
-    static Vec2 pos;
-    pos = center - dockerSize*0.5 + Vec2{0, dockerSize.h + spacing};
+    static Vec2f pos;
+    pos = center - dockerSize*0.5 + Vec2f{0, dockerSize.h + spacing};
     return pos;
   }
 
-  const Vec2& DockerContainer::GetLeftSplitPos() const
+  const Vec2f& DockerContainer::GetLeftSplitPos() const
   {
     // TODO: Store all this in a variable
-    Vec2 center = size*0.5;
-    const Vec2& dockerSize = GetSplitSize();
+    Vec2f center = size*0.5;
+    const Vec2f& dockerSize = GetSplitSize();
     float spacing = 10;
-    static Vec2 pos;
-    pos = center - dockerSize*0.5 - Vec2{dockerSize.w + spacing, 0};
+    static Vec2f pos;
+    pos = center - dockerSize*0.5 - Vec2f{dockerSize.w + spacing, 0};
     return pos;
   }
 
-  const Vec2& DockerContainer::GetRightSplitPos() const
+  const Vec2f& DockerContainer::GetRightSplitPos() const
   {
     // TODO: Store all this in a variable
-    Vec2 center = size*0.5;
-    const Vec2& dockerSize = GetSplitSize();
+    Vec2f center = size*0.5;
+    const Vec2f& dockerSize = GetSplitSize();
     float spacing = 10;
-    static Vec2 pos;
-    pos = center - dockerSize*0.5 + Vec2{dockerSize.w + spacing, 0};
+    static Vec2f pos;
+    pos = center - dockerSize*0.5 + Vec2f{dockerSize.w + spacing, 0};
     return pos;
   }
 
-  const Vec2& DockerContainer::GetSplitSize() const
+  const Vec2f& DockerContainer::GetSplitSize() const
   {
     // TODO: Store all this in a variable
-    static Vec2 splitSize = {30,30};
+    static Vec2f splitSize = {30,30};
     return splitSize;
   }
 
-  const Vec2& DockerContainer::GetTabOffset() const
+  const Vec2f& DockerContainer::GetTabOffset() const
   {
-    static Vec2 offset;
+    static Vec2f offset;
     offset = {0, docker->GetTabButton()->GetHeight()};
     return offset;
   }

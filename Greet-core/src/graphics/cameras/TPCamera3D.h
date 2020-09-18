@@ -1,12 +1,12 @@
 #pragma once
 
-#include <graphics/cameras/Camera.h>
+#include <graphics/cameras/Camera3D.h>
 #include <math/Maths.h>
 #include <event/EventDispatcher.h>
 
 namespace Greet {
 
-  class TPCamera : public Camera
+  class TPCamera3D : public Camera3D
   {
     private:
       bool m_mouse1 = false;
@@ -24,29 +24,28 @@ namespace Greet {
       float m_heightSpeed;
       float m_distanceSpeed;
 
-      Vec3<float> m_position;
+      Vec3f m_position;
       float m_distance;
       float m_height;
       float m_rotation;
 
-      Vec3<float> m_positionWanted;
+      Vec3f m_positionWanted;
       float m_distanceWanted;
       float m_heightWanted;
       float m_rotationWanted;
 
     private:
-      void CalculateViewMatrix();
-      void CalculateInformation();
+      void UpdateViewMatrix();
     public:
-      TPCamera(float fov, float near, float far);
-      TPCamera(float fov, float near, float far, const Vec3<float>& position, float distance, float height, float rotation);
-      TPCamera(float fov, float near, float far, const Vec3<float>& position, float distance, float height, float rotation, float distanceMin, float distanceMax, float heightMin, float heightMax);
-      TPCamera(float fov, float near, float far, const Vec3<float>& position, float distance, float height, float rotation, float distanceMin, float distanceMax, float heightMin, float heightMax, float rotationSpeed, float heightSpeed, float distanceSpeed);
-      virtual ~TPCamera();
+      TPCamera3D(float fov, float near, float far);
+      TPCamera3D(float fov, float near, float far, const Vec3f& position, float distance, float height, float rotation);
+      TPCamera3D(float fov, float near, float far, const Vec3f& position, float distance, float height, float rotation, float distanceMin, float distanceMax, float heightMin, float heightMax);
+      TPCamera3D(float fov, float near, float far, const Vec3f& position, float distance, float height, float rotation, float distanceMin, float distanceMax, float heightMin, float heightMax, float rotationSpeed, float heightSpeed, float distanceSpeed);
+      virtual ~TPCamera3D();
 
       void Update(float timeElapsed) override;
 
-      const Vec3<float>& GetPosition() const { return m_position; }
+      const Vec3f& GetPosition() const { return m_position; }
       float GetHeight() const { return m_height; }
       float GetRotation() const { return m_rotation; }
       float GetDistance() const { return m_distance; }
@@ -56,7 +55,7 @@ namespace Greet {
       float GetMaxHeight() const { return m_heightMax; }
 
 
-      void SetPosition(const Vec3<float>& pos);
+      void SetPosition(const Vec3f& pos);
       void SetHeight(float height);
       void SetRotation(float rotation);
       void SetDistance(float distance);
@@ -69,8 +68,8 @@ namespace Greet {
       void SetInputY(const std::string& inputName);
       void SetInputMove(const std::string& inputName);
 
-      void Move(const Vec2& delta);
-      void Rotate(const Vec2& delta);
+      void Move(const Vec2f& delta);
+      void Rotate(const Vec2f& delta);
       void Zoom(float delta);
       void OnEvent(Event& event) override;
   };

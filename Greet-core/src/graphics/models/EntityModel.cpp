@@ -4,32 +4,32 @@
 
 namespace Greet {
   EntityModel::EntityModel(Mesh* mesh, Material* material, float x, float y, float z, float sx, float sy, float sz, float rx, float ry, float rz)
-    : mesh{mesh}, material(material), m_position(Vec3<float>(x,y,z)), m_scale(Vec3<float>(sx,sy,sz)), m_rotation(Vec3<float>(rx,ry,rz))
+    : mesh{mesh}, material(material), m_position(Vec3f(x,y,z)), m_scale(Vec3f(sx,sy,sz)), m_rotation(Vec3f(rx,ry,rz))
   {
     UpdateTransformation();
   }
 
-  EntityModel::EntityModel(Mesh* mesh, Material* material, Vec3<float> position, Vec3<float> scale, Vec3<float> rotation)
+  EntityModel::EntityModel(Mesh* mesh, Material* material, Vec3f position, Vec3f scale, Vec3f rotation)
     : mesh{mesh}, material(material), m_position(position), m_scale(scale), m_rotation(rotation)
   {
     UpdateTransformation();
   }
 
   EntityModel::EntityModel(Mesh* mesh, Material* material)
-    : mesh{mesh}, material(material), m_position(Vec3<float>(0,0,0)), m_scale(Vec3<float>(1,1,1)), m_rotation(0,0,0)
+    : mesh{mesh}, material(material), m_position(Vec3f(0,0,0)), m_scale(Vec3f(1,1,1)), m_rotation(0,0,0)
   {
     UpdateTransformation();
   }
 
-  void EntityModel::BindShader(const Renderer3D* renderer, const Camera* camera) const
+  void EntityModel::BindShader() const
   {
-    material->Bind(camera);
+    material->Bind();
     BindTransformation();
   }
 
   void EntityModel::BindTransformation() const
   {
-    material->GetShader()->SetUniformMat4("transformationMatrix", m_transformationMatrix);
+    material->GetShader()->SetUniformMat4("uTransformationMatrix", m_transformationMatrix);
 
   }
   void EntityModel::PreRender() const
@@ -37,7 +37,7 @@ namespace Greet {
     mesh->Bind();
   }
 
-  void EntityModel::Render(const Renderer3D* renderer, const Camera* camera) const
+  void EntityModel::Render() const
   {
     mesh->Render();
   }
@@ -47,7 +47,7 @@ namespace Greet {
     mesh->Unbind();
   }
 
-  void EntityModel::UnbindShader(const Renderer3D* renderer, const Camera* camera) const
+  void EntityModel::UnbindShader() const
   {
     GetMaterial()->Unbind();
   }

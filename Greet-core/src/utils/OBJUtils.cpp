@@ -8,25 +8,25 @@ namespace Greet {
 
   MeshData OBJUtils::ErrorModel()
   {
-    return MeshFactory::Cube(0,0,0,1,1,1);
+    return MeshFactory::Cube();
   }
 
   MeshData OBJUtils::LoadObj(const std::string& filename)
   {
     std::vector<std::string> dataLine;
 
-    std::vector<Vec3<float>> positions;
-    std::vector<Vec2> texCoords;
-    std::vector<Vec3<float>> normals;
+    std::vector<Vec3f> positions;
+    std::vector<Vec2f> texCoords;
+    std::vector<Vec3f> normals;
     std::vector<uint> indices;
 
     std::ifstream input(filename);
     std::map<std::string, uint> verticesMap;
 
     // These are the same length.
-    std::vector<Vec3<float>> vertexPos;
-    std::vector<Vec2> vertexTexCoords;
-    std::vector<Vec3<float>> vertexNormals;
+    std::vector<Vec3f> vertexPos;
+    std::vector<Vec2f> vertexTexCoords;
+    std::vector<Vec3f> vertexNormals;
 
     for (std::string line; getline(input, line); )
     {
@@ -35,7 +35,7 @@ namespace Greet {
       iss >> s;
       if (s == "v")
       {
-        Vec3<float> vector{};
+        Vec3f vector{};
         iss >> vector.x;
         iss >> vector.y;
         iss >> vector.z;
@@ -43,14 +43,14 @@ namespace Greet {
       }
       else if (s == "vt")
       {
-        Vec2 vector{};
+        Vec2f vector{};
         iss >> vector.x;
         iss >> vector.y;
         texCoords.push_back(vector);
       }
       else if (s == "vn")
       {
-        Vec3<float> vector{};
+        Vec3f vector{};
         iss >> vector.x;
         iss >> vector.y;
         iss >> vector.z;
@@ -102,10 +102,10 @@ namespace Greet {
 
     MeshData mesh{vertexPos, indices};
     if(vertexTexCoords.size() > 0)
-      mesh.AddAttribute({MESH_TEXCOORDS_LOCATION, BufferAttributeType::VEC2}, Pointer<Vec2>{vertexTexCoords});
+      mesh.AddAttribute({MESH_TEXCOORDS_LOCATION, BufferAttributeType::VEC2}, Pointer<Vec2f>{vertexTexCoords});
 
     if(vertexNormals.size() > 0)
-      mesh.AddAttribute({MESH_NORMALS_LOCATION, BufferAttributeType::VEC3}, Pointer<Vec3<float>>{vertexNormals});
+      mesh.AddAttribute({MESH_NORMALS_LOCATION, BufferAttributeType::VEC3}, Pointer<Vec3f>{vertexNormals});
 
     return mesh;
   }

@@ -15,7 +15,7 @@ namespace Greet
   {}
 
 
-  void SatValSlider::PreRender(GUIRenderer* renderer, const Vec2& translation) const
+  void SatValSlider::PreRender(GUIRenderer* renderer, const Vec2f& translation) const
   {
     renderer->PushTranslation(translation);
     renderer->DrawRect(pos, GetSize(), Color(color.h, 0, 0), Color(color.h, 1, 0), Color(color.h, 0, 1), Color(color.h, 1, 1), true);
@@ -23,21 +23,21 @@ namespace Greet
 
   void SatValSlider::Render(GUIRenderer* renderer) const
   {
-    Vec2 sliderPos = {GetSliderPosFromSat(color.s), GetSliderPosFromVal(color.v)};
-    Vec2 size = GetSize();
+    Vec2f sliderPos = {GetSliderPosFromSat(color.s), GetSliderPosFromVal(color.v)};
+    Vec2f size = GetSize();
     Color argb = Color(color).ToRGB().Invert();
-    renderer->DrawRect(pos + Vec2{sliderPos .x, 0}, Vec2{1, size.h}, argb, false);
-    renderer->DrawRect(pos + Vec2{0, sliderPos .y}, Vec2{size.w, 1}, argb, false);
+    renderer->DrawRect(pos + Vec2f{sliderPos .x, 0}, Vec2f{1, size.h}, argb, false);
+    renderer->DrawRect(pos + Vec2f{0, sliderPos .y}, Vec2f{size.w, 1}, argb, false);
   }
 
-  void SatValSlider::OnEvent(Event& event, const Vec2& componentPos)
+  void SatValSlider::OnEvent(Event& event, const Vec2f& componentPos)
   {
     if(EVENT_IS_TYPE(event, EventType::MOUSE_PRESS))
     {
       MousePressEvent& e = static_cast<MousePressEvent&>(event);
       if(e.GetButton() == GREET_MOUSE_1 && pressed)
       {
-        Vec2 translatedPos = e.GetPosition() - componentPos;
+        Vec2f translatedPos = e.GetPosition() - componentPos;
         SetSat(GetSliderSatFromPos(translatedPos.x));
         SetVal(GetSliderValFromPos(translatedPos.y));
       }
@@ -47,7 +47,7 @@ namespace Greet
       if(pressed)
       {
         MouseMoveEvent& e = static_cast<MouseMoveEvent&>(event);
-        Vec2 translatedPos = e.GetPosition() - componentPos;
+        Vec2f translatedPos = e.GetPosition() - componentPos;
         SetSat(GetSliderSatFromPos(translatedPos.x));
         SetVal(GetSliderValFromPos(translatedPos.y));
       }

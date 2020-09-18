@@ -6,8 +6,8 @@
 
 namespace Greet
 {
-  std::stack<Vec4> RenderCommand::viewportStack;
-  Vec4 RenderCommand::clearColor{0,0,0,1};
+  std::stack<Vec4f> RenderCommand::viewportStack;
+  Color RenderCommand::clearColor{0,0,0,1};
 
 
   void RenderCommand::Init()
@@ -27,12 +27,12 @@ namespace Greet
     PushViewportStack({x,y,width,height}, ignoreParent);
   }
 
-  void RenderCommand::PushViewportStack(const Vec2& pos, const Vec2& size, bool ignoreParent)
+  void RenderCommand::PushViewportStack(const Vec2f& pos, const Vec2f& size, bool ignoreParent)
   {
     PushViewportStack({pos.x,pos.y,size.w,size.h}, ignoreParent);
   }
 
-  void RenderCommand::PushViewportStack(const Vec4& viewport, bool ignoreParent)
+  void RenderCommand::PushViewportStack(const Vec4f& viewport, bool ignoreParent)
   {
     if(ignoreParent)
     {
@@ -41,8 +41,8 @@ namespace Greet
     }
     else
     {
-      const Vec4& lastViewport = viewportStack.empty()
-        ? Vec4(0, 0, Window::GetWidth(), Window::GetHeight())
+      const Vec4f& lastViewport = viewportStack.empty()
+        ? Vec4f(0, 0, Window::GetWidth(), Window::GetHeight())
         : viewportStack.top();
 
       Vec4 vp{viewport};
@@ -55,7 +55,7 @@ namespace Greet
 
   void RenderCommand::PushViewportDefaultStack()
   {
-    Vec4 vp{0,0, (float)Window::GetWidth(), (float)Window::GetHeight()};
+    Vec4f vp{0,0, (float)Window::GetWidth(), (float)Window::GetHeight()};
     GLCall(glViewport(vp.x, vp.y, vp.z, vp.w));
     viewportStack.push(vp);
   }
@@ -70,8 +70,8 @@ namespace Greet
     viewportStack.pop();
 
     // Use window size as default viewport if stack is empty
-    const Vec4& vp = viewportStack.empty()
-      ? Vec4(0, 0, Window::GetWidth(), Window::GetHeight())
+    const Vec4f& vp = viewportStack.empty()
+      ? Vec4f(0, 0, Window::GetWidth(), Window::GetHeight())
       : viewportStack.top();
 
     GLCall(glViewport(vp.x, vp.y, vp.z, vp.w));
@@ -85,10 +85,10 @@ namespace Greet
     GLCall(glViewport(0,0,Window::GetWidth(), Window::GetHeight()));
   }
 
-  Vec4 RenderCommand::TopViewportStack()
+  Vec4f RenderCommand::TopViewportStack()
   {
     if(viewportStack.empty())
-      return Vec4{0,0, (float)Window::GetWidth(), (float)Window::GetHeight()};
+      return Vec4f{0,0, (float)Window::GetWidth(), (float)Window::GetHeight()};
     return viewportStack.top();
   }
 
@@ -127,13 +127,13 @@ namespace Greet
     return viewportStack.top().z / viewportStack.top().w;
   }
 
-  void RenderCommand::SetClearColor(const Vec4& clearColor)
+  void RenderCommand::SetClearColor(const Color& clearColor)
   {
     RenderCommand::clearColor = clearColor;
     GLCall(glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a));
   }
 
-  const Vec4& RenderCommand::GetClearColor()
+  const Color& RenderCommand::GetClearColor()
   {
     return clearColor;
   }

@@ -46,7 +46,7 @@ namespace Greet
       TextBox& SetHintFont(const std::string& fontName);
       TextBox& SetHintFontSize(float fontSize);
 
-      void OnEvent(Event& event, const Vec2& componentPos) override;
+      void OnEvent(Event& event, const Vec2f& componentPos) override;
       void KeyPress(KeyPressEvent& event);
 
       void SetOnTextChangedCallback(OnTextChangedCallback callback);

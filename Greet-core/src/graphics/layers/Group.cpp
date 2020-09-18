@@ -2,7 +2,7 @@
 
 namespace Greet {
 
-  Group::Group(const Vec2& position)
+  Group::Group(const Vec2f& position)
     : m_transformationMatrix(Mat3::Translate(position))
   {
     enable = true;

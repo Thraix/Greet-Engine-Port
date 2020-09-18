@@ -11,6 +11,6 @@ namespace Greet
     public:
       HueSlider(const std::string& name, Component* parent);
       HueSlider(const XMLObject& xmlObject, Component* parent);
-      void PreRender(GUIRenderer* renderer, const Vec2& translation) const override;
+      void PreRender(GUIRenderer* renderer, const Vec2f& translation) const override;
   };
 }

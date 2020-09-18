@@ -2,7 +2,7 @@
 
 #include <math/Maths.h>
 #include <graphics/models/EntityModel.h>
-#include <graphics/cameras/Camera.h>
+#include <graphics/cameras/Camera3D.h>
 #include <graphics/Skybox.h>
 #include <graphics/layers/Scene.h>
 
@@ -22,10 +22,10 @@ namespace Greet{
       {}
 
       virtual void Update(float timeElapsed) {}
-      void BindMatrices(const Ref<Shader>& shader, const Camera* camera, bool shouldBindShader = false) const;
+      void BindMatrices(const Ref<Shader>& shader, const Ref<Camera3D>& camera, bool shouldBindShader = false) const;
 
-      virtual void Begin(Camera* camera) {}
-      virtual void Render(Camera* camera) const {}
-      virtual void End(Camera* camera) {}
+      virtual void Begin(const Ref<Camera3D>& camera) {}
+      virtual void Render(const Ref<Camera3D>& camera) const {}
+      virtual void End(const Ref<Camera3D>& camera) {}
   };
 }

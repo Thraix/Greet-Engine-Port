@@ -9,8 +9,8 @@
 namespace Greet{
   struct AtlasCoords
   {
-    Vec2 coord1;
-    Vec2 coord2;
+    Vec2f coord1;
+    Vec2f coord2;
   };
 
   class Atlas

@@ -181,7 +181,7 @@ class Core : public App
 
     void OnColorChangeCallback(Component* component, const Color& oldValue, const Color& current)
     {
-      RenderCommand::SetClearColor(Vec4(current.r,current.g,current.b,1));
+      RenderCommand::SetClearColor(Color(current.r,current.g,current.b, 1));
       editorView->LoadStyle("normal", Styling{.colors={{"backgroundColor", current}}});
     }
 

@@ -20,11 +20,11 @@ namespace Greet
       ColorPicker(const XMLObject& object, Component* parent);
       virtual ~ColorPicker();
 
-      void PreRender(GUIRenderer* renderer, const Vec2& translation) const override;
+      void PreRender(GUIRenderer* renderer, const Vec2f& translation) const override;
 
       void AttachColor(Color* color);
 
-      void OnEvent(Event& event, const Vec2& translatedPos) override;
+      void OnEvent(Event& event, const Vec2f& translatedPos) override;
       void OnColorChanged(const Color& previous, const Color& current);
 
       void SetOnColorChangeCallback(OnColorChangeCallback callback);

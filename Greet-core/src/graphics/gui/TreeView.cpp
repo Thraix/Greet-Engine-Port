@@ -51,7 +51,7 @@ namespace Greet
     renderer->PopViewport();
   }
 
-  void TreeView::OnEvent(Event& event, const Vec2& componentPos)
+  void TreeView::OnEvent(Event& event, const Vec2f& componentPos)
   {
     if(EVENT_IS_TYPE(event, EventType::MOUSE_MOVE))
     {

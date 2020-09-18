@@ -51,9 +51,9 @@ namespace Greet
     component->UpdateHandle(timeElapsed);
   }
 
-  void DockerTab::OnEvent(Event& event, const Vec2& componentPos)
+  void DockerTab::OnEvent(Event& event, const Vec2f& componentPos)
   {
-    component->OnEventHandler(event, componentPos + Vec2{0.0f, 0.0f});
+    component->OnEventHandler(event, componentPos + Vec2f{0.0f, 0.0f});
   }
 
   Component* DockerTab::GetComponentByNameNoCast(const std::string& name)
@@ -86,12 +86,12 @@ namespace Greet
     component->SetGUIScene(scene);
   }
 
-  void DockerTab::SetPosition(const Vec2& _position)
+  void DockerTab::SetPosition(const Vec2f& _position)
   {
     component->SetPosition(_position);
   }
 
-  void DockerTab::SetSize(const Vec2& avSize, bool abRemeasure)
+  void DockerTab::SetSize(const Vec2f& avSize, bool abRemeasure)
   {
     size = avSize;
     if(abRemeasure)

@@ -41,13 +41,13 @@ namespace Greet
     renderer->PushViewport(pos+GetTotalPadding(), GetContentSize());
     if(text.str.length() == 0)
     {
-      Vec2 p = pos + GetTotalPadding() +  Vec2(-textOffset, 0);
+      Vec2f p = pos + GetTotalPadding() +  Vec2f(-textOffset, 0);
       renderer->PushTranslation(p);
       hintText.Render(renderer, GetContentSize());
     }
     else
     {
-      Vec2 p = pos + GetTotalPadding() +  Vec2(-textOffset, 0);
+      Vec2f p = pos + GetTotalPadding() +  Vec2f(-textOffset, 0);
       renderer->PushTranslation(p);
       text.Render(renderer, GetContentSize());
     }
@@ -58,8 +58,8 @@ namespace Greet
     if(isFocused && cursorBlinkTimer < 0.5)
     {
       float p = text.font.GetWidthOfText(text.str,0, cursorPos)-textOffset;
-      Vec2 curPos = pos + GetTotalPadding() + Vec2(p, (GetContentSize().h - text.font.GetSize())/2);
-      renderer->DrawRect(curPos,Vec2(1,text.font.GetSize()),text.color,false);
+      Vec2f curPos = pos + GetTotalPadding() + Vec2f(p, (GetContentSize().h - text.font.GetSize())/2);
+      renderer->DrawRect(curPos,Vec2f(1,text.font.GetSize()),text.color,false);
     }
   }
 
@@ -70,14 +70,14 @@ namespace Greet
       cursorBlinkTimer -= 1;
   }
 
-  void TextBox::OnEvent(Event& event, const Vec2& componentPos)
+  void TextBox::OnEvent(Event& event, const Vec2f& componentPos)
   {
     if(EVENT_IS_TYPE(event, EventType::MOUSE_PRESS))
     {
       MousePressEvent& e = static_cast<MousePressEvent&>(event);
       if(e.GetButton() == GREET_MOUSE_1)
       {
-        Vec2 translatedPos = e.GetPosition() - componentPos;
+        Vec2f translatedPos = e.GetPosition() - componentPos;
         // TODO: In the future we probably want to do some smart, average character length
         // to determain around where the cursor should be.
         std::vector<uint> widths{text.font.GetPartialWidths(str)};

@@ -1,6 +1,7 @@
 #include "Mat4.h"
 
 #include <math/MathFunc.h>
+#include <graphics/RenderCommand.h>
 #include <cstring>
 
 #define _0_0 0
@@ -47,6 +48,20 @@ namespace Greet {
     return Mat4(1.0f);
   }
 
+  Mat4 Mat4::OrthographicViewport(float near, float far)
+  {
+    Mat4 result(1.0f);
+
+    result.elements[_0_0] = 2.0f / (RenderCommand::GetViewportWidth());
+    result.elements[_1_1] = 2.0f / (-RenderCommand::GetViewportHeight());
+    result.elements[_2_2] = -2.0f / (far - near);
+    result.elements[_3_0] = -(2 * RenderCommand::GetViewportX() + RenderCommand::GetViewportWidth()) / RenderCommand::GetViewportWidth();
+    result.elements[_3_1] = -(2 * RenderCommand::GetViewportY() + RenderCommand::GetViewportHeight()) / -RenderCommand::GetViewportHeight();
+    result.elements[_3_2] = -(far + near) / (far - near);
+
+    return result;
+  }
+
   Mat4 Mat4::Orthographic(float left, float right, float top, float bottom, float near, float far)
   {
     Mat4 result(1.0f);
@@ -61,7 +76,21 @@ namespace Greet {
     return result;
   }
 
-  Mat4 Mat4::ProjectionMatrix(float aspect, float fov, float near, float far)
+  Mat4 Mat4::PerspectiveViewport(float fov, float near, float far)
+  {
+    Mat4 result(1.0f);
+    float tan2 = 1.0f / tan(Math::ToRadians(fov * 0.5f));
+    result.elements[_0_0] = tan2 / RenderCommand::GetViewportAspect();
+    result.elements[_1_1] = tan2;
+    result.elements[_2_2] = (far + near) / (near - far);
+    result.elements[_3_2] = 2 * (far * near) / (near - far);
+    result.elements[_2_3] = -1;
+    result.elements[_3_3] = 0;
+
+    return result;
+  }
+
+  Mat4 Mat4::Perspective(float aspect, float fov, float near, float far)
   {
     Mat4 result(1.0f);
     float tan2 = 1.0f / tan(Math::ToRadians(fov * 0.5f));
@@ -75,7 +104,7 @@ namespace Greet {
     return result;
   }
 
-  Mat4 Mat4::TransformationMatrix(const Vec3<float>& position, const Vec3<float>& rotation, const Vec3<float>& scale)
+  Mat4 Mat4::TransformationMatrix(const Vec3f& position, const Vec3f& rotation, const Vec3f& scale)
   {
     return
       Mat4::Translate(position) *
@@ -85,7 +114,7 @@ namespace Greet {
       Mat4::Scale(scale);
   }
 
-  Mat4 Mat4::ViewMatrix(const Vec3<float>& position, const Vec3<float>& rotation)
+  Mat4 Mat4::ViewMatrix(const Vec3f& position, const Vec3f& rotation)
   {
     return
       Mat4::RotateX(rotation.x) *
@@ -94,13 +123,17 @@ namespace Greet {
       Mat4::Translate(-position.x, -position.y, -position.z);
   }
 
-  Mat4 Mat4::AlignAxis(const Vec3<float>& point, const Vec3<float>& normal, const Vec3<float>& forward)
+  Mat4 Mat4::AlignAxis(const Vec3f& point, const Vec3f& normal, const Vec3f& forward)
   {
-    Vec3<float> yaxis = normal;
+    if(Vec::Dot(normal, forward) >= 0.9999)
+      return Translate(point);
+
+    Vec3f yaxis = normal;
     yaxis.Normalize();
 
-    Vec3<float> xaxis = (forward.Cross(yaxis)).Normalize();
-    Vec3<float> zaxis = xaxis.Cross(yaxis);
+    Vec3f xaxis = (forward.Cross(yaxis)).Normalize();
+    Vec3f zaxis = xaxis.Cross(yaxis);
+
 
     Mat4 result(1.0f);
 
@@ -120,18 +153,18 @@ namespace Greet {
     return result;
   }
 
-  Mat4 Mat4::TPCamera(const Vec3<float>& position, float distance, float height, float rotation)
+  Mat4 Mat4::TPCamera(const Vec3f& position, float distance, float height, float rotation)
   {
     return
-      RotateRX(asin(height)) *
-      Mat4::RotateY(90) *
-      Mat4::Translate(Vec3<float>(sqrt(1 - height*height) * distance, -height * distance, 0)) *
+      RotateX(asin(height)) *
+      Mat4::RotateY(M_PI / 2) *
+      Mat4::Translate(Vec3f(sqrt(1 - height*height) * distance, -height * distance, 0)) *
       Mat4::RotateY(rotation) *
       Mat4::Translate(-position.x, -position.y, -position.z);
   }
 
 
-  Mat4 Mat4::Translate(const Vec3<float>& translation)
+  Mat4 Mat4::Translate(const Vec3f& translation)
   {
     Mat4 result(1.0f);
 
@@ -152,7 +185,7 @@ namespace Greet {
     return result;
   }
 
-  Mat4 Mat4::Scale(const Vec3<float>& scaling)
+  Mat4 Mat4::Scale(const Vec3f& scaling)
   {
     Mat4 result(1.0f);
 
@@ -174,21 +207,7 @@ namespace Greet {
     return result;
   }
 
-  Mat4 Mat4::RotateX(float deg)
-  {
-    return RotateRX(Math::ToRadians(deg));
-  }
-
-  Mat4 Mat4::RotateY(float deg)
-  {
-    return RotateRY(Math::ToRadians(deg));
-  }
-
-  Mat4 Mat4::RotateZ(float deg)
-  {
-    return RotateRZ(Math::ToRadians(deg));
-  }
-  Mat4 Mat4::RotateRX(float rad)
+  Mat4 Mat4::RotateX(float rad)
   {
     Mat4 result(1.0f);
     float c = cos(rad);
@@ -200,7 +219,7 @@ namespace Greet {
     return result;
   }
 
-  Mat4 Mat4::RotateRY(float rad)
+  Mat4 Mat4::RotateY(float rad)
   {
     Mat4 result(1.0f);
     float c = cos(rad);
@@ -211,7 +230,8 @@ namespace Greet {
     result.elements[_2_2] = c;
     return result;
   }
-  Mat4 Mat4::RotateRZ(float rad)
+
+  Mat4 Mat4::RotateZ(float rad)
   {
     Mat4 result(1.0f);
     float c = cos(rad);
@@ -223,12 +243,7 @@ namespace Greet {
     return result;
   }
 
-  Mat4 Mat4::Rotate(float deg, const Vec3<float>& axis)
-  {
-    return RotateR(Math::ToRadians(deg), axis);
-  }
-
-  Mat4 Mat4::RotateR(float rad, const Vec3<float>& axis)
+  Mat4 Mat4::Rotate(float rad, const Vec3f& axis)
   {
     Mat4 result(1.0f);
 
@@ -412,7 +427,7 @@ namespace Greet {
     return *this;
   }
 
-  Vec3<float> Mat4::Multiply(const Vec3<float> &other) const
+  Vec3f Mat4::Multiply(const Vec3f &other) const
   {
     float x = columns[0].x * other.x + columns[1].x * other.y + columns[2].x * other.z + columns[3].x;
     float y = columns[0].y * other.x + columns[1].y * other.y + columns[2].y * other.z + columns[3].y;
@@ -421,13 +436,13 @@ namespace Greet {
     return Vec3(x/w, y/w, z/w);
   }
 
-  Vec4 Mat4::Multiply(const Vec4 &other) const
+  Vec4f Mat4::Multiply(const Vec4f &other) const
   {
     float x = columns[0].x * other.x + columns[1].x * other.y + columns[2].x * other.z + columns[3].x * other.w;
     float y = columns[0].y * other.x + columns[1].y * other.y + columns[2].y * other.z + columns[3].y * other.w;
     float z = columns[0].z * other.x + columns[1].z * other.y + columns[2].z * other.z + columns[3].z * other.w;
     float w = columns[0].w * other.x + columns[1].w * other.y + columns[2].w * other.z + columns[3].w * other.w;
-    return Vec4(x, y, z, w);
+    return Vec4f(x, y, z, w);
   }
 
   Mat4 operator*(Mat4 first, const Mat4 &second)
@@ -439,12 +454,12 @@ namespace Greet {
     return Multiply(other);
   }
 
-  Vec3<float> operator*(const Mat4 &first, const Vec3<float> &second)
+  Vec3f operator*(const Mat4 &first, const Vec3f &second)
   {
     return first.Multiply(second);
   }
 
-  Vec4 operator*(const Mat4 &first, const Vec4 &second)
+  Vec4f operator*(const Mat4 &first, const Vec4f &second)
   {
     return first.Multiply(second);
   }

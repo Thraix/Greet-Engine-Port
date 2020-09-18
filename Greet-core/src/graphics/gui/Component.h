@@ -56,7 +56,7 @@ namespace Greet
       Component* parent;
       bool remeasure = true;
 
-      Vec2 pos;
+      Vec2f pos;
 
       bool isFocused;
       bool isHovered;
@@ -73,18 +73,18 @@ namespace Greet
 
       virtual void PostConstruction(){}
 
-      virtual void Measure(const Vec2& emptyParentSpace, const Vec2& percentageFill);
+      virtual void Measure(const Vec2f& emptyParentSpace, const Vec2f& percentageFill);
 
       void Remeasure();
 
       // Size has updated
       virtual void OnMeasured(){}
 
-      virtual Vec2 GetMeasureFillSize();
+      virtual Vec2f GetMeasureFillSize();
       virtual float GetMeasureTotalWeight();
 
       // Push translation to renderer
-      virtual void PreRender(GUIRenderer* renderer, const Vec2& translation) const;
+      virtual void PreRender(GUIRenderer* renderer, const Vec2f& translation) const;
 
       // Render component
       virtual void RenderHandle(GUIRenderer* renderer) const;
@@ -98,12 +98,12 @@ namespace Greet
 
       // These methods generally handle internal stuff and shouldn't be overriden if
       // not necessary use their non EventHandler counterparts instead.
-      virtual void OnEventHandler(Event& event, const Vec2& componentPos);
-      virtual void OnMousePressEventHandler(MousePressEvent& event, const Vec2& componentPos);
-      virtual void OnMouseMoveEventHandler(MouseMoveEvent& event, const Vec2& componentPos);
-      virtual void OnMouseReleaseEventHandler(MouseReleaseEvent& event, const Vec2& componentPos);
+      virtual void OnEventHandler(Event& event, const Vec2f& componentPos);
+      virtual void OnMousePressEventHandler(MousePressEvent& event, const Vec2f& componentPos);
+      virtual void OnMouseMoveEventHandler(MouseMoveEvent& event, const Vec2f& componentPos);
+      virtual void OnMouseReleaseEventHandler(MouseReleaseEvent& event, const Vec2f& componentPos);
 
-      virtual void OnEvent(Event& event, const Vec2& componentPos) {}
+      virtual void OnEvent(Event& event, const Vec2f& componentPos) {}
 
 
       // Callbacks
@@ -111,9 +111,9 @@ namespace Greet
       void SetOnPressCallback(OnPressCallback callback);
       void SetOnReleaseCallback(OnReleaseCallback callback);
 
-      Vec2 GetPosition() const;
-      Vec2 GetRealPosition() const;
-      Vec2 GetSize() const;
+      Vec2f GetPosition() const;
+      Vec2f GetRealPosition() const;
+      Vec2f GetSize() const;
       Component* GetParent() const;
 
       virtual float GetWrapWidth() const { return 100; };
@@ -126,7 +126,7 @@ namespace Greet
       GUISize::Type GetHeightType() const;
 
       // Value of the sizeType, 1w will return 1 and not the size of the component
-      Vec2 GetSizeValue() const;
+      Vec2f GetSizeValue() const;
 
       // Sets the sizeType size and not the actuall component size.
       Component& SetWidth(float width);
@@ -146,9 +146,9 @@ namespace Greet
       Component& LoadStyle(const std::string& stylename, const Styling& styling);
       void SetCurrentStyle(const std::string& stylename);
 
-      virtual bool IsMouseInside(const Vec2& parentMouse) const;
-      virtual void SetPosition(const Vec2& pos);
-      void SetSize(const Vec2& size);
+      virtual bool IsMouseInside(const Vec2f& parentMouse) const;
+      virtual void SetPosition(const Vec2f& pos);
+      void SetSize(const Vec2f& size);
 
       virtual void SetGUIScene(GUIScene* scene);
 
@@ -165,11 +165,11 @@ namespace Greet
       virtual bool UsingMouse();
 
       Component* GetRootNode();
-      Vec2 GetTotalPadding() const;
+      Vec2f GetTotalPadding() const;
       const TLBR& GetMargin() const;
       const TLBR& GetPadding() const;
       const TLBR& GetBorder() const;
-      Vec2 GetContentSize() const;
+      Vec2f GetContentSize() const;
       const std::string& GetName() const;
 
       uint GetComponentDepth() const;

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <graphics/textures/CubeMap.h>
-#include <graphics/cameras/Camera.h>
+#include <graphics/cameras/Camera3D.h>
 #include <graphics/shaders/Shader.h>
 #include <graphics/models/Mesh.h>
 
@@ -19,7 +19,6 @@ namespace Greet {
       virtual ~Skybox();
 
       const Ref<CubeMap>& GetCubeMap() const { return m_map; };
-      void Render(const Mat4& projectionMatrix, const Mat4& viewMatrix) const;
-      void Render(const Camera& camera) const;
+      void Render(const Ref<Camera3D>& camera) const;
   };
 }

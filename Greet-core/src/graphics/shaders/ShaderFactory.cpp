@@ -2,7 +2,6 @@
 
 #include <graphics/shaders/Shader.h>
 
-
 namespace Greet {
 
   const char* ShaderFactory::shader2d=

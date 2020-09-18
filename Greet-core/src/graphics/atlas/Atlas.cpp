@@ -90,8 +90,8 @@ namespace Greet {
       uint y = (j - x) / textureCountSide;
 
       float size = textureSize / (float)texture->GetWidth();
-      Vec2 coord1 = Vec2(size, size) * Vec2(x, y);
-      Vec2 coord2 = coord1 + Vec2(size, size);
+      Vec2f coord1 = Vec2f(size, size) * Vec2f(x, y);
+      Vec2f coord2 = coord1 + Vec2f(size, size);
       return AtlasCoords{coord1, coord2};
     }
 

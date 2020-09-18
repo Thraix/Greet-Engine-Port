@@ -13,7 +13,7 @@ namespace Greet {
     public:
       bool enable;
     public:
-      Group(const Vec2& position);
+      Group(const Vec2f& position);
       Group(const Mat3& transform);
       virtual ~Group();
       virtual void Add(Renderable* renderable);
@@ -28,18 +28,18 @@ namespace Greet {
 
       void SetColor(uint color) override { Log::Warning("THIS DOES NOTHING",__PRETTY_FUNCTION__); }
       inline uint GetColor() const override { Log::Warning("THIS DOES NOTHING",__PRETTY_FUNCTION__);return 0xffffffff;}
-      void SetPosition(const Vec2& position) override { Log::Warning("THIS DOES NOTHING",__PRETTY_FUNCTION__); }
-      inline const Vec2& GetPosition() const override
+      void SetPosition(const Vec2f& position) override { Log::Warning("THIS DOES NOTHING",__PRETTY_FUNCTION__); }
+      inline const Vec2f& GetPosition() const override
       {
         Log::Warning("THIS DOES NOTHING",__PRETTY_FUNCTION__);
-        static Vec2 ret(0,0);
+        static Vec2f ret(0,0);
         return ret;
       }
-      void SetSize(const Vec2& size) override { Log::Warning("THIS DOES NOTHING",__PRETTY_FUNCTION__); }
-      inline const Vec2& GetSize() const override
+      void SetSize(const Vec2f& size) override { Log::Warning("THIS DOES NOTHING",__PRETTY_FUNCTION__); }
+      inline const Vec2f& GetSize() const override
       {
         Log::Warning("THIS DOES NOTHING",__PRETTY_FUNCTION__);
-        static Vec2 ret(1,1);
+        static Vec2f ret(1,1);
         return ret;
       }
   };

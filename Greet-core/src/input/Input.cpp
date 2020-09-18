@@ -5,14 +5,14 @@
 
 namespace Greet
 {
-  Vec2 Input::mousePos;
-  Vec2 Input::mouseLastPos;
+  Vec2f Input::mousePos;
+  Vec2f Input::mouseLastPos;
   std::unordered_map<int, bool> Input::mouseButtonsDown(16);
   std::unordered_map<int, bool> Input::keyButtonsDown(256);
   float Input::mouseScrollX;
   float Input::mouseScrollY;
 
-  void Input::SetMousePos(const Vec2& pos)
+  void Input::SetMousePos(const Vec2f& pos)
   {
     mousePos = pos;
   }
@@ -54,28 +54,28 @@ namespace Greet
     return false;
   }
 
-  Vec2 Input::GetMousePos(bool ignoreViewport)
+  Vec2f Input::GetMousePos(bool ignoreViewport)
   {
     if(ignoreViewport)
       return mousePos;
     return ConvertMousePosToViewport(mousePos);
   }
 
-  Vec2 Input::GetMousePosDelta(bool ignoreViewport)
+  Vec2f Input::GetMousePosDelta(bool ignoreViewport)
   {
     if(ignoreViewport)
       return mousePos - mouseLastPos;
     return ConvertMousePosToViewport(mousePos) - ConvertMousePosToViewport(mouseLastPos);
   }
 
-  Vec2 Input::ConvertMousePosToViewport(const Vec2& pos)
+  Vec2f Input::ConvertMousePosToViewport(const Vec2f& pos)
   {
-    const Vec4& viewport = RenderCommand::TopViewportStack();
+    const Vec4f& viewport = RenderCommand::TopViewportStack();
     // Transform viewport to screen pos
-    Vec2 pos1 {
+    Vec2f pos1 {
       2 * viewport.x / Window::GetWidth() - 1.0f,
         2 * viewport.y / Window::GetHeight() - 1.0f};
-    Vec2 pos2{
+    Vec2f pos2{
       2 * (viewport.x + viewport.z) / Window::GetWidth() - 1.0f,
         2 * (viewport.y + viewport.w) / Window::GetHeight() - 1.0f};
 
@@ -85,9 +85,9 @@ namespace Greet
     };
   }
 
-  Vec2 Input::GetMousePosPixel(bool ignoreViewport)
+  Vec2f Input::GetMousePosPixel(bool ignoreViewport)
   {
-    Vec2 pos = GetMousePos(ignoreViewport);
+    Vec2f pos = GetMousePos(ignoreViewport);
     Window::TransformScreenToWindowPos(pos);
     return pos;
   }

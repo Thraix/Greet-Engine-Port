@@ -43,9 +43,9 @@
 #include <graphics/buffers/Buffer.h>
 #include <graphics/buffers/VertexArray.h>
 #include <graphics/buffers/VertexBuffer.h>
-#include <graphics/cameras/Camera.h>
-#include <graphics/cameras/FPCamera.h>
-#include <graphics/cameras/TPCamera.h>
+#include <graphics/cameras/Camera3D.h>
+#include <graphics/cameras/FPCamera3D.h>
+#include <graphics/cameras/TPCamera3D.h>
 #include <graphics/fonts/Font.h>
 #include <graphics/fonts/FontAtlas.h>
 #include <graphics/fonts/FontContainer.h>
@@ -112,12 +112,13 @@
 #include <logging/LogLevel.h>
 #include <logging/LogStream.h>
 #include <logging/Logger.h>
+#include <math/Line.h>
 #include <math/Mat3.h>
 #include <math/Mat4.h>
 #include <math/MathFunc.h>
 #include <math/Maths.h>
+#include <math/Plane.h>
 #include <math/Quaternion.h>
-#include <math/Transform.h>
 #include <math/Vec2.h>
 #include <math/Vec3.h>
 #include <math/Vec4.h>

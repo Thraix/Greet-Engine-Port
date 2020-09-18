@@ -2,28 +2,31 @@ R"skyboxshader(
 //vertex
 #version 330 core
 
-layout(location = 0) in vec3 position;
-out vec3 vert_texCoord;
+layout(location = 0) in vec3 aPosition;
 
-uniform mat4 projectionMatrix;
-uniform mat4 viewMatrix;
+out vec3 vTexCoord;
+
+uniform mat4 uProjectionMatrix;
+uniform mat4 uViewMatrix;
 
 void main()
 {
-  vec3 worldPos = mat3(viewMatrix) * position;
-	gl_Position = projectionMatrix * vec4(worldPos, 1.0);
-	vert_texCoord = position;
+  vec3 worldPos = mat3(uViewMatrix) * aPosition;
+	gl_Position = uProjectionMatrix * vec4(worldPos, 1.0);
+	vTexCoord = aPosition;
 }
 
 //fragment
 #version 330 core
 
-in vec3 vert_texCoord;
-out vec4 out_color;
-uniform samplerCube textureSampler;
+in vec3 vTexCoord;
+
+out vec4 fColor;
+
+uniform samplerCube uTextureSampler;
 
 void main()
 {
-	out_color = texture(textureSampler,vert_texCoord);
+	fColor = texture(uTextureSampler, vTexCoord);
 }
 )skyboxshader"

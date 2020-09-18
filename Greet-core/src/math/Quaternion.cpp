@@ -44,17 +44,16 @@ namespace Greet {
     return *this;
   }
 
-  Quaternion& Quaternion::Multiply(const Vec3<float>& other)
+  Vec3f Quaternion::Multiply(const Vec3f& v)
   {
-    float w_ = -x * other.x - y * other.y - z * other.z;
-    float x_ =  w * other.x + y * other.z - z * other.y;
-    float y_ =  w * other.y + z * other.x - x * other.z;
-    float z_ =  w * other.z + x * other.y - y * other.x;
-    x = x_;
-    y = y_;
-    z = z_;
-    w = w_;
-    return *this;
+    return v + 2.0 * Vec::Cross(Vec::Cross(v, {x, y, z}) + w * v, {x, y, z});
+  }
+
+  Quaternion Quaternion::AxisAngle(const Vec3f& axis, float angle)
+  {
+    float s = sin(0.5f * angle);
+    float c = cos(0.5f * angle);
+    return Quaternion(axis.x * s, axis.y * s, axis.z * s, c);
   }
 
   Quaternion operator*(const Quaternion& first, const Quaternion &second)
@@ -62,7 +61,7 @@ namespace Greet {
     return Quaternion(first.x,first.y,first.z,first.w).Multiply(second);
   }
 
-  Quaternion operator*(const Quaternion& first, const Vec3<float>& second)
+  Vec3f operator*(const Quaternion& first, const Vec3f& second)
   {
     return Quaternion(first.x, first.y, first.z, first.w).Multiply(second);
   }
@@ -71,10 +70,4 @@ namespace Greet {
   {
     return Multiply(other);
   }
-
-  Quaternion& Quaternion::operator*=(const Vec3<float>& other)
-  {
-    return Multiply(other);
-  }
-
 }
