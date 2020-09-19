@@ -20,6 +20,6 @@ class ECSScene : public Greet::Scene
 
     void Render() const override;
     void Update(float timeElapsed) override;
-    void ViewportResize(Greet::ViewportResizeEvent& event) override;
+    void OnEvent(Greet::Event& event) override;
 };
 

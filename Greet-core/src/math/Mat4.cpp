@@ -117,9 +117,9 @@ namespace Greet {
   Mat4 Mat4::ViewMatrix(const Vec3f& position, const Vec3f& rotation)
   {
     return
-      Mat4::RotateX(rotation.x) *
-      Mat4::RotateY(rotation.y) *
-      Mat4::RotateZ(rotation.z) *
+      Mat4::RotateX(-rotation.x) *
+      Mat4::RotateY(-rotation.y) *
+      Mat4::RotateZ(-rotation.z) *
       Mat4::Translate(-position.x, -position.y, -position.z);
   }
 

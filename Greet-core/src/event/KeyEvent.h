@@ -25,6 +25,8 @@ namespace Greet {
       KeyPressEvent(uint button, uint repeat)
         : KeyEvent(button), repeat{repeat} {}
       EventType GetType() const {return EventType::KEY_PRESS;}
+      bool IsRepeat() const { return repeat != 0; }
+      uint GetRepeat() const { return repeat; }
   };
 
   class KeyReleaseEvent : public KeyEvent

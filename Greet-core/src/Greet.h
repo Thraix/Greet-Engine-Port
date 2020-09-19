@@ -24,6 +24,7 @@
 #include <ecs/Entity.h>
 #include <ecs/EntityContainer.h>
 #include <ecs/EntitySet.h>
+#include <ecs/NativeScript.h>
 #include <event/Event.h>
 #include <event/EventDispatcher.h>
 #include <event/JoystickEvent.h>

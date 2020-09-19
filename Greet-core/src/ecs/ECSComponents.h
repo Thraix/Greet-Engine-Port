@@ -5,6 +5,7 @@
 #include <graphics/models/Mesh.h>
 #include <event/ViewportEvent.h>
 #include <math/Line.h>
+#include <ecs/NativeScript.h>
 
 namespace Greet
 {
@@ -112,6 +113,21 @@ namespace Greet
     MaterialComponent(const Ref<Material>& material)
       : material{material}
     {}
+  };
+
+  struct NativeScriptComponent
+  {
+    Ref<NativeScript> script;
+    bool created = false;
+
+    NativeScriptComponent(const Ref<NativeScript>& script)
+      : script{script}
+    {}
+
+    void Create() { script->Create(); created = true; }
+    void Update(float timeElapsed) { script->Update(timeElapsed); }
+    void OnEvent(Event& event) { script->OnEvent(event); }
+    void Destroy() { script->Destroy(); created = false; }
   };
 }
 

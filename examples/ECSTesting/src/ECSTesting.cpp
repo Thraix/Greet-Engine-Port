@@ -1,5 +1,7 @@
 #include "ECSTesting.h"
 
+#include "CameraController.h"
+
 using namespace Greet;
 
 ECSTesting::ECSTesting()
@@ -24,9 +26,10 @@ void ECSTesting::Init()
   scene.reset(new ECSScene());
   sceneView->GetSceneManager().Add3DScene(scene.get(), "ecs");
   Entity camera = scene->AddEntity();
-  camera.AddComponent<Camera3DComponent>(Mat4::ViewMatrix({0, 0, 0}, {}), 90, 0.001, 1000.0f, true);
+  camera.AddComponent<Camera3DComponent>(Mat4::Identity(), 90.0f, 0.001f, 1000.0f, true);
+  camera.AddComponent<NativeScriptComponent>(Ref<NativeScript>{new CameraController{camera, {2, 2, 2}, {-M_PI / 4, M_PI / 4, 0}}});
   Entity cube = scene->AddEntity();
-  cube.AddComponent<Transform3DComponent>(Mat4::Translate(0, 0, -2));
+  cube.AddComponent<Transform3DComponent>(Mat4::Translate(0, 0, 0));
   cube.AddComponent<MeshComponent>(Ref<Mesh>{new Mesh{MeshFactory::Cube()}});
   cube.AddComponent<MaterialComponent>(Ref<Material>{new Material{ShaderFactory::Shader3D()}});
 }

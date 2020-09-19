@@ -336,7 +336,7 @@ namespace Greet{
     }
 
     template <typename T>
-    static Vec3<T> Rotate(const Vec3<T>& vector, const Vec3<T>& axis, float angle)
+    static Vec3<T> Rotate(const Vec3<T>& vector, const Vec3<T>& axis, const T& angle)
     {
       return Vec3<T>{vector}.Rotate(axis, angle);
     }

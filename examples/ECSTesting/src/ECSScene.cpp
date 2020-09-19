@@ -63,12 +63,27 @@ void ECSScene::Render() const
 
 void ECSScene::Update(float timeElapsed)
 {
+  manager->Each<NativeScriptComponent>([&](EntityID id, NativeScriptComponent& script)
+  {
+    if(!script.created)
+      script.Create();
+    script.Update(timeElapsed);
+  });
 }
 
-void ECSScene::ViewportResize(Greet::ViewportResizeEvent& event)
+void ECSScene::OnEvent(Greet::Event& event)
 {
-  manager->Each<Camera3DComponent>([&](EntityID id, Camera3DComponent& cam)
+  if(EVENT_IS_TYPE(event, EventType::VIEWPORT_RESIZE))
   {
-    cam.ViewportResize(event);
+    ViewportResizeEvent& e = static_cast<ViewportResizeEvent&>(event);
+    manager->Each<Camera3DComponent>([&](EntityID id, Camera3DComponent& cam)
+    {
+      cam.ViewportResize(e);
+    });
+  }
+  manager->Each<NativeScriptComponent>([&](EntityID id, NativeScriptComponent& script)
+  {
+    if(script.created)
+      script.OnEvent(event);
   });
 }
