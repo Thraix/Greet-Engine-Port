@@ -1,0 +1,33 @@
+<Frame
+  name="Main"
+  styling="res/styling/styling.meta"
+  width="fill_parent" height="fill_parent"
+  resizeTop="false" resizeLeft="false" resizeBottom="false" resizeRight="false">
+<Docker name="docker">
+  <TabButton align="left"/>
+  <SplitIcon width="30" height="30" backgroundColor="#424242" border="5 2 2 2" borderColor="#626262"/>
+  <DockerSplit>
+
+    <DockerContainer weight="0.35">
+      <DockerTab title="Scene Heirarchy">
+        <Container width="fill_parent" height="fill_parent" padding="10">
+          <TreeView name="treeView" width="fill_parent" height="fill_parent"/>
+          <Button name="addSceneButton">Add Scene</Button>
+          <Button name="addEntityButton">Add Entity</Button>
+        </Container>
+      </DockerTab>
+    </DockerContainer>
+
+    <DockerContainer weight="1">
+      <DockerTab title="Scenes">
+        <SceneView name="sceneView"/>
+      </DockerTab>
+    </DockerContainer>
+    <DockerContainer weight="0.45">
+      <DockerTab title="Settings">
+        <Container width="fill_parent" height="fill_parent"/>
+      </DockerTab>
+    </DockerContainer>
+  </DockerSplit>
+</Docker>
+</Frame>

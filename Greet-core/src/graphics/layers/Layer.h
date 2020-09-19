@@ -37,14 +37,10 @@ namespace Greet {
         renderables.push_back(renderable);
       }
 
-      virtual void PreRender() override
+      virtual void Render() const override
       {
         renderer->Begin();
         setUniforms();
-      }
-
-      virtual void Render() const override
-      {
         uint size = renderables.size();
         for (uint i = 0; i < size; i++)
         {
@@ -52,10 +48,6 @@ namespace Greet {
           renderables[i]->Render(renderer);
           renderables[i]->End(renderer);
         }
-      }
-
-      virtual void PostRender() override
-      {
         renderer->End();
         renderer->Flush();
       }

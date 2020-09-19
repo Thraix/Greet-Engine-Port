@@ -2,6 +2,7 @@
 
 #include <logging/Log.h>
 #include <utils/HotSwapping.h>
+#include <utils/Timer.h>
 
 namespace Greet {
 
@@ -64,42 +65,25 @@ namespace Greet {
   void SceneManager::Render() const
   {
     for (auto it = m_scenes3d.begin(); it != m_scenes3d.end(); it++)
-    {
-      it->second->PreRender();
       it->second->Render();
-      it->second->PostRender();
-    }
 
     for (auto it = m_scenes2d.begin(); it != m_scenes2d.end(); it++)
-    {
-      it->second->PreRender();
       it->second->Render();
-      it->second->PostRender();
-    }
   }
 
   void SceneManager::Update(float timeElapsed)
   {
-    static float time = 0.0f;
-    time+=timeElapsed;
-    if(time > 1.0f)
+    static Timer timer;
+    if(timer.Elapsed() > 1.0f)
     {
+      timer.Reset();
       HotSwapping::CheckResources();
-      time-=1.0f;
     }
     for (auto it = m_scenes3d.begin(); it != m_scenes3d.end(); it++)
-    {
-      it->second->PreUpdate(timeElapsed);
       it->second->Update(timeElapsed);
-      it->second->PostUpdate(timeElapsed);
-    }
 
     for (auto it = m_scenes2d.begin(); it != m_scenes2d.end(); it++)
-    {
-      it->second->PreUpdate(timeElapsed);
       it->second->Update(timeElapsed);
-      it->second->PostUpdate(timeElapsed);
-    }
   }
 
   void SceneManager::OnEvent(Event& event)

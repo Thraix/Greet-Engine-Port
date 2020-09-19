@@ -14,14 +14,17 @@ namespace Greet
       Ref<ECSManager> manager;
       EntityID id;
 
+    public:
+      Entity(const Ref<ECSManager>& manager)
+        : manager{manager}, id{0}
+      {}
+
       Entity(const Ref<ECSManager>& manager, EntityID id)
         : manager{manager}, id{id}
       {}
 
-    public:
-
-      operator EntityID() { return id; }
-      operator bool() { return manager->ValidEntity(id); }
+      operator EntityID() const { return id; }
+      operator bool() const { return manager->ValidEntity(id); }
 
       void Destroy()
       {
@@ -53,22 +56,26 @@ namespace Greet
       }
 
       template <typename Component>
-      inline Component& GetComponent()
+      inline Component& GetComponent() const
       {
         return manager->GetComponent<Component>(id);
       }
 
       template <typename Component>
-      inline Component& HasComponent()
+      inline bool HasComponent() const
       {
         return manager->HasComponent<Component>(id);
       }
 
-      EntityID GetID()
+      void SetID(EntityID aId)
+      {
+        id = aId;
+      }
+
+      EntityID GetID() const
       {
         return id;
       }
-
 
       static Entity Create(const Ref<ECSManager>& manager)
       {

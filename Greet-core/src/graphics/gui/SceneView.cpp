@@ -25,13 +25,13 @@ namespace Greet
 
   void SceneView::Render(GUIRenderer* renderer) const
   {
-    guiScene->PostRender();
+    guiScene->EndRender();
     RenderCommand::PushViewportStack(GetRealPosition(), GetContentSize());
 
     sceneManager.Render();
 
     RenderCommand::PopViewportStack();
-    guiScene->PreRender();
+    guiScene->BeginRender();
   }
 
   void SceneView::OnEventHandler(Event& event, const Vec2f& componentPos)

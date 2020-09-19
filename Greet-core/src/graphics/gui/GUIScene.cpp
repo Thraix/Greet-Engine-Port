@@ -16,7 +16,7 @@ namespace Greet {
     renderer->GetShader()->Enable();
     renderer->GetShader()->SetUniformMat3("projectionMatrix", projectionMatrix);
     renderer->GetShader()->Disable();
-}
+  }
 
   void GUIScene::OnEvent(Event& event)
   {
@@ -98,22 +98,24 @@ namespace Greet {
     }
   }
 
-  void GUIScene::PreRender()
+  void GUIScene::BeginRender() const
   {
     renderer->Begin();
   }
 
   void GUIScene::Render() const
   {
+    BeginRender();
     for (auto it = frames.begin(); it != frames.end(); ++it)
     {
       (*it)->PreRender(renderer.get(), Vec2f(0,0));
       (*it)->RenderHandle(renderer.get());
       (*it)->PostRender(renderer.get());
     }
+    EndRender();
   }
 
-  void GUIScene::PostRender()
+  void GUIScene::EndRender() const
   {
     renderer->End();
     renderer->Draw();

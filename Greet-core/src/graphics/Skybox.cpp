@@ -37,4 +37,18 @@ namespace Greet {
     m_shader->Disable();
     RenderCommand::ResetDepthTest();
   }
+
+  void Skybox::Render(const Camera3DComponent& camera) const
+  {
+    RenderCommand::EnableDepthTest(false);
+    m_shader->Enable();
+    camera.SetShaderUniforms(m_shader);
+    m_map->Enable(0);
+    m_mesh->Bind();
+    m_mesh->Render();
+    m_mesh->Unbind();
+    m_map->Disable();
+    m_shader->Disable();
+    RenderCommand::ResetDepthTest();
+  }
 }

@@ -1,0 +1,25 @@
+<makegen>
+  <configuration name="Release">
+    <cflag>-g</cflag>
+    <define>_DEBUG</define>
+    <define>_GREET_HOTSWAP</define>
+    <dependency>../../Greet-core/</dependency>
+    <generatehfile>false</generatehfile>
+    <includedir>../../Greet-core/src/</includedir>
+    <includedir>../../deps/includes/</includedir>
+    <library>greet</library>
+    <library>GL</library>
+    <library>GLEW</library>
+    <library>glfw</library>
+    <library>freeimage</library>
+    <library>freetype</library>
+    <librarydir>../../Greet-core/bin/</librarydir>
+    <outputdir>bin/</outputdir>
+    <outputname>ecs_testing.x86_64</outputname>
+    <outputtype>executable</outputtype>
+    <projectname>ECS Testing</projectname>
+    <srcdir>src/</srcdir>
+	</configuration>
+  <target>Release</target>
+  <version>v1.3.0</version>
+</makegen>

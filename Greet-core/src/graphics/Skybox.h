@@ -4,6 +4,7 @@
 #include <graphics/cameras/Camera3D.h>
 #include <graphics/shaders/Shader.h>
 #include <graphics/models/Mesh.h>
+#include <ecs/ECSComponents.h>
 
 namespace Greet {
 
@@ -20,5 +21,6 @@ namespace Greet {
 
       const Ref<CubeMap>& GetCubeMap() const { return m_map; };
       void Render(const Ref<Camera3D>& camera) const;
+      void Render(const Camera3DComponent& camera) const;
   };
 }

@@ -16,24 +16,16 @@ namespace Greet {
   {
   }
 
-  void Layer3D::PreRender()
+  void Layer3D::Render() const
   {
     if(skybox)
       skybox->Render(camera);
-  }
-
-  void Layer3D::Render() const
-  {
     for(auto&& renderer : renderers)
     {
       renderer->Begin(camera);
       renderer->Render(camera);
       renderer->End(camera);
     }
-  }
-
-  void Layer3D::PostRender()
-  {
   }
 
   void Layer3D::Update(float timeElapsed)

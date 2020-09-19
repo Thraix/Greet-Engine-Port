@@ -46,8 +46,8 @@ out vec4 fColor;
 
 uniform sampler2D uTexture;
 uniform vec3 uLightColor = vec3(1.0f, 1.0f, 1.0f);
-uniform vec3 uFogColor;
-uniform float uHasColor = 1.0;
+uniform vec3 uFogColor = vec3(0, 0, 0);
+uniform float uHasTexture = 1.0;
 uniform float uSpecularExponent = 10.0;
 uniform float uSpecularStrength = 1;
 uniform float uDiffuseStrength = 1;
@@ -56,7 +56,7 @@ uniform float uAmbient = 0.3;
 void main()
 {
 	fColor = vColor;
-	if (uHasColor > 0.5)
+	if (uHasTexture > 0.5)
 	{
 		fColor *= texture(uTexture, vTexCoord);
 		if (fColor.a < 0.1)

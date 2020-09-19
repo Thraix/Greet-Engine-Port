@@ -17,9 +17,7 @@ namespace Greet {
 
       virtual ~Layer3D();
 
-      virtual void PreRender() override;
       virtual void Render() const override;
-      virtual void PostRender() override;
       virtual void Update(float timeElapsed) override;
       virtual void OnEvent(Event& event) override;
       virtual void ViewportResize(ViewportResizeEvent& event) override;
