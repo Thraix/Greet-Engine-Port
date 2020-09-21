@@ -66,6 +66,7 @@ namespace Greet {
       void EnableBuffers();
       void DisableBuffers();
       void AddIndicesPoly(uint poly);
+      void SetShader(const Ref<Shader>& aShader) override;
     private:
       void Init();
   };

@@ -67,33 +67,28 @@ namespace Greet {
 
   void Shader::MoveUniforms(uint program, uint oldProgram)
   {
-    std::map<std::string, int> oldUniforms = uniforms;
+    std::set<UniformData> oldUniforms = GetListOfUniforms(oldProgram);
     uniforms = GetUniforms(program);
 
-    std::vector<UniformData> newUniforms = GetListOfUniforms(program);
+    std::set<UniformData> newUniforms = GetListOfUniforms(program);
     GLint numActiveUniforms = 0;
     GLCall(glGetProgramiv(program, GL_ACTIVE_UNIFORMS, &numActiveUniforms));
     std::vector<GLchar> nameData(256);
     Enable();
     for(auto it = newUniforms.begin(); it != newUniforms.end();++it)
     {
-      auto found = oldUniforms.find(it->name);
+      auto found = oldUniforms.find(UniformData{it->name, 1, 0, -1});
       if(found != oldUniforms.end())
       {
-        GLint arraySize = 0;
-        GLenum type = 0;
-        GLsizei actualLength = 0;
-        GLCall(glGetActiveUniform(oldProgram, found->second, nameData.size(), &actualLength, &arraySize, &type, &nameData[0]));
-
         // Type has changed
-        if(it->type != type || it->arraySize != arraySize)
+        if(it->type != found->type || it->arraySize != found->arraySize)
           continue;
         if(it->type == GL_FLOAT)
         {
           if(it->arraySize == 1)
           {
             float f;
-            GLCall(glGetUniformfv(oldProgram, found->second, &f));
+            GLCall(glGetUniformfv(oldProgram, found->location, &f));
             SetUniform1f(it->name, f);
           }
           else
@@ -104,7 +99,7 @@ namespace Greet {
             for(int i = 0;i<it->arraySize;i++)
             {
               GLCall(int location = glGetUniformLocation(program,
-                    std::string(found->first + "["+std::to_string(i)+"]").c_str()));
+                    std::string(found->name + "["+std::to_string(i)+"]").c_str()));
               GLCall(glGetUniformfv(oldProgram, location, &values[i]));
             }
             SetUniform1fv(it->name, it->arraySize, values);
@@ -113,25 +108,25 @@ namespace Greet {
         else if(it->type == GL_FLOAT_VEC2)
         {
           Vec2f f;
-          GLCall(glGetnUniformfv(oldProgram, found->second, sizeof(Vec2f), (float*)&f));
+          GLCall(glGetnUniformfv(oldProgram, found->location, sizeof(Vec2f), (float*)&f));
           SetUniform2f(it->name, f);
         }
         else if(it->type == GL_FLOAT_VEC3)
         {
           Vec3f f;
-          GLCall(glGetnUniformfv(oldProgram, found->second, sizeof(Vec3f), (float*)&f));
+          GLCall(glGetnUniformfv(oldProgram, found->location, sizeof(Vec3f), (float*)&f));
           SetUniform3f(it->name, f);
         }
         else if(it->type == GL_FLOAT_VEC4)
         {
           Vec4f f;
-          GLCall(glGetnUniformfv(oldProgram, found->second, sizeof(Vec4f), (float*)&f));
+          GLCall(glGetnUniformfv(oldProgram, found->location, sizeof(Vec4f), (float*)&f));
           SetUniform4f(it->name, f);
         }
         else if(it->type == GL_FLOAT)
         {
           Vec4f f;
-          GLCall(glGetnUniformfv(oldProgram, found->second, sizeof(Vec4f), (float*)&f));
+          GLCall(glGetnUniformfv(oldProgram, found->location, sizeof(Vec4f), (float*)&f));
           SetUniform4f(it->name, f);
         }
         else if(it->type == GL_INT ||
@@ -143,7 +138,7 @@ namespace Greet {
           if(it->arraySize == 1)
           {
             int i;
-            GLCall(glGetUniformiv(oldProgram, found->second, &i));
+            GLCall(glGetUniformiv(oldProgram, found->location, &i));
             SetUniform1i(it->name, i);
           }
           else
@@ -154,7 +149,7 @@ namespace Greet {
             for(int i = 0;i<it->arraySize;i++)
             {
               GLCall(int location = glGetUniformLocation(program,
-                    std::string(found->first + "["+std::to_string(i)+"]").c_str()));
+                    std::string(found->name + "["+std::to_string(i)+"]").c_str()));
               GLCall(glGetUniformiv(oldProgram, location, &values[i]));
             }
             SetUniform1iv(it->name, it->arraySize, values);
@@ -165,7 +160,7 @@ namespace Greet {
           if(it->arraySize == 1)
           {
             uint i;
-            GLCall(glGetUniformuiv(oldProgram, found->second, &i));
+            GLCall(glGetUniformuiv(oldProgram, found->location, &i));
             SetUniform1ui(it->name, i);
           }
           else
@@ -176,7 +171,7 @@ namespace Greet {
             for(int i = 0;i<it->arraySize;i++)
             {
               GLCall(int location = glGetUniformLocation(program,
-                    std::string(found->first + "["+std::to_string(i)+"]").c_str()));
+                    std::string(found->name + "["+std::to_string(i)+"]").c_str()));
               GLCall(glGetUniformuiv(oldProgram, location, &values[i]));
             }
             SetUniform1uiv(it->name, it->arraySize, values);
@@ -185,13 +180,13 @@ namespace Greet {
         else if(it->type == GL_FLOAT_MAT3)
         {
           Mat3 mat;
-          GLCall(glGetnUniformfv(oldProgram, found->second, sizeof(Mat3), mat.elements));
+          GLCall(glGetnUniformfv(oldProgram, found->location, sizeof(Mat3), mat.elements));
           SetUniformMat3(it->name, mat);
         }
         else if(it->type == GL_FLOAT_MAT4)
         {
           Mat4 mat;
-          GLCall(glGetnUniformfv(oldProgram, found->second, sizeof(Mat4), mat.elements));
+          GLCall(glGetnUniformfv(oldProgram, found->location, sizeof(Mat4), mat.elements));
           SetUniformMat4(it->name, mat);
         }
       }
@@ -323,9 +318,9 @@ namespace Greet {
     return uniforms;
   }
 
-  std::vector<UniformData> Shader::GetListOfUniforms(uint program) const
+  std::set<UniformData> Shader::GetListOfUniforms(uint program) const
   {
-    std::vector<UniformData> uniforms;
+    std::set<UniformData> uniforms;
     GLint numActiveUniforms = 0;
     GLCall(glGetProgramiv(program, GL_ACTIVE_UNIFORMS, &numActiveUniforms));
     char name[256];
@@ -345,7 +340,8 @@ namespace Greet {
           break;
         }
       }
-      uniforms.push_back({name, arraySize, type});
+      GLCall(int location = glGetUniformLocation(program, name));
+      uniforms.emplace(UniformData{name, arraySize, type, location});
     }
     return uniforms;
   }

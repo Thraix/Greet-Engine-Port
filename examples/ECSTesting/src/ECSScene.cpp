@@ -35,26 +35,32 @@ void ECSScene::Render() const
 void ECSScene::Render2D() const
 {
   Entity camera{manager};
-  bool foundPrimary = false;
   manager->Each<Camera2DComponent>([&](EntityID id, Camera2DComponent& cam)
   {
     if(cam.primary)
     {
-      if(foundPrimary)
+      if(camera)
         Log::Warning("More than one primary 2D camera in scene");
-      foundPrimary = true;
       camera.SetID(id);
     }
   });
 
-  if(!foundPrimary)
-  {
-    Log::Warning("No camera in scene");
+  // No camera found, so cannot render anything
+  if(!camera)
     return;
-  }
 
-  Shader::Disable();
+  Entity environment{manager};
+  manager->Each<Environment2D>([&](EntityID id, Environment2D& env)
+  {
+    if(environment)
+      Log::Warning("More than one environment in 2D scene");
+    environment.SetID(id);
+  });
+
   Camera2DComponent& cam = camera.GetComponent<Camera2DComponent>();
+  if(environment)
+    renderer2d->SetShader(environment.GetComponent<Environment2D>().shader);
+
   renderer2d->Begin();
   cam.SetShaderUniforms(renderer2d->GetShader());
   manager->Each<Transform2DComponent>([&](EntityID id, Transform2DComponent& transform)

@@ -330,4 +330,13 @@ namespace Greet {
     }
     m_lastIndex = indices[m_iboSize + 3 * (vertices - 1) + 2] + 1;
   }
+
+  void BatchRenderer::SetShader(const Ref<Shader>& aShader)
+  {
+    Renderer2D::SetShader(aShader);
+    std::vector<int> samplerUnits(maxTextures);
+    std::iota(samplerUnits.begin(), samplerUnits.end(), 0);
+    shader->Enable();
+    shader->SetUniform1iv("uTextures", maxTextures, samplerUnits.data());
+  }
 }

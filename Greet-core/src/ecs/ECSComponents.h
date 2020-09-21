@@ -62,6 +62,14 @@ namespace Greet
       }
   };
 
+  struct Environment2D
+  {
+    Ref<Shader> shader;
+    Environment2D(const Ref<Shader>& shader)
+      : shader{shader}
+    {}
+  };
+
   struct Transform3DComponent
   {
     Mat4 transform;

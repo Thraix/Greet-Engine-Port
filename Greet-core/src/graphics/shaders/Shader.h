@@ -15,12 +15,18 @@ namespace Greet {
 
   struct UniformData
   {
-    UniformData(const std::string& name, int arraySize, uint type)
-      : name{name}, arraySize{arraySize}, type{type}
+    UniformData(const std::string& name, int arraySize, uint type, int location)
+      : name{name}, arraySize{arraySize}, type{type}, location{location}
     {}
     std::string name;
     int arraySize;
     uint type;
+    int location;
+
+    friend bool operator<(const UniformData& u1, const UniformData& u2)
+    {
+      return u1.name < u2.name;
+    }
   };
 
   struct ShaderDeleter final
@@ -48,7 +54,7 @@ namespace Greet {
       void AttachShader(const uint program, uint shader);
       int GetUniformLocation(const std::string& name) const;
       std::map<std::string, int> GetUniforms(const uint program) const;
-      std::vector<UniformData> GetListOfUniforms(uint program) const;
+      std::set<UniformData> GetListOfUniforms(uint program) const;
       void MoveUniforms(uint program, uint oldProgram);
 
     public:

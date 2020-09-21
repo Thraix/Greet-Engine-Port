@@ -35,11 +35,12 @@ void ECSTesting::Init()
   cube.AddComponent<MeshComponent>(Ref<Mesh>{new Mesh{MeshFactory::Cube()}});
   cube.AddComponent<MaterialComponent>(Ref<Material>{new Material{ShaderFactory::Shader3D()}});
 
-  Entity camera2d = scene->AddEntity();
-  camera2d.AddComponent<Camera2DComponent>(Mat3::Identity(), true);
+  Entity env2d = scene->AddEntity();
+  env2d.AddComponent<Camera2DComponent>(Mat3::Identity(), true);
+  env2d.AddComponent<Environment2D>(Shader::FromFile("res/shaders/shader2d.glsl"));
 
   Entity square = scene->AddEntity();
-  square.AddComponent<Transform2DComponent>(Vec2f{20.0f, 20.0f}, Vec2f{20.0f, 20.0f}, M_PI / 4);
+  square.AddComponent<Transform2DComponent>(Vec2f{20.0f, 20.0f}, Vec2f{100.0f, 100.0f}, M_PI / 4);
 }
 
 void ECSTesting::Tick()
