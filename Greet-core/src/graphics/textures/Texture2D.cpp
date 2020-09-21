@@ -32,10 +32,6 @@ namespace Greet {
   {
   }
 
-  Texture2D::~Texture2D()
-  {
-  }
-
   void Texture2D::LoadTexture(const std::string& filename)
   {
     auto res = ImageUtils::LoadImage(filename.c_str(), &width,&height);

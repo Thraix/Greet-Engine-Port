@@ -48,19 +48,18 @@ namespace Greet {
 #if 0
       void Submit(const RenderablePoly* renderable);
 #endif
-      void DrawRect(const Mat3& transform, uint texID, Vec2f texPos, Vec2f texSize, uint color, uint maskTexId, const Vec2f& maskTexPos, const Vec2f& maskTexSize);
-      void DrawRect(const Vec2f& position, const Vec2f& size, uint texID, Vec2f texPos, Vec2f texSize, uint color, uint maskTexId, const Vec2f& maskTexPos, const Vec2f& maskTexSize);
-      void DrawRect(const Vec2f& position, const Vec2f& size, uint texID, Vec2f texPos, Vec2f texSize, uint color);
-      void DrawText(const std::string& text, const Vec2f& position, const Font& font, const uint& color);
-      void Draw(const Mat3& transform, const Vec2f& texPos, const Vec2f& texSize, const uint textureSlot, const uint& color, const uint& maskTexSlot, const Vec2f& maskTexPos, const Vec2f& maskTexSize);
-      void Draw(const Vec2f& position, const Vec2f& size, const Vec2f& texPos, const Vec2f& texSize, const uint textureSlot, const uint color, const uint& maskTexSlot, const Vec2f& maskTexPos, const Vec2f& maskTexSize);
-      void Draw(const Vec2f& position, const Vec2f* vertices, const uint amount, const uint color);
-      void DrawRect(const Vec2f& position, const Vec2f& size, const uint& color);
-      void DrawLine(const Vec2f& pos1, const Vec2f& pos2, float width, uint color);
-      void FillRect(const Vec2f& position, const Vec2f& size, const uint& color);
-      void FillRect(const Vec2f& position, const Vec2f& size, const uint& color, const Sprite* mask);
-      void AppendVertexBuffer(const Vec2f& position, const Vec2f& texCoord, const uint& texID, const uint& color, const uint& maskTexId, const Vec2f& maskTexCoord);
-      uint GetTextureSlot(const uint texID);
+      void DrawRect(const Mat3& transform, uint color = 0xffffffff);
+      void DrawRect(const Mat3& transform, const Ref<Texture2D>& texture, const Vec2f& texPos = Vec2f{0, 0}, const Vec2f& texSize = Vec2f{1, 1}, uint color = 0xffffffff);
+
+      void DrawRect(const Vec2f& position, const Vec2f& size, uint color = 0xffffffff);
+      void DrawRect(const Vec2f& position, const Vec2f& size, const Ref<Texture2D>& texture, const Vec2f& texPos = Vec2f{0, 0}, const Vec2f& texSize = Vec2f{1, 1}, uint color = 0xffffffff);
+
+      void DrawText(const std::string& text, const Vec2f& position, const Font& font, uint color = 0xffffffff);
+      void Draw(const Vec2f& position, const Vec2f* vertices, uint amount, uint color = 0xffffffff);
+      void DrawLine(const Vec2f& pos1, const Vec2f& pos2, float width, uint color = 0xffffffff);
+      void AppendVertexBuffer(const Vec2f& position, const Vec2f& texCoord, uint texSlot, uint color);
+      uint GetTextureSlot(const Ref<Texture2D>& texture);
+      uint GetTextureSlot(uint texID);
       void End() override;
       void Flush() override;
       void EnableBuffers();

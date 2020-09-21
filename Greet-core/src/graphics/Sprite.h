@@ -15,11 +15,8 @@ namespace Greet{
     public:
       Sprite()
         : texture(nullptr), texPos(Vec2f(0, 0)), texSize(Vec2f(1, 1))
-      {
+      {}
 
-      }
-
-      virtual bool Update(float timeElapsed) { return false; }
       Sprite(const Ref<Texture2D>& texture)
         : texture{texture}, texPos{Vec2f{0, 0}}, texSize{Vec2f{1, 1}}
       {}
@@ -28,16 +25,16 @@ namespace Greet{
         : texture{texture}, texPos{texPos}, texSize{texSize}
       {}
 
-      virtual ~Sprite() {}
+      virtual bool Update(float timeElapsed) { return false; }
 
-      inline uint GetTextureID() const { return texture->GetTexId(); }
+      const Ref<Texture2D>& GetTexture() const { return texture; }
 
-      inline Sprite* FromSpriteSheet(const Vec2f& texPos, const Vec2f& texSize) const
+      Sprite* FromSpriteSheet(const Vec2f& texPos, const Vec2f& texSize) const
       {
         return new Sprite(texture, texPos + texPos * texSize, texSize * texSize);
       }
 
-      virtual inline const Vec2f& GetTexPos() const { return texPos; }
-      virtual inline const Vec2f& GetTexSize() const { return texSize; }
+      virtual const Vec2f& GetTexPos() const { return texPos; }
+      virtual const Vec2f& GetTexSize() const { return texSize; }
   };
 }

@@ -1,4 +1,3 @@
-R"(
 //vertex
 #version 330 core
 
@@ -11,6 +10,8 @@ out vec2 vPos;
 out float vTexID;
 out vec2 vTexCoord;
 out vec4 vColor;
+out float vMaskTexID;
+out vec2 vMaskTexCoord;
 
 uniform mat3 uProjectionMatrix = mat3(1.0);
 uniform mat3 uViewMatrix = mat3(1.0);
@@ -18,7 +19,7 @@ uniform mat3 uViewMatrix = mat3(1.0);
 void main()
 {
 	gl_Position = vec4(uProjectionMatrix * uViewMatrix * vec3(aPosition, 1.0), 1.0);
-	vPos = vec2(vec3(aPosition, 1.0));
+	vPos = aPosition;
 	vTexCoord = vec2(aTexCoord.x, 1 - aTexCoord.y);
 	vTexID = aTexID;
 	vColor = vec4(aColor.z, aColor.y, aColor.x, aColor.w);
@@ -40,10 +41,11 @@ uniform sampler2D uTextures[32];
 void main()
 {
 	fColor = vColor;
+  float len = length(vPos - vec2(20));
+  fColor = vec4(vec3(1.0f / pow(len, 0.35f)), 1.0f);
 	if (vTexID > 0.0)
 	{
 		int tid = int(vTexID - 0.5);
 		fColor *= texture(uTextures[tid], vTexCoord);
 	}
 }
-)"

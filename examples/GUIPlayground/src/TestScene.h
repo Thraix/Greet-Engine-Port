@@ -37,7 +37,7 @@ struct Comp
   {
     /* Greet::Log::Info(GetName(), " pos: ", xOffset + x, ", ", yOffset + y); */
     /* Greet::Log::Info(GetName(), " size: ", width.size, ", ", height.size); */
-    renderer->FillRect({(float)(x + xOffset), (float)(y + yOffset)}, {(float)width.size, (float)height.size}, color);
+    renderer->DrawRect({(float)(x + xOffset), (float)(y + yOffset)}, {(float)width.size, (float)height.size}, color);
   }
 
   virtual void Measure(int parentWidth, int parentHeight)
@@ -123,7 +123,7 @@ struct Lab : public Comp
     for(int i = 0; i < length; i++)
     {
       uint textColor = Greet::Color(1.0 * i / length, 1, 1, 1).ToRGB().AsUInt();
-      renderer->FillRect({(float)(x + xPos + xOffset), (float)(y + yPos + yOffset)}, {20.0f, 20.0f}, textColor);
+      renderer->DrawRect({(float)(x + xPos + xOffset), (float)(y + yPos + yOffset)}, {20.0f, 20.0f}, textColor);
       xPos += 30;
       if(xPos + 20 > width.size)
       {
