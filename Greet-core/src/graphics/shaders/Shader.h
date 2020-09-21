@@ -47,8 +47,8 @@ namespace Greet {
       uint CompileShader(const uint program, const std::string& shaderSrc, const uint shaderType, bool safeFail);
       void AttachShader(const uint program, uint shader);
       int GetUniformLocation(const std::string& name) const;
-      std::map<std::string, int> GetUniforms(const uint program);
-      std::vector<UniformData> GetListOfUniforms(uint program);
+      std::map<std::string, int> GetUniforms(const uint program) const;
+      std::vector<UniformData> GetListOfUniforms(uint program) const;
       void MoveUniforms(uint program, uint oldProgram);
 
     public:

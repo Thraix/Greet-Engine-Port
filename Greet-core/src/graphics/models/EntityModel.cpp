@@ -62,7 +62,7 @@ namespace Greet {
 
   void EntityModel::UpdateTransformation()
   {
-    m_transformationMatrix = Mat4::TransformationMatrix(m_position, m_rotation, m_scale);
+    m_transformationMatrix = Mat4::TransformationMatrix(m_position, m_scale, m_rotation);
     m_hasChanged = false;
   }
 }

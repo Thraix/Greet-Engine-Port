@@ -104,7 +104,7 @@ namespace Greet {
     return result;
   }
 
-  Mat4 Mat4::TransformationMatrix(const Vec3f& position, const Vec3f& rotation, const Vec3f& scale)
+  Mat4 Mat4::TransformationMatrix(const Vec3f& position, const Vec3f& scale, const Vec3f& rotation)
   {
     return
       Mat4::Translate(position) *

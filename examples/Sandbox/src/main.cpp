@@ -80,7 +80,7 @@ class Core : public App
 
       FontManager::Add("noto", FontContainer("res/fonts/NotoSansUI-Regular.ttf"));
 
-      GUIScene* guiScene = new GUIScene(new GUIRenderer());
+      GUIScene* guiScene = new GUIScene();
       Frame* frame = FrameFactory::GetFrame("res/guis/header.xml");
       guiScene->AddFrameQueued(frame);
 

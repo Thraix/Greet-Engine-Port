@@ -15,16 +15,16 @@ namespace Greet {
     std::vector<int> samplerUnits(maxTextures);
     std::iota(samplerUnits.begin(), samplerUnits.end(), 0);
     shader->Enable();
-    shader->SetUniform1iv("textures", maxTextures, samplerUnits.data());
+    shader->SetUniform1iv("uTextures", maxTextures, samplerUnits.data());
     vao = VertexArray::Create();
     vbo = VertexBuffer::CreateDynamic(nullptr, RENDERER_BUFFER_SIZE);
     vbo->SetStructure({
-        { shader->GetAttributeLocation("position"), BufferAttributeType::VEC2},
-        { shader->GetAttributeLocation("texCoord"), BufferAttributeType::VEC2},
-        { shader->GetAttributeLocation("texID"), BufferAttributeType::FLOAT},
-        { shader->GetAttributeLocation("color"), BufferAttributeType::UBYTE4, true},
-        { shader->GetAttributeLocation("maskTexCoord"), BufferAttributeType::VEC2},
-        { shader->GetAttributeLocation("maskTexID"), BufferAttributeType::FLOAT}
+        { shader->GetAttributeLocation("aPosition"), BufferAttributeType::VEC2},
+        { shader->GetAttributeLocation("aTexCoord"), BufferAttributeType::VEC2},
+        { shader->GetAttributeLocation("aTexID"), BufferAttributeType::FLOAT},
+        { shader->GetAttributeLocation("aColor"), BufferAttributeType::UBYTE4, true},
+        { shader->GetAttributeLocation("aMaskTexCoord"), BufferAttributeType::VEC2},
+        { shader->GetAttributeLocation("aMaskTexID"), BufferAttributeType::FLOAT}
         });
     vao->AddVertexBuffer(vbo);
     vbo->Disable();
@@ -153,10 +153,10 @@ namespace Greet {
   {
     PushMatrix(transform);
 
-    AppendVertexBuffer(Vec2f(0, 0),Vec2f(texPos.x, texPos.y),textureSlot,color, maskTexSlot,Vec2f(maskTexPos.x, maskTexPos.y));
-    AppendVertexBuffer(Vec2f(0, 1),Vec2f(texPos.x, texPos.y + texSize.y),textureSlot,color, maskTexSlot, Vec2f(maskTexPos.x, maskTexPos.y+maskTexSize.y));
-    AppendVertexBuffer(Vec2f(1, 1),Vec2f(texPos.x + texSize.x, texPos.y + texSize.y),textureSlot,color, maskTexSlot, Vec2f(maskTexPos.x + maskTexSize.x, maskTexPos.y + maskTexSize.y));
-    AppendVertexBuffer(Vec2f(1, 0),Vec2f(texPos.x + texSize.x, texPos.y),textureSlot,color, maskTexSlot, Vec2f(maskTexPos.x + maskTexSize.x, maskTexPos.y));
+    AppendVertexBuffer(Vec2f(-0.5f, -0.5f),Vec2f(texPos.x, texPos.y),textureSlot,color, maskTexSlot,Vec2f(maskTexPos.x, maskTexPos.y));
+    AppendVertexBuffer(Vec2f(-0.5f, 0.5f),Vec2f(texPos.x, texPos.y + texSize.y),textureSlot,color, maskTexSlot, Vec2f(maskTexPos.x, maskTexPos.y+maskTexSize.y));
+    AppendVertexBuffer(Vec2f(0.5f, 0.5f),Vec2f(texPos.x + texSize.x, texPos.y + texSize.y),textureSlot,color, maskTexSlot, Vec2f(maskTexPos.x + maskTexSize.x, maskTexPos.y + maskTexSize.y));
+    AppendVertexBuffer(Vec2f(0.5f, -0.5f),Vec2f(texPos.x + texSize.x, texPos.y),textureSlot,color, maskTexSlot, Vec2f(maskTexPos.x + maskTexSize.x, maskTexPos.y));
 
     PopMatrix();
     AddIndicesPoly(4);

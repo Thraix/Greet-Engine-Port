@@ -27,17 +27,16 @@ namespace Greet{
     static Mat3 Identity();
     static Mat3 Orthographic(float left, float right, float top, float bottom);
     static Mat3 OrthographicViewport();
-    static Mat3 Quad(float x, float y, float width, float height);
-    static Mat3 Quad(const Vec2f& pos, const Vec2f& size);
+    static Mat3 TransformationMatrix(const Vec2f& pos, const Vec2f& scale, float rot);
 
     static Mat3 Translate(const Vec2f& translation);
     static Mat3 Scale(const Vec2f& scaling);
     static Mat3 Shear(const Vec2f& shearing);
 
-    static Mat3 Translate(const float& x, const float& y);
-    static Mat3 Scale(const float& x, const float& y);
+    static Mat3 Translate(float x, float y);
+    static Mat3 Scale(float x, float y);
     static Mat3 Rotate(float rad);
-    static Mat3 Shear(const float& x, const float& y);
+    static Mat3 Shear(float x, float y);
 
     static Mat3 Inverse(const Mat3& mat);
     Mat3 Cpy();

@@ -51,7 +51,7 @@ class Core : public App
       progressBarValue = 0;
       FontManager::Add("noto", FontContainer("res/fonts/NotoSansUI-Regular.ttf"));
 
-      guiScene = new GUIScene(new GUIRenderer());
+      guiScene = new GUIScene();
 
       Frame* frame = FrameFactory::GetFrame("res/guis/gui.xml");
       guiScene->AddFrameQueued(frame);

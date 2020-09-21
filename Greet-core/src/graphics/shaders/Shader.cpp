@@ -13,20 +13,15 @@ namespace Greet {
 
   Shader::Shader(const std::string& filename)
     : Resource(filename), m_shaderID{Load(filename)}, uniforms{GetUniforms(m_shaderID)}
-  {
-  }
+  {}
 
   Shader::Shader(const std::string& vertSrc, const std::string& fragSrc, const std::string& geomSrc)
     : m_shaderID{Load(vertSrc, fragSrc, geomSrc, geomSrc.size() != 0)}, uniforms{GetUniforms(m_shaderID)}
-  {
-
-  }
+  {}
 
   Shader::Shader(const std::string& vertSrc, const std::string& fragSrc)
     : m_shaderID{Load(vertSrc,fragSrc)}, uniforms{GetUniforms(m_shaderID)}
-  {
-
-  }
+  {}
 
   Shader::~Shader()
   {
@@ -283,6 +278,7 @@ namespace Greet {
       return LoadError(program);
     }
     GLCall(glValidateProgram(program));
+
     return program;
   }
 
@@ -298,57 +294,58 @@ namespace Greet {
     return program;
   }
 
-  std::map<std::string, int> Shader::GetUniforms(const uint program)
+  std::map<std::string, int> Shader::GetUniforms(const uint program) const
   {
     std::map<std::string, int> uniforms;
     GLint numActiveUniforms = 0;
     GLCall(glGetProgramiv(program, GL_ACTIVE_UNIFORMS, &numActiveUniforms));
-    std::vector<GLchar> nameData(256);
-    for(int i= 0; i< numActiveUniforms; ++i)
+    char name[256];
+    for(int i= 0; i < numActiveUniforms; ++i)
     {
       GLint arraySize = 0;
       GLenum type = 0;
       GLsizei actualLength = 0;
-      GLCall(glGetActiveUniform(program, i, nameData.size(), &actualLength, &arraySize, &type, &nameData[0]));
+      GLCall(glGetActiveUniform(program, i, sizeof(name), &actualLength, &arraySize, &type, name));
 
       // For some reason arrays return 'arrayName[0]'
-      for(int i = 0;i<actualLength;i++)
+      for(int j = 0;j<actualLength;j++)
       {
-        if(nameData[i] == '[')
+        if(name[j] == '[')
         {
-          nameData[i] = '\0';
+          name[j] = '\0';
           break;
         }
       }
-      std::string name(nameData.data());
-      uniforms.emplace(name, i);
+      // i != glGetUniformLocation(program, name) sometimes for some reason
+      GLCall(int location = glGetUniformLocation(program, name));
+      uniforms.emplace(name, location);
     }
     return uniforms;
   }
 
-  std::vector<UniformData> Shader::GetListOfUniforms(uint program)
+  std::vector<UniformData> Shader::GetListOfUniforms(uint program) const
   {
     std::vector<UniformData> uniforms;
     GLint numActiveUniforms = 0;
     GLCall(glGetProgramiv(program, GL_ACTIVE_UNIFORMS, &numActiveUniforms));
-    std::vector<GLchar> nameData(256);
-    for(int i= 0; i< numActiveUniforms; ++i)
+    char name[256];
+    for(int i= 0; i < numActiveUniforms; ++i)
     {
       GLint arraySize = 0;
       GLenum type = 0;
       GLsizei actualLength = 0;
-      GLCall(glGetActiveUniform(program, i, nameData.size(), &actualLength, &arraySize, &type, &nameData[0]));
+      GLCall(glGetActiveUniform(program, i, sizeof(name), &actualLength, &arraySize, &type, name));
 
       // For some reason arrays return 'arrayName[0]'
-      for(int i = 0;i<actualLength;i++)
+      for(int j = 0;j<actualLength;j++)
       {
-        if(nameData[i] == '[')
+        if(name[j] == '[')
         {
-          nameData[i] = '\0';
+          name[j] = '\0';
           break;
         }
       }
-      uniforms.push_back({nameData.data(), arraySize, type});
+      uniforms.push_back({name, arraySize, type});
     }
     return uniforms;
   }

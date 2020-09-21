@@ -20,7 +20,8 @@ namespace Greet {
         : renderer(renderer), projectionMatrix(projectionMatrix)
       {
         renderer->GetShader()->Enable();
-        renderer->GetShader()->SetUniformMat3("projectionMatrix", projectionMatrix);
+        renderer->GetShader()->SetUniformMat3("uProjectionMatrix", projectionMatrix);
+        renderer->GetShader()->SetUniformMat3("uViewMatrix", Mat3::Scale(1));
         renderer->GetShader()->Disable();
       }
 
@@ -59,11 +60,11 @@ namespace Greet {
           renderables[i]->Update(timeElapsed);
       }
 
-      void SetProjectionMatrix(Mat3 projectionMatrix)
+      void SetProjectionMatrix(Mat3 amProjectionMatrix)
       {
-        projectionMatrix = projectionMatrix;
+        projectionMatrix = amProjectionMatrix;
         renderer->GetShader()->Enable();
-        renderer->GetShader()->SetUniformMat3("projectionMatrix", projectionMatrix);
+        renderer->GetShader()->SetUniformMat3("uProjectionMatrix", projectionMatrix);
         renderer->GetShader()->Disable();
       }
 

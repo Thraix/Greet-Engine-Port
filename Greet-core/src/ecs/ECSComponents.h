@@ -12,6 +12,54 @@ namespace Greet
   struct Transform2DComponent
   {
     Mat3 transform;
+    Transform2DComponent(const Mat3& transform)
+      : transform{transform}
+    {}
+
+    Transform2DComponent(const Vec2f& pos, const Vec2f& scale, float rot)
+      : transform{Mat3::TransformationMatrix(pos, scale, rot)}
+    {}
+  };
+
+  struct Camera2DComponent {
+    public:
+      bool primary;
+    private:
+      Mat3 projectionMatrix;
+      Mat3 viewMatrix;
+      Vec2f cameraPos;
+    public:
+
+      Camera2DComponent(const Mat3& viewMatrix, bool primary)
+        : primary{primary}, projectionMatrix{Mat3::OrthographicViewport()}, viewMatrix{viewMatrix}
+      {}
+
+      const Mat3& GetViewMatrix() const { return viewMatrix; }
+      const Mat3& GetProjectionMatrix() const { return projectionMatrix; }
+
+      void SetProjectionMatrix(const Mat3& amProjectionMatrix)
+      {
+        projectionMatrix = amProjectionMatrix;
+      }
+
+      void SetViewMatrix(const Mat3& amViewMatrix)
+      {
+        Mat3 invMatrix = ~viewMatrix;
+        cameraPos = Vec2f{invMatrix.columns[2]};
+        viewMatrix = amViewMatrix;
+      }
+
+      void SetShaderUniforms(const Ref<Shader>& shader) const
+      {
+        shader->SetUniform2f("uCameraPos", cameraPos);
+        shader->SetUniformMat3("uViewMatrix", viewMatrix);
+        shader->SetUniformMat3("uProjectionMatrix", projectionMatrix);
+      }
+
+      void ViewportResize(ViewportResizeEvent& event)
+      {
+        SetProjectionMatrix(Mat3::OrthographicViewport());
+      }
   };
 
   struct Transform3DComponent
@@ -22,7 +70,7 @@ namespace Greet
     {}
 
     Transform3DComponent(const Vec3f& pos, const Vec3f& scale, const Vec3f& rot)
-      : transform{Mat4::TransformationMatrix(pos, rot, scale)}
+      : transform{Mat4::TransformationMatrix(pos, scale, rot)}
     {}
   };
 

@@ -7,7 +7,7 @@
 using namespace Greet;
 
 ECSScene::ECSScene()
-  : manager{new ECSManager()}, skybox{new Skybox{TextureManager::LoadCubeMap("res/textures/skybox.meta")}}
+  : manager{new ECSManager()}, skybox{new Skybox{TextureManager::LoadCubeMap("res/textures/skybox.meta")}}, renderer2d{new BatchRenderer(ShaderFactory::Shader2D())}
 {
 }
 
@@ -28,6 +28,45 @@ void ECSScene::RemoveEntity(EntityID entity)
 
 void ECSScene::Render() const
 {
+  Render3D();
+  Render2D();
+}
+
+void ECSScene::Render2D() const
+{
+  Entity camera{manager};
+  bool foundPrimary = false;
+  manager->Each<Camera2DComponent>([&](EntityID id, Camera2DComponent& cam)
+  {
+    if(cam.primary)
+    {
+      if(foundPrimary)
+        Log::Warning("More than one primary 2D camera in scene");
+      foundPrimary = true;
+      camera.SetID(id);
+    }
+  });
+
+  if(!foundPrimary)
+  {
+    Log::Warning("No camera in scene");
+    return;
+  }
+
+  Shader::Disable();
+  Camera2DComponent& cam = camera.GetComponent<Camera2DComponent>();
+  renderer2d->Begin();
+  cam.SetShaderUniforms(renderer2d->GetShader());
+  manager->Each<Transform2DComponent>([&](EntityID id, Transform2DComponent& transform)
+  {
+    renderer2d->DrawRect(transform.transform, 0, {}, {}, 0xffffffff, 0, {}, {});
+  });
+  renderer2d->End();
+  renderer2d->Flush();
+}
+
+void ECSScene::Render3D() const
+{
   Entity camera{manager};
   bool foundPrimary = false;
   manager->Each<Camera3DComponent>([&](EntityID id, Camera3DComponent& cam)
@@ -35,7 +74,7 @@ void ECSScene::Render() const
     if(cam.primary)
     {
       if(foundPrimary)
-        Log::Warning("More than one primary camera in scene");
+        Log::Warning("More than one primary 3D camera in scene");
       foundPrimary = true;
       camera.SetID(id);
     }
@@ -77,6 +116,10 @@ void ECSScene::OnEvent(Greet::Event& event)
   {
     ViewportResizeEvent& e = static_cast<ViewportResizeEvent&>(event);
     manager->Each<Camera3DComponent>([&](EntityID id, Camera3DComponent& cam)
+    {
+      cam.ViewportResize(e);
+    });
+    manager->Each<Camera2DComponent>([&](EntityID id, Camera2DComponent& cam)
     {
       cam.ViewportResize(e);
     });

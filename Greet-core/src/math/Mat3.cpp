@@ -68,28 +68,9 @@ namespace Greet{
 
   }
 
-  Mat3 Mat3::Quad(float x, float y, float width, float height)
+  Mat3 Mat3::TransformationMatrix(const Vec2f& pos, const Vec2f& scale, float rot)
   {
-    Mat3 result(1.0f);
-
-    result.elements[6] = x;
-    result.elements[7] = y;
-    result.elements[0] = width;
-    result.elements[4] = height;
-
-    return result;
-  }
-
-  Mat3 Mat3::Quad(const Vec2f& pos, const Vec2f& size)
-  {
-    Mat3 result(1.0f);
-
-    result.elements[6] = pos.x;
-    result.elements[7] = pos.y;
-    result.elements[0] = size.x;
-    result.elements[4] = size.y;
-
-    return result;
+    return Mat3::Translate(pos) * Mat3::Rotate(rot) * Mat3::Scale(scale);
   }
 
   Mat3 Mat3::Translate(const Vec2f& translation)
@@ -102,7 +83,7 @@ namespace Greet{
     return result;
   }
 
-  Mat3 Mat3::Translate(const float& x, const float& y)
+  Mat3 Mat3::Translate(float x, float y)
   {
     Mat3 result(1.0f);
 
@@ -122,7 +103,7 @@ namespace Greet{
     return result;
   }
 
-  Mat3 Mat3::Scale(const float& x, const float& y)
+  Mat3 Mat3::Scale(float x, float y)
   {
     Mat3 result(1.0f);
 
@@ -156,7 +137,7 @@ namespace Greet{
     return result;
   }
 
-  Mat3 Mat3::Shear(const float& x, const float& y)
+  Mat3 Mat3::Shear(float x, float y)
   {
     Mat3 result(1.0f);
 
