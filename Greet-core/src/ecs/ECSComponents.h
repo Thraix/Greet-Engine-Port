@@ -1,11 +1,12 @@
 #pragma once
 
-#include <math/Maths.h>
+#include <ecs/NativeScript.h>
+#include <event/ViewportEvent.h>
+#include <graphics/Sprite.h>
 #include <graphics/models/Material.h>
 #include <graphics/models/Mesh.h>
-#include <event/ViewportEvent.h>
 #include <math/Line.h>
-#include <ecs/NativeScript.h>
+#include <math/Maths.h>
 
 namespace Greet
 {
@@ -67,6 +68,16 @@ namespace Greet
     Ref<Shader> shader;
     Environment2D(const Ref<Shader>& shader)
       : shader{shader}
+    {}
+  };
+
+  struct SpriteComponent
+  {
+    Ref<Texture2D> texture;
+    Vec2f texPos;
+    Vec2f texSize;
+    SpriteComponent(const Ref<Texture2D>& texture, const Vec2f& texPos, const Vec2f& texSize)
+      : texture{texture}, texPos{texPos}, texSize{texSize}
     {}
   };
 

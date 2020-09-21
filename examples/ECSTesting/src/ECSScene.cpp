@@ -65,7 +65,14 @@ void ECSScene::Render2D() const
   cam.SetShaderUniforms(renderer2d->GetShader());
   manager->Each<Transform2DComponent>([&](EntityID id, Transform2DComponent& transform)
   {
-    renderer2d->DrawRect(transform.transform, 0xffffffff);
+    Entity e{manager, id};
+    if(e.HasComponent<SpriteComponent>())
+    {
+      SpriteComponent& sprite = e.GetComponent<SpriteComponent>();
+      renderer2d->DrawRect(transform.transform, sprite.texture, sprite.texPos, sprite.texSize);
+    }
+    else
+      renderer2d->DrawRect(transform.transform);
   });
   renderer2d->End();
   renderer2d->Flush();

@@ -10,8 +10,6 @@ out vec2 vPos;
 out float vTexID;
 out vec2 vTexCoord;
 out vec4 vColor;
-out float vMaskTexID;
-out vec2 vMaskTexCoord;
 
 uniform mat3 uProjectionMatrix = mat3(1.0);
 uniform mat3 uViewMatrix = mat3(1.0);
@@ -41,8 +39,8 @@ uniform sampler2D uTextures[32];
 void main()
 {
 	fColor = vColor;
-  float len = length(vPos - vec2(20));
-  fColor = vec4(vec3(1.0f / pow(len, 0.35f)), 1.0f);
+  float len = length(vPos - vec2(80, 30));
+  fColor = vec4(vec3(1.0f / pow(len, 0.15f)), 1.0f);
 	if (vTexID > 0.0)
 	{
 		int tid = int(vTexID - 0.5);
