@@ -7,7 +7,7 @@
 using namespace Greet;
 
 ECSScene::ECSScene()
-  : manager{new ECSManager()}, skybox{new Skybox{TextureManager::LoadCubeMap("res/textures/skybox.meta")}}, renderer2d{new BatchRenderer(ShaderFactory::Shader2D())}
+  : manager{new ECSManager()}, renderer2d{new BatchRenderer(ShaderFactory::Shader2D())}
 {
 }
 
@@ -50,7 +50,7 @@ void ECSScene::Render2D() const
     return;
 
   Entity environment{manager};
-  manager->Each<Environment2D>([&](EntityID id, Environment2D& env)
+  manager->Each<Environment2DComponent>([&](EntityID id, Environment2DComponent& env)
   {
     if(environment)
       Log::Warning("More than one environment in 2D scene");
@@ -59,7 +59,7 @@ void ECSScene::Render2D() const
 
   Camera2DComponent& cam = camera.GetComponent<Camera2DComponent>();
   if(environment)
-    renderer2d->SetShader(environment.GetComponent<Environment2D>().shader);
+    renderer2d->SetShader(environment.GetComponent<Environment2DComponent>().shader);
 
   renderer2d->Begin();
   cam.SetShaderUniforms(renderer2d->GetShader());
@@ -99,8 +99,22 @@ void ECSScene::Render3D() const
     return;
   }
 
+  Entity environment{manager};
+  manager->Each<Environment3DComponent>([&](EntityID id, Environment3DComponent& env)
+  {
+    if(environment)
+      Log::Warning("More than one environment in 3D scene");
+    environment.SetID(id);
+  });
   Camera3DComponent& cam = camera.GetComponent<Camera3DComponent>();
-  skybox->Render(cam);
+
+  Environment3DComponent* env = nullptr;
+  if(environment)
+  {
+    env = &environment.GetComponent<Environment3DComponent>();
+    env->Skybox(cam);
+  }
+
   manager->Each<Transform3DComponent, MeshComponent, MaterialComponent>([&](EntityID id, Transform3DComponent& transform, MeshComponent& mesh, MaterialComponent& material)
   {
     material.material->Bind();
@@ -108,6 +122,8 @@ void ECSScene::Render3D() const
     material.material->GetShader()->SetUniformMat4("uTransformationMatrix", transform.transform);
     material.material->GetShader()->SetUniform3f("uLightPosition", Vec3f(30.0f, 50.0f, 40.0f));
     material.material->GetShader()->SetUniform3f("uLightColor", Vec3f(0.7, 0.7, 0.7));
+    if(env)
+      env->SetShaderUniforms(material.material->GetShader());
     mesh.mesh->Bind();
     mesh.mesh->Render();
     mesh.mesh->Unbind();

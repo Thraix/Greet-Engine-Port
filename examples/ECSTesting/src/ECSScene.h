@@ -10,7 +10,6 @@ class ECSScene : public Greet::Scene
 {
   private:
     Greet::Ref<Greet::ECSManager> manager;
-    Greet::Ref<Greet::Skybox> skybox;
     Greet::Ref<Greet::BatchRenderer> renderer2d;
 
   public:

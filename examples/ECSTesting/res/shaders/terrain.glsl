@@ -31,8 +31,8 @@ in vec3 vPos[];
 out vec4 gColor;
 out float gVisibility;
 
-const float cDensity = 0.003;
-const float cGradient = 1.5;
+uniform float uFogNearDistance = 100;
+uniform float uFogFarDistance = 140;
 
 vec3 GetColorFromHeight(float y)
 {
@@ -44,6 +44,13 @@ vec3 GetColorFromHeight(float y)
     return vec3(0.71, 0.69, 0.65);
   else
     return vec3(0.86, 0.94, 0.94);
+}
+
+float GetFogVisibility(vec3 positionRelativeToCamera)
+{
+  float visibility = 1 - (length(positionRelativeToCamera) - uFogNearDistance) / (uFogFarDistance - uFogNearDistance);
+  visibility = clamp(visibility, 0.0, 1.0);
+  return visibility;
 }
 
 void main()
@@ -61,16 +68,14 @@ void main()
     vec4 positionRelativeToCamera = uViewMatrix * vec4(pos[i], 1.0);
     gl_Position = uProjectionMatrix * positionRelativeToCamera;
 
-    vec3 toCameraVector = uCameraPos - pos[i];
-
-    float distance = length(positionRelativeToCamera.xyz);
-    gVisibility = exp(-pow((distance*cDensity), cGradient));
-    gVisibility = clamp(gVisibility, 0.0, 1.0);
+    gVisibility = GetFogVisibility(positionRelativeToCamera.xyz);
+    /* if(distance < uFogNearDistance) */
+    /*   gVisibility = 1.0f; */
     gColor *= vec4(0.8f, 0.8f, 0.8f, 1.0f);
-    vec3 unitLightVector = normalize(uLightPosition);
 
+    vec3 unitLightVector = normalize(uLightPosition);
     float nDot = dot(normal, unitLightVector);
-    float brightness = nDot;//max(nDot,0.6);
+    float brightness = nDot;
     if (brightness < 0.6)
       brightness = mix(0.4, 0.6, brightness / 0.6);
 
@@ -90,10 +95,10 @@ in float gVisibility;
 
 out vec4 fColor;
 
-uniform vec4 uFogColor = vec4(0.125, 0.125, 0.125, 1);
+uniform vec3 uFogColor = vec3(0.125, 0.125, 0.125);
 
 void main()
 {
 	fColor = gColor;
-	fColor = mix(vec4(uFogColor.rgb, fColor.a), vec4(fColor.rgb, fColor.a), gVisibility);
+	fColor = mix(vec4(uFogColor, fColor.a), vec4(fColor.rgb, fColor.a), gVisibility);
 }

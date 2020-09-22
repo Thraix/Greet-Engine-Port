@@ -30,6 +30,9 @@ void ECSTesting::Init()
 
   Entity camera = scene->AddEntity();
   camera.AddComponent<Camera3DComponent>(Mat4::Identity(), 90.0f, 0.01f, 100.0f, true);
+  Environment3DComponent& env3d = camera.AddComponent<Environment3DComponent>(TextureManager::LoadCubeMap("res/textures/skybox.meta"));
+  env3d.fogNearDistance = 40;
+  env3d.fogFarDistance = 80;
   camera.AddComponent<NativeScriptComponent>(Ref<NativeScript>{new CameraController{camera, {15}, {-M_PI / 4, M_PI / 4, 0}}});
 
   Entity cube = scene->AddEntity();
@@ -51,7 +54,7 @@ void ECSTesting::Init()
 
   Entity env2d = scene->AddEntity();
   env2d.AddComponent<Camera2DComponent>(Mat3::Identity(), true);
-  env2d.AddComponent<Environment2D>(Shader::FromFile("res/shaders/shader2d.glsl"));
+  env2d.AddComponent<Environment2DComponent>(Shader::FromFile("res/shaders/shader2d.glsl"));
 
   Entity square = scene->AddEntity();
   square.AddComponent<Transform2DComponent>(Vec2f{50.0f, 50.0f}, Vec2f{100.0f, 100.0f}, M_PI / 4);

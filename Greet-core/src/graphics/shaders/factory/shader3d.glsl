@@ -12,13 +12,23 @@ out vec2 vTexCoord;
 out vec3 vSurfaceNormal;
 out vec3 vToLightVector;
 out vec3 vToCameraVector;
+out float vVisibility;
 
 uniform vec3 uCameraPos;
 uniform mat4 uTransformationMatrix;
 uniform mat4 uProjectionMatrix;
 uniform mat4 uViewMatrix;
-uniform vec3 uLightPosition = vec3(0.0, 10.0, -10.0);
+uniform vec3 uLightPosition = vec3(30.0, 20.0, 40.0);
 uniform vec4 uMaterialColor = vec4(1,1,1,1);
+uniform float uFogNearDistance = 100;
+uniform float uFogFarDistance = 140;
+
+float GetFogVisibility(vec3 positionRelativeToCamera)
+{
+  float visibility = 1 - (length(positionRelativeToCamera) - uFogNearDistance) / (uFogFarDistance - uFogNearDistance);
+  visibility = clamp(visibility, 0.0, 1.0);
+  return visibility;
+}
 
 void main()
 {
@@ -31,6 +41,7 @@ void main()
 	vSurfaceNormal = mat3(uTransformationMatrix) * aNormal;
 	vToLightVector = uLightPosition - worldPosition.xyz;
 	vToCameraVector = uCameraPos - worldPosition.xyz;
+  vVisibility = GetFogVisibility(positionRelativeToCamera.xyz);
 }
 
 //fragment
@@ -41,12 +52,13 @@ in vec2 vTexCoord;
 in vec3 vSurfaceNormal;
 in vec3 vToLightVector;
 in vec3 vToCameraVector;
+in float vVisibility;
 
 out vec4 fColor;
 
 uniform sampler2D uTexture;
 uniform vec3 uLightColor = vec3(1.0f, 1.0f, 1.0f);
-uniform vec3 uFogColor = vec3(0, 0, 0);
+uniform vec4 uFogColor = vec4(0.125, 0.125, 0.125, 1);
 uniform float uHasTexture = 1.0;
 uniform float uSpecularExponent = 10.0;
 uniform float uSpecularStrength = 1;
@@ -71,5 +83,6 @@ void main()
 	float uSpecular = uSpecularStrength * pow(max(dot(reflect(lightDirection, unitNormal), unitVectorToCamera), 0.0f), uSpecularExponent);
 
 	fColor *= vec4((uAmbient + (uDiffuse + uSpecular) * uLightColor), 1.0f);
+  fColor = mix(vec4(uFogColor.xyz, fColor.a), vec4(fColor), vVisibility);
 }
 )"

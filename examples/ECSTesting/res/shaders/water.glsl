@@ -31,9 +31,8 @@ uniform float uTime;
 uniform float uShadeDamper = 10.0;
 uniform float uReflectivity = 1;
 
-uniform vec4 uFogColor = vec4(0.125, 0.125, 0.125, 1);
-uniform float cFogDensity = 0.003;
-uniform float cFogGradient = 1.5;
+uniform float uFogNearDistance = 100;
+uniform float uFogFarDistance = 140;
 
 const float cWaveLength = 4.0;
 const float cWaveAmplitude = 0.2;
@@ -51,6 +50,13 @@ vec3 GetPosition(vec3 pos)
 	float yDistortion = generateOffset(pos.x, pos.z, 0.1, 0.3);
 	float zDistortion = generateOffset(pos.x, pos.z, 0.15, 0.2);
 	return pos + vec3(xDistortion, yDistortion, zDistortion);
+}
+
+float GetFogVisibility(vec3 positionRelativeToCamera)
+{
+  float visibility = 1 - (length(positionRelativeToCamera) - uFogNearDistance) / (uFogFarDistance - uFogNearDistance);
+  visibility = clamp(visibility, 0.0, 1.0);
+  return visibility;
 }
 
 void main()
@@ -71,9 +77,7 @@ void main()
     vec3 toLightVector = vec3(-100, 100, 0);
     vec3 toCameraVector = uCameraPos - worldPosition.xyz;
 
-    float distance = length(positionRelativeToCamera.xyz);
-    gVisibility = exp(-pow((distance * cFogDensity), cFogGradient));
-    gVisibility = clamp(gVisibility, 0.0, 1.0);
+    gVisibility = GetFogVisibility(positionRelativeToCamera.xyz);
     vec3 unitLightVector = normalize(toLightVector);
 
     float nDot = dot(normal, unitLightVector);
@@ -93,7 +97,6 @@ void main()
     gColor *= vec4(diffuse, 1.0f);
     gColor += vec4(finalSpecular, 0.0);
 
-    gColor = mix(vec4(uFogColor.xyz, gColor.a), vec4(gColor), gVisibility);
     gColor *= vec4(diffuse, 1.0f);
 
     float fresnel = ((1-dot(normal, unitVectorToCamera)) + 0.5) * 0.5;
@@ -111,7 +114,11 @@ in float gVisibility;
 
 out vec4 fColor;
 
+uniform vec3 uFogColor = vec3(0.125, 0.125, 0.125);
+
 void main()
 {
 	fColor = gColor;
+  fColor = mix(vec4(uFogColor, fColor.a), vec4(fColor), gVisibility);
+  fColor.a = min(fColor.a, gVisibility);
 }
