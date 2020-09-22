@@ -192,8 +192,8 @@ namespace Greet
     {}
 
     void Create() { script->Create(); created = true; }
-    void Update(float timeElapsed) { script->Update(timeElapsed); }
-    void OnEvent(Event& event) { script->OnEvent(event); }
+    void Update(float timeElapsed) { if(created) script->Update(timeElapsed); }
+    void OnEvent(Event& event) { if(created) script->OnEvent(event); }
     void Destroy() { script->Destroy(); created = false; }
   };
 }

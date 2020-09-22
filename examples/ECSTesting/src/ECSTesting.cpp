@@ -1,6 +1,8 @@
 #include "ECSTesting.h"
 
 #include "CameraController.h"
+#include "TerrainGeneratorScript.h"
+#include "WaterScript.h"
 
 using namespace Greet;
 
@@ -34,6 +36,18 @@ void ECSTesting::Init()
   cube.AddComponent<Transform3DComponent>(Mat4::Translate(0, 0, 0));
   cube.AddComponent<MeshComponent>(Ref<Mesh>{new Mesh{MeshFactory::Cube()}});
   cube.AddComponent<MaterialComponent>(Ref<Material>{new Material{ShaderFactory::Shader3D()}});
+
+  Entity terrain = scene->AddEntity();
+  terrain.AddComponent<Transform3DComponent>(Mat4::Translate(0, -10, 0));
+  terrain.AddComponent<MeshComponent>(Ref<Mesh>{new Mesh{MeshFactory::Cube()}});
+  terrain.AddComponent<MaterialComponent>(Ref<Material>{new Material{Shader::FromFile("res/shaders/terrain.glsl")}});
+  terrain.AddComponent<NativeScriptComponent>(Ref<NativeScript>(new TerrainGenerationScript(terrain)));
+
+  Entity water = scene->AddEntity();
+  water.AddComponent<Transform3DComponent>(Mat4::Translate(0, -10 + 0.45f * 20.0f, 0));
+  water.AddComponent<MeshComponent>(Ref<Mesh>{new Mesh{Greet::MeshFactory::Grid({99, 99}, {}, {0.0f, 0.0f, 0.0f}, {99.0f, 0.0f, 99.0f})}});
+  water.AddComponent<MaterialComponent>(Ref<Material>{new Material{Shader::FromFile("res/shaders/water.glsl")}});
+  water.AddComponent<NativeScriptComponent>(Ref<NativeScript>(new WaterScript(water)));
 
   Entity env2d = scene->AddEntity();
   env2d.AddComponent<Camera2DComponent>(Mat3::Identity(), true);
