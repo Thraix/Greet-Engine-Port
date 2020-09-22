@@ -29,16 +29,16 @@ void ECSTesting::Init()
   sceneView->GetSceneManager().Add3DScene(scene.get(), "ecs");
 
   Entity camera = scene->AddEntity();
-  camera.AddComponent<Camera3DComponent>(Mat4::Identity(), 90.0f, 0.001f, 1000.0f, true);
-  camera.AddComponent<NativeScriptComponent>(Ref<NativeScript>{new CameraController{camera, {2, 2, 2}, {-M_PI / 4, M_PI / 4, 0}}});
+  camera.AddComponent<Camera3DComponent>(Mat4::Identity(), 90.0f, 0.01f, 100.0f, true);
+  camera.AddComponent<NativeScriptComponent>(Ref<NativeScript>{new CameraController{camera, {15}, {-M_PI / 4, M_PI / 4, 0}}});
 
   Entity cube = scene->AddEntity();
-  cube.AddComponent<Transform3DComponent>(Mat4::Translate(0, 0, 0));
+  cube.AddComponent<Transform3DComponent>(Mat4::Scale(10, 10, 10));
   cube.AddComponent<MeshComponent>(Ref<Mesh>{new Mesh{MeshFactory::Cube()}});
-  cube.AddComponent<MaterialComponent>(Ref<Material>{new Material{ShaderFactory::Shader3D()}});
+  cube.AddComponent<MaterialComponent>(Ref<Material>{new Material{ShaderFactory::Shader3D(), TextureManager::LoadTexture2D("res/textures/block.meta")}});
 
   Entity terrain = scene->AddEntity();
-  terrain.AddComponent<Transform3DComponent>(Mat4::Translate(0, -10, 0));
+  terrain.AddComponent<Transform3DComponent>(Mat4::Scale(1, 20, 1) * Mat4::Translate(0, -0.5f, 0));
   terrain.AddComponent<MeshComponent>(Ref<Mesh>{new Mesh{MeshFactory::Cube()}});
   terrain.AddComponent<MaterialComponent>(Ref<Material>{new Material{Shader::FromFile("res/shaders/terrain.glsl")}});
   terrain.AddComponent<NativeScriptComponent>(Ref<NativeScript>(new TerrainGenerationScript(terrain)));

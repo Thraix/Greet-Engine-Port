@@ -106,6 +106,8 @@ void ECSScene::Render3D() const
     material.material->Bind();
     cam.SetShaderUniforms(material.material->GetShader());
     material.material->GetShader()->SetUniformMat4("uTransformationMatrix", transform.transform);
+    material.material->GetShader()->SetUniform3f("uLightPosition", Vec3f(30.0f, 50.0f, 40.0f));
+    material.material->GetShader()->SetUniform3f("uLightColor", Vec3f(0.7, 0.7, 0.7));
     mesh.mesh->Bind();
     mesh.mesh->Render();
     mesh.mesh->Unbind();

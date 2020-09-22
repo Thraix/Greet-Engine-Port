@@ -7,7 +7,23 @@
 
 class CameraController : public Greet::NativeScript
 {
+  struct Controller
+  {
+    bool forwardKey = false;
+    bool backKey = false;
+    bool leftKey = false;
+    bool rightKey = false;
+    bool upKey = false;
+    bool downKey = false;
+
+    bool yawPlusKey = false;
+    bool yawMinusKey = false;
+    bool pitchPlusKey = false;
+    bool pitchMinusKey = false;
+  };
+
   private:
+    Controller controller;
     Greet::Vec3f pos;
     Greet::Vec3f rot;
 
@@ -30,7 +46,7 @@ class CameraController : public Greet::NativeScript
     void OnEvent(Greet::Event& event) override
     {
       float rotationSpeed = 4;
-      float moveSpeed = 5;
+      float moveSpeed = 10;
       if(EVENT_IS_TYPE(event, Greet::EventType::KEY_PRESS))
       {
         Greet::KeyPressEvent& e = static_cast<Greet::KeyPressEvent&>(event);
@@ -39,25 +55,25 @@ class CameraController : public Greet::NativeScript
         switch(e.GetButton())
         {
           case GREET_KEY_DOWN:
-            rotVel.x -= rotationSpeed; break;
+            controller.pitchMinusKey = true; break;
           case GREET_KEY_UP:
-            rotVel.x += rotationSpeed; break;
+            controller.pitchPlusKey = true; break;
           case GREET_KEY_LEFT:
-            rotVel.y += rotationSpeed; break;
+            controller.yawMinusKey= true; break;
           case GREET_KEY_RIGHT:
-            rotVel.y -= rotationSpeed; break;
+            controller.yawPlusKey = true; break;
           case GREET_KEY_W:
-            vel.z -= moveSpeed; break;
+            controller.forwardKey = true; break;
           case GREET_KEY_S:
-            vel.z += moveSpeed; break;
+            controller.backKey = true; break;
           case GREET_KEY_A:
-            vel.x -= moveSpeed; break;
+            controller.leftKey = true; break;
           case GREET_KEY_D:
-            vel.x += moveSpeed; break;
+            controller.rightKey = true; break;
           case GREET_KEY_LEFT_SHIFT:
-            vel.y -= moveSpeed; break;
+            controller.downKey = true; break;
           case GREET_KEY_SPACE:
-            vel.y += moveSpeed; break;
+            controller.upKey = true; break;
         }
       }
       else if(EVENT_IS_TYPE(event, Greet::EventType::KEY_RELEASE))
@@ -66,26 +82,39 @@ class CameraController : public Greet::NativeScript
         switch(e.GetButton())
         {
           case GREET_KEY_DOWN:
-            rotVel.x += rotationSpeed; break;
+            controller.pitchMinusKey = false; break;
           case GREET_KEY_UP:
-            rotVel.x -= rotationSpeed; break;
+            controller.pitchPlusKey = false; break;
           case GREET_KEY_LEFT:
-            rotVel.y -= rotationSpeed; break;
+            controller.yawMinusKey= false; break;
           case GREET_KEY_RIGHT:
-            rotVel.y += rotationSpeed; break;
+            controller.yawPlusKey = false; break;
           case GREET_KEY_W:
-            vel.z += moveSpeed; break;
+            controller.forwardKey = false; break;
           case GREET_KEY_S:
-            vel.z -= moveSpeed; break;
+            controller.backKey = false; break;
           case GREET_KEY_A:
-            vel.x += moveSpeed; break;
+            controller.leftKey = false; break;
           case GREET_KEY_D:
-            vel.x -= moveSpeed; break;
+            controller.rightKey = false; break;
           case GREET_KEY_LEFT_SHIFT:
-            vel.y += moveSpeed; break;
+            controller.downKey = false; break;
           case GREET_KEY_SPACE:
-            vel.y -= moveSpeed; break;
+            controller.upKey = false; break;
         }
       }
+      rotVel = {};
+      vel = {};
+      if(controller.pitchMinusKey) rotVel.x -= rotationSpeed;
+      if(controller.pitchPlusKey) rotVel.x += rotationSpeed;
+      if(controller.yawMinusKey) rotVel.y += rotationSpeed;
+      if(controller.yawPlusKey) rotVel.y -= rotationSpeed;
+
+      if(controller.forwardKey) vel.z -= moveSpeed;
+      if(controller.backKey) vel.z += moveSpeed;
+      if(controller.leftKey) vel.x -= moveSpeed;
+      if(controller.rightKey) vel.x += moveSpeed;
+      if(controller.upKey) vel.y += moveSpeed;
+      if(controller.downKey) vel.y -= moveSpeed;
     }
 };

@@ -26,27 +26,14 @@ class TerrainGenerationScript : public Greet::NativeScript
     {
       for(float& f : noise)
       {
-        if (f < 0.45)
-        {
-          //y = 0.45f + Noise::PRNG(vertex->x, vertex->z)*0.01f;// + 0.03f*(rand() / (float)RAND_MAX - 0.5f);
-        }
-        else if (f < 0.48)
-        {
-
-        }
-        else if (f < 0.58)
-        {
-
-        }
-        else if (f < 0.65)
+        if (f > 0.58 && f < 0.65)
         {
           f = (pow(f - 0.58, 0.6) + 0.58);
         }
-        else
+        else if(f > 0.65)
         {
           f = (pow(f - 0.58, 0.6) + 0.58);
         }
-        f *= 20;
       }
     }
 };

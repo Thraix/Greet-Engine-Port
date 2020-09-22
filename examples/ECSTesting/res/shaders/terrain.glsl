@@ -1,4 +1,5 @@
-//vertex
+#shader vertex
+
 #version 330 core
 
 layout(location = 0) in vec3 aPosition;
@@ -10,7 +11,8 @@ void main()
   vPos = aPosition;
 }
 
-//geometry
+#shader geometry
+
 #version 330 core
 
 layout(triangles) in;
@@ -34,7 +36,6 @@ const float cGradient = 1.5;
 
 vec3 GetColorFromHeight(float y)
 {
-  y /= 20.0f;
   if (y < 0.48)
     return vec3(0.94, 0.89, 0.64);
   else if (y < 0.58)
@@ -47,21 +48,20 @@ vec3 GetColorFromHeight(float y)
 
 void main()
 {
-  vec3 p0 = vec3(uTransformationMatrix * vec4(vPos[0], 1.0f));
-  vec3 p1 = vec3(uTransformationMatrix * vec4(vPos[1], 1.0f));
-  vec3 p2 = vec3(uTransformationMatrix * vec4(vPos[2], 1.0f));
-  vec3 avgPos = (vPos[0] + vPos[1] + vPos[2]) / 3.0f;
-  vec3 color = GetColorFromHeight(avgPos.y);
-  vec3 normal = normalize(cross(p1 - p0, p2 - p0));
+  vec3 pos[3];
+  pos[0] = vec3(uTransformationMatrix * vec4(vPos[0], 1.0f));
+  pos[1] = vec3(uTransformationMatrix * vec4(vPos[1], 1.0f));
+  pos[2] = vec3(uTransformationMatrix * vec4(vPos[2], 1.0f));
+  vec3 color = GetColorFromHeight((vPos[0].y + vPos[1].y + vPos[2].y) / 3.0f);
+  vec3 normal = normalize(cross(pos[1] - pos[0], pos[2] - pos[0]));
 
-  for(int i=0; i<3; i++)
+  for(int i = 0; i < 3; i++)
   {
     gColor = vec4(color, 1.0);
-    vec4 worldPosition = uTransformationMatrix * vec4(vPos[i], 1.0f);
-    vec4 positionRelativeToCamera = uViewMatrix * worldPosition;
+    vec4 positionRelativeToCamera = uViewMatrix * vec4(pos[i], 1.0);
     gl_Position = uProjectionMatrix * positionRelativeToCamera;
 
-    vec3 toCameraVector = uCameraPos - worldPosition.xyz;
+    vec3 toCameraVector = uCameraPos - pos[i];
 
     float distance = length(positionRelativeToCamera.xyz);
     gVisibility = exp(-pow((distance*cDensity), cGradient));
@@ -81,7 +81,8 @@ void main()
   EndPrimitive();
 }
 
-//fragment
+#shader fragment
+
 #version 330 core
 
 in vec4 gColor;
