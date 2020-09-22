@@ -8,11 +8,15 @@ namespace Greet
   class NativeScript
   {
     protected:
+      bool hasBoundEntity = false;
       Entity entity;
     public:
-      NativeScript(const Entity& entity)
-        : entity{entity}
+      NativeScript()
+        : entity{nullptr}
       {}
+
+      void BindEntity(const Entity& aEntity) { entity = aEntity; hasBoundEntity = true; }
+      bool HasBoundEntity() const { return hasBoundEntity; }
 
       virtual void Create() {}
       virtual void Update(float timeElapsed) {}

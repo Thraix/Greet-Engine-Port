@@ -30,8 +30,8 @@ class CameraController : public Greet::NativeScript
     Greet::Vec3f vel;
     Greet::Vec3f rotVel;
   public:
-    CameraController(const Greet::Entity& entity, const Greet::Vec3f& pos = {}, const Greet::Vec3f& rot = {})
-      : NativeScript{entity}, pos{pos}, rot{rot}, vel{}, rotVel{}
+    CameraController(const Greet::Vec3f& pos = {}, const Greet::Vec3f& rot = {})
+      : pos{pos}, rot{rot}, vel{}, rotVel{}
     {}
 
     void Update(float timeElapsed) override

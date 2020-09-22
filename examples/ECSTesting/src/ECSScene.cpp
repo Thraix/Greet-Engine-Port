@@ -135,8 +135,12 @@ void ECSScene::Update(float timeElapsed)
 {
   manager->Each<NativeScriptComponent>([&](EntityID id, NativeScriptComponent& script)
   {
+    if(!script.script->HasBoundEntity())
+      script.BindEntity({manager, id});
     if(!script.created)
+    {
       script.Create();
+    }
     script.Update(timeElapsed);
   });
 }

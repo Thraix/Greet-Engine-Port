@@ -8,10 +8,6 @@
 class TerrainGenerationScript : public Greet::NativeScript
 {
   public:
-    TerrainGenerationScript(const Greet::Entity& entity)
-      : NativeScript{entity}
-    {}
-
     void Create() override
     {
       ASSERT(entity.HasComponent<Greet::MeshComponent>(), "Terrain does not contain meshcomponent");

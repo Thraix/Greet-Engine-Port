@@ -10,9 +10,6 @@ class WaterScript : public Greet::NativeScript
   private:
     float time;
   public:
-    WaterScript(const Greet::Entity& entity)
-      : NativeScript{entity}
-    {}
 
     void Create() override
     {

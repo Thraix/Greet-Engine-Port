@@ -262,6 +262,11 @@ namespace Greet
       : script{script}
     {}
 
+    void BindEntity(const Entity& entity)
+    {
+      script->BindEntity(entity);
+    }
+
     void Create() { script->Create(); created = true; }
     void Update(float timeElapsed) { if(created) script->Update(timeElapsed); }
     void OnEvent(Event& event) { if(created) script->OnEvent(event); }
