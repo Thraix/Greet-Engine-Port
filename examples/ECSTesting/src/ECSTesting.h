@@ -2,13 +2,11 @@
 
 #include <Greet.h>
 
-#include "ECSScene.h"
-
 class ECSTesting : public Greet::App
 {
   private:
     Greet::GUIScene* gui;
-    Greet::Ref<ECSScene> scene;
+    Greet::Ref<Greet::ECSScene> scene;
   public:
     ECSTesting();
 
