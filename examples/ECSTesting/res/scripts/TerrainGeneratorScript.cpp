@@ -1,14 +1,12 @@
-#pragma once
-
 #include <ecs/NativeScript.h>
 #include <ecs/ECSComponents.h>
 #include <graphics/models/MeshFactory.h>
 #include <utils/Noise.h>
 
-class TerrainGenerationScript : public Greet::NativeScript
+class TerrainGeneratorScript : public Greet::NativeScript
 {
   public:
-    void Create() override
+    void OnCreate() override
     {
       ASSERT(entity.HasComponent<Greet::MeshComponent>(), "Terrain does not contain meshcomponent");
       Greet::MeshComponent& mesh = entity.GetComponent<Greet::MeshComponent>();
@@ -33,3 +31,5 @@ class TerrainGenerationScript : public Greet::NativeScript
       }
     }
 };
+
+REGISTER_NATIVE_SCRIPT(TerrainGeneratorScript);

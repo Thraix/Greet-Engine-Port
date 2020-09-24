@@ -13,6 +13,7 @@
     <library>glfw</library>
     <library>freeimage</library>
     <library>freetype</library>
+    <library>dl</library>
     <librarydir>../../Greet-core/bin/</librarydir>
     <outputdir>bin/</outputdir>
     <outputname>ecs_testing.x86_64</outputname>

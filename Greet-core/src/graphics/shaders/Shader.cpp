@@ -571,17 +571,17 @@ namespace Greet {
 
   Ref<Shader> Shader::FromFile(const std::string& vertPath, const std::string& fragPath)
   {
-    std::string vertSourceString = FileUtils::read_file(vertPath.c_str());
-    std::string fragSourceString = FileUtils::read_file(fragPath.c_str());
+    std::string vertSourceString = FileUtils::ReadFile(vertPath.c_str());
+    std::string fragSourceString = FileUtils::ReadFile(fragPath.c_str());
     return Ref<Shader>(new Shader{vertSourceString, fragSourceString});
   }
 
 
   Ref<Shader> Shader::FromFile(const std::string& vertPath, const std::string& fragPath, const std::string& geomPath)
   {
-    std::string vertSourceString = FileUtils::read_file(vertPath.c_str());
-    std::string fragSourceString = FileUtils::read_file(fragPath.c_str());
-    std::string geomSourceString = FileUtils::read_file(geomPath.c_str());
+    std::string vertSourceString = FileUtils::ReadFile(vertPath.c_str());
+    std::string fragSourceString = FileUtils::ReadFile(fragPath.c_str());
+    std::string geomSourceString = FileUtils::ReadFile(geomPath.c_str());
     return Ref<Shader>(new Shader{vertSourceString,fragSourceString,geomSourceString});
   }
 

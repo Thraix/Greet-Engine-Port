@@ -1,5 +1,3 @@
-#pragma once
-
 #include <ecs/NativeScript.h>
 #include <ecs/ECSComponents.h>
 #include <input/Input.h>
@@ -34,7 +32,7 @@ class CameraControllerScript : public Greet::NativeScript
       : pos{pos}, rot{rot}, vel{}, rotVel{}
     {}
 
-    void Update(float timeElapsed) override
+    void OnUpdate(float timeElapsed) override
     {
       ASSERT(entity.HasComponent<Greet::Camera3DComponent>(), "CameraController entity does not contain a Camera3DComponent");
       Greet::Camera3DComponent& cam = entity.GetComponent<Greet::Camera3DComponent>();
@@ -118,3 +116,5 @@ class CameraControllerScript : public Greet::NativeScript
       if(controller.downKey) vel.y -= moveSpeed;
     }
 };
+
+REGISTER_NATIVE_SCRIPT(CameraControllerScript);

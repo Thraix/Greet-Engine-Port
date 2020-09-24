@@ -3,6 +3,7 @@
 *.logging
 *.swp
 *.swo
+*.so
 deps/libs/*
 *Makefile.backup
 installation/glfw*

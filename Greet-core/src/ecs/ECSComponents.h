@@ -285,10 +285,10 @@ namespace Greet
 
   struct NativeScriptComponent
   {
-    Ref<NativeScript> script;
+    Ref<NativeScriptResource> script;
     bool created = false;
 
-    NativeScriptComponent(const Ref<NativeScript>& script)
+    NativeScriptComponent(const Ref<NativeScriptResource>& script)
       : script{script}
     {}
 
@@ -297,10 +297,28 @@ namespace Greet
       script->BindEntity(entity);
     }
 
-    void Create() { script->Create(); created = true; }
-    void Update(float timeElapsed) { if(created) script->Update(timeElapsed); }
-    void OnEvent(Event& event) { if(created) script->OnEvent(event); }
-    void Destroy() { script->Destroy(); created = false; }
+    void Create()
+    {
+      script->OnCreate();
+      created = true;
+    }
+
+    void Update(float timeElapsed)
+    {
+      if(created)
+        script->OnUpdate(timeElapsed);
+    }
+
+    void OnEvent(Event& event)
+    {
+      if(created) script->OnEvent(event);
+    }
+
+    void Destroy()
+    {
+      script->OnDestroy();
+      created = false;
+    }
   };
 }
 

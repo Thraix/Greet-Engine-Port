@@ -150,7 +150,5 @@ namespace Greet {
       else
         return CharType::SYMBOL;
     }
-
-
   };
 }

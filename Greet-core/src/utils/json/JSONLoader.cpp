@@ -7,7 +7,7 @@ namespace Greet {
 
   JSONObject JSONLoader::LoadJSON(const std::string& filename)
   {
-    std::string file = FileUtils::read_file(filename.c_str());
+    std::string file = FileUtils::ReadFile(filename.c_str());
     uint currentPos = file.find("{");
     while (IsIndent(file, currentPos));
     JSONObject obj;
