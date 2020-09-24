@@ -200,10 +200,10 @@ namespace Greet {
     texCoords[2] = Vec2f(0.25f, 2.0f / 3.0f);
     texCoords[3] = Vec2f(0.25f, 1.0f / 3.0f);
 
-    texCoords[4] = Vec2f(0.50f, 1.0f / 3.0f);
-    texCoords[5] = Vec2f(0.50f, 2.0f / 3.0f);
-    texCoords[6] = Vec2f(0.75f, 2.0f / 3.0f);
-    texCoords[7] = Vec2f(0.75f, 1.0f / 3.0f);
+    texCoords[4] = Vec2f(0.75f, 1.0f / 3.0f);
+    texCoords[5] = Vec2f(0.75f, 2.0f / 3.0f);
+    texCoords[6] = Vec2f(0.50f, 2.0f / 3.0f);
+    texCoords[7] = Vec2f(0.50f, 1.0f / 3.0f);
 
     texCoords[8]  = Vec2f(0.25f, 1.0f / 3.0f);
     texCoords[9]  = Vec2f(0.25f, 0.00f);
