@@ -1,0 +1,17 @@
+[TagComponent]
+tag=Block
+
+[Transform3DComponent]
+position=0 10 20
+scale=10 10 10
+rotation=0 0.75 0
+
+[MeshComponent]
+type=cube
+
+[MaterialComponent]
+shadertype=shader3d
+texture=res/textures/block.meta
+
+[NativeScript]
+name=WaterScript

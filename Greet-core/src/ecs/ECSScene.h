@@ -1,10 +1,11 @@
 #pragma once
 
-#include <graphics/layers/Scene.h>
-#include <ecs/Entity.h>
 #include <ecs/ECSManager.h>
+#include <ecs/Entity.h>
 #include <graphics/Skybox.h>
+#include <graphics/layers/Scene.h>
 #include <graphics/renderers/BatchRenderer.h>
+#include <utils/MetaFile.h>
 
 namespace Greet
 {
@@ -16,7 +17,10 @@ namespace Greet
 
     public:
       ECSScene();
+      ECSScene(const std::string& scenePath);
       ~ECSScene();
+
+      void LoadEntity(const MetaFile& meta);
 
       Entity AddEntity(const std::string& tag);
       void RemoveEntity(const Entity& entity);
@@ -27,5 +31,14 @@ namespace Greet
       void Render3D() const;
       void Update(float timeElapsed) override;
       void OnEvent(Event& event) override;
+
+    private:
+      template <typename T>
+      void LoadComponent(Entity& entity, const MetaFile& meta, const std::string& componentName)
+      {
+        const std::vector<MetaFileClass>& metaClass = meta.GetMetaClass(componentName);
+        if(metaClass.size() > 0)
+          entity.AddComponent<T>(metaClass[0]);
+      }
   };
 }

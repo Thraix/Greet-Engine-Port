@@ -89,6 +89,15 @@ namespace Greet
         return classes.find(className) != classes.end();
       }
 
+      std::vector<MetaFileClass>& GetMetaClass(const std::string& className)
+      {
+        static std::vector<MetaFileClass> empty;
+        auto it = classes.find(className);
+        if(it != classes.end())
+          return it->second;
+        return empty;
+      }
+
       const std::vector<MetaFileClass>& GetMetaClass(const std::string& className) const
       {
         static std::vector<MetaFileClass> empty;

@@ -139,6 +139,7 @@
 #include <utils/ImageUtils.h>
 #include <utils/LogUtils.h>
 #include <utils/MetaFile.h>
+#include <utils/MetaFileLoading.h>
 #include <utils/Noise.h>
 #include <utils/OBJUtils.h>
 #include <utils/Resource.h>

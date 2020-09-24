@@ -25,7 +25,7 @@ void ECSTesting::Init()
   GlobalSceneManager::GetSceneManager().Add2DScene(gui, "gui");
   SceneView* sceneView = frame->GetComponentByName<SceneView>("sceneView");
   ASSERT(sceneView, "SceneView did not exist in gui");
-  scene.reset(new ECSScene());
+  scene.reset(new ECSScene("res/scenes/scene.meta"));
   sceneView->GetSceneManager().Add3DScene(scene, "ecs");
   gui->RequestFocusQueued(sceneView);
 

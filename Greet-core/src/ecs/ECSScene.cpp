@@ -6,10 +6,21 @@
 
 namespace Greet
 {
-
   ECSScene::ECSScene()
     : manager{new ECSManager()}, renderer2d{new BatchRenderer(ShaderFactory::Shader2D())}
   {
+  }
+
+  ECSScene::ECSScene(const std::string& scenePath)
+    : manager{new ECSManager()}, renderer2d{new BatchRenderer(ShaderFactory::Shader2D())}
+  {
+    MetaFile meta{scenePath};
+    const std::vector<MetaFileClass>& entities = meta.GetMetaClass("Entity");
+    for(auto&& entity : entities)
+    {
+      if(entity.HasValue("entitypath"))
+        LoadEntity(MetaFile{entity.GetValue("entitypath")});
+    }
   }
 
   ECSScene::~ECSScene()
@@ -17,7 +28,23 @@ namespace Greet
     TextureManager::CleanupUnused();
   }
 
-  Greet::Entity ECSScene::AddEntity(const std::string& tag)
+  void ECSScene::LoadEntity(const MetaFile& meta)
+  {
+    const std::vector<MetaFileClass>& tag = meta.GetMetaClass("TagComponent");
+    if(tag.size() == 0)
+    {
+      Log::Error("Entity does not contain TagComponent");
+      return;
+    }
+    Entity e = Entity::Create(manager);
+    e.AddComponent<TagComponent>(tag[0]);
+
+    LoadComponent<Transform3DComponent>(e, meta, "Transform3DComponent");
+    LoadComponent<MeshComponent>(e, meta, "MeshComponent");
+    LoadComponent<MaterialComponent>(e, meta, "MaterialComponent");
+  }
+
+  Entity ECSScene::AddEntity(const std::string& tag)
   {
     Entity e = Entity::Create(manager);
     e.AddComponent<TagComponent>(tag);

@@ -9,6 +9,8 @@
 #include <graphics/RenderCommand.h>
 #include <math/Line.h>
 #include <math/Maths.h>
+#include <utils/MetaFile.h>
+#include <utils/MetaFileLoading.h>
 
 namespace Greet
 {
@@ -93,6 +95,14 @@ namespace Greet
     Transform3DComponent(const Vec3f& pos, const Vec3f& scale, const Vec3f& rot)
       : transform{Mat4::TransformationMatrix(pos, scale, rot)}
     {}
+
+    Transform3DComponent(const MetaFileClass& metaClass)
+      : transform{Mat4::TransformationMatrix(
+          MetaFileLoading::LoadVec3f(metaClass, "position", {0.0f}),
+          MetaFileLoading::LoadVec3f(metaClass, "scale", {1.0f}),
+          MetaFileLoading::LoadVec3f(metaClass, "rotation", {0.0f}))}
+    {
+    }
   };
 
   struct Camera3DComponent {
@@ -238,6 +248,15 @@ namespace Greet
     TagComponent(const std::string& tag)
       : tag{tag}
     {}
+
+    TagComponent(const MetaFileClass& metaClass)
+      : tag{"Invalid"}
+    {
+      if(metaClass.HasValue("tag"))
+        tag = metaClass.GetValue("tag");
+      else
+        Log::Error("tag does not exist in TagComponent");
+    }
   };
 
   struct MeshComponent
@@ -246,6 +265,10 @@ namespace Greet
     MeshComponent(const Ref<Mesh>& mesh)
       : mesh{mesh}
     {}
+
+    MeshComponent(const MetaFileClass& metaClass)
+      : mesh{MetaFileLoading::LoadMesh(metaClass, "mesh")}
+    {}
   };
 
   struct MaterialComponent
@@ -253,6 +276,10 @@ namespace Greet
     Ref<Material> material;
     MaterialComponent(const Ref<Material>& material)
       : material{material}
+    {}
+
+    MaterialComponent(const MetaFileClass& metaClass)
+      : material{MetaFileLoading::LoadMaterial(metaClass)}
     {}
   };
 
