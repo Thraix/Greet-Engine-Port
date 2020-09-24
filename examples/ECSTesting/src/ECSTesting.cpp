@@ -1,6 +1,6 @@
 #include "ECSTesting.h"
 
-#include "CameraController.h"
+#include "CameraControllerScript.h"
 #include "TerrainGeneratorScript.h"
 #include "WaterScript.h"
 
@@ -19,44 +19,45 @@ ECSTesting::~ECSTesting()
 void ECSTesting::Init()
 {
   FontManager::Add("noto", FontContainer("res/fonts/noto.ttf"));
-  gui = new GUIScene();
+  gui.reset(new GUIScene());
   Frame* frame = FrameFactory::GetFrame("res/guis/gui.xml");
   gui->AddFrameQueued(frame);
   GlobalSceneManager::GetSceneManager().Add2DScene(gui, "gui");
   SceneView* sceneView = frame->GetComponentByName<SceneView>("sceneView");
   ASSERT(sceneView, "SceneView did not exist in gui");
   scene.reset(new ECSScene());
-  sceneView->GetSceneManager().Add3DScene(scene.get(), "ecs");
+  sceneView->GetSceneManager().Add3DScene(scene, "ecs");
+  gui->RequestFocusQueued(sceneView);
 
-  Entity camera = scene->AddEntity();
+  Entity camera = scene->AddEntity("CameraEnvironmnet3D");
   camera.AddComponent<Camera3DComponent>(Mat4::Identity(), 90.0f, 0.01f, 100.0f, true);
   Environment3DComponent& env3d = camera.AddComponent<Environment3DComponent>(TextureManager::LoadCubeMap("res/textures/skybox.meta"));
   env3d.fogNearDistance = 40;
   env3d.fogFarDistance = 80;
-  camera.AddComponent<NativeScriptComponent>(Ref<NativeScript>{new CameraController{{15}, {-M_PI / 4, M_PI / 4, 0}}});
+  camera.AddComponent<NativeScriptComponent>(Ref<NativeScript>{new CameraControllerScript{{15}, {-M_PI / 4, M_PI / 4, 0}}});
 
-  Entity cube = scene->AddEntity();
+  Entity cube = scene->AddEntity("Cube");
   cube.AddComponent<Transform3DComponent>(Mat4::Scale(10, 10, 10));
   cube.AddComponent<MeshComponent>(Ref<Mesh>{new Mesh{MeshFactory::Cube()}});
   cube.AddComponent<MaterialComponent>(Ref<Material>{new Material{ShaderFactory::Shader3D(), TextureManager::LoadTexture2D("res/textures/block.meta")}});
 
-  Entity terrain = scene->AddEntity();
+  Entity terrain = scene->AddEntity("Terrain");
   terrain.AddComponent<Transform3DComponent>(Mat4::Scale(1, 20, 1) * Mat4::Translate(0, -0.5f, 0));
   terrain.AddComponent<MeshComponent>(Ref<Mesh>{new Mesh{MeshFactory::Cube()}});
   terrain.AddComponent<MaterialComponent>(Ref<Material>{new Material{Shader::FromFile("res/shaders/terrain.glsl")}});
   terrain.AddComponent<NativeScriptComponent>(Ref<NativeScript>(new TerrainGenerationScript()));
 
-  Entity water = scene->AddEntity();
+  Entity water = scene->AddEntity("Water");
   water.AddComponent<Transform3DComponent>(Mat4::Translate(0, -10 + 0.45f * 20.0f, 0));
   water.AddComponent<MeshComponent>(Ref<Mesh>{new Mesh{Greet::MeshFactory::Grid({99, 99}, {}, {0.0f, 0.0f, 0.0f}, {99.0f, 0.0f, 99.0f})}});
   water.AddComponent<MaterialComponent>(Ref<Material>{new Material{Shader::FromFile("res/shaders/water.glsl")}});
   water.AddComponent<NativeScriptComponent>(Ref<NativeScript>(new WaterScript()));
 
-  Entity env2d = scene->AddEntity();
+  Entity env2d = scene->AddEntity("CameraEnvironmnet2D");
   env2d.AddComponent<Camera2DComponent>(Mat3::Identity(), true);
   env2d.AddComponent<Environment2DComponent>(Shader::FromFile("res/shaders/shader2d.glsl"));
 
-  Entity square = scene->AddEntity();
+  Entity square = scene->AddEntity("Square");
   square.AddComponent<Transform2DComponent>(Vec2f{50.0f, 50.0f}, Vec2f{100.0f, 100.0f}, M_PI / 4);
   square.AddComponent<SpriteComponent>(TextureManager::LoadTexture2D("res/textures/sprite.meta"), Vec2f{0.0f, 0.0f}, Vec2f{2.0f, 2.0f});
 }

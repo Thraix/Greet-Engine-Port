@@ -5,7 +5,7 @@
 #include <input/Input.h>
 #include <event/KeyEvent.h>
 
-class CameraController : public Greet::NativeScript
+class CameraControllerScript : public Greet::NativeScript
 {
   struct Controller
   {
@@ -30,7 +30,7 @@ class CameraController : public Greet::NativeScript
     Greet::Vec3f vel;
     Greet::Vec3f rotVel;
   public:
-    CameraController(const Greet::Vec3f& pos = {}, const Greet::Vec3f& rot = {})
+    CameraControllerScript(const Greet::Vec3f& pos = {}, const Greet::Vec3f& rot = {})
       : pos{pos}, rot{rot}, vel{}, rotVel{}
     {}
 

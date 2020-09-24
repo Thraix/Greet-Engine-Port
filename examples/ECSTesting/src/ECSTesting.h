@@ -5,7 +5,7 @@
 class ECSTesting : public Greet::App
 {
   private:
-    Greet::GUIScene* gui;
+    Greet::Ref<Greet::GUIScene> gui;
     Greet::Ref<Greet::ECSScene> scene;
   public:
     ECSTesting();

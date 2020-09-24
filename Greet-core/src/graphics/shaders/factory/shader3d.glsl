@@ -58,7 +58,7 @@ out vec4 fColor;
 
 uniform sampler2D uTexture;
 uniform vec3 uLightColor = vec3(1.0f, 1.0f, 1.0f);
-uniform vec4 uFogColor = vec4(0.125, 0.125, 0.125, 1);
+uniform vec3 uFogColor = vec3(0.125, 0.125, 0.125);
 uniform float uHasTexture = 1.0;
 uniform float uSpecularExponent = 10.0;
 uniform float uSpecularStrength = 1;

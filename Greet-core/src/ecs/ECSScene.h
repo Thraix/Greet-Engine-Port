@@ -8,7 +8,7 @@
 
 namespace Greet
 {
-  class ECSScene : public Greet::Scene
+  class ECSScene final : public Greet::Scene
   {
     private:
       Ref<ECSManager> manager;
@@ -16,8 +16,9 @@ namespace Greet
 
     public:
       ECSScene();
+      ~ECSScene();
 
-      Entity AddEntity();
+      Entity AddEntity(const std::string& tag);
       void RemoveEntity(const Entity& entity);
       void RemoveEntity(EntityID entity);
 
