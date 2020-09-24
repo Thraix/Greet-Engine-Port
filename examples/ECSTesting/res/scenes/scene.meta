@@ -1,2 +1,11 @@
 [Entity]
 entitypath=res/entities/block.meta
+
+[Entity]
+entitypath=res/entities/block2.meta
+
+[Entity]
+entitypath=res/entities/terrain.meta
+
+[Entity]
+entitypath=res/entities/water.meta

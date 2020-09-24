@@ -292,6 +292,10 @@ namespace Greet
       : script{script}
     {}
 
+    NativeScriptComponent(const MetaFileClass& metaClass)
+      : script{Ref<NativeScriptResource>(new NativeScriptResource{MetaFileLoading::LoadString(metaClass, "path", "")})}
+    {}
+
     void BindEntity(const Entity& entity)
     {
       script->BindEntity(entity);

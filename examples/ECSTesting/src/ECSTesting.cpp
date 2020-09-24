@@ -32,23 +32,6 @@ void ECSTesting::Init()
   env3d.fogFarDistance = 80;
   camera.AddComponent<NativeScriptComponent>(Ref<NativeScriptResource>(new NativeScriptResource{"res/scripts/CameraControllerScript.cpp"}));
 
-  Entity cube = scene->AddEntity("Cube");
-  cube.AddComponent<Transform3DComponent>(Mat4::Scale(10, 10, 10));
-  cube.AddComponent<MeshComponent>(Ref<Mesh>{new Mesh{MeshFactory::Cube()}});
-  cube.AddComponent<MaterialComponent>(Ref<Material>{new Material{ShaderFactory::Shader3D(), TextureManager::LoadTexture2D("res/textures/block.meta")}});
-
-  Entity terrain = scene->AddEntity("Terrain");
-  terrain.AddComponent<Transform3DComponent>(Mat4::Scale(1, 20, 1) * Mat4::Translate(0, -0.5f, 0));
-  terrain.AddComponent<MeshComponent>(Ref<Mesh>{new Mesh{MeshFactory::Cube()}});
-  terrain.AddComponent<MaterialComponent>(Ref<Material>{new Material{Shader::FromFile("res/shaders/terrain.glsl")}});
-  terrain.AddComponent<NativeScriptComponent>(Ref<NativeScriptResource>(new NativeScriptResource{"res/scripts/TerrainGeneratorScript.cpp"}));
-
-  Entity water = scene->AddEntity("Water");
-  water.AddComponent<Transform3DComponent>(Mat4::Translate(0, -10 + 0.45f * 20.0f, 0));
-  water.AddComponent<MeshComponent>(Ref<Mesh>{new Mesh{Greet::MeshFactory::Grid({99, 99}, {}, {0.0f, 0.0f, 0.0f}, {99.0f, 0.0f, 99.0f})}});
-  water.AddComponent<MaterialComponent>(Ref<Material>{new Material{Shader::FromFile("res/shaders/water.glsl")}});
-  water.AddComponent<NativeScriptComponent>(Ref<NativeScriptResource>(new NativeScriptResource{"res/scripts/WaterScript.cpp"}));
-
   Entity env2d = scene->AddEntity("CameraEnvironmnet2D");
   env2d.AddComponent<Camera2DComponent>(Mat3::Identity(), true);
   env2d.AddComponent<Environment2DComponent>(Shader::FromFile("res/shaders/shader2d.glsl"));

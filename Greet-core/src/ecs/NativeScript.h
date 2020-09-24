@@ -36,6 +36,7 @@ namespace Greet
       NativeScriptResource(const std::string& scriptCpp)
         : Resource{scriptCpp}, entity{nullptr}
       {
+        Log::Info("Loading NativeScript: ", scriptCpp);
         ReloadResource();
       }
 

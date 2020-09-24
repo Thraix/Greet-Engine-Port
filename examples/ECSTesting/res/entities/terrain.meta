@@ -1,0 +1,18 @@
+[TagComponent]
+tag=Terrain
+
+[Transform3DComponent]
+position=0 -10 0
+scale=1 20 1
+
+[MeshComponent]
+mesh=grid
+mesh-gridSize=99 99
+mesh-gridScale=99 99
+
+[MaterialComponent]
+shadertype=file
+shaderpath=res/shaders/terrain.glsl
+
+[NativeScriptComponent]
+path=res/scripts/TerrainGeneratorScript.cpp

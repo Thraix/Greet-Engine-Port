@@ -1,0 +1,17 @@
+[TagComponent]
+tag=Water
+
+[Transform3DComponent]
+position=0 -1 0
+
+[MeshComponent]
+mesh=grid
+mesh-gridSize=99 99
+mesh-gridScale=99 99
+
+[MaterialComponent]
+shadertype=file
+shaderpath=res/shaders/water.glsl
+
+[NativeScriptComponent]
+path=res/scripts/WaterScript.cpp

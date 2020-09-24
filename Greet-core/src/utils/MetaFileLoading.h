@@ -69,12 +69,16 @@ namespace Greet
           return Ref<Mesh>(new Mesh{MeshFactory::Cube()});
         if(type == "sphere")
           return Ref<Mesh>(new Mesh{MeshFactory::Sphere()});
-        if(type == "Tetrahedron")
+        if(type == "tetrahedron")
           return Ref<Mesh>(new Mesh{MeshFactory::Tetrahedron()});
-        if(type == "Plane")
+        if(type == "plane")
           return Ref<Mesh>(new Mesh{MeshFactory::Plane()});
-        if(type == "Grid")
-          return Ref<Mesh>(new Mesh{MeshFactory::Grid(LoadVec2i(metaClass, key+"-gridSize", {32,32}))});
+        if(type == "grid")
+          return Ref<Mesh>(new Mesh{MeshFactory::Grid(
+                LoadVec2i(metaClass, key+"-gridSize", {32,32}),
+                {},
+                LoadVec2f(metaClass, key+"-gridScale", {1, 1})
+                )});
         if(type == "model")
           return Ref<Mesh>(new Mesh(OBJUtils::LoadObj(LoadString(metaClass, key + "-path", ""))));
       }
