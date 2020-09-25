@@ -29,11 +29,6 @@ namespace Greet {
     }
   };
 
-  struct ShaderDeleter final
-  {
-    void operator()(uint* id);
-  };
-
   class Shader final : public Resource
   {
     private:

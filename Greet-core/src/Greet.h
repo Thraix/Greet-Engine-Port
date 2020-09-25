@@ -23,7 +23,6 @@
 #include <ecs/ECSManager.h>
 #include <ecs/ECSScene.h>
 #include <ecs/Entity.h>
-#include <ecs/EntityContainer.h>
 #include <ecs/EntitySet.h>
 #include <event/Event.h>
 #include <event/EventDispatcher.h>
