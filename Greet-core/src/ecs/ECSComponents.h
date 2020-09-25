@@ -1,14 +1,14 @@
 #pragma once
 
-#include <ecs/NativeScript.h>
 #include <event/ViewportEvent.h>
+#include <graphics/RenderCommand.h>
 #include <graphics/Sprite.h>
 #include <graphics/models/Material.h>
 #include <graphics/models/Mesh.h>
 #include <graphics/models/MeshFactory.h>
-#include <graphics/RenderCommand.h>
 #include <math/Line.h>
 #include <math/Maths.h>
+#include <scripting/NativeScriptHandler.h>
 #include <utils/MetaFile.h>
 #include <utils/MetaFileLoading.h>
 
@@ -285,15 +285,15 @@ namespace Greet
 
   struct NativeScriptComponent
   {
-    Ref<NativeScriptResource> script;
+    Ref<NativeScriptHandler> script;
     bool created = false;
 
-    NativeScriptComponent(const Ref<NativeScriptResource>& script)
+    NativeScriptComponent(const Ref<NativeScriptHandler>& script)
       : script{script}
     {}
 
     NativeScriptComponent(const MetaFileClass& metaClass)
-      : script{Ref<NativeScriptResource>(new NativeScriptResource{MetaFileLoading::LoadString(metaClass, "path", "")})}
+      : script{Ref<NativeScriptHandler>(new NativeScriptHandler{MetaFileLoading::LoadString(metaClass, "path", "")})}
     {}
 
     void BindEntity(const Entity& entity)

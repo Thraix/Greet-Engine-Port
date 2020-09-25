@@ -13,6 +13,7 @@
 #include <event/MouseEvent.h>
 #include <event/JoystickEvent.h>
 #include <input/Input.h>
+#include <scripting/NativeScriptHandler.h>
 
 namespace Greet {
 
@@ -93,6 +94,7 @@ namespace Greet {
     glfwSwapInterval(0);
     ASSERT(glewInit() == GLEW_OK,"Glew failed to init.");
     RenderCommand::Init();
+    NativeScriptHandler::LoadIncludePaths();
 
     Log::Info("OpenGL Version: ", glGetString(GL_VERSION));
     Log::Info("GLFW Version: ", glfwGetVersionString());

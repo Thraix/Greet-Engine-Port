@@ -1,4 +1,4 @@
-#include <ecs/NativeScript.h>
+#include <scripting/NativeScript.h>
 #include <ecs/ECSComponents.h>
 #include <graphics/models/MeshFactory.h>
 #include <utils/Noise.h>

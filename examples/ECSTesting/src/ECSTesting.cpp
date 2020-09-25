@@ -30,7 +30,7 @@ void ECSTesting::Init()
   Environment3DComponent& env3d = camera.AddComponent<Environment3DComponent>(TextureManager::LoadCubeMap("res/textures/skybox.meta"));
   env3d.fogNearDistance = 40;
   env3d.fogFarDistance = 80;
-  camera.AddComponent<NativeScriptComponent>(Ref<NativeScriptResource>(new NativeScriptResource{"res/scripts/CameraControllerScript.cpp"}));
+  camera.AddComponent<NativeScriptComponent>(Ref<NativeScriptHandler>(new NativeScriptHandler{"res/scripts/CameraControllerScript.cpp"}));
 
   Entity env2d = scene->AddEntity("CameraEnvironmnet2D");
   env2d.AddComponent<Camera2DComponent>(Mat3::Identity(), true);

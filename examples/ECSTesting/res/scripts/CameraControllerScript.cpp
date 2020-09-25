@@ -1,4 +1,4 @@
-#include <ecs/NativeScript.h>
+#include <scripting/NativeScript.h>
 #include <ecs/ECSComponents.h>
 #include <input/Input.h>
 #include <event/KeyEvent.h>

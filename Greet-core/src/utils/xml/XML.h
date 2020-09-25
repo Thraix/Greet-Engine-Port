@@ -1,6 +1,7 @@
 #pragma once
 
 #include <utils/xml/XMLObject.h>
+#include <utils/xml/XMLException.h>
 
 namespace Greet
 {

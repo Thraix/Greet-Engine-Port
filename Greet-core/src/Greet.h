@@ -25,7 +25,6 @@
 #include <ecs/Entity.h>
 #include <ecs/EntityContainer.h>
 #include <ecs/EntitySet.h>
-#include <ecs/NativeScript.h>
 #include <event/Event.h>
 #include <event/EventDispatcher.h>
 #include <event/JoystickEvent.h>
@@ -131,6 +130,8 @@
 #include <math/Vec2.h>
 #include <math/Vec3.h>
 #include <math/Vec4.h>
+#include <scripting/NativeScript.h>
+#include <scripting/NativeScriptHandler.h>
 #include <utils/AABBUtils.h>
 #include <utils/ColorUtils.h>
 #include <utils/ErrorHandle.h>
