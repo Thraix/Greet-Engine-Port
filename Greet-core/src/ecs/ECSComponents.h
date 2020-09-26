@@ -128,6 +128,17 @@ namespace Greet
         invPVMatrix{~(projectionMatrix * viewMatrix)}
       {}
 
+      Camera3DComponent(const MetaFileClass& metaClass)
+        :
+          primary{MetaFileLoading::LoadBool(metaClass, "primary", true)},
+        fov{MetaFileLoading::LoadFloat(metaClass, "fov", 90.0f)},
+        near{MetaFileLoading::LoadFloat(metaClass, "near", 0.01f)},
+        far{MetaFileLoading::LoadFloat(metaClass, "far", 100.0f)},
+        projectionMatrix{Mat4::PerspectiveViewport(fov, near, far)},
+        viewMatrix{Mat4::Identity()},
+        invPVMatrix{~(projectionMatrix * viewMatrix)}
+      {}
+
       const Mat4& GetViewMatrix() const { return viewMatrix;}
       const Mat4& GetProjectionMatrix() const { return projectionMatrix; }
 
@@ -212,6 +223,19 @@ namespace Greet
 
       Environment3DComponent()
         : skyboxMesh{new Mesh{MeshFactory::Cube()}}, skybox{ShaderFactory::ShaderSkybox()}
+      {
+        skyboxMesh->SetClockwiseRender(true);
+      }
+
+      Environment3DComponent(const MetaFileClass& metaClass)
+        : skyboxMesh{new Mesh{MeshFactory::Cube()}},
+        skybox{MetaFileLoading::LoadShader(metaClass, "skybox", "skybox")},
+        skyboxTexture{MetaFileLoading::LoadCubeMap(metaClass, "skybox-texture")},
+        lightPos{MetaFileLoading::LoadVec3f(metaClass, "lightPos", {30.0, 20.0, 40.0})},
+        lightColor{MetaFileLoading::LoadColor(metaClass, "lightColor", {1.0, 0.96, 0.9})},
+        fogColor{MetaFileLoading::LoadColor(metaClass, "fogColor", {0.125f, 0.125f, 0.125f})},
+        fogNearDistance{MetaFileLoading::LoadFloat(metaClass, "fogNearDistance", 100)},
+        fogFarDistance{MetaFileLoading::LoadFloat(metaClass, "fogFarDistance", 140)}
       {
         skyboxMesh->SetClockwiseRender(true);
       }

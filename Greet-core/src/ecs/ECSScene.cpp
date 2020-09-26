@@ -43,6 +43,8 @@ namespace Greet
     LoadComponent<MeshComponent>(e, meta, "MeshComponent");
     LoadComponent<MaterialComponent>(e, meta, "MaterialComponent");
     LoadComponent<NativeScriptComponent>(e, meta, "NativeScriptComponent");
+    LoadComponent<Camera3DComponent>(e, meta, "Camera3DComponent");
+    LoadComponent<Environment3DComponent>(e, meta, "Environment3DComponent");
   }
 
   Entity ECSScene::AddEntity(const std::string& tag)

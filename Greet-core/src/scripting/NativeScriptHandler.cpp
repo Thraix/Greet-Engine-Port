@@ -43,7 +43,7 @@ namespace Greet
       std::string soSecure = soFile;
       StringUtils::ReplaceAll(cppSecure, "\"", "\\\"");
       StringUtils::ReplaceAll(soSecure, "\"", "\\\"");
-      std::string syscall = "g++ -fPIC -shared -std=c++17 -D_DEBUG -D_GREET_HOTSWAP -g" + includePaths + " -c \"" + filePath + "\" -o \"" + soFile + "\"";
+      std::string syscall = "g++ -fPIC -shared -std=c++17 -D_DEBUG -D_GREET_HOTSWAP -g" + includePaths + " \"" + filePath + "\" -o \"" + soFile + "\"";
       system(syscall.c_str());
     }
 

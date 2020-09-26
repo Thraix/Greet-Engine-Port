@@ -25,13 +25,6 @@ void ECSTesting::Init()
   sceneView->GetSceneManager().Add3DScene(scene, "ecs");
   gui->RequestFocusQueued(sceneView);
 
-  Entity camera = scene->AddEntity("CameraEnvironmnet3D");
-  camera.AddComponent<Camera3DComponent>(Mat4::Identity(), 90.0f, 0.01f, 100.0f, true);
-  Environment3DComponent& env3d = camera.AddComponent<Environment3DComponent>(TextureManager::LoadCubeMap("res/textures/skybox.meta"));
-  env3d.fogNearDistance = 40;
-  env3d.fogFarDistance = 80;
-  camera.AddComponent<NativeScriptComponent>(Ref<NativeScriptHandler>(new NativeScriptHandler{"res/scripts/CameraControllerScript.cpp"}));
-
   Entity env2d = scene->AddEntity("CameraEnvironmnet2D");
   env2d.AddComponent<Camera2DComponent>(Mat3::Identity(), true);
   env2d.AddComponent<Environment2DComponent>(Shader::FromFile("res/shaders/shader2d.glsl"));

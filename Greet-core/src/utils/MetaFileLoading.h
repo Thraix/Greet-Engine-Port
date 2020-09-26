@@ -39,6 +39,44 @@ namespace Greet
       return vec;
     }
 
+    static float LoadFloat(const MetaFileClass& metaClass, const std::string& key, float defaultValue)
+    {
+      float f = defaultValue;
+      if(metaClass.HasValue(key))
+      {
+        std::stringstream ss{metaClass.GetValue(key)};
+        ss >> f;
+        return f;
+      }
+      return f;
+    }
+
+    static bool LoadBool(const MetaFileClass& metaClass, const std::string& key, bool defaultValue)
+    {
+      bool b = defaultValue;
+      if(metaClass.HasValue(key))
+      {
+        std::string s{metaClass.GetValue(key)};
+        b = s == "true" ? true : false;
+        return b;
+      }
+      return b;
+    }
+
+    static Color LoadColor(const MetaFileClass& metaClass, const std::string& key, const Color& defaultValue)
+    {
+      Color color = defaultValue;
+      if(metaClass.HasValue(key))
+      {
+        std::stringstream ss{metaClass.GetValue(key)};
+        ss >> color.r >> color.g >> color.b;
+        if(!ss.eof())
+          ss >> color.a;
+        return color;
+      }
+      return color;
+    }
+
     static std::string LoadString(const MetaFileClass& metaClass, const std::string& key, const std::string& defaultValue)
     {
       if(metaClass.HasValue(key))
@@ -85,11 +123,12 @@ namespace Greet
       return Ref<Mesh>(new Mesh{MeshFactory::Cube()});
     }
 
-    static Ref<Shader> LoadShader(const MetaFileClass& metaClass)
+    static Ref<Shader> LoadShader(const MetaFileClass& metaClass, const std::string& defaultShader = "shader3d", const std::string& prefix = "")
     {
-      if(metaClass.HasValue("shadertype"))
+      std::string typeKey = prefix == "" ? "shadertype" : prefix + "-shadertype";
+      if(metaClass.HasValue(typeKey))
       {
-        const std::string& type = metaClass.GetValue("shadertype");
+        const std::string& type = metaClass.GetValue(typeKey);
         if(type == "shader3d")
           return ShaderFactory::Shader3D();
         else if(type == "shader2d")
@@ -99,8 +138,19 @@ namespace Greet
         else if(type == "gui")
           return ShaderFactory::ShaderGUI();
         else if(type == "file")
-          return Shader::FromFile(LoadString(metaClass, "shaderpath", ""));
+        {
+          std::string pathKey = prefix == "" ? "shaderpath" : prefix + "-shaderpath";
+          return Shader::FromFile(LoadString(metaClass, pathKey, ""));
+        }
       }
+      if(defaultShader == "shader3d")
+        return ShaderFactory::Shader3D();
+      else if(defaultShader == "shader2d")
+        return ShaderFactory::Shader2D();
+      else if(defaultShader == "skybox")
+        return ShaderFactory::ShaderSkybox();
+      else if(defaultShader == "gui")
+        return ShaderFactory::ShaderGUI();
       return ShaderFactory::Shader3D();
     }
 
@@ -110,6 +160,16 @@ namespace Greet
       {
         const std::string& metaPath = metaClass.GetValue("texture");
         return TextureManager::LoadTexture2D(metaPath);
+      }
+      return nullptr;
+    }
+
+    static Ref<CubeMap> LoadCubeMap(const MetaFileClass& metaClass, const std::string& key)
+    {
+      if(metaClass.HasValue(key))
+      {
+        const std::string& metaPath = metaClass.GetValue(key);
+        return TextureManager::LoadCubeMap(metaPath);
       }
       return nullptr;
     }

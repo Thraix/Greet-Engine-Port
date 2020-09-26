@@ -1,4 +1,7 @@
 [Entity]
+entitypath=res/entities/camera.meta
+
+[Entity]
 entitypath=res/entities/block.meta
 
 [Entity]

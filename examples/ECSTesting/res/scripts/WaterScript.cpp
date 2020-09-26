@@ -6,7 +6,7 @@
 
 struct WaterScript : public Greet::NativeScript
 {
-  float time;
+  float time = 0.0f;
 
   void OnCreate() override
   {
