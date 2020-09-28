@@ -1,0 +1,4 @@
+[texture2d]
+filepath=res/textures/radar.png
+filter=nearest
+wrap=clampBorder

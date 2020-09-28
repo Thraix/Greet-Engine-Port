@@ -39,6 +39,21 @@ namespace Greet
       return vec;
     }
 
+    static Vec2f LoadTextureCoord(const MetaFileClass& metaClass, const Ref<Texture2D>& texture, const std::string& key, const Vec2f& defaultValue)
+    {
+      Vec2f vec = defaultValue;
+      if(metaClass.HasValue(key))
+      {
+        std::stringstream ss{metaClass.GetValue(key)};
+        int x, y;
+        ss >> x >> y;
+        vec.x = x / (float)texture->GetWidth();
+        vec.y = y / (float)texture->GetWidth();
+        return vec;
+      }
+      return vec;
+    }
+
     static float LoadFloat(const MetaFileClass& metaClass, const std::string& key, float defaultValue)
     {
       float f = defaultValue;

@@ -24,14 +24,6 @@ void ECSTesting::Init()
   scene.reset(new ECSScene("res/scenes/scene.meta"));
   sceneView->GetSceneManager().Add3DScene(scene, "ecs");
   gui->RequestFocusQueued(sceneView);
-
-  Entity env2d = scene->AddEntity("CameraEnvironmnet2D");
-  env2d.AddComponent<Camera2DComponent>(Mat3::Identity(), true);
-  env2d.AddComponent<Environment2DComponent>(Shader::FromFile("res/shaders/shader2d.glsl"));
-
-  Entity square = scene->AddEntity("Square");
-  square.AddComponent<Transform2DComponent>(Vec2f{50.0f, 50.0f}, Vec2f{100.0f, 100.0f}, M_PI / 4);
-  square.AddComponent<SpriteComponent>(TextureManager::LoadTexture2D("res/textures/sprite.meta"), Vec2f{0.0f, 0.0f}, Vec2f{2.0f, 2.0f});
 }
 
 void ECSTesting::Tick()

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <ecs/ECSScene.h>
 #include <ecs/Entity.h>
 #include <event/Event.h>
 
@@ -10,8 +11,7 @@ namespace Greet
   struct NativeScript
   {
     Entity entity{nullptr};
-    NativeScript(){}
-    virtual ~NativeScript(){}
+    virtual ~NativeScript() {}
 
     virtual void OnCreate() {}
     virtual void OnUpdate(float timeElapsed) {}

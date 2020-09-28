@@ -28,7 +28,8 @@ namespace Greet
 
       void Destroy()
       {
-        manager->DestroyEntity(id);
+        if(*this)
+          manager->DestroyEntity(id);
       }
 
       template <typename Component, typename... Args>
@@ -75,6 +76,11 @@ namespace Greet
       EntityID GetID() const
       {
         return id;
+      }
+
+      const Ref<ECSManager>& GetManager() const
+      {
+        return manager;
       }
 
       static Entity Create(const Ref<ECSManager>& manager)

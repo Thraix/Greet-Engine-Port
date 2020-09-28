@@ -21,6 +21,8 @@ class CameraControllerScript : public Greet::NativeScript
   };
 
   private:
+    Greet::Entity radar;
+
     Controller controller;
     Greet::Vec3f pos;
     Greet::Vec3f rot;
@@ -29,16 +31,41 @@ class CameraControllerScript : public Greet::NativeScript
     Greet::Vec3f rotVel;
   public:
     CameraControllerScript(const Greet::Vec3f& pos = {}, const Greet::Vec3f& rot = {})
-      : pos{pos}, rot{rot}, vel{}, rotVel{}
-    {}
+      : pos{pos}, rot{rot}, vel{}, rotVel{}, radar{nullptr}
+    {
+    }
+
+    void OnCreate() override
+    {
+      ASSERT(entity.HasComponent<Greet::Camera3DComponent>(), "CameraController entity does not contain a Camera3DComponent");
+      entity.GetManager()->Each<Greet::TagComponent>([&](EntityID tagEntity, Greet::TagComponent& tag){
+          if(tag.tag == "Radar")
+            radar = {entity.GetManager(), tagEntity};
+          });
+      if(!radar)
+      {
+        Greet::Log::Error("Radar could not be found");
+      }
+      else if(!radar.HasComponent<Greet::Transform2DComponent>())
+      {
+        Greet::Log::Error("Radar does not contain Transform2DComponent");
+        // Invalidate radar
+        radar = {nullptr};
+      }
+      Greet::Log::Info("here");
+    }
 
     void OnUpdate(float timeElapsed) override
     {
-      ASSERT(entity.HasComponent<Greet::Camera3DComponent>(), "CameraController entity does not contain a Camera3DComponent");
       Greet::Camera3DComponent& cam = entity.GetComponent<Greet::Camera3DComponent>();
       pos += Greet::Vec::Rotate(vel, {0, 1, 0}, -rot.y) * timeElapsed;
       rot += rotVel * timeElapsed;
       cam.SetViewMatrix(Greet::Mat4::ViewMatrix(pos, rot));
+      if(radar)
+      {
+        Greet::Transform2DComponent& transform = radar.GetComponent<Greet::Transform2DComponent>();
+        transform.transform = Greet::Mat3::TransformationMatrix({74.0f}, {128.0f}, rot.y);
+      }
     }
 
     void OnEvent(Greet::Event& event) override

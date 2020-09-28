@@ -79,6 +79,15 @@ namespace Greet{
       return Divide(len);
     }
 
+    // All These modifies the current vec3
+    Vec3& ToRadians()
+    {
+      x = x * M_PI / 180;
+      y = y * M_PI / 180;
+      z = z * M_PI / 180;
+      return *this;
+    }
+
     template <typename std::enable_if<std::is_floating_point<T>::value>* = nullptr>
     Vec3<T>& Rotate(const Vec3& axis, const T& angle)
     {

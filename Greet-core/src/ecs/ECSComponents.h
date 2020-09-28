@@ -24,19 +24,37 @@ namespace Greet
     Transform2DComponent(const Vec2f& pos, const Vec2f& scale, float rot)
       : transform{Mat3::TransformationMatrix(pos, scale, rot)}
     {}
+
+    Transform2DComponent(const MetaFileClass& metaClass)
+      : transform{Mat3::TransformationMatrix(
+          MetaFileLoading::LoadVec2f(metaClass, "position", {0, 0}),
+          MetaFileLoading::LoadVec2f(metaClass, "scale", {1, 1}),
+          Math::ToRadians(MetaFileLoading::LoadFloat(metaClass, "rotation", 0.0f)))}
+    {}
   };
 
   struct Camera2DComponent {
     public:
-      bool primary;
+      bool active;
     private:
       Mat3 projectionMatrix;
       Mat3 viewMatrix;
       Vec2f cameraPos;
     public:
 
-      Camera2DComponent(const Mat3& viewMatrix, bool primary)
-        : primary{primary}, projectionMatrix{Mat3::OrthographicViewport()}, viewMatrix{viewMatrix}
+      Camera2DComponent(const Mat3& viewMatrix, bool active)
+        : active{active}, projectionMatrix{Mat3::OrthographicViewport()}, viewMatrix{viewMatrix}
+      {}
+
+      Camera2DComponent(const MetaFileClass& metaClass)
+        : active{MetaFileLoading::LoadBool(metaClass, "active", false)},
+        projectionMatrix{Mat3::OrthographicViewport()},
+
+        viewMatrix{~Mat3::TransformationMatrix(
+          MetaFileLoading::LoadVec2f(metaClass, "position", {0, 0}),
+          MetaFileLoading::LoadVec2f(metaClass, "scale", {1, 1}),
+          MetaFileLoading::LoadFloat(metaClass, "rotation", 0.0f)
+        )}
       {}
 
       const Mat3& GetViewMatrix() const { return viewMatrix; }
@@ -73,6 +91,10 @@ namespace Greet
     Environment2DComponent(const Ref<Shader>& shader)
       : shader{shader}
     {}
+
+    Environment2DComponent(const MetaFileClass& metaClass)
+      : shader{MetaFileLoading::LoadShader(metaClass, "shader2d")}
+    {}
   };
 
   struct SpriteComponent
@@ -82,6 +104,12 @@ namespace Greet
     Vec2f texSize;
     SpriteComponent(const Ref<Texture2D>& texture, const Vec2f& texPos, const Vec2f& texSize)
       : texture{texture}, texPos{texPos}, texSize{texSize}
+    {}
+
+    SpriteComponent(const MetaFileClass& metaClass)
+      : texture{MetaFileLoading::LoadTexture2D(metaClass)},
+      texPos{MetaFileLoading::LoadTextureCoord(metaClass, texture, "texturePos", {0, 0})},
+      texSize{MetaFileLoading::LoadTextureCoord(metaClass, texture, "textureSize", Vec2f{texture->GetWidth(), texture->GetHeight()})}
     {}
   };
 
@@ -100,7 +128,7 @@ namespace Greet
       : transform{Mat4::TransformationMatrix(
           MetaFileLoading::LoadVec3f(metaClass, "position", {0.0f}),
           MetaFileLoading::LoadVec3f(metaClass, "scale", {1.0f}),
-          MetaFileLoading::LoadVec3f(metaClass, "rotation", {0.0f}))}
+          MetaFileLoading::LoadVec3f(metaClass, "rotation", {0.0f}).ToRadians())}
     {
     }
   };
@@ -108,7 +136,7 @@ namespace Greet
   struct Camera3DComponent {
 
     public:
-      bool primary;
+      bool active;
     private:
       float fov;
       float near;
@@ -120,9 +148,9 @@ namespace Greet
       Mat4 invPVMatrix;
 
     public:
-      Camera3DComponent(const Mat4& viewMatrix, float fov, float near, float far, bool primary)
+      Camera3DComponent(const Mat4& viewMatrix, float fov, float near, float far, bool active)
         :
-          primary{primary}, fov{fov}, near{near}, far{far},
+          active{active}, fov{fov}, near{near}, far{far},
         projectionMatrix{Mat4::PerspectiveViewport(fov, near, far)},
         viewMatrix{viewMatrix},
         invPVMatrix{~(projectionMatrix * viewMatrix)}
@@ -130,7 +158,7 @@ namespace Greet
 
       Camera3DComponent(const MetaFileClass& metaClass)
         :
-          primary{MetaFileLoading::LoadBool(metaClass, "primary", true)},
+        active{MetaFileLoading::LoadBool(metaClass, "active", true)},
         fov{MetaFileLoading::LoadFloat(metaClass, "fov", 90.0f)},
         near{MetaFileLoading::LoadFloat(metaClass, "near", 0.01f)},
         far{MetaFileLoading::LoadFloat(metaClass, "far", 100.0f)},

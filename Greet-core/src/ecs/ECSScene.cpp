@@ -42,9 +42,15 @@ namespace Greet
     LoadComponent<Transform3DComponent>(e, meta, "Transform3DComponent");
     LoadComponent<MeshComponent>(e, meta, "MeshComponent");
     LoadComponent<MaterialComponent>(e, meta, "MaterialComponent");
-    LoadComponent<NativeScriptComponent>(e, meta, "NativeScriptComponent");
     LoadComponent<Camera3DComponent>(e, meta, "Camera3DComponent");
     LoadComponent<Environment3DComponent>(e, meta, "Environment3DComponent");
+
+    LoadComponent<Transform2DComponent>(e, meta, "Transform2DComponent");
+    LoadComponent<SpriteComponent>(e, meta, "SpriteComponent");
+    LoadComponent<Camera2DComponent>(e, meta, "Camera2DComponent");
+    LoadComponent<Environment2DComponent>(e, meta, "Environment2DComponent");
+
+    LoadComponent<NativeScriptComponent>(e, meta, "NativeScriptComponent");
   }
 
   Entity ECSScene::AddEntity(const std::string& tag)
@@ -75,10 +81,10 @@ namespace Greet
     Entity camera{manager};
     manager->Each<Camera2DComponent>([&](EntityID id, Camera2DComponent& cam)
     {
-      if(cam.primary)
+      if(cam.active)
       {
         if(camera)
-          Log::Warning("More than one primary 2D camera in scene");
+          Log::Warning("More than one active 2D camera in scene");
         camera.SetID(id);
       }
     });
@@ -122,7 +128,7 @@ namespace Greet
     bool foundPrimary = false;
     manager->Each<Camera3DComponent>([&](EntityID id, Camera3DComponent& cam)
     {
-      if(cam.primary)
+      if(cam.active)
       {
         if(foundPrimary)
           Log::Warning("More than one primary 3D camera in scene");

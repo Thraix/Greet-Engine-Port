@@ -25,9 +25,6 @@ namespace Greet
 
   void NativeScriptHandler::ReloadResource()
   {
-    if(libraryHandle)
-      dlclose(libraryHandle);
-
     std::string soFile = FileUtils::ReplaceExtension(filePath, "so");
     FileUtils::TimeModified soMod = FileUtils::GetTimeModified(soFile);
     FileUtils::TimeModified cppMod = FileUtils::GetTimeModified(filePath);
@@ -47,8 +44,14 @@ namespace Greet
       system(syscall.c_str());
     }
 
+    // Free current script
+    script = {nullptr};
+    if(libraryHandle)
+      dlclose(libraryHandle);
+
     // Load shared library
     libraryHandle = dlopen(soFile.c_str(), RTLD_NOW);
+
     if(!libraryHandle)
     {
       Log::Error("Failed to load script library: ", filePath);
@@ -60,8 +63,9 @@ namespace Greet
     void* newScript  = dlsym(libraryHandle, "New");
     if(!newScript)
     {
-      Log::Error("Failed to load New() function: ", filePath);
+      Log::Error("Failed to load New() function (Forgot REGISTER_NATIVE_SCRIPT define?): ", filePath);
       Log::Error("dlerror: ", dlerror());
+      dlclose(libraryHandle);
       return;
     }
     typedef NativeScript*(*NewScript)();

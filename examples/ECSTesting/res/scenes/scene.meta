@@ -12,3 +12,12 @@ entitypath=res/entities/terrain.meta
 
 [Entity]
 entitypath=res/entities/water.meta
+
+[Entity]
+entitypath=res/entities/radar.meta
+
+[Entity]
+entitypath=res/entities/rectangle.meta
+
+[Entity]
+entitypath=res/entities/camera2d.meta

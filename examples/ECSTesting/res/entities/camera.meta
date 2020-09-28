@@ -2,7 +2,7 @@
 tag=Camera
 
 [Camera3DComponent]
-pimary=true
+active=true
 fov=90
 near=0.01
 far=100

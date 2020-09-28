@@ -1,0 +1,11 @@
+[TagComponent]
+tag=Camera2D
+
+[Camera2DComponent]
+active=true
+position=0 0
+scale=1 1
+
+[Environment2DComponent]
+shadertype=file
+shaderpath=res/shaders/shader2d.glsl
