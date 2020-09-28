@@ -37,22 +37,24 @@ class CameraControllerScript : public Greet::NativeScript
 
     void OnCreate() override
     {
-      ASSERT(entity.HasComponent<Greet::Camera3DComponent>(), "CameraController entity does not contain a Camera3DComponent");
-      entity.GetManager()->Each<Greet::TagComponent>([&](EntityID tagEntity, Greet::TagComponent& tag){
-          if(tag.tag == "Radar")
-            radar = {entity.GetManager(), tagEntity};
-          });
+      if(!entity.HasComponent<Greet::Camera3DComponent>())
+      {
+        Greet::Log::Warning("CameraController entity does not contain a Camera3DComponent");
+        entity.AddComponent<Greet::Camera3DComponent>(Greet::Mat4::Identity(), 90.0f, 0.01f, 100.0f, true);
+      };
+      radar = FindEntityByTag("Radar");
       if(!radar)
       {
-        Greet::Log::Error("Radar could not be found");
+        Greet::Log::Warning("Radar could not be found");
+        radar = Greet::Entity::Create(entity.GetManager());
+        radar.AddComponent<Greet::Transform2DComponent>(Greet::Vec2f{74.0f}, Greet::Vec2f{128.0f}, 0.0f);
+        radar.AddComponent<Greet::SpriteComponent>(Greet::TextureManager::LoadTexture2D("res/textures/radar.meta"), Greet::Vec2f{0.0f}, Greet::Vec2f{1.0f});
       }
       else if(!radar.HasComponent<Greet::Transform2DComponent>())
       {
-        Greet::Log::Error("Radar does not contain Transform2DComponent");
-        // Invalidate radar
-        radar = {nullptr};
+        Greet::Log::Warning("Radar does not contain Transform2DComponent");
+        radar.AddComponent<Greet::Transform2DComponent>(Greet::Vec2f{74.0f}, Greet::Vec2f{128.0f}, 0.0f);
       }
-      Greet::Log::Info("here");
     }
 
     void OnUpdate(float timeElapsed) override
@@ -61,11 +63,8 @@ class CameraControllerScript : public Greet::NativeScript
       pos += Greet::Vec::Rotate(vel, {0, 1, 0}, -rot.y) * timeElapsed;
       rot += rotVel * timeElapsed;
       cam.SetViewMatrix(Greet::Mat4::ViewMatrix(pos, rot));
-      if(radar)
-      {
-        Greet::Transform2DComponent& transform = radar.GetComponent<Greet::Transform2DComponent>();
-        transform.transform = Greet::Mat3::TransformationMatrix({74.0f}, {128.0f}, rot.y);
-      }
+      Greet::Transform2DComponent& transform = radar.GetComponent<Greet::Transform2DComponent>();
+      transform.transform = Greet::Mat3::TransformationMatrix({74.0f}, {128.0f}, rot.y);
     }
 
     void OnEvent(Greet::Event& event) override

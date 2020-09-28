@@ -1,6 +1,5 @@
 #pragma once
 
-#include <ecs/ECSScene.h>
 #include <ecs/Entity.h>
 #include <event/Event.h>
 
@@ -17,5 +16,7 @@ namespace Greet
     virtual void OnUpdate(float timeElapsed) {}
     virtual void OnEvent(Event& event) {}
     virtual void OnDestroy() {}
+
+    Entity FindEntityByTag(const std::string& tag);
   };
 };

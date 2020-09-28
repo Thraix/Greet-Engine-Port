@@ -109,7 +109,7 @@ namespace Greet
     SpriteComponent(const MetaFileClass& metaClass)
       : texture{MetaFileLoading::LoadTexture2D(metaClass)},
       texPos{MetaFileLoading::LoadTextureCoord(metaClass, texture, "texturePos", {0, 0})},
-      texSize{MetaFileLoading::LoadTextureCoord(metaClass, texture, "textureSize", Vec2f{texture->GetWidth(), texture->GetHeight()})}
+      texSize{MetaFileLoading::LoadTextureCoord(metaClass, texture, "textureSize", Vec2f{1, 1})}
     {}
   };
 
@@ -163,7 +163,10 @@ namespace Greet
         near{MetaFileLoading::LoadFloat(metaClass, "near", 0.01f)},
         far{MetaFileLoading::LoadFloat(metaClass, "far", 100.0f)},
         projectionMatrix{Mat4::PerspectiveViewport(fov, near, far)},
-        viewMatrix{Mat4::Identity()},
+        viewMatrix{Mat4::ViewMatrix(
+            MetaFileLoading::LoadVec3f(metaClass, "position", {0.0f}),
+            MetaFileLoading::LoadVec3f(metaClass, "rotation", {0.0f}).ToRadians()
+            )},
         invPVMatrix{~(projectionMatrix * viewMatrix)}
       {}
 

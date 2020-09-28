@@ -24,7 +24,18 @@ namespace Greet
       {}
 
       operator EntityID() const { return id; }
-      operator bool() const { return manager->ValidEntity(id); }
+
+      operator bool() const
+      {
+        if(manager)
+          return manager->ValidEntity(id);
+        return false;
+      }
+
+      void Invalidate()
+      {
+        id = 0;
+      }
 
       void Destroy()
       {

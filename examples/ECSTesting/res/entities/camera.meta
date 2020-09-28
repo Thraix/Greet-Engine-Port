@@ -3,6 +3,8 @@ tag=Camera
 
 [Camera3DComponent]
 active=true
+position=10 10 10
+rotation=-45 45 0
 fov=90
 near=0.01
 far=100
