@@ -12,11 +12,19 @@ namespace Greet {
 
   }
 
+  SceneManager::~SceneManager()
+  {
+    if(m_scenes2d.size() > 0)
+      Log::Warning("SceneManager deleted without removing 2D scenes");
+    if(m_scenes3d.size() > 0)
+      Log::Warning("SceneManager deleted without removing 3D scenes");
+  }
+
   void SceneManager::Add2DScene(const Ref<Scene>& scene, const std::string& name)
   {
-    if (scene == NULL)
+    if (!scene)
     {
-      Log::Error("Trying to add Scene to SceneManager but it is NULL.");
+      Log::Error("Trying to add Scene to SceneManager but it is uninitialized.");
       return;
     }
     m_scenes2d.push_back({name, scene});
@@ -24,9 +32,9 @@ namespace Greet {
 
   void SceneManager::Add3DScene(const Ref<Scene>& scene, const std::string& name)
   {
-    if (scene == NULL)
+    if (!scene)
     {
-      Log::Error("Trying to add Renderer3D to SceneManager but it is NULL.");
+      Log::Error("Trying to add Scene to SceneManager but it is uninitialized.");
       return;
     }
     m_scenes3d.push_back({name, scene});

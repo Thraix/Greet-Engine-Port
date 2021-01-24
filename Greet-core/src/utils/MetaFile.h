@@ -63,6 +63,7 @@ namespace Greet
       std::map<std::string, std::vector<MetaFileClass>> classes; // map<class, map<variable, value>>
 
     public:
+      MetaFile() {}
       MetaFile(const std::string& filepath)
         : filepath{filepath}
       {

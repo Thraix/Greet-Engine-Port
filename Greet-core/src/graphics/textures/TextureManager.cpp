@@ -150,4 +150,10 @@ namespace Greet{
         ++it;
     }
   }
+
+  void TextureManager::Cleanup()
+  {
+    cubeMaps.clear();
+    texture2Ds.clear();
+  }
 }

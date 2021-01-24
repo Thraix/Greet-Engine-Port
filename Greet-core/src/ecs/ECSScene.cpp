@@ -51,6 +51,8 @@ namespace Greet
     LoadComponent<Environment2DComponent>(e, meta, "Environment2DComponent");
 
     LoadComponent<NativeScriptComponent>(e, meta, "NativeScriptComponent");
+
+    LoadExtComponents(e, meta);
   }
 
   Entity ECSScene::AddEntity(const std::string& tag)
@@ -96,9 +98,9 @@ namespace Greet
     Entity environment{manager};
     manager->Each<Environment2DComponent>([&](EntityID id, Environment2DComponent& env)
         {
-        if(environment)
-        Log::Warning("More than one environment in 2D scene");
-        environment.SetID(id);
+          if(environment)
+            Log::Warning("More than one environment in 2D scene");
+          environment.SetID(id);
         });
 
     Camera2DComponent& cam = camera.GetComponent<Camera2DComponent>();
@@ -177,6 +179,7 @@ namespace Greet
 
   void ECSScene::Update(float timeElapsed)
   {
+    UpdateBefore(timeElapsed);
     manager->Each<NativeScriptComponent>([&](EntityID id, NativeScriptComponent& script)
     {
       if(!script.script->HasBoundEntity())
@@ -187,6 +190,7 @@ namespace Greet
       }
       script.Update(timeElapsed);
     });
+    UpdateAfter(timeElapsed);
   }
 
   void ECSScene::OnEvent(Greet::Event& event)

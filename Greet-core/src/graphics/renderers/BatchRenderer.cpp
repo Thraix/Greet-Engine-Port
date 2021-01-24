@@ -37,7 +37,7 @@ namespace Greet {
 
   BatchRenderer::~BatchRenderer()
   {
-    delete indices;
+    delete[] indices;
   }
 
   void BatchRenderer::Begin()
@@ -59,12 +59,13 @@ namespace Greet {
     float ts = GetTextureSlot(font.GetFontAtlasId());
     if (ts == 0 && font.GetFontAtlasId() != 0)
     {
+      End();
       Flush();
+      Begin();
       ts = GetTextureSlot(font.GetFontAtlasId());
     }
 
     const Ref<FontAtlas>& atlas = font.GetFontAtlas();
-    const Vec2f& scale = Vec2f(1,1);//Vec2f(64.0, 64.0) / font.GetSize();//font.getScale();
     Vec2f pos;
     Vec2f size;
     Vec2f uv0;
@@ -74,10 +75,10 @@ namespace Greet {
     for (uint i = 0;i < text.length();i++)
     {
       const Glyph& glyph = atlas->GetGlyph(text[i]);
-      pos.x = x + glyph.miBearingX * scale.x;
-      pos.y = roundPos.y - glyph.miBearingY * scale.y;
-      size.x = glyph.miWidth * scale.x;
-      size.y = glyph.miHeight * scale.y;
+      pos.x = x + glyph.miBearingX;
+      pos.y = (roundPos.y - glyph.miBearingY);
+      size.x = glyph.miWidth;
+      size.y = glyph.miHeight;
 
       uv0.x = glyph.mvTextureCoords.left;
       uv0.y = 1.0-glyph.mvTextureCoords.top;
@@ -92,7 +93,7 @@ namespace Greet {
       AddIndicesPoly(4);
       m_iboSize += 6;
 
-      x += glyph.miAdvanceX* scale.x;
+      x += glyph.miAdvanceX;
     }
   }
 
@@ -223,6 +224,7 @@ namespace Greet {
   void BatchRenderer::Flush()
   {
     RenderCommand::EnableDepthTest(false);
+    RenderCommand::EnableCulling(false);
     for (uint i = 0; i < m_texSlots.size(); i++)
     {
       GLCall(glActiveTexture(GL_TEXTURE0 + i));
@@ -237,6 +239,7 @@ namespace Greet {
     m_texSlots.clear();
     GLCall(glActiveTexture(GL_TEXTURE0));
     RenderCommand::ResetDepthTest();
+    RenderCommand::ResetCulling();
     shader->Disable();
   }
 

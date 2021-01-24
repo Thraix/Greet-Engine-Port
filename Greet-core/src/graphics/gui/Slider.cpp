@@ -10,7 +10,7 @@ namespace Greet
   Slider::Slider(const std::string& name, Component* parent)
     : Component{name, parent}
   {
-    AddStyleVariables(StylingVariables{.bools = {{"vertical", &vertical}}});
+    AddStyleVariables(StylingVariables{.bools = {{"vertical", &vertical}, {"reverse", &reverse}}});
 
     sliderComponent = new Component{name+"#SliderIndicator", this, "SliderIndicator"};
 
@@ -27,7 +27,7 @@ namespace Greet
   Slider::Slider(const XMLObject& xmlObject, Component* parent)
     : Component(xmlObject, parent)
   {
-    AddStyleVariables(StylingVariables{.bools = {{"vertical", &vertical}}});
+    AddStyleVariables(StylingVariables{.bools = {{"vertical", &vertical}, {"reverse", &reverse}}});
     LoadStyles(xmlObject);
 
     minValue = GUIUtils::GetFloatFromXML(xmlObject, "minValue", 0.0f);
@@ -90,6 +90,8 @@ namespace Greet
       minPos = 0;
       maxPos = sliderDirSize;
     }
+    if(reverse)
+      std::swap(minPos, maxPos);
   }
 
   void Slider::Render(GUIRenderer* renderer) const
@@ -207,6 +209,6 @@ namespace Greet
 
   float Slider::GetSliderPosFromValue(float value) const
   {
-    return (value - minValue) / (maxValue - minValue) * (maxPos-minPos) + minPos;
+    return (value - minValue) / (maxValue - minValue) * (maxPos - minPos) + minPos;
   }
 }

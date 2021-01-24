@@ -54,7 +54,7 @@ namespace Greet
 
     if(!libraryHandle)
     {
-      Log::Error("Failed to load script library: ", filePath);
+      Log::Error("Failed to load script: ", filePath);
       Log::Error("dlerror: ", dlerror());
       return;
     }

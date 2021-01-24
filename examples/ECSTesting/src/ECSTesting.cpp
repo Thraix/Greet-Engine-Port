@@ -2,6 +2,26 @@
 
 using namespace Greet;
 
+struct PrintComponent
+{
+};
+
+class ECSSceneExt : public ECSScene
+{
+  public:
+    ECSSceneExt(const std::string& scenePath)
+      : ECSScene{scenePath}
+    {}
+
+    void LoadExtComponents(Entity& entity, const MetaFile& metaClass) override
+    {
+    }
+
+    void UpdateAfter(float timeElapsed) override
+    {
+    }
+};
+
 ECSTesting::ECSTesting()
   : App{"ECSTesting", 1440, 1440 * 9 / 16}
 {
@@ -21,7 +41,7 @@ void ECSTesting::Init()
   GlobalSceneManager::GetSceneManager().Add2DScene(gui, "gui");
   SceneView* sceneView = frame->GetComponentByName<SceneView>("sceneView");
   ASSERT(sceneView, "SceneView did not exist in gui");
-  scene.reset(new ECSScene("res/scenes/scene.meta"));
+  scene.reset(new ECSSceneExt("res/scenes/scene.meta"));
   sceneView->GetSceneManager().Add3DScene(scene, "ecs");
   gui->RequestFocusQueued(sceneView);
 }

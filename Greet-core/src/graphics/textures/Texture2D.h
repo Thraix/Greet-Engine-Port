@@ -9,8 +9,6 @@ namespace Greet {
 
   class Texture2D : public Texture, public Resource
   {
-    public:
-      friend class FrameBufferObject;
     private:
       uint width;
       uint height;

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <common/Memory.h>
 #include <utils/FileUtils.h>
 #include <utils/UUID.h>
 
@@ -8,22 +9,27 @@ namespace Greet
 {
   class Resource
   {
+    DELETE_COPY_AND_MOVE(Resource);
+
     friend class HotSwapping;
 
     private:
       static uint s_Id;
       uint id;
       FileUtils::TimeModified modDate;
+
     protected:
       std::string filePath;
+
     public:
       Resource()
-        : id{++s_Id}
+        : id{0}
       {}
+
       Resource(const std::string& filePath);
-      Resource(Resource&& res);
-      Resource& operator=(Resource&& res);
+
       virtual ~Resource();
+
       void CheckResource();
       virtual void ReloadResource() {}
 

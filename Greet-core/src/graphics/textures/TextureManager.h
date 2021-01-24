@@ -20,6 +20,7 @@ namespace Greet {
       static Ref<CubeMap>& LoadCubeMap(const std::string& metaFile);
 
       static void CleanupUnused();
+      static void Cleanup();
     private:
       TextureManager(){}
   };

@@ -566,14 +566,14 @@ namespace Greet {
 
   Ref<Shader> Shader::FromFile(const std::string& shaderPath)
   {
-    return Ref<Shader>{new Shader{shaderPath}};
+    return NewRef<Shader>(shaderPath);
   }
 
   Ref<Shader> Shader::FromFile(const std::string& vertPath, const std::string& fragPath)
   {
     std::string vertSourceString = FileUtils::ReadFile(vertPath.c_str());
     std::string fragSourceString = FileUtils::ReadFile(fragPath.c_str());
-    return Ref<Shader>(new Shader{vertSourceString, fragSourceString});
+    return NewRef<Shader>(vertSourceString, fragSourceString);
   }
 
 
@@ -582,7 +582,7 @@ namespace Greet {
     std::string vertSourceString = FileUtils::ReadFile(vertPath.c_str());
     std::string fragSourceString = FileUtils::ReadFile(fragPath.c_str());
     std::string geomSourceString = FileUtils::ReadFile(geomPath.c_str());
-    return Ref<Shader>(new Shader{vertSourceString,fragSourceString,geomSourceString});
+    return NewRef<Shader>(vertSourceString,fragSourceString,geomSourceString);
   }
 
   Ref<Shader> Shader::FromSource(const std::string& shaderSrc)
@@ -590,18 +590,18 @@ namespace Greet {
     std::stringstream shaderStream{shaderSrc};
     std::array<std::pair<std::string, bool>, 3> ss = ReadStream(shaderStream);
     if(ss[2].second)
-      return Ref<Shader>(new Shader{ss[0].first, ss[1].first, ss[2].first});
+      return NewRef<Shader>(ss[0].first, ss[1].first, ss[2].first);
     else
-      return Ref<Shader>(new Shader{ss[0].first, ss[1].first});
+      return NewRef<Shader>(ss[0].first, ss[1].first);
   }
 
   Ref<Shader> Shader::FromSource(const std::string& vertSrc, const std::string& fragSrc)
   {
-    return Ref<Shader>(new Shader{vertSrc, fragSrc});
+    return NewRef<Shader>(vertSrc, fragSrc);
   }
 
   Ref<Shader> Shader::FromSource(const std::string& vertSrc, const std::string& fragSrc, const std::string& geomSrc)
   {
-    return Ref<Shader>(new Shader{vertSrc, fragSrc, geomSrc});
+    return NewRef<Shader>(vertSrc, fragSrc, geomSrc);
   }
 }

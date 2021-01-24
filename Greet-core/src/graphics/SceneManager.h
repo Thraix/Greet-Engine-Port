@@ -7,15 +7,18 @@
 namespace Greet {
   class SceneManager
   {
+    DELETE_COPY_AND_MOVE(SceneManager);
     typedef std::pair<std::string, Ref<Scene>> SceneElement;
+
     private:
-      // they are the same but 3d scenes are always rendered first
-    std::vector<SceneElement> m_scenes2d;
-    std::vector<SceneElement> m_scenes3d;
-    Ref<Scene> focusedScene;
+        // they are the same but 3d scenes are always rendered first
+      std::vector<SceneElement> m_scenes2d;
+      std::vector<SceneElement> m_scenes3d;
+      Ref<Scene> focusedScene;
 
     public:
       SceneManager();
+      virtual ~SceneManager();
       void Add2DScene(const Ref<Scene>& scene, const std::string& name);
       void Add3DScene(const Ref<Scene>& scene, const std::string& name);
 

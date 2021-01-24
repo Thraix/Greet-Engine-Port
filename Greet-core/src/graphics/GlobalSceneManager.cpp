@@ -5,10 +5,20 @@
 
 namespace Greet {
 
-  SceneManager GlobalSceneManager::sceneManager;
+  SceneManager* GlobalSceneManager::sceneManager;
 
   SceneManager& GlobalSceneManager::GetSceneManager()
   {
-    return sceneManager;
+    return *sceneManager;
+  }
+
+  void GlobalSceneManager::Create()
+  {
+    sceneManager = new SceneManager();
+  }
+
+  void GlobalSceneManager::Destroy()
+  {
+    delete sceneManager;
   }
 }

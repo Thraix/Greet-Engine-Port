@@ -11,6 +11,7 @@ namespace Greet {
   GUIScene::GUIScene()
     : renderer{new GUIRenderer()}, projectionMatrix(Mat3::OrthographicViewport())
   {
+    focusQueue = nullptr;
     focused = nullptr;
 
     renderer->GetShader()->Enable();

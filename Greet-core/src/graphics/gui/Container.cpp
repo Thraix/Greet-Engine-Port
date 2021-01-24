@@ -256,6 +256,8 @@ namespace Greet
       return;
     }
     m_components.push_back(component);
+    if(guiScene)
+      component->SetGUIScene(guiScene);
   }
 
   Component* Container::RemoveComponent(uint index)

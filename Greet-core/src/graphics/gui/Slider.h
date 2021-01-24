@@ -29,6 +29,7 @@ namespace Greet
       //////////////////
       // Style variables
       bool vertical = false;
+      bool reverse = false;
 
 
 

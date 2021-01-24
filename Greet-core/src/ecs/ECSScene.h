@@ -9,7 +9,7 @@
 
 namespace Greet
 {
-  class ECSScene final : public Greet::Scene
+  class ECSScene : public Greet::Scene
   {
     private:
       Ref<ECSManager> manager;
@@ -18,7 +18,7 @@ namespace Greet
     public:
       ECSScene();
       ECSScene(const std::string& scenePath);
-      ~ECSScene();
+      virtual ~ECSScene();
 
       void LoadEntity(const MetaFile& meta);
 
@@ -29,7 +29,9 @@ namespace Greet
       void Render() const override;
       void Render2D() const;
       void Render3D() const;
+      virtual void UpdateBefore(float timeElapsed) {}
       void Update(float timeElapsed) override;
+      virtual void UpdateAfter(float timeElapsed) {}
       void OnEvent(Event& event) override;
 
     private:
@@ -40,5 +42,9 @@ namespace Greet
         if(metaClass.size() > 0)
           entity.AddComponent<T>(metaClass[0]);
       }
+
+      // Loads external components not handled by the engine.
+      // Gives the developer more control over what components can be used
+      virtual void LoadExtComponents(Entity& entity, const MetaFile& metaClass) {}
   };
 }

@@ -35,11 +35,12 @@ namespace Greet {
       uint m_shaderID;
       std::map<std::string, int> uniforms;
 
-    private:
+    public:
       Shader(const std::string& filename);
       Shader(const std::string& vertSrc, const std::string& fragSrc, const std::string& geomSrc);
       Shader(const std::string& vertSrc, const std::string& fragSrc);
 
+    private:
       uint Load(const std::string& filename);
       uint Load(const std::string& vertSrc, const std::string& fragSrc, const std::string& geomSrc, bool hasGeometry);
       uint Load(const std::string& vertSrc, const std::string& fragSrc);
