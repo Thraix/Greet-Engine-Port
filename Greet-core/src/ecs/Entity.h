@@ -11,15 +11,15 @@ namespace Greet
     friend class ECSManager;
 
     private:
-      Ref<ECSManager> manager;
+      ECSManager* manager;
       EntityID id;
 
     public:
-      Entity(const Ref<ECSManager>& manager)
+      Entity(ECSManager* manager)
         : manager{manager}, id{0}
       {}
 
-      Entity(const Ref<ECSManager>& manager, EntityID id)
+      Entity(ECSManager* manager, EntityID id)
         : manager{manager}, id{id}
       {}
 
@@ -89,12 +89,12 @@ namespace Greet
         return id;
       }
 
-      const Ref<ECSManager>& GetManager() const
+      ECSManager* GetManager() const
       {
         return manager;
       }
 
-      static Entity Create(const Ref<ECSManager>& manager)
+      static Entity Create(ECSManager* manager)
       {
         return {manager, manager->CreateEntity()};
       }

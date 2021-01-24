@@ -8,7 +8,7 @@ namespace Greet
   {
     if(entity)
     {
-      const Ref<ECSManager>& manager = entity.GetManager();
+      ECSManager* manager = entity.GetManager();
       EntityID ret = 0;
 
       manager->Each<Greet::TagComponent>(

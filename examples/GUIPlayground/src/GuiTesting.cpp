@@ -21,11 +21,11 @@ class Layer2D : public Layer
 class Core : public App
 {
   private:
-    GUIScene* guiScene;
+    Ref<GUIScene> guiScene;
     Component* content;
     TestScene* scene;
     float progressBarValue;
-    Layer2D* layer;
+    Ref<Layer2D> layer;
     SceneView* editorView;
     Renderable2D* renderable;
   public:
@@ -36,22 +36,19 @@ class Core : public App
     }
 
     ~Core()
-    {
-      delete guiScene;
-      delete layer;
-    }
+    {}
 
     void Init() override
     {
       renderable = new Renderable2D({0, 0}, {70, 70}, 0xffffffff);
       /* GlobalSceneManager::GetSceneManager().Add2DScene(new TestScene(), "testscene"); */
       /* return; */
-      layer = new Layer2D();
+      layer = NewRef<Layer2D>();
       layer->Add(renderable);
       progressBarValue = 0;
       FontManager::Add("noto", FontContainer("res/fonts/NotoSansUI-Regular.ttf"));
 
-      guiScene = new GUIScene();
+      guiScene = NewRef<GUIScene>();
 
       Frame* frame = FrameFactory::GetFrame("res/guis/gui.xml");
       guiScene->AddFrameQueued(frame);
@@ -144,6 +141,11 @@ class Core : public App
       }
 #endif
       GlobalSceneManager::GetSceneManager().Add2DScene(guiScene, "GUIScene");
+    }
+
+    void Destruct() override
+    {
+      GlobalSceneManager::GetSceneManager().Remove2DScene("GUIScene");
     }
 
     void OnTreeNodeSelected(TreeView* view, TreeNode* node, bool selected)

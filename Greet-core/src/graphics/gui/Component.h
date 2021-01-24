@@ -52,8 +52,8 @@ namespace Greet
       GUISize height = GUISize{0, 1, GUISize::Type::Wrap};
 
     protected:
-      GUIScene* guiScene;
-      Component* parent;
+      GUIScene* guiScene = nullptr;
+      Component* parent = nullptr;
       bool remeasure = true;
 
       Vec2f pos;

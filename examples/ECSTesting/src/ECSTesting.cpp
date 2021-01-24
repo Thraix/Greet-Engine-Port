@@ -13,6 +13,9 @@ class ECSSceneExt : public ECSScene
       : ECSScene{scenePath}
     {}
 
+    virtual ~ECSSceneExt()
+    {}
+
     void LoadExtComponents(Entity& entity, const MetaFile& metaClass) override
     {
     }
@@ -35,15 +38,21 @@ ECSTesting::~ECSTesting()
 void ECSTesting::Init()
 {
   FontManager::Add("noto", FontContainer("res/fonts/noto.ttf"));
-  gui.reset(new GUIScene());
+  Ref<GUIScene> gui = NewRef<GUIScene>();
   Frame* frame = FrameFactory::GetFrame("res/guis/gui.xml");
   gui->AddFrameQueued(frame);
   GlobalSceneManager::GetSceneManager().Add2DScene(gui, "gui");
-  SceneView* sceneView = frame->GetComponentByName<SceneView>("sceneView");
+  sceneView = frame->GetComponentByName<SceneView>("sceneView");
   ASSERT(sceneView, "SceneView did not exist in gui");
-  scene.reset(new ECSSceneExt("res/scenes/scene.meta"));
+  Ref<ECSSceneExt> scene = NewRef<ECSSceneExt>("res/scenes/scene.meta");
   sceneView->GetSceneManager().Add3DScene(scene, "ecs");
   gui->RequestFocusQueued(sceneView);
+}
+
+void ECSTesting::Destruct()
+{
+  sceneView->GetSceneManager().Remove3DScene("ecs");
+  GlobalSceneManager::GetSceneManager().Remove2DScene("gui");
 }
 
 void ECSTesting::Tick()

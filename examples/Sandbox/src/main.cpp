@@ -40,8 +40,8 @@ class Core : public App
 
     float progressFloat;
 
-    Layer* uilayer;
-    Layer3D* layer3d;
+    Ref<Layer> uilayer;
+    Ref<Layer3D> layer3d;
     Button* button;
     Label* fps;
     Renderable2D* cursor;
@@ -65,7 +65,6 @@ class Core : public App
       delete tetrahedron;
       delete renderer3d;
       delete waterRenderer;
-      delete uilayer;
       delete movement;
       delete rotation;
     }
@@ -80,7 +79,7 @@ class Core : public App
 
       FontManager::Add("noto", FontContainer("res/fonts/NotoSansUI-Regular.ttf"));
 
-      GUIScene* guiScene = new GUIScene();
+      Ref<GUIScene> guiScene = NewRef<GUIScene>();
       Frame* frame = FrameFactory::GetFrame("res/guis/header.xml");
       guiScene->AddFrameQueued(frame);
 
@@ -174,7 +173,7 @@ class Core : public App
       light.SetToUniform(flatShader, "Light");
       flatShader->Disable();
 
-      uilayer = new Layer(new BatchRenderer(ShaderFactory::Shader2D()), Mat3::OrthographicViewport());
+      uilayer = NewRef<Layer>(new BatchRenderer(ShaderFactory::Shader2D()), Mat3::OrthographicViewport());
       Vec4 colorPink = ColorUtils::GetMaterialColorAsHSV(300 /360.0f, 3);
       cursor = new Renderable2D(Vec2f(0,0), Vec2f(32,32), 0xffffffff, Ref<Sprite>{new Sprite{TextureManager::LoadTexture2D("res/textures/cursor.meta")}});
       uilayer->Add(cursor);
@@ -201,27 +200,20 @@ class Core : public App
       GlobalSceneManager::GetSceneManager().Add2DScene(guiScene, "guiScene");
 
       Ref<TPCamera3D> camera{new TPCamera3D{90, 0.01f,1000.0f, Vec3f(0, 0, 0), 15, 0, 0, 0, 80, -0.8f, 0.8f}};
-      layer3d = new Layer3D(camera, skybox);
+      layer3d = NewRef<Layer3D>(camera, skybox);
       layer3d->AddRenderer(renderer3d);
       layer3d->AddRenderer(waterRenderer);
-      if(!frame)
-      {
-        GlobalSceneManager::GetSceneManager().Add3DScene(layer3d, "World");
-        GlobalSceneManager::GetSceneManager().Add2DScene(uilayer, "uilayer");
-        return;
-      }
-
       fps = frame->GetComponentByName<Label>("fpsCounter");
       sceneView = frame->GetComponentByName<SceneView>("scene");
-      if(!sceneView)
-      {
-        GlobalSceneManager::GetSceneManager().Add3DScene(layer3d, "World");
-        GlobalSceneManager::GetSceneManager().Add2DScene(uilayer, "uilayer");
-        return;
-      }
       sceneView->GetSceneManager().Add3DScene(layer3d, "World");
       sceneView->GetSceneManager().Add2DScene(uilayer, "uilayer");
-      //GlobalSceneManager::GetSceneManager().Add3DScene(new World(camera, 10, 10), "WorldTerrain");
+    }
+
+    void Destruct() override
+    {
+      sceneView->GetSceneManager().Remove3DScene("World");
+      sceneView->GetSceneManager().Remove2DScene("uilayer");
+      GlobalSceneManager::GetSceneManager().Remove2DScene("guiScene");
     }
 
     void RecalcPositions(Vec3f& vertex)

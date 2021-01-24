@@ -36,7 +36,7 @@ namespace Greet
       Log::Error("Entity does not contain TagComponent");
       return;
     }
-    Entity e = Entity::Create(manager);
+    Entity e = Entity::Create(manager.get());
     e.AddComponent<TagComponent>(tag[0]);
 
     LoadComponent<Transform3DComponent>(e, meta, "Transform3DComponent");
@@ -57,7 +57,7 @@ namespace Greet
 
   Entity ECSScene::AddEntity(const std::string& tag)
   {
-    Entity e = Entity::Create(manager);
+    Entity e = Entity::Create(manager.get());
     e.AddComponent<TagComponent>(tag);
     return e;
   }
@@ -80,7 +80,7 @@ namespace Greet
 
   void ECSScene::Render2D() const
   {
-    Entity camera{manager};
+    Entity camera{manager.get()};
     manager->Each<Camera2DComponent>([&](EntityID id, Camera2DComponent& cam)
     {
       if(cam.active)
@@ -95,7 +95,7 @@ namespace Greet
     if(!camera)
       return;
 
-    Entity environment{manager};
+    Entity environment{manager.get()};
     manager->Each<Environment2DComponent>([&](EntityID id, Environment2DComponent& env)
         {
           if(environment)
@@ -111,7 +111,7 @@ namespace Greet
     cam.SetShaderUniforms(renderer2d->GetShader());
     manager->Each<Transform2DComponent>([&](EntityID id, Transform2DComponent& transform)
     {
-      Entity e{manager, id};
+      Entity e{manager.get(), id};
       if(e.HasComponent<SpriteComponent>())
       {
         SpriteComponent& sprite = e.GetComponent<SpriteComponent>();
@@ -126,7 +126,7 @@ namespace Greet
 
   void ECSScene::Render3D() const
   {
-    Entity camera{manager};
+    Entity camera{manager.get()};
     bool foundPrimary = false;
     manager->Each<Camera3DComponent>([&](EntityID id, Camera3DComponent& cam)
     {
@@ -145,7 +145,7 @@ namespace Greet
       return;
     }
 
-    Entity environment{manager};
+    Entity environment{manager.get()};
     manager->Each<Environment3DComponent>([&](EntityID id, Environment3DComponent& env)
     {
       if(environment)
@@ -183,7 +183,7 @@ namespace Greet
     manager->Each<NativeScriptComponent>([&](EntityID id, NativeScriptComponent& script)
     {
       if(!script.script->HasBoundEntity())
-        script.BindEntity({manager, id});
+        script.BindEntity({manager.get(), id});
       if(!script.created)
       {
         script.Create();

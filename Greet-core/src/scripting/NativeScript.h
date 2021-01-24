@@ -9,6 +9,8 @@ namespace Greet
 {
   struct NativeScript
   {
+    DELETE_COPY_AND_MOVE(NativeScript);
+
     Entity entity{nullptr};
     virtual ~NativeScript() {}
 

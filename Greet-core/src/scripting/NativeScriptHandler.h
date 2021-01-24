@@ -9,6 +9,8 @@ namespace Greet
 {
   class NativeScriptHandler final : public Resource
   {
+    DELETE_COPY_AND_MOVE(NativeScriptHandler);
+
     private:
       static std::string includePaths;
 
@@ -17,11 +19,11 @@ namespace Greet
       bool hasCreatedScript = false;
       bool hasBoundEntity = false;
       Entity entity;
-      Ref<NativeScript> script;
+      NativeScript* script = nullptr;
 
     public:
       NativeScriptHandler(const std::string& scriptCpp);
-      ~NativeScriptHandler();
+      virtual ~NativeScriptHandler();
 
       void ReloadResource() override;
       void BindEntity(const Entity& aEntity);

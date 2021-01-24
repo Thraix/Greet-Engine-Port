@@ -19,6 +19,8 @@ namespace Greet
 
   NativeScriptHandler::~NativeScriptHandler()
   {
+    if(script)
+      delete script;
     if(libraryHandle)
       dlclose(libraryHandle);
   }
@@ -68,8 +70,10 @@ namespace Greet
       dlclose(libraryHandle);
       return;
     }
+    if(script)
+      delete script;
     typedef NativeScript*(*NewScript)();
-    script.reset(NewScript(newScript)());
+    script = NewScript(newScript)();
 
     if(script && hasBoundEntity)
       script->entity = this->entity;

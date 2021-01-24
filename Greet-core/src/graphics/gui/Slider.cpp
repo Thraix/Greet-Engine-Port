@@ -17,9 +17,6 @@ namespace Greet
     minValue = 0;
     maxValue = 100;
     stepSize = 0;
-    // Bit of a hack to make the initial value correct
-    minPos = 0;
-    maxPos = 1;
 
     SetValue((maxValue-minValue)/2.0f);
   }

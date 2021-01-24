@@ -5,14 +5,14 @@
 class ECSTesting : public Greet::App
 {
   private:
-    Greet::Ref<Greet::GUIScene> gui;
-    Greet::Ref<Greet::ECSScene> scene;
+    Greet::SceneView* sceneView;
   public:
     ECSTesting();
 
     ~ECSTesting();
 
     void Init() override;
+    void Destruct() override;
 
     void Tick() override;
     void Update(float timeElapsed) override;
