@@ -11,12 +11,12 @@ namespace Greet {
   class Layer : public Scene
   {
     protected:
-      Renderer2D* renderer;
-      std::vector<Renderable*> renderables;
+      Ref<Renderer2D> renderer;
+      std::vector<Ref<Renderable>> renderables;
 
       Mat3 projectionMatrix;
     public:
-      Layer(Renderer2D* renderer, const Mat3& projectionMatrix)
+      Layer(const Ref<Renderer2D>& renderer, const Mat3& projectionMatrix)
         : renderer(renderer), projectionMatrix(projectionMatrix)
       {
         renderer->GetShader()->Enable();
@@ -26,14 +26,9 @@ namespace Greet {
       }
 
       virtual ~Layer()
-      {
-        delete renderer;
+      {}
 
-        for (uint i = 0; i < renderables.size(); i++)
-          delete renderables[i];
-      }
-
-      virtual void Add(Renderable* renderable)
+      virtual void Add(const Ref<Renderable>& renderable)
       {
         renderables.push_back(renderable);
       }

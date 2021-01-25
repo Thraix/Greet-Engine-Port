@@ -45,7 +45,7 @@ namespace Greet{
       void SetSize(const Vec2f& size) override { m_size = size; }
       inline const Vec2f& GetSize() const override { return m_size;}
 
-      virtual void Render(Renderer2D* renderer) const override
+      virtual void Render(const Ref<Renderer2D>& renderer) const override
       {
         if (render)
           renderer->Draw(*this);

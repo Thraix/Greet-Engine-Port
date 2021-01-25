@@ -22,5 +22,7 @@ namespace Greet
       static void AddHotswapResource(Resource* res);
       static void RemoveHotswapResource(Resource* res);
       static void CheckResources();
+
+      static void Destroy();
   };
 }

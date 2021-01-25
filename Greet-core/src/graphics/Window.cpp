@@ -15,6 +15,7 @@
 #include <internal/GreetGL.h>
 #include <scripting/NativeScriptHandler.h>
 #include <graphics/GlobalSceneManager.h>
+#include <utils/HotSwapping.h>
 
 namespace Greet {
 
@@ -63,6 +64,7 @@ namespace Greet {
     FrameFactory::Cleanup();
     joysticks.clear();
     GlobalSceneManager::Destroy();
+    HotSwapping::Destroy();
     glfwTerminate();
   }
 

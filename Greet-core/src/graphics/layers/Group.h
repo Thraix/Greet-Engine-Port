@@ -19,9 +19,9 @@ namespace Greet {
       virtual void Add(Renderable* renderable);
       virtual void Remove(Renderable* renderable);
       virtual bool Update(float timeElapsed) override;
-      virtual void Begin(Renderer2D* renderer) const override;
-      virtual void Render(Renderer2D* renderer) const override;
-      virtual void End(Renderer2D* renderer) const override;
+      virtual void Begin(const Ref<Renderer2D>& renderer) const override;
+      virtual void Render(const Ref<Renderer2D>& renderer) const override;
+      virtual void End(const Ref<Renderer2D>& renderer) const override;
 
       void SetEnable(bool enable) { Group::enable = enable;}
       void SetTransformationMatrix(Mat3 transformationMatrix) {m_transformationMatrix = transformationMatrix;}

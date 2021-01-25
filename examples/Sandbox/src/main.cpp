@@ -14,24 +14,24 @@ using namespace Greet;
 class Core : public App
 {
   private:
-    BatchRenderer3D* renderer3d;
-    BatchRenderer3D* waterRenderer;
-    Material* modelMaterial;
-    Material* flatMaterial;
-    Material* terrainMaterial;
-    Material* waterMaterial;
-    Material* stallMaterial;
+    Ref<BatchRenderer3D> renderer3d;
+    Ref<BatchRenderer3D> waterRenderer;
+    Ref<Material> modelMaterial;
+    Ref<Material> flatMaterial;
+    Ref<Material> terrainMaterial;
+    Ref<Material> waterMaterial;
+    Ref<Material> stallMaterial;
     KeyboardControl* movement;
     KeyboardControl* rotation;
 
-    EntityModel* stall;
-    EntityModel* dragon;
-    EntityModel* terrain;
-    EntityModel* water;
-    EntityModel* polygon;
-    EntityModel* cube;
-    EntityModel* sphere;
-    EntityModel* tetrahedron;
+    Ref<EntityModel> stall;
+    Ref<EntityModel> dragon;
+    Ref<EntityModel> terrain;
+    Ref<EntityModel> water;
+    Ref<EntityModel> polygon;
+    Ref<EntityModel> cube;
+    Ref<EntityModel> sphere;
+    Ref<EntityModel> tetrahedron;
     std::vector<EntityModel> models;
     Light light{{}, 0x0};
 
@@ -42,9 +42,10 @@ class Core : public App
 
     Ref<Layer> uilayer;
     Ref<Layer3D> layer3d;
+    Ref<Renderable2D> cursor;
+
     Button* button;
     Label* fps;
-    Renderable2D* cursor;
 
   public:
     Core()
@@ -55,16 +56,6 @@ class Core : public App
 
     ~Core()
     {
-      delete modelMaterial;
-      delete stall;
-      delete dragon;
-      delete terrain;
-      delete water;
-      delete cube;
-      delete sphere;
-      delete tetrahedron;
-      delete renderer3d;
-      delete waterRenderer;
       delete movement;
       delete rotation;
     }
@@ -85,19 +76,19 @@ class Core : public App
 
       //camera = new TPCamera3D(vec3(-3.5, -7.8, 5.5), 18, 0.66, 38.5, 15, 80, 0, 0.8f); // Profile shot
 
-      Ref<Skybox> skybox{new Skybox(TextureManager::LoadCubeMap("res/textures/skybox.meta"))};
-      renderer3d = new BatchRenderer3D();
-      waterRenderer = new BatchRenderer3D();
+      Ref<Skybox> skybox = NewRef<Skybox>(TextureManager::LoadCubeMap("res/textures/skybox.meta"));
+      renderer3d = NewRef<BatchRenderer3D>();
+      waterRenderer = NewRef<BatchRenderer3D>();
 
 
-      modelMaterial = new Material(ShaderFactory::Shader3D(), TextureManager::LoadTexture2D("res/textures/debugtexture.meta"));
-      flatMaterial = new Material(Shader::FromFile("res/shaders/flat3d.glsl"));
-      stallMaterial = new Material(ShaderFactory::Shader3D(), TextureManager::LoadTexture2D("res/textures/stall.meta"));
+      modelMaterial = NewRef<Material>(ShaderFactory::Shader3D(), TextureManager::LoadTexture2D("res/textures/debugtexture.meta"));
+      flatMaterial = NewRef<Material>(Shader::FromFile("res/shaders/flat3d.glsl"));
+      stallMaterial = NewRef<Material>(ShaderFactory::Shader3D(), TextureManager::LoadTexture2D("res/textures/stall.meta"));
       modelMaterial->SetSpecularStrength(1.0)->SetSpecularExponent(10)->SetDiffuseStrength(0.5);
 
       {
-        terrainMaterial = new Material(Shader::FromFile("res/shaders/terrain.glsl"));
-        waterMaterial = new Material(Shader::FromFile("res/shaders/water.glsl"));
+        terrainMaterial = NewRef<Material>(Shader::FromFile("res/shaders/terrain.glsl"));
+        waterMaterial = NewRef<Material>(Shader::FromFile("res/shaders/water.glsl"));
         waterMaterial->SetSpecularExponent(50);
         waterMaterial->SetSpecularStrength(0.4);
         waterMaterial->GetShader()->Enable();
@@ -113,36 +104,36 @@ class Core : public App
         std::vector<float> noise = Noise::GenNoise(gridWidth+1, gridWidth + 1,5,8, 8,0.5f);
         MeshData gridMesh = MeshFactory::GridLowPoly(Vec2i{gridWidth, gridLength}, noise, {0, 0, 0}, Vec3f{gridWidth+1.0f, 1.0f, gridLength+1.0f});
         RecalcGrid(gridMesh, gridWidth, gridLength);
-        terrain = new EntityModel(new Mesh(gridMesh), terrainMaterial, Vec3f(0, -15, 0), Vec3f(1.0f, 1.0f, 1.0f), Vec3f(0.0f, 0.0f, 0.0f));
+        terrain = NewRef<EntityModel>(NewRef<Mesh>(gridMesh), terrainMaterial, Vec3f(0, -15, 0), Vec3f(1.0f, 1.0f, 1.0f), Vec3f(0.0f, 0.0f, 0.0f));
         gridMesh.RemoveAttribute(MESH_NORMALS_LOCATION);
         gridMesh.RemoveAttribute(MESH_COLORS_LOCATION);
         CalcGridVertexOffset(gridMesh);
 
-        water = new EntityModel(new Mesh(gridMesh), waterMaterial, Vec3f(0, -15, 0), Vec3f(1.0f, 1.0f, 1.0f), Vec3f(0.0f, 0.0f, 0.0f));
+        water = NewRef<EntityModel>(NewRef<Mesh>(gridMesh), waterMaterial, Vec3f(0, -15, 0), Vec3f(1.0f, 1.0f, 1.0f), Vec3f(0.0f, 0.0f, 0.0f));
 #endif
       }
 
       MeshData polygonMesh = MeshFactory::Polygon(6, MeshFactory::PolygonSizeFormat::SIDE_LENGTH, {0, 0, 0}, 10);
-      polygon = new EntityModel(new Mesh(polygonMesh), terrainMaterial, Vec3f(0,1,0), Vec3f(1,1,1), Vec3f(0,0,0));
+      polygon = NewRef<EntityModel>(NewRef<Mesh>(polygonMesh), terrainMaterial, Vec3f(0,1,0), Vec3f(1,1,1), Vec3f(0,0,0));
 
 
       MeshData cubeMesh = MeshFactory::Cube();
-      cube = new EntityModel(new Mesh(cubeMesh), modelMaterial, Vec3f(1,0,0), Vec3f(10, 10, 10), Vec3f(0, 0, 0));
+      cube = NewRef<EntityModel>(NewRef<Mesh>(cubeMesh), modelMaterial, Vec3f(1,0,0), Vec3f(10, 10, 10), Vec3f(0, 0, 0));
 
       MeshData sphereMeshData = MeshFactory::Sphere(20, 20, {0, 0, 0}, 0.5f);
       sphereMeshData.GenerateNormals();
       //sphereMeshData->LowPolify();
-      Mesh* sphereMesh = new Mesh(sphereMeshData);
-      sphere = new EntityModel(sphereMesh, modelMaterial, Vec3f(0,0,0), Vec3f(10, 10, 10), Vec3f(0, 0, 0));
+      Ref<Mesh> sphereMesh = NewRef<Mesh>(sphereMeshData);
+      sphere = NewRef<EntityModel>(sphereMesh, modelMaterial, Vec3f(0,0,0), Vec3f(10, 10, 10), Vec3f(0, 0, 0));
 
       MeshData tetrahedronMesh = MeshFactory::Tetrahedron({0, 0, 0}, 10);
-      tetrahedron = new EntityModel(new Mesh(tetrahedronMesh), modelMaterial, Vec3f(30, 0, 10), Vec3f(1, 1, 1), Vec3f(0, 0, 0));
+      tetrahedron = NewRef<EntityModel>(NewRef<Mesh>(tetrahedronMesh), modelMaterial, Vec3f(30, 0, 10), Vec3f(1, 1, 1), Vec3f(0, 0, 0));
 
       MeshData stallMeshData = OBJUtils::LoadObj("res/objs/stall.obj");
       //
-      Mesh* stallMesh = new Mesh(stallMeshData);
+      Ref<Mesh> stallMesh = NewRef<Mesh>(stallMeshData);
       stallMaterial->SetSpecularStrength(0.1)->SetSpecularExponent(1);
-      stall = new EntityModel(stallMesh, stallMaterial, Vec3f(0.0f, 0.0f, -25), Vec3(3.0f, 3.0f, 3.0f), Vec3(0.0f, 0.0f, 0.0f));
+      stall = NewRef<EntityModel>(stallMesh, stallMaterial, Vec3f(0.0f, 0.0f, -25), Vec3(3.0f, 3.0f, 3.0f), Vec3(0.0f, 0.0f, 0.0f));
 
       // MEMORY LEAK WITH MESHDATA
       //MeshData data = MeshData::ReadFromFile("res/objs/dragon.gobj");
@@ -150,8 +141,8 @@ class Core : public App
       data = *data.LowPolify();
       data.GenerateNormals();
       data.WriteToFile("res/objs/dragon.gobj");
-      Mesh* dragonMesh = new Mesh(data);
-      dragon = new EntityModel(dragonMesh, flatMaterial, Vec3f(20.0f, 0.0f, -25), Vec3(1.0f, 1.0f, 1.0f), Vec3(0.0f, 0.0f, 0.0f));
+      Ref<Mesh> dragonMesh = NewRef<Mesh>(data);
+      dragon = NewRef<EntityModel>(dragonMesh, flatMaterial, Vec3f(20.0f, 0.0f, -25), Vec3(1.0f, 1.0f, 1.0f), Vec3(0.0f, 0.0f, 0.0f));
 
       //Mesh* gridMesh = MeshFactory::cube(0,0,0,10,10,10);
       //gridMesh->setEnableCulling(false);
@@ -173,13 +164,13 @@ class Core : public App
       light.SetToUniform(flatShader, "Light");
       flatShader->Disable();
 
-      uilayer = NewRef<Layer>(new BatchRenderer(ShaderFactory::Shader2D()), Mat3::OrthographicViewport());
+      uilayer = NewRef<Layer>(NewRef<BatchRenderer>(ShaderFactory::Shader2D()), Mat3::OrthographicViewport());
       Vec4 colorPink = ColorUtils::GetMaterialColorAsHSV(300 /360.0f, 3);
-      cursor = new Renderable2D(Vec2f(0,0), Vec2f(32,32), 0xffffffff, Ref<Sprite>{new Sprite{TextureManager::LoadTexture2D("res/textures/cursor.meta")}});
+      cursor = NewRef<Renderable2D>(Vec2f(0,0), Vec2f(32,32), 0xffffffff, Ref<Sprite>{new Sprite{TextureManager::LoadTexture2D("res/textures/cursor.meta")}});
       uilayer->Add(cursor);
-      uilayer->Add(new Renderable2D(Vec2f(0,0), Vec2f(noiseS, noiseS), 0xffffffff, Ref<Sprite>{new Sprite{TextureManager::LoadTexture2D("noise")}}));
+      uilayer->Add(NewRef<Renderable2D>(Vec2f(0,0), Vec2f(noiseS, noiseS), 0xffffffff, Ref<Sprite>{new Sprite{TextureManager::LoadTexture2D("noise")}}));
 
-      renderer3d->Submit(new Portal({1.0f,1.0f,1.0f}));
+      renderer3d->Submit(NewRef<Portal>(Vec3f{1.0f,1.0f,1.0f}));
       renderer3d->Submit(stall);
       renderer3d->Submit(dragon);
       renderer3d->Submit(terrain);

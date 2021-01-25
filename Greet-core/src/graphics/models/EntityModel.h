@@ -9,8 +9,8 @@ namespace Greet {
 
   class EntityModel {
     private:
-      Material* material;
-      Mesh* mesh;
+      Ref<Material> material;
+      Ref<Mesh> mesh;
     private:
       Vec3f m_position;
       Vec3f m_scale;
@@ -18,9 +18,9 @@ namespace Greet {
       Mat4 m_transformationMatrix;
       bool m_hasChanged;
     public:
-      EntityModel(Mesh* mesh, Material* material, float x, float y, float z, float sx, float sy, float sz, float rx, float ry, float rz);
-      EntityModel(Mesh* mesh, Material* material, Vec3f position, Vec3f scale, Vec3f rotation);
-      EntityModel(Mesh* mesh, Material* material);
+      EntityModel(const Ref<Mesh>& mesh, const Ref<Material>& material, float x, float y, float z, float sx, float sy, float sz, float rx, float ry, float rz);
+      EntityModel(const Ref<Mesh>& mesh, const Ref<Material>& material, Vec3f position, Vec3f scale, Vec3f rotation);
+      EntityModel(const Ref<Mesh>& mesh, const Ref<Material>& material);
 
       virtual void PreRender() const;
       virtual void Render() const;
@@ -30,10 +30,10 @@ namespace Greet {
       virtual void UnbindShader() const;
       virtual void BindTransformation() const;
 
-      Material* GetMaterial() const { return material; }
-      void SetMaterial(Material* material) { this->material = material;}
-      Mesh* GetMesh() const { return mesh; }
-      void SetMesh(Mesh* mesh) { this->mesh = mesh;}
+      const Ref<Material>& GetMaterial() const { return material; }
+      void SetMaterial(const Ref<Material>& material) { this->material = material;}
+      const Ref<Mesh>& GetMesh() const { return mesh; }
+      void SetMesh(const Ref<Mesh>& mesh) { this->mesh = mesh;}
       const Mat4& GetTransformationMatrix() const { return m_transformationMatrix; }
       virtual void Update(float timeElapsed);
       void UpdateTransformation();

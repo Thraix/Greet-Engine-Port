@@ -3,7 +3,6 @@
 #include <common/Types.h>
 
 #include <graphics/Renderable2D.h>
-#include <graphics/RenderablePoly.h>
 #include <graphics/buffers/VertexArray.h>
 #include <graphics/renderers/Renderer2D.h>
 
@@ -44,10 +43,8 @@ namespace Greet {
       BatchRenderer(const Ref<Shader>& shader);
       virtual ~BatchRenderer();
       void Begin() override;
+
       void Draw(const Renderable2D& renderable) override;
-#if 0
-      void Submit(const RenderablePoly* renderable);
-#endif
       void DrawRect(const Mat3& transform, uint color = 0xffffffff);
       void DrawRect(const Mat3& transform, const Ref<Texture2D>& texture, const Vec2f& texPos = Vec2f{0, 0}, const Vec2f& texSize = Vec2f{1, 1}, uint color = 0xffffffff);
 

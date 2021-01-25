@@ -40,7 +40,6 @@
 #include <graphics/RenderCommand.h>
 #include <graphics/Renderable.h>
 #include <graphics/Renderable2D.h>
-#include <graphics/RenderablePoly.h>
 #include <graphics/SceneManager.h>
 #include <graphics/Skybox.h>
 #include <graphics/Sprite.h>

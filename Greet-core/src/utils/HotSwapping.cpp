@@ -23,4 +23,12 @@ namespace Greet
       resource.second->CheckResource();
     }
   }
+
+  void HotSwapping::Destroy()
+  {
+    if(resources.size() > 0)
+    {
+      Log::Warning(resources.size(), " hotswapped resource", resources.size() > 1 ? "s were" : " was", " not freed.");
+    }
+  }
 }

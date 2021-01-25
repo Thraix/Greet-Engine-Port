@@ -15,12 +15,12 @@ namespace Greet {
   class BatchRenderer3D : public Renderer3D
   {
     private:
-      std::map<Material*, std::vector<EntityModel*>, Utils::ptr_less<Material>> m_map;
+      std::map<Ref<Material>, std::vector<Ref<EntityModel>>, RefLess<Material>> m_map;
     public:
       BatchRenderer3D()
         : Renderer3D(){}
 
-      void Submit(EntityModel* model);
+      void Submit(const Ref<EntityModel>& model);
       void Render(const Ref<Camera3D>& camera) const override;
       void Update(float timeElapsed) override;
   };

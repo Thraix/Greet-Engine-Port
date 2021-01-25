@@ -2,7 +2,7 @@
 
 namespace Greet {
 
-  void BatchRenderer3D::Submit(EntityModel* model)
+  void BatchRenderer3D::Submit(const Ref<EntityModel>& model)
   {
     if(model == NULL)
     {
@@ -13,7 +13,7 @@ namespace Greet {
     auto it = m_map.find(model->GetMaterial());
     if(it == m_map.end())
     {
-      std::vector<EntityModel*> vector{model};
+      std::vector<Ref<EntityModel>> vector{model};
       m_map.emplace(model->GetMaterial(), vector);
     }
     else

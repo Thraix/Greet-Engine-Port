@@ -22,4 +22,12 @@ namespace Greet
   {
     return std::make_shared<T>(args...);
   }
+
+  template<class T> struct RefLess
+  {
+    bool operator()(const Ref<T>& lhs, const Ref<T> rhs) const
+    {
+      return lhs.get() < rhs.get();
+    }
+  };
 }
