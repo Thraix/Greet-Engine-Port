@@ -1,5 +1,6 @@
 #pragma once
 
+#include <common/Memory.h>
 #include <graphics/Window.h>
 #include <utils/Timer.h>
 #include <event/Event.h>
@@ -8,6 +9,8 @@ namespace Greet {
 
   class App
   {
+    DELETE_COPY_AND_MOVE(App);
+
     protected:
       Timer* m_timer;
       uint m_fps;
@@ -19,6 +22,7 @@ namespace Greet {
       virtual ~App();
 
       virtual void Init() = 0;
+      virtual void Destruct() = 0;
       virtual void Tick() = 0;
       virtual void Update(float elapsedTime) = 0;
       virtual void Render() = 0;

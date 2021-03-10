@@ -42,6 +42,16 @@ namespace Greet
     Remeasure();
   }
 
+  void TreeView::Update(float timeElapsed)
+  {
+    if(tree->dirty)
+    {
+      tree->UpdateStyling(*this);
+      Remeasure();
+      tree->UnmarkDirty();
+    }
+  }
+
   void TreeView::Render(GUIRenderer* renderer) const
   {
     renderer->PushTranslation(GetTotalPadding());
@@ -102,13 +112,9 @@ namespace Greet
         {
           if(selected)
             selected->SetSelected(false, *this);
+          selected = nullptr;
         }
       }
-    }
-    if(tree->dirty)
-    {
-      tree->dirty = false;
-      Remeasure();
     }
   }
 
@@ -135,6 +141,16 @@ namespace Greet
   float TreeView::GetWrapHeight() const
   {
     return tree->GetHeight(*this);
+  }
+
+  bool TreeView::HasSelectedNode() const
+  {
+    return selected != nullptr;
+  }
+
+  TreeNode* TreeView::GetSelectedNode() const
+  {
+    return selected;
   }
 
   void TreeView::SetOnNodeSelectedCallback(OnNodeSelected callback)

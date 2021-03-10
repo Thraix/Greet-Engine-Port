@@ -1,5 +1,6 @@
 #pragma once
 
+#include <string_view>
 #include <string>
 #include <sstream>
 #include <vector>
@@ -150,7 +151,5 @@ namespace Greet {
       else
         return CharType::SYMBOL;
     }
-
-
   };
 }

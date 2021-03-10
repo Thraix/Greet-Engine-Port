@@ -6,12 +6,12 @@
 
 namespace Greet
 {
-  TreeNode::TreeNode(const std::string& name)
-    : name{name}
+  TreeNode::TreeNode(const std::string& name, bool open)
+    : name{name}, open{open}
   {}
 
-  TreeNode::TreeNode(const std::string& name, const std::initializer_list<TreeNode>& nodes)
-    : name{name}, childNodes{nodes}
+  TreeNode::TreeNode(const std::string& name, const std::initializer_list<TreeNode>& nodes, bool open)
+    : name{name}, childNodes{nodes}, open{open}
   {
     for(auto&& node : childNodes)
       node.parent = this;
@@ -230,6 +230,26 @@ namespace Greet
     open = !open;
     MarkDirty();
     view.CallOnNodeFlowChangeCallback(this);
+  }
+
+  TreeNode* TreeNode::GetChildNode(const std::string& name)
+  {
+    for(auto& child : childNodes)
+    {
+      if(child.name == name)
+        return &child;
+    }
+    return nullptr;
+  }
+
+  TreeNode* TreeNode::GetChildNode(std::function<bool(const TreeNode& node)> compare)
+  {
+    for(auto& child : childNodes)
+    {
+      if(compare(child))
+        return &child;
+    }
+    return nullptr;
   }
 
   void TreeNode::SetHovered(bool hover, const TreeView& view, bool hoverFlowController)

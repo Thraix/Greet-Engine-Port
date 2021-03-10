@@ -16,24 +16,16 @@ namespace Greet {
   {
   }
 
-  void Layer3D::PreRender()
+  void Layer3D::Render() const
   {
     if(skybox)
       skybox->Render(camera);
-  }
-
-  void Layer3D::Render() const
-  {
     for(auto&& renderer : renderers)
     {
       renderer->Begin(camera);
       renderer->Render(camera);
       renderer->End(camera);
     }
-  }
-
-  void Layer3D::PostRender()
-  {
   }
 
   void Layer3D::Update(float timeElapsed)
@@ -57,12 +49,12 @@ namespace Greet {
       camera->ViewportResize(event);
   }
 
-  void Layer3D::AddRenderer(Renderer3D* renderer)
+  void Layer3D::AddRenderer(const Ref<Renderer3D>& renderer)
   {
     renderers.push_back(renderer);
   }
 
-  void Layer3D::RemoveRenderer(Renderer3D* renderer)
+  void Layer3D::RemoveRenderer(const Ref<Renderer3D>& renderer)
   {
     for(auto it = renderers.begin(); it != renderers.end(); ++it)
     {

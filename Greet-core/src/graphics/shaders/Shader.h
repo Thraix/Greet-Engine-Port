@@ -15,17 +15,18 @@ namespace Greet {
 
   struct UniformData
   {
-    UniformData(const std::string& name, int arraySize, uint type)
-      : name{name}, arraySize{arraySize}, type{type}
+    UniformData(const std::string& name, int arraySize, uint type, int location)
+      : name{name}, arraySize{arraySize}, type{type}, location{location}
     {}
     std::string name;
     int arraySize;
     uint type;
-  };
+    int location;
 
-  struct ShaderDeleter final
-  {
-    void operator()(uint* id);
+    friend bool operator<(const UniformData& u1, const UniformData& u2)
+    {
+      return u1.name < u2.name;
+    }
   };
 
   class Shader final : public Resource
@@ -34,21 +35,22 @@ namespace Greet {
       uint m_shaderID;
       std::map<std::string, int> uniforms;
 
-    private:
+    public:
       Shader(const std::string& filename);
       Shader(const std::string& vertSrc, const std::string& fragSrc, const std::string& geomSrc);
       Shader(const std::string& vertSrc, const std::string& fragSrc);
 
+    private:
       uint Load(const std::string& filename);
       uint Load(const std::string& vertSrc, const std::string& fragSrc, const std::string& geomSrc, bool hasGeometry);
       uint Load(const std::string& vertSrc, const std::string& fragSrc);
       uint LoadError(uint program);
-      uint CompileAttachShader(const uint program, const std::string& shaderSrc, const uint shaderType, bool safeFail);
-      uint CompileShader(const uint program, const std::string& shaderSrc, const uint shaderType, bool safeFail);
-      void AttachShader(const uint program, uint shader);
+      uint CompileAttachShader(uint program, const std::string& shaderSrc, uint shaderType, bool safeFail);
+      uint CompileShader(uint program, const std::string& shaderSrc, uint shaderType, bool safeFail);
+      void AttachShader(uint program, uint shader);
       int GetUniformLocation(const std::string& name) const;
-      std::map<std::string, int> GetUniforms(const uint program);
-      std::vector<UniformData> GetListOfUniforms(uint program);
+      std::map<std::string, int> GetUniforms(uint program) const;
+      std::set<UniformData> GetListOfUniforms(uint program) const;
       void MoveUniforms(uint program, uint oldProgram);
 
     public:
@@ -78,8 +80,9 @@ namespace Greet {
       void SetUniformMat4(const std::string& name, const Mat4 &value) const;
       bool operator<(const Shader& s);
     private:
-      static std::array<std::string,3> ReadFile(const std::string& filename);
-      static std::array<std::string,3> ReadStream(std::istream& stream);
+      static std::array<std::pair<std::string, bool>, 3> ReadFile(const std::string& filename);
+      static std::array<std::pair<std::string, bool>, 3> ReadStream(std::istream& stream);
+      static void ReadLineToStringStream(std::stringstream ss[3], const std::string& line, uint shaderIndex);
     public:
       static Ref<Shader> FromFile(const std::string& shaderPath);
       static Ref<Shader> FromFile(const std::string& vertPath, const std::string& fragPath);

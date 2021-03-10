@@ -9,8 +9,6 @@ namespace Greet {
 
   class Texture2D : public Texture, public Resource
   {
-    public:
-      friend class FrameBufferObject;
     private:
       uint width;
       uint height;
@@ -24,10 +22,6 @@ namespace Greet {
       Texture2D(TextureParams params = TextureParams());
 
     public:
-      Texture2D(Texture2D&&) = default;
-      Texture2D& operator=(Texture2D&&) = default;
-
-      virtual ~Texture2D();
 
       void SetPixels(const std::vector<byte>& pixels) const;
       void ReloadResource() override;

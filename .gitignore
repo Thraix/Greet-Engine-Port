@@ -1,10 +1,9 @@
-**/bin/*.a
-**/bin/*.so*
-**/bin/intermediates/*
+**/bin/*
 **screenshot*.png
 *.logging
 *.swp
 *.swo
+*.so
 deps/libs/*
 *Makefile.backup
 installation/glfw*

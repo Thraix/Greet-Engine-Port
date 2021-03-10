@@ -1,0 +1,4 @@
+[texture2d]
+filepath=res/textures/block.png
+filter=nearest
+wrap=clampEdge

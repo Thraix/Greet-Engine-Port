@@ -15,12 +15,12 @@ namespace Greet {
 
   enum class TextureWrap
   {
-    NONE,
-    CLAMP_TO_EDGE,
-    CLAMP_TO_BORDER,
-    MIRRORED_REPEAT,
-    REPEAT,
-    MIRROR_CLAMP_TO_EDGE
+    NONE = 0,
+    CLAMP_TO_EDGE = 0x812F,
+    CLAMP_TO_BORDER = 0x812D,
+    MIRRORED_REPEAT = 0x8370,
+    REPEAT = 0x2901,
+    MIRROR_CLAMP_TO_EDGE = 0x8743
   };
 
   enum class TextureInternalFormat

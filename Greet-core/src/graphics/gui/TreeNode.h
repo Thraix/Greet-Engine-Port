@@ -42,8 +42,8 @@ namespace Greet
 
     public:
 
-      TreeNode(const std::string& name);
-      TreeNode(const std::string& name, const std::initializer_list<TreeNode>& nodes);
+      TreeNode(const std::string& name, bool open = true);
+      TreeNode(const std::string& name, const std::initializer_list<TreeNode>& nodes, bool open = true);
 
       TreeNode(const TreeNode& node);
       TreeNode(TreeNode&& node);
@@ -66,7 +66,13 @@ namespace Greet
       bool IsLeaf() const { return childNodes.empty(); }
       bool IsRoot() const { return parent == nullptr; }
       bool IsOpen() const { return open && !IsLeaf(); }
+
       const std::string& GetName() const { return name; }
+      void SetName(const std::string& asName) { name = asName; }
+
+      TreeNode* GetParent() const { return parent; }
+      TreeNode* GetChildNode(const std::string& name);
+      TreeNode* GetChildNode(std::function<bool(const TreeNode& node)> compare);
 
       void ToggleOpen(TreeView& view);
       void SetHovered(bool hover, const TreeView& view, bool hoverFlowController);

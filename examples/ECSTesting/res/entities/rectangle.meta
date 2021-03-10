@@ -1,0 +1,12 @@
+[TagComponent]
+tag=Square2D
+
+[Transform2DComponent]
+position=100 200
+scale=100 100
+rotation=45
+
+[SpriteComponent]
+texture=res/textures/sprite.meta
+texturePos=0 0
+textureSize=16 16

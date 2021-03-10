@@ -194,36 +194,38 @@ namespace Greet {
     normals[22] = Vec3f(0.0f, 0.0f, 1.0f);
     normals[23] = Vec3f(0.0f, 0.0f, 1.0f);
 
+
+    float epsilon = 0.0001;
     Pointer<Vec2f> texCoords = Pointer<Vec2f>(24);
-    texCoords[0] = Vec2f(0.00f, 0.33f);
-    texCoords[1] = Vec2f(0.00f, 0.67f);
-    texCoords[2] = Vec2f(0.25f, 0.67f);
-    texCoords[3] = Vec2f(0.25f, 0.33f);
+    texCoords[0] = Vec2f(0.00f, 1.0f / 3.0f + epsilon);
+    texCoords[1] = Vec2f(0.00f, 2.0f / 3.0f - epsilon);
+    texCoords[2] = Vec2f(0.25f, 2.0f / 3.0f - epsilon);
+    texCoords[3] = Vec2f(0.25f, 1.0f / 3.0f + epsilon);
 
-    texCoords[4] = Vec2f(0.50f, 0.33f);
-    texCoords[5] = Vec2f(0.50f, 0.67f);
-    texCoords[6] = Vec2f(0.75f, 0.67f);
-    texCoords[7] = Vec2f(0.75f, 0.33f);
+    texCoords[4] = Vec2f(0.75f, 1.0f / 3.0f + epsilon);
+    texCoords[5] = Vec2f(0.75f, 2.0f / 3.0f - epsilon);
+    texCoords[6] = Vec2f(0.50f, 2.0f / 3.0f - epsilon);
+    texCoords[7] = Vec2f(0.50f, 1.0f / 3.0f + epsilon);
 
-    texCoords[8]  = Vec2f(0.25f, 0.33f);
-    texCoords[9]  = Vec2f(0.25f, 0.00f);
-    texCoords[10] = Vec2f(0.50f, 0.00f);
-    texCoords[11] = Vec2f(0.50f, 0.33f);
+    texCoords[8]  = Vec2f(0.25f, 1.0f / 3.0f - epsilon);
+    texCoords[9]  = Vec2f(0.25f, 0.00f + epsilon);
+    texCoords[10] = Vec2f(0.50f, 0.00f + epsilon);
+    texCoords[11] = Vec2f(0.50f, 1.0f / 3.0f - epsilon);
 
-    texCoords[12] = Vec2f(0.25f, 1.00f);
-    texCoords[13] = Vec2f(0.25f, 0.67f);
-    texCoords[14] = Vec2f(0.50f, 0.67f);
-    texCoords[15] = Vec2f(0.50f, 1.00f);
+    texCoords[12] = Vec2f(0.25f, 1.00f - epsilon);
+    texCoords[13] = Vec2f(0.25f, 2.0f / 3.0f + epsilon);
+    texCoords[14] = Vec2f(0.50f, 2.0f / 3.0f + epsilon);
+    texCoords[15] = Vec2f(0.50f, 1.00f - epsilon);
 
-    texCoords[16] = Vec2f(1.00f, 0.33f);
-    texCoords[17] = Vec2f(0.75f, 0.33f);
-    texCoords[18] = Vec2f(0.75f, 0.67f);
-    texCoords[19] = Vec2f(1.00f, 0.67f);
+    texCoords[16] = Vec2f(1.00f, 1.0f / 3.0f + epsilon);
+    texCoords[17] = Vec2f(0.75f, 1.0f / 3.0f + epsilon);
+    texCoords[18] = Vec2f(0.75f, 2.0f / 3.0f - epsilon);
+    texCoords[19] = Vec2f(1.00f, 2.0f / 3.0f - epsilon);
 
-    texCoords[20] = Vec2f(0.25f, 0.33f);
-    texCoords[21] = Vec2f(0.50f, 0.33f);
-    texCoords[22] = Vec2f(0.50f, 0.67f);
-    texCoords[23] = Vec2f(0.25f, 0.67f);
+    texCoords[20] = Vec2f(0.25f, 1.0f / 3.0f + epsilon);
+    texCoords[21] = Vec2f(0.50f, 1.0f / 3.0f + epsilon);
+    texCoords[22] = Vec2f(0.50f, 2.0f / 3.0f - epsilon);
+    texCoords[23] = Vec2f(0.25f, 2.0f / 3.0f - epsilon);
 
 
     Pointer<uint> indices{

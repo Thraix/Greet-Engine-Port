@@ -59,5 +59,6 @@ namespace Greet{
       }
 
       const Ref<Shader>& GetShader() const { return shader; }
+      virtual void SetShader(const Ref<Shader>& aShader) { shader = aShader; }
   };
 }

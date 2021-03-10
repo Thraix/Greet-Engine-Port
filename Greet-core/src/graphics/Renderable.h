@@ -18,9 +18,9 @@ namespace Greet {
       {
 
       }
-      virtual void Begin(Renderer2D* renderer) const {}
-      virtual void Render(Renderer2D* renderer) const = 0;
-      virtual void End(Renderer2D* renderer) const {}
+      virtual void Begin(const Ref<Renderer2D>& renderer) const {}
+      virtual void Render(const Ref<Renderer2D>& renderer) const = 0;
+      virtual void End(const Ref<Renderer2D>& renderer) const {}
 
       virtual bool Update(float timeElapsed) = 0;
 

@@ -104,7 +104,7 @@ namespace Greet {
     return result;
   }
 
-  Mat4 Mat4::TransformationMatrix(const Vec3f& position, const Vec3f& rotation, const Vec3f& scale)
+  Mat4 Mat4::TransformationMatrix(const Vec3f& position, const Vec3f& scale, const Vec3f& rotation)
   {
     return
       Mat4::Translate(position) *
@@ -117,9 +117,9 @@ namespace Greet {
   Mat4 Mat4::ViewMatrix(const Vec3f& position, const Vec3f& rotation)
   {
     return
-      Mat4::RotateX(rotation.x) *
-      Mat4::RotateY(rotation.y) *
-      Mat4::RotateZ(rotation.z) *
+      Mat4::RotateX(-rotation.x) *
+      Mat4::RotateY(-rotation.y) *
+      Mat4::RotateZ(-rotation.z) *
       Mat4::Translate(-position.x, -position.y, -position.z);
   }
 
@@ -395,6 +395,138 @@ namespace Greet {
     det = 1.0 / det;
 
     Mat4 result = inv;
+
+    for (i = 0; i < 16; i++)
+      result.elements[i] = temp[i] * det;
+
+    return result;
+  }
+
+  Mat4 Mat4::InverseTranspose(const Mat4& inv)
+  {
+    float temp[FLOATS], det;
+    int i;
+
+    temp[0] = inv.elements[5] * inv.elements[10] * inv.elements[15] -
+      inv.elements[5] * inv.elements[11] * inv.elements[14] -
+      inv.elements[9] * inv.elements[6] * inv.elements[15] +
+      inv.elements[9] * inv.elements[7] * inv.elements[14] +
+      inv.elements[13] * inv.elements[6] * inv.elements[11] -
+      inv.elements[13] * inv.elements[7] * inv.elements[10];
+
+    temp[1] = -inv.elements[4] * inv.elements[10] * inv.elements[15] +
+      inv.elements[4] * inv.elements[11] * inv.elements[14] +
+      inv.elements[8] * inv.elements[6] * inv.elements[15] -
+      inv.elements[8] * inv.elements[7] * inv.elements[14] -
+      inv.elements[12] * inv.elements[6] * inv.elements[11] +
+      inv.elements[12] * inv.elements[7] * inv.elements[10];
+
+    temp[2] = inv.elements[4] * inv.elements[9] * inv.elements[15] -
+      inv.elements[4] * inv.elements[11] * inv.elements[13] -
+      inv.elements[8] * inv.elements[5] * inv.elements[15] +
+      inv.elements[8] * inv.elements[7] * inv.elements[13] +
+      inv.elements[12] * inv.elements[5] * inv.elements[11] -
+      inv.elements[12] * inv.elements[7] * inv.elements[9];
+
+    temp[3] = -inv.elements[4] * inv.elements[9] * inv.elements[14] +
+      inv.elements[4] * inv.elements[10] * inv.elements[13] +
+      inv.elements[8] * inv.elements[5] * inv.elements[14] -
+      inv.elements[8] * inv.elements[6] * inv.elements[13] -
+      inv.elements[12] * inv.elements[5] * inv.elements[10] +
+      inv.elements[12] * inv.elements[6] * inv.elements[9];
+
+    temp[4] = -inv.elements[1] * inv.elements[10] * inv.elements[15] +
+      inv.elements[1] * inv.elements[11] * inv.elements[14] +
+      inv.elements[9] * inv.elements[2] * inv.elements[15] -
+      inv.elements[9] * inv.elements[3] * inv.elements[14] -
+      inv.elements[13] * inv.elements[2] * inv.elements[11] +
+      inv.elements[13] * inv.elements[3] * inv.elements[10];
+
+    temp[5] = inv.elements[0] * inv.elements[10] * inv.elements[15] -
+      inv.elements[0] * inv.elements[11] * inv.elements[14] -
+      inv.elements[8] * inv.elements[2] * inv.elements[15] +
+      inv.elements[8] * inv.elements[3] * inv.elements[14] +
+      inv.elements[12] * inv.elements[2] * inv.elements[11] -
+      inv.elements[12] * inv.elements[3] * inv.elements[10];
+
+    temp[6] = -inv.elements[0] * inv.elements[9] * inv.elements[15] +
+      inv.elements[0] * inv.elements[11] * inv.elements[13] +
+      inv.elements[8] * inv.elements[1] * inv.elements[15] -
+      inv.elements[8] * inv.elements[3] * inv.elements[13] -
+      inv.elements[12] * inv.elements[1] * inv.elements[11] +
+      inv.elements[12] * inv.elements[3] * inv.elements[9];
+
+    temp[7] = inv.elements[0] * inv.elements[9] * inv.elements[14] -
+      inv.elements[0] * inv.elements[10] * inv.elements[13] -
+      inv.elements[8] * inv.elements[1] * inv.elements[14] +
+      inv.elements[8] * inv.elements[2] * inv.elements[13] +
+      inv.elements[12] * inv.elements[1] * inv.elements[10] -
+      inv.elements[12] * inv.elements[2] * inv.elements[9];
+
+    temp[8] = inv.elements[1] * inv.elements[6] * inv.elements[15] -
+      inv.elements[1] * inv.elements[7] * inv.elements[14] -
+      inv.elements[5] * inv.elements[2] * inv.elements[15] +
+      inv.elements[5] * inv.elements[3] * inv.elements[14] +
+      inv.elements[13] * inv.elements[2] * inv.elements[7] -
+      inv.elements[13] * inv.elements[3] * inv.elements[6];
+
+    temp[9] = -inv.elements[0] * inv.elements[6] * inv.elements[15] +
+      inv.elements[0] * inv.elements[7] * inv.elements[14] +
+      inv.elements[4] * inv.elements[2] * inv.elements[15] -
+      inv.elements[4] * inv.elements[3] * inv.elements[14] -
+      inv.elements[12] * inv.elements[2] * inv.elements[7] +
+      inv.elements[12] * inv.elements[3] * inv.elements[6];
+
+    temp[10] = inv.elements[0] * inv.elements[5] * inv.elements[15] -
+      inv.elements[0] * inv.elements[7] * inv.elements[13] -
+      inv.elements[4] * inv.elements[1] * inv.elements[15] +
+      inv.elements[4] * inv.elements[3] * inv.elements[13] +
+      inv.elements[12] * inv.elements[1] * inv.elements[7] -
+      inv.elements[12] * inv.elements[3] * inv.elements[5];
+
+    temp[11] = -inv.elements[0] * inv.elements[5] * inv.elements[14] +
+      inv.elements[0] * inv.elements[6] * inv.elements[13] +
+      inv.elements[4] * inv.elements[1] * inv.elements[14] -
+      inv.elements[4] * inv.elements[2] * inv.elements[13] -
+      inv.elements[12] * inv.elements[1] * inv.elements[6] +
+      inv.elements[12] * inv.elements[2] * inv.elements[5];
+
+    temp[12] = -inv.elements[1] * inv.elements[6] * inv.elements[11] +
+      inv.elements[1] * inv.elements[7] * inv.elements[10] +
+      inv.elements[5] * inv.elements[2] * inv.elements[11] -
+      inv.elements[5] * inv.elements[3] * inv.elements[10] -
+      inv.elements[9] * inv.elements[2] * inv.elements[7] +
+      inv.elements[9] * inv.elements[3] * inv.elements[6];
+
+    temp[13] = inv.elements[0] * inv.elements[6] * inv.elements[11] -
+      inv.elements[0] * inv.elements[7] * inv.elements[10] -
+      inv.elements[4] * inv.elements[2] * inv.elements[11] +
+      inv.elements[4] * inv.elements[3] * inv.elements[10] +
+      inv.elements[8] * inv.elements[2] * inv.elements[7] -
+      inv.elements[8] * inv.elements[3] * inv.elements[6];
+
+    temp[14] = -inv.elements[0] * inv.elements[5] * inv.elements[11] +
+      inv.elements[0] * inv.elements[7] * inv.elements[9] +
+      inv.elements[4] * inv.elements[1] * inv.elements[11] -
+      inv.elements[4] * inv.elements[3] * inv.elements[9] -
+      inv.elements[8] * inv.elements[1] * inv.elements[7] +
+      inv.elements[8] * inv.elements[3] * inv.elements[5];
+
+    temp[15] = inv.elements[0] * inv.elements[5] * inv.elements[10] -
+      inv.elements[0] * inv.elements[6] * inv.elements[9] -
+      inv.elements[4] * inv.elements[1] * inv.elements[10] +
+      inv.elements[4] * inv.elements[2] * inv.elements[9] +
+      inv.elements[8] * inv.elements[1] * inv.elements[6] -
+      inv.elements[8] * inv.elements[2] * inv.elements[5];
+
+    det = inv.elements[0] * temp[0] + inv.elements[1] * temp[4] + inv.elements[2] * temp[8] + inv.elements[3] * temp[12];
+
+    if (det == 0)
+      return inv;
+
+    det = 1.0 / det;
+
+    Mat4 result;
 
     for (i = 0; i < 16; i++)
       result.elements[i] = temp[i] * det;

@@ -32,10 +32,6 @@ namespace Greet {
   {
   }
 
-  Texture2D::~Texture2D()
-  {
-  }
-
   void Texture2D::LoadTexture(const std::string& filename)
   {
     auto res = ImageUtils::LoadImage(filename.c_str(), &width,&height);
@@ -49,6 +45,11 @@ namespace Greet {
     {
       GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,  (uint)params.filter));
       GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, (uint)params.filter));
+    }
+    if(params.wrap != TextureWrap::NONE)
+    {
+      GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T,  (uint)params.wrap));
+      GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, (uint)params.wrap));
     }
     GLCall(glTexImage2D(GL_TEXTURE_2D, 0, (uint)params.internalFormat, width, height, 0, (uint)params.internalFormat, GL_UNSIGNED_BYTE, bits.data()));
     Disable();

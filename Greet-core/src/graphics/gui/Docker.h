@@ -20,7 +20,7 @@ namespace Greet {
       DockerSplit* split;
       DockerTab* grabbedTab;
       float grabbedDistance = 0;
-      bool childrenChanged;
+      bool childrenChanged = false;
 
       Button* tabButton;
       Component* splitIcon;

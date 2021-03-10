@@ -8,15 +8,16 @@
 
 namespace Greet {
 
-  GUIScene::GUIScene(GUIRenderer* renderer)
-    : renderer(renderer), projectionMatrix(Mat3::OrthographicViewport())
+  GUIScene::GUIScene()
+    : renderer{new GUIRenderer()}, projectionMatrix(Mat3::OrthographicViewport())
   {
+    focusQueue = nullptr;
     focused = nullptr;
 
     renderer->GetShader()->Enable();
     renderer->GetShader()->SetUniformMat3("projectionMatrix", projectionMatrix);
     renderer->GetShader()->Disable();
-}
+  }
 
   void GUIScene::OnEvent(Event& event)
   {
@@ -98,22 +99,24 @@ namespace Greet {
     }
   }
 
-  void GUIScene::PreRender()
+  void GUIScene::BeginRender() const
   {
     renderer->Begin();
   }
 
   void GUIScene::Render() const
   {
+    BeginRender();
     for (auto it = frames.begin(); it != frames.end(); ++it)
     {
-      (*it)->PreRender(renderer, Vec2f(0,0));
-      (*it)->RenderHandle(renderer);
-      (*it)->PostRender(renderer);
+      (*it)->PreRender(renderer.get(), Vec2f(0,0));
+      (*it)->RenderHandle(renderer.get());
+      (*it)->PostRender(renderer.get());
     }
+    EndRender();
   }
 
-  void GUIScene::PostRender()
+  void GUIScene::EndRender() const
   {
     renderer->End();
     renderer->Draw();

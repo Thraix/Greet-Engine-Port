@@ -24,6 +24,6 @@ namespace Greet {
 
       void SetTexPos(const Vec2f& texSize);
 
-      inline const Vec2f& GetTexPos() const override { return texPos2; }
+      const Vec2f& GetTexPos() const override { return texPos2; }
   };
 }

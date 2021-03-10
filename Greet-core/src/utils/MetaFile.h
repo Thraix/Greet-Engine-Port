@@ -63,6 +63,7 @@ namespace Greet
       std::map<std::string, std::vector<MetaFileClass>> classes; // map<class, map<variable, value>>
 
     public:
+      MetaFile() {}
       MetaFile(const std::string& filepath)
         : filepath{filepath}
       {
@@ -87,6 +88,15 @@ namespace Greet
       bool HasMetaClass(const std::string& className)
       {
         return classes.find(className) != classes.end();
+      }
+
+      std::vector<MetaFileClass>& GetMetaClass(const std::string& className)
+      {
+        static std::vector<MetaFileClass> empty;
+        auto it = classes.find(className);
+        if(it != classes.end())
+          return it->second;
+        return empty;
       }
 
       const std::vector<MetaFileClass>& GetMetaClass(const std::string& className) const

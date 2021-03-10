@@ -17,6 +17,13 @@
 #include <drivers/DriverListener.h>
 #include <drivers/LinearDriver.h>
 #include <drivers/RectDriver.h>
+#include <ecs/ComponentPool.h>
+#include <ecs/Config.h>
+#include <ecs/ECSComponents.h>
+#include <ecs/ECSManager.h>
+#include <ecs/ECSScene.h>
+#include <ecs/Entity.h>
+#include <ecs/EntitySet.h>
 #include <event/Event.h>
 #include <event/EventDispatcher.h>
 #include <event/JoystickEvent.h>
@@ -33,7 +40,6 @@
 #include <graphics/RenderCommand.h>
 #include <graphics/Renderable.h>
 #include <graphics/Renderable2D.h>
-#include <graphics/RenderablePoly.h>
 #include <graphics/SceneManager.h>
 #include <graphics/Skybox.h>
 #include <graphics/Sprite.h>
@@ -122,6 +128,8 @@
 #include <math/Vec2.h>
 #include <math/Vec3.h>
 #include <math/Vec4.h>
+#include <scripting/NativeScript.h>
+#include <scripting/NativeScriptHandler.h>
 #include <utils/AABBUtils.h>
 #include <utils/ColorUtils.h>
 #include <utils/ErrorHandle.h>
@@ -130,6 +138,7 @@
 #include <utils/ImageUtils.h>
 #include <utils/LogUtils.h>
 #include <utils/MetaFile.h>
+#include <utils/MetaFileLoading.h>
 #include <utils/Noise.h>
 #include <utils/OBJUtils.h>
 #include <utils/Resource.h>

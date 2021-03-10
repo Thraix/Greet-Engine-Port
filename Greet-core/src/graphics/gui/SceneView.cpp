@@ -25,13 +25,13 @@ namespace Greet
 
   void SceneView::Render(GUIRenderer* renderer) const
   {
-    guiScene->PostRender();
+    guiScene->EndRender();
     RenderCommand::PushViewportStack(GetRealPosition(), GetContentSize());
 
     sceneManager.Render();
 
     RenderCommand::PopViewportStack();
-    guiScene->PreRender();
+    guiScene->BeginRender();
   }
 
   void SceneView::OnEventHandler(Event& event, const Vec2f& componentPos)
@@ -74,7 +74,7 @@ namespace Greet
     return sceneManager;
   }
 
-  void SceneView::Add2DScene(Scene* scene, const std::string& name)
+  void SceneView::Add2DScene(const Ref<Scene>& scene, const std::string& name)
   {
     sceneManager.Add2DScene(scene, name);
     Vec2 realPos = GetRealPosition();
@@ -84,7 +84,7 @@ namespace Greet
     RenderCommand::PopViewportStack();
   }
 
-  void SceneView::Add3DScene(Scene* scene, const std::string& name)
+  void SceneView::Add3DScene(const Ref<Scene>& scene, const std::string& name)
   {
     sceneManager.Add3DScene(scene, name);
     Vec2 realPos = GetRealPosition();
@@ -94,22 +94,22 @@ namespace Greet
     RenderCommand::PopViewportStack();
   }
 
-  Scene* SceneView::Remove2DScene(const std::string& name)
+  const Ref<Scene>& SceneView::Remove2DScene(const std::string& name)
   {
     return sceneManager.Remove2DScene(name);
   }
 
-  Scene* SceneView::Remove3DScene(const std::string& name)
+  const Ref<Scene>& SceneView::Remove3DScene(const std::string& name)
   {
     return sceneManager.Remove3DScene(name);
   }
 
-  Scene* SceneView::Get2DScene(const std::string& name) const
+  const Ref<Scene>& SceneView::Get2DScene(const std::string& name) const
   {
     return sceneManager.Get2DScene(name);
   }
 
-  Scene* SceneView::Get3DScene(const std::string& name) const
+  const Ref<Scene>& SceneView::Get3DScene(const std::string& name) const
   {
     return sceneManager.Get3DScene(name);
   }

@@ -32,6 +32,7 @@ namespace Greet {
       Vec2f m_sizeOrigin;
 
       GUIMouseListener* m_mouseListener;
+      MetaFile styleFile;
 
     public:
       bool visible;
@@ -69,6 +70,11 @@ namespace Greet {
       virtual void OnViewportResize(int width, int height);
 
       virtual void ChildChangedFocus(bool focused) override;
+
+      const MetaFile& GetStylingFile() const
+      {
+        return styleFile;
+      }
 
   };
 }

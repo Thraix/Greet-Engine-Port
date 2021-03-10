@@ -48,6 +48,7 @@ namespace Greet
 
       void SetTreeNode(TreeNode* node);
 
+      virtual void Update(float timeElapsed) override;
       virtual void Render(GUIRenderer* renderer) const override;
 
       virtual void OnEvent(Event& event, const Vec2f& componentPos) override;
@@ -57,6 +58,9 @@ namespace Greet
 
       virtual float GetWrapWidth() const override;
       virtual float GetWrapHeight() const override;
+
+      bool HasSelectedNode() const;
+      TreeNode* GetSelectedNode() const;
 
       void SetOnNodeSelectedCallback(OnNodeSelected callback);
       void SetOnNodeFlowChangedCallback(OnNodeFlowChanged callback);

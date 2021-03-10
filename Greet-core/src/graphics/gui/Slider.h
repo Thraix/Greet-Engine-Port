@@ -14,21 +14,22 @@ namespace Greet
 
       // The slider indicator component can be any component really
       Component* sliderComponent;
-      float value;
+      float value = 0;
       bool clampSlider = true;
       bool snapSlider = false;
       float minValue;
       float maxValue;
       float stepSize;
 
-      float minPos;
-      float maxPos;
+      float minPos = 0;
+      float maxPos = 1;
 
       OnValueChangeCallback onValueChangeCallback;
 
       //////////////////
       // Style variables
       bool vertical = false;
+      bool reverse = false;
 
 
 

@@ -13,35 +13,16 @@ namespace Greet
 {
   struct HotSwapping
   {
+    DELETE_CONSTRUCTOR_DESTRUCTOR(HotSwapping);
+
     private:
       static std::map<uint, Resource*> resources;
 
     public:
-      static void AddHotswapResource(Resource* res)
-      {
-        resources.emplace(res->id, res);
-      }
+      static void AddHotswapResource(Resource* res);
+      static void RemoveHotswapResource(Resource* res);
+      static void CheckResources();
 
-      static void RemoveHotswapResource(Resource* res)
-      {
-        auto result = resources.erase(res->id);
-      }
-
-      static void MoveHotswapResource(Resource* res)
-      {
-        auto it = resources.find(res->id);
-        if(it != resources.end())
-        {
-          it->second = res;
-        }
-      }
-
-      static void CheckResources()
-      {
-        for(auto&& resource : resources)
-        {
-          resource.second->CheckResource();
-        }
-      }
+      static void Destroy();
   };
 }

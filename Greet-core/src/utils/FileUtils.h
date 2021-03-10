@@ -39,7 +39,7 @@ namespace Greet {
       }
     };
 
-    static void print_working_directory()
+    static void PrintWorkingDirectory()
     {
       char cCurrentPath[FILENAME_MAX];
 
@@ -57,7 +57,7 @@ namespace Greet {
       return TimeModified{attrib.st_mtim};
     }
 
-    static std::string read_file(const std::string& filepath)
+    static std::string ReadFile(const std::string& filepath)
     {
       FILE *file = fopen(filepath.c_str(), "rt");
       if (!file)
@@ -77,7 +77,7 @@ namespace Greet {
       return result;
     }
 
-    static void write_file(const std::string& filepath, const std::string& write)
+    static void WriteFile(const std::string& filepath, const std::string& write)
     {
       FILE *file = fopen(filepath.c_str(),"wt");
       fseek(file, 0, SEEK_END);
@@ -85,7 +85,7 @@ namespace Greet {
       fclose(file);
     }
 
-    static bool file_exists(const std::string& filepath)
+    static bool FileExist(const std::string& filepath)
     {
       if (FILE *file = fopen(filepath.c_str(), "r"))
       {
@@ -96,6 +96,14 @@ namespace Greet {
       {
         return false;
       }
+    }
+
+    static std::string ReplaceExtension(const std::string& file, const std::string& ext)
+    {
+      size_t pos = file.find_last_of('.');
+      if(pos == std::string::npos)
+        return file + "." + ext;
+      return file.substr(0, pos + 1) + ext;
     }
   };
 }

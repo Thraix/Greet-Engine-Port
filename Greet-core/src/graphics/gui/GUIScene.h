@@ -22,25 +22,25 @@ namespace Greet {
       Mat3 projectionMatrix;
       std::list<Frame*> frames;
       Component* focused;
-      GUIRenderer* renderer;
+      Ref<GUIRenderer> renderer;
 
       std::queue<Frame*> addQueue;
       std::queue<Frame*> removeQueue;
       Component* focusQueue;
 
     public:
-      GUIScene(GUIRenderer* renderer);
+      GUIScene();
 
-      void OnEvent(Event& event);
+      void OnEvent(Event& event) override;
       void OnMousePressEventHandler(MousePressEvent& event);
       void OnMouseMoveEventHandler(MouseMoveEvent& event);
       void OnMouseReleaseEventHandler(MouseReleaseEvent& event);
-      void ViewportResize(ViewportResizeEvent& event);
+      void ViewportResize(ViewportResizeEvent& event) override;
 
-      void PreRender();
-      void Render() const;
-      void PostRender();
-      void Update(float timeElapsed);
+      void BeginRender() const;
+      void Render() const override;
+      void EndRender() const;
+      void Update(float timeElapsed) override;
 
       void RequestFocusQueued(Component* component);
       void AddFrameQueued(Frame* frame);

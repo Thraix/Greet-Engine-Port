@@ -4,18 +4,6 @@
 #include <logging/LogLevel.h>
 #include <string.h>
 
-#define __FILENAME__ (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)
-#if _DEBUG
-#define ASSERT(x,...) \
-if(!(x)) \
-{ \
-  Greet::Log::LogAt(LogLevel::Error(),"[ASSERT]","[",__FILENAME__, "::", __func__,":", __LINE__, "] " __VA_ARGS__);\
-  abort();\
-}
-#else
-#define ASSERT(x,...)
-#endif
-
 namespace Greet {
   /*
      Singleton class for logging
@@ -58,7 +46,7 @@ namespace Greet {
       template <typename... Args>
       static void Info(const Args&... args)
       {
-        m_log.m_logger.Log(LogLevel::Information(), "[INF] ", args...);
+        m_log.m_logger.Log(LogLevel::Information(), "[Greet][INF] ", args...);
       }
 
       /*
@@ -67,7 +55,7 @@ namespace Greet {
       template <typename... Args>
       static void Warning(const Args&... args)
       {
-        m_log.m_logger.Log(LogLevel::Warning(), "[WRN] ", args...);
+        m_log.m_logger.Log(LogLevel::Warning(), "\e[0;33m[Greet][WRN] ", args..., "\e[m");
       }
 
       /*
@@ -76,7 +64,7 @@ namespace Greet {
       template <typename... Args>
       static void Error(const Args&... args)
       {
-        m_log.m_logger.Log(LogLevel::Error(),"[ERR] ",args...);
+        m_log.m_logger.Log(LogLevel::Error(),"\e[0;31m[Greet][ERR] ",args..., "\e[m");
       }
 
       /*
@@ -85,7 +73,19 @@ namespace Greet {
       template <typename... Args>
       static void LogAt(const LogLevel& level, const Args&... args)
       {
-        m_log.m_logger.Log(level, args...);
+        m_log.m_logger.Log(level, "[Greet]", args...);
       }
   };
 }
+
+#define __FILENAME__ (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)
+#if _DEBUG
+#define ASSERT(x,...) \
+if(!(x)) \
+{ \
+  Greet::Log::LogAt(Greet::LogLevel::Error(),"[ASSERT]","[",__FILENAME__, "::", __func__,":", __LINE__, "] " __VA_ARGS__);\
+  abort();\
+}
+#else
+#define ASSERT(x,...)
+#endif

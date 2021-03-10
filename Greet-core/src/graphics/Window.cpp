@@ -1,18 +1,21 @@
 #include "Window.h"
 
-#include <input/InputDefines.h>
-#include <internal/GreetGL.h>
-#include <graphics/fonts/FontManager.h>
-#include <graphics/atlas/AtlasManager.h>
-#include <graphics/RenderCommand.h>
 #include <event/EventDispatcher.h>
-#include <graphics/gui/ComponentFactory.h>
-#include <event/WindowEvent.h>
-#include <event/ViewportEvent.h>
+#include <event/JoystickEvent.h>
 #include <event/KeyEvent.h>
 #include <event/MouseEvent.h>
-#include <event/JoystickEvent.h>
+#include <event/ViewportEvent.h>
+#include <event/WindowEvent.h>
+#include <graphics/RenderCommand.h>
+#include <graphics/atlas/AtlasManager.h>
+#include <graphics/fonts/FontManager.h>
+#include <graphics/gui/ComponentFactory.h>
 #include <input/Input.h>
+#include <input/InputDefines.h>
+#include <internal/GreetGL.h>
+#include <scripting/NativeScriptHandler.h>
+#include <graphics/GlobalSceneManager.h>
+#include <utils/HotSwapping.h>
 
 namespace Greet {
 
@@ -56,10 +59,12 @@ namespace Greet {
   {
     FontManager::Destroy();
     AtlasManager::Destroy();
-    TextureManager::CleanupUnused();
+    TextureManager::Cleanup();
     ComponentFactory::Cleanup();
     FrameFactory::Cleanup();
     joysticks.clear();
+    GlobalSceneManager::Destroy();
+    HotSwapping::Destroy();
     glfwTerminate();
   }
 
@@ -72,8 +77,8 @@ namespace Greet {
     // so that WM_CLASS property contain the engine.
     // Generally just to make i3 window managing work the same for all applications.
     window = glfwCreateWindow(width, height, ("Greet-Engine - " + title).c_str(), NULL, NULL);
-    SetTitle(title);
     ASSERT(window,"Failed to initialize window!");
+    SetTitle(title);
     //glfwSetInputMode(window,GLFW_CURSOR,GLFW_CURSOR_HIDDEN);
     //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glfwMakeContextCurrent(window);
@@ -93,9 +98,11 @@ namespace Greet {
     glfwSwapInterval(0);
     ASSERT(glewInit() == GLEW_OK,"Glew failed to init.");
     RenderCommand::Init();
+    NativeScriptHandler::LoadIncludePaths();
 
     Log::Info("OpenGL Version: ", glGetString(GL_VERSION));
     Log::Info("GLFW Version: ", glfwGetVersionString());
+    GlobalSceneManager::Create();
     return true;
   }
 

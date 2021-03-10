@@ -2,7 +2,6 @@
 
 #include <fstream>
 #include <algorithm>
-#include <utils/xml/XMLException.h>
 
 namespace Greet
 {

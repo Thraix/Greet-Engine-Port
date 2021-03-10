@@ -36,7 +36,7 @@ namespace vmc
         FontManager::Add("noto", FontContainer("res/fonts/NotoSansUI-Regular.ttf"));
         SetFrameCap(144);
 
-        guiScene = new GUIScene(new GUIRenderer());
+        guiScene = new GUIScene();
         Frame* frame = FrameFactory::GetFrame("res/guis/editor.xml");
         guiScene->AddFrameQueued(frame);
 

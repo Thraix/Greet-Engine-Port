@@ -2,66 +2,48 @@ R"(
 //vertex
 #version 330 core
 
-layout(location = 0) in vec2 position;
-layout(location = 1) in vec2 texCoord;
-layout(location = 2) in float texID;
-layout(location = 3) in vec4 color;
-layout(location = 4) in vec2 maskTexCoord;
-layout(location = 5) in float maskTexID;
+layout(location = 0) in vec2 aPosition;
+layout(location = 1) in vec2 aTexCoord;
+layout(location = 2) in float aTexID;
+layout(location = 3) in vec4 aColor;
 
-uniform mat3 projectionMatrix = mat3(1.0);
+out vec2 vPos;
+out float vTexID;
+out vec2 vTexCoord;
+out vec4 vColor;
 
-out DATA
-{
-	vec2 pos;
-	float texID;
-	vec2 texCoord;
-	vec4 color;
-	float maskTexID;
-	vec2 maskTexCoord;
-} vs_out;
+uniform mat3 uProjectionMatrix = mat3(1.0);
+uniform mat3 uViewMatrix = mat3(1.0);
 
 void main()
 {
-	gl_Position = vec4(projectionMatrix * vec3(position, 1.0), 1.0);
-	vs_out.pos = vec2(vec3(position, 1.0));
-	vs_out.texCoord = vec2(texCoord.x, 1 - texCoord.y);
-	vs_out.texID = texID;
-	vs_out.color = vec4(color.z, color.y, color.x, color.w);
-	vs_out.maskTexCoord = vec2(maskTexCoord.x, 1 - maskTexCoord.y);
-	vs_out.maskTexID =  maskTexID;
+	gl_Position = vec4(uProjectionMatrix * uViewMatrix * vec3(aPosition, 1.0), 1.0);
+	vPos = vec2(vec3(aPosition, 1.0));
+	vTexCoord = vec2(aTexCoord.x, 1 - aTexCoord.y);
+	vTexID = aTexID;
+	vColor = vec4(aColor.z, aColor.y, aColor.x, aColor.w);
 }
 
 //fragment
 #version 330 core
 
-layout(location = 0) out vec4 color;
+out vec4 fColor;
 
-in DATA
-{
-	vec2 pos;
-	float texID;
-	vec2 texCoord;
-	vec4 color;
-	float maskTexID;
-	vec2 maskTexCoord;
-} fs_in;
+in vec2 vPos;
+in float vTexID;
+in vec2 vTexCoord;
+in vec4 vColor;
 
-uniform sampler2D textures[32];
+uniform sampler2D uTextures[32];
+
 
 void main()
 {
-	color = fs_in.color;
-	if (fs_in.texID>0.0)
+	fColor = vColor;
+	if (vTexID > 0.0)
 	{
-		int tid = int(fs_in.texID - 0.5);
-		color *= texture(textures[tid], fs_in.texCoord);
-		//color = vec4(fs_in.texCoord.xy,0.0,1.0);
-	}
-	if (fs_in.maskTexID>0.0)
-	{
-		int mtid = int(fs_in.maskTexID - 0.5);
-		color.rgb *= texture(textures[mtid],fs_in.maskTexCoord).r;
+		int tid = int(vTexID - 0.5);
+		fColor *= texture(uTextures[tid], vTexCoord);
 	}
 }
 )"

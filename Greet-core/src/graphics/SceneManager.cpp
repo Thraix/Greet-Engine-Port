@@ -2,6 +2,7 @@
 
 #include <logging/Log.h>
 #include <utils/HotSwapping.h>
+#include <utils/Timer.h>
 
 namespace Greet {
 
@@ -11,27 +12,35 @@ namespace Greet {
 
   }
 
-  void SceneManager::Add2DScene(Scene* scene, const std::string& name)
+  SceneManager::~SceneManager()
   {
-    if (scene == NULL)
+    if(m_scenes2d.size() > 0)
+      Log::Warning("SceneManager deleted without removing 2D scenes");
+    if(m_scenes3d.size() > 0)
+      Log::Warning("SceneManager deleted without removing 3D scenes");
+  }
+
+  void SceneManager::Add2DScene(const Ref<Scene>& scene, const std::string& name)
+  {
+    if (!scene)
     {
-      Log::Error("Trying to add Scene to SceneManager but it is NULL.");
+      Log::Error("Trying to add Scene to SceneManager but it is uninitialized.");
       return;
     }
     m_scenes2d.push_back({name, scene});
   }
 
-  void SceneManager::Add3DScene(Scene* scene, const std::string& name)
+  void SceneManager::Add3DScene(const Ref<Scene>& scene, const std::string& name)
   {
-    if (scene == NULL)
+    if (!scene)
     {
-      Log::Error("Trying to add Renderer3D to SceneManager but it is NULL.");
+      Log::Error("Trying to add Scene to SceneManager but it is uninitialized.");
       return;
     }
     m_scenes3d.push_back({name, scene});
   }
 
-  Scene* SceneManager::Remove2DScene(const std::string& name)
+  const Ref<Scene>& SceneManager::Remove2DScene(const std::string& name)
   {
     auto it = std::find_if(m_scenes2d.begin(), m_scenes2d.end(),
         [name] (const SceneElement& scene) { return scene.first == name; });
@@ -39,7 +48,7 @@ namespace Greet {
     return it->second;
   }
 
-  Scene* SceneManager::Remove3DScene(const std::string& name)
+  const Ref<Scene>& SceneManager::Remove3DScene(const std::string& name)
   {
     auto it = std::find_if(m_scenes3d.begin(), m_scenes3d.end(),
         [name] (const SceneElement& scene) { return scene.first == name; });
@@ -47,14 +56,14 @@ namespace Greet {
     return it->second;
   }
 
-  Scene* SceneManager::Get2DScene(const std::string& name) const
+  const Ref<Scene>& SceneManager::Get2DScene(const std::string& name) const
   {
     auto it = std::find_if(m_scenes2d.begin(), m_scenes2d.end(),
         [name] (const SceneElement& scene) { return scene.first == name; });
     return it->second;
   }
 
-  Scene* SceneManager::Get3DScene(const std::string& name) const
+  const Ref<Scene>& SceneManager::Get3DScene(const std::string& name) const
   {
     auto it = std::find_if(m_scenes3d.begin(), m_scenes3d.end(),
         [name] (const SceneElement& scene) { return scene.first == name; });
@@ -64,42 +73,25 @@ namespace Greet {
   void SceneManager::Render() const
   {
     for (auto it = m_scenes3d.begin(); it != m_scenes3d.end(); it++)
-    {
-      it->second->PreRender();
       it->second->Render();
-      it->second->PostRender();
-    }
 
     for (auto it = m_scenes2d.begin(); it != m_scenes2d.end(); it++)
-    {
-      it->second->PreRender();
       it->second->Render();
-      it->second->PostRender();
-    }
   }
 
   void SceneManager::Update(float timeElapsed)
   {
-    static float time = 0.0f;
-    time+=timeElapsed;
-    if(time > 1.0f)
+    static Timer timer;
+    if(timer.Elapsed() > 1.0f)
     {
+      timer.Reset();
       HotSwapping::CheckResources();
-      time-=1.0f;
     }
     for (auto it = m_scenes3d.begin(); it != m_scenes3d.end(); it++)
-    {
-      it->second->PreUpdate(timeElapsed);
       it->second->Update(timeElapsed);
-      it->second->PostUpdate(timeElapsed);
-    }
 
     for (auto it = m_scenes2d.begin(); it != m_scenes2d.end(); it++)
-    {
-      it->second->PreUpdate(timeElapsed);
       it->second->Update(timeElapsed);
-      it->second->PostUpdate(timeElapsed);
-    }
   }
 
   void SceneManager::OnEvent(Event& event)

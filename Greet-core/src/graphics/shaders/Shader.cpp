@@ -11,22 +11,21 @@
 
 namespace Greet {
 
+  static const uint SHADER_VERTEX = 0;
+  static const uint SHADER_FRAGMENT = 1;
+  static const uint SHADER_GEOMETRY = 2;
+
   Shader::Shader(const std::string& filename)
     : Resource(filename), m_shaderID{Load(filename)}, uniforms{GetUniforms(m_shaderID)}
-  {
-  }
+  {}
 
   Shader::Shader(const std::string& vertSrc, const std::string& fragSrc, const std::string& geomSrc)
     : m_shaderID{Load(vertSrc, fragSrc, geomSrc, geomSrc.size() != 0)}, uniforms{GetUniforms(m_shaderID)}
-  {
-
-  }
+  {}
 
   Shader::Shader(const std::string& vertSrc, const std::string& fragSrc)
     : m_shaderID{Load(vertSrc,fragSrc)}, uniforms{GetUniforms(m_shaderID)}
-  {
-
-  }
+  {}
 
   Shader::~Shader()
   {
@@ -37,34 +36,43 @@ namespace Greet {
   {
     if(m_shaderID)
     {
-      std::array<std::string,3> ss = ReadFile(filePath);
-      if(!ss[0].empty())
+      std::array<std::pair<std::string, bool>, 3> ret = ReadFile(filePath);
+      uint vertShader = CompileShader(m_shaderID, ret[0].first, GL_VERTEX_SHADER, false);
+      if(!vertShader)
+        return;
+      uint fragShader = CompileShader(m_shaderID, ret[1].first, GL_FRAGMENT_SHADER, false);
+      if(!fragShader)
+        return;
+      uint geomShader = 0;
+      if(ret[2].second)
       {
-        uint vertShader = CompileShader(m_shaderID, ss[0], GL_VERTEX_SHADER, false);
-        if(!vertShader)
+        geomShader = CompileShader(m_shaderID, ret[2].first, GL_GEOMETRY_SHADER, false);
+        if(!geomShader)
           return;
-        uint fragShader = CompileShader(m_shaderID, ss[1], GL_FRAGMENT_SHADER, false);
-        if(!fragShader)
-          return;
-        uint geomShader = 0;
-        if(!ss[2].empty())
-        {
-          geomShader = CompileShader(m_shaderID, ss[2], GL_GEOMETRY_SHADER, false);
-          if(!geomShader)
-            return;
-        }
-        GLCall(uint program = glCreateProgram());
-        AttachShader(program, vertShader);
-        AttachShader(program, fragShader);
-        if(geomShader)
-          AttachShader(program, geomShader);
-        GLCall(glLinkProgram(program));
-        GLCall(glValidateProgram(program));
-        uint oldProgram = m_shaderID;
-        m_shaderID = program;
-        MoveUniforms(program, oldProgram);
-        GLCall(glDeleteProgram(oldProgram));
       }
+      GLCall(uint program = glCreateProgram());
+      AttachShader(program, vertShader);
+      AttachShader(program, fragShader);
+      if(geomShader)
+        AttachShader(program, geomShader);
+      GLCall(glLinkProgram(program));
+      int resultFlag;
+      GLCall(glGetProgramiv(program, GL_LINK_STATUS, &resultFlag));
+      if (resultFlag == GL_FALSE)
+      {
+        GLint length;
+        GLCall(glGetProgramiv(program, GL_INFO_LOG_LENGTH, &length));
+        std::vector<char> error(length);
+        GLCall(glGetProgramInfoLog(program, length, &length, &error[0]));
+        Log::Error("Failed to link shader!\n", &error[0]);
+        return;
+      }
+      GLCall(glValidateProgram(program));
+      uint oldProgram = m_shaderID;
+      m_shaderID = program;
+      MoveUniforms(program, oldProgram);
+      GLCall(glDeleteProgram(oldProgram));
+      Log::Info("Reloaded Shader: ", filePath);
     }
     else
       Log::Error("Invalid pointer");
@@ -72,33 +80,28 @@ namespace Greet {
 
   void Shader::MoveUniforms(uint program, uint oldProgram)
   {
-    std::map<std::string, int> oldUniforms = uniforms;
+    std::set<UniformData> oldUniforms = GetListOfUniforms(oldProgram);
     uniforms = GetUniforms(program);
 
-    std::vector<UniformData> newUniforms = GetListOfUniforms(program);
+    std::set<UniformData> newUniforms = GetListOfUniforms(program);
     GLint numActiveUniforms = 0;
     GLCall(glGetProgramiv(program, GL_ACTIVE_UNIFORMS, &numActiveUniforms));
     std::vector<GLchar> nameData(256);
     Enable();
     for(auto it = newUniforms.begin(); it != newUniforms.end();++it)
     {
-      auto found = oldUniforms.find(it->name);
+      auto found = oldUniforms.find(UniformData{it->name, 1, 0, -1});
       if(found != oldUniforms.end())
       {
-        GLint arraySize = 0;
-        GLenum type = 0;
-        GLsizei actualLength = 0;
-        GLCall(glGetActiveUniform(oldProgram, found->second, nameData.size(), &actualLength, &arraySize, &type, &nameData[0]));
-
         // Type has changed
-        if(it->type != type || it->arraySize != arraySize)
+        if(it->type != found->type || it->arraySize != found->arraySize)
           continue;
         if(it->type == GL_FLOAT)
         {
           if(it->arraySize == 1)
           {
             float f;
-            GLCall(glGetUniformfv(oldProgram, found->second, &f));
+            GLCall(glGetUniformfv(oldProgram, found->location, &f));
             SetUniform1f(it->name, f);
           }
           else
@@ -109,7 +112,7 @@ namespace Greet {
             for(int i = 0;i<it->arraySize;i++)
             {
               GLCall(int location = glGetUniformLocation(program,
-                    std::string(found->first + "["+std::to_string(i)+"]").c_str()));
+                    std::string(found->name + "["+std::to_string(i)+"]").c_str()));
               GLCall(glGetUniformfv(oldProgram, location, &values[i]));
             }
             SetUniform1fv(it->name, it->arraySize, values);
@@ -118,25 +121,25 @@ namespace Greet {
         else if(it->type == GL_FLOAT_VEC2)
         {
           Vec2f f;
-          GLCall(glGetnUniformfv(oldProgram, found->second, sizeof(Vec2f), (float*)&f));
+          GLCall(glGetnUniformfv(oldProgram, found->location, sizeof(Vec2f), (float*)&f));
           SetUniform2f(it->name, f);
         }
         else if(it->type == GL_FLOAT_VEC3)
         {
           Vec3f f;
-          GLCall(glGetnUniformfv(oldProgram, found->second, sizeof(Vec3f), (float*)&f));
+          GLCall(glGetnUniformfv(oldProgram, found->location, sizeof(Vec3f), (float*)&f));
           SetUniform3f(it->name, f);
         }
         else if(it->type == GL_FLOAT_VEC4)
         {
           Vec4f f;
-          GLCall(glGetnUniformfv(oldProgram, found->second, sizeof(Vec4f), (float*)&f));
+          GLCall(glGetnUniformfv(oldProgram, found->location, sizeof(Vec4f), (float*)&f));
           SetUniform4f(it->name, f);
         }
         else if(it->type == GL_FLOAT)
         {
           Vec4f f;
-          GLCall(glGetnUniformfv(oldProgram, found->second, sizeof(Vec4f), (float*)&f));
+          GLCall(glGetnUniformfv(oldProgram, found->location, sizeof(Vec4f), (float*)&f));
           SetUniform4f(it->name, f);
         }
         else if(it->type == GL_INT ||
@@ -148,7 +151,7 @@ namespace Greet {
           if(it->arraySize == 1)
           {
             int i;
-            GLCall(glGetUniformiv(oldProgram, found->second, &i));
+            GLCall(glGetUniformiv(oldProgram, found->location, &i));
             SetUniform1i(it->name, i);
           }
           else
@@ -159,7 +162,7 @@ namespace Greet {
             for(int i = 0;i<it->arraySize;i++)
             {
               GLCall(int location = glGetUniformLocation(program,
-                    std::string(found->first + "["+std::to_string(i)+"]").c_str()));
+                    std::string(found->name + "["+std::to_string(i)+"]").c_str()));
               GLCall(glGetUniformiv(oldProgram, location, &values[i]));
             }
             SetUniform1iv(it->name, it->arraySize, values);
@@ -170,7 +173,7 @@ namespace Greet {
           if(it->arraySize == 1)
           {
             uint i;
-            GLCall(glGetUniformuiv(oldProgram, found->second, &i));
+            GLCall(glGetUniformuiv(oldProgram, found->location, &i));
             SetUniform1ui(it->name, i);
           }
           else
@@ -181,7 +184,7 @@ namespace Greet {
             for(int i = 0;i<it->arraySize;i++)
             {
               GLCall(int location = glGetUniformLocation(program,
-                    std::string(found->first + "["+std::to_string(i)+"]").c_str()));
+                    std::string(found->name + "["+std::to_string(i)+"]").c_str()));
               GLCall(glGetUniformuiv(oldProgram, location, &values[i]));
             }
             SetUniform1uiv(it->name, it->arraySize, values);
@@ -190,13 +193,13 @@ namespace Greet {
         else if(it->type == GL_FLOAT_MAT3)
         {
           Mat3 mat;
-          GLCall(glGetnUniformfv(oldProgram, found->second, sizeof(Mat3), mat.elements));
+          GLCall(glGetnUniformfv(oldProgram, found->location, sizeof(Mat3), mat.elements));
           SetUniformMat3(it->name, mat);
         }
         else if(it->type == GL_FLOAT_MAT4)
         {
           Mat4 mat;
-          GLCall(glGetnUniformfv(oldProgram, found->second, sizeof(Mat4), mat.elements));
+          GLCall(glGetnUniformfv(oldProgram, found->location, sizeof(Mat4), mat.elements));
           SetUniformMat4(it->name, mat);
         }
       }
@@ -204,49 +207,66 @@ namespace Greet {
 
   }
 
-  std::array<std::string,3> Shader::ReadFile(const std::string& filename)
+  std::array<std::pair<std::string, bool>, 3> Shader::ReadFile(const std::string& filename)
   {
     std::ifstream file(filename);
     if (!file.good())
     {
       Log::Error("Shader::FromFile Couldn't find shader in path \'", filename, "\'");
       return {
-        ShaderFactory::shaderErrorVert,
-        ShaderFactory::shaderErrorFrag,
-        ""};
+        std::pair{ShaderFactory::shaderErrorVert, true},
+        {ShaderFactory::shaderErrorFrag, true},
+        {"", false}};
     }
     return ReadStream(file);
   }
 
-  std::array<std::string,3> Shader::ReadStream(std::istream& stream)
+  std::array<std::pair<std::string, bool>, 3> Shader::ReadStream(std::istream& stream)
   {
-    std::array<std::stringstream, 3> ss;
-    const static uint VERTEX = 0;
-    const static uint FRAGMENT = 1;
-    const static uint GEOMETRY = 2;
+    std::stringstream ss[3];
+    bool hasWritten[3] = {false, false, false};
 
     std::string line;
-    uint shader = VERTEX;
+    uint shader = SHADER_VERTEX;
     while (std::getline(stream, line))
     {
-      if (line == "//vertex")
-        shader = VERTEX;
-      else if (line == "//fragment")
-        shader = FRAGMENT;
-      else if (line == "//geometry")
-        shader = GEOMETRY;
+      if (line == "//vertex" || line == "#shader vertex")
+      {
+        shader = SHADER_VERTEX;
+        ReadLineToStringStream(ss, "", shader);
+      }
+      else if (line == "//fragment" || line == "#shader fragment")
+      {
+        shader = SHADER_FRAGMENT;
+        ReadLineToStringStream(ss, "", shader);
+      }
+      else if (line == "//geometry" || line == "#shader geometry")
+      {
+        shader = SHADER_GEOMETRY;
+        ReadLineToStringStream(ss, "", shader);
+      }
       else
       {
-        ss[shader] << line << std::endl;
+        hasWritten[shader] = true;
+        ReadLineToStringStream(ss, line, shader);
       }
     }
-    return {ss[0].str(),ss[1].str(),ss[2].str()};
+    return {std::pair{ss[0].str(), hasWritten[0]}, {ss[1].str(), hasWritten[1]},{ss[2].str(), hasWritten[2]}};
+  }
+
+  void Shader::ReadLineToStringStream(std::stringstream ss[3], const std::string& line, uint shaderIndex)
+  {
+    ss[shaderIndex] << line << std::endl;
+
+    // Write newlines so that the line number in errors are correct
+    ss[(shaderIndex + 1) % 3] << std::endl;
+    ss[(shaderIndex + 2) % 3] << std::endl;
   }
 
   uint Shader::Load(const std::string& filename)
   {
-    std::array<std::string,3> ss =  ReadFile(filename);
-    return Load(ss[0], ss[1], ss[2], !ss[2].empty());
+    std::array<std::pair<std::string, bool>,3> ret =  ReadFile(filename);
+    return Load(ret[0].first, ret[1].first, ret[2].first, ret[2].second);
   }
 
   uint Shader::Load(const std::string& vertSrc, const std::string& fragSrc)
@@ -283,6 +303,7 @@ namespace Greet {
       return LoadError(program);
     }
     GLCall(glValidateProgram(program));
+
     return program;
   }
 
@@ -298,62 +319,64 @@ namespace Greet {
     return program;
   }
 
-  std::map<std::string, int> Shader::GetUniforms(const uint program)
+  std::map<std::string, int> Shader::GetUniforms(uint program) const
   {
     std::map<std::string, int> uniforms;
     GLint numActiveUniforms = 0;
     GLCall(glGetProgramiv(program, GL_ACTIVE_UNIFORMS, &numActiveUniforms));
-    std::vector<GLchar> nameData(256);
-    for(int i= 0; i< numActiveUniforms; ++i)
+    char name[256];
+    for(int i= 0; i < numActiveUniforms; ++i)
     {
       GLint arraySize = 0;
       GLenum type = 0;
       GLsizei actualLength = 0;
-      GLCall(glGetActiveUniform(program, i, nameData.size(), &actualLength, &arraySize, &type, &nameData[0]));
+      GLCall(glGetActiveUniform(program, i, sizeof(name), &actualLength, &arraySize, &type, name));
 
       // For some reason arrays return 'arrayName[0]'
-      for(int i = 0;i<actualLength;i++)
+      for(int j = 0;j<actualLength;j++)
       {
-        if(nameData[i] == '[')
+        if(name[j] == '[')
         {
-          nameData[i] = '\0';
+          name[j] = '\0';
           break;
         }
       }
-      std::string name(nameData.data());
-      uniforms.emplace(name, i);
+      // i != glGetUniformLocation(program, name) sometimes for some reason
+      GLCall(int location = glGetUniformLocation(program, name));
+      uniforms.emplace(name, location);
     }
     return uniforms;
   }
 
-  std::vector<UniformData> Shader::GetListOfUniforms(uint program)
+  std::set<UniformData> Shader::GetListOfUniforms(uint program) const
   {
-    std::vector<UniformData> uniforms;
+    std::set<UniformData> uniforms;
     GLint numActiveUniforms = 0;
     GLCall(glGetProgramiv(program, GL_ACTIVE_UNIFORMS, &numActiveUniforms));
-    std::vector<GLchar> nameData(256);
-    for(int i= 0; i< numActiveUniforms; ++i)
+    char name[256];
+    for(int i= 0; i < numActiveUniforms; ++i)
     {
       GLint arraySize = 0;
       GLenum type = 0;
       GLsizei actualLength = 0;
-      GLCall(glGetActiveUniform(program, i, nameData.size(), &actualLength, &arraySize, &type, &nameData[0]));
+      GLCall(glGetActiveUniform(program, i, sizeof(name), &actualLength, &arraySize, &type, name));
 
       // For some reason arrays return 'arrayName[0]'
-      for(int i = 0;i<actualLength;i++)
+      for(int j = 0;j<actualLength;j++)
       {
-        if(nameData[i] == '[')
+        if(name[j] == '[')
         {
-          nameData[i] = '\0';
+          name[j] = '\0';
           break;
         }
       }
-      uniforms.push_back({nameData.data(), arraySize, type});
+      GLCall(int location = glGetUniformLocation(program, name));
+      uniforms.emplace(UniformData{name, arraySize, type, location});
     }
     return uniforms;
   }
 
-  uint Shader::CompileAttachShader(const uint program, const std::string& shaderSrc, const uint shaderType, bool safeFail)
+  uint Shader::CompileAttachShader(uint program, const std::string& shaderSrc, uint shaderType, bool safeFail)
   {
     uint shader = CompileShader(program, shaderSrc, shaderType, safeFail);
     if(shader == 0)
@@ -362,7 +385,7 @@ namespace Greet {
     return 1;
   }
 
-  uint Shader::CompileShader(const uint program, const std::string& shaderSrc, const uint shaderType, bool safeFail)
+  uint Shader::CompileShader(uint program, const std::string& shaderSrc, uint shaderType, bool safeFail)
   {
     GLCall(uint shader = glCreateShader(shaderType));
     const char* src = shaderSrc.c_str();
@@ -431,7 +454,7 @@ namespace Greet {
 
 
 
-  void Shader::AttachShader(const uint program, uint shader)
+  void Shader::AttachShader(uint program, uint shader)
   {
     GLCall(glAttachShader(program, shader));
     GLCall(glDeleteShader(shader));
@@ -543,39 +566,42 @@ namespace Greet {
 
   Ref<Shader> Shader::FromFile(const std::string& shaderPath)
   {
-    return Ref<Shader>{new Shader{shaderPath}};
+    return NewRef<Shader>(shaderPath);
   }
 
   Ref<Shader> Shader::FromFile(const std::string& vertPath, const std::string& fragPath)
   {
-    std::string vertSourceString = FileUtils::read_file(vertPath.c_str());
-    std::string fragSourceString = FileUtils::read_file(fragPath.c_str());
-    return Ref<Shader>(new Shader{vertSourceString, fragSourceString});
+    std::string vertSourceString = FileUtils::ReadFile(vertPath.c_str());
+    std::string fragSourceString = FileUtils::ReadFile(fragPath.c_str());
+    return NewRef<Shader>(vertSourceString, fragSourceString);
   }
 
 
   Ref<Shader> Shader::FromFile(const std::string& vertPath, const std::string& fragPath, const std::string& geomPath)
   {
-    std::string vertSourceString = FileUtils::read_file(vertPath.c_str());
-    std::string fragSourceString = FileUtils::read_file(fragPath.c_str());
-    std::string geomSourceString = FileUtils::read_file(geomPath.c_str());
-    return Ref<Shader>(new Shader{vertSourceString,fragSourceString,geomSourceString});
+    std::string vertSourceString = FileUtils::ReadFile(vertPath.c_str());
+    std::string fragSourceString = FileUtils::ReadFile(fragPath.c_str());
+    std::string geomSourceString = FileUtils::ReadFile(geomPath.c_str());
+    return NewRef<Shader>(vertSourceString,fragSourceString,geomSourceString);
   }
 
   Ref<Shader> Shader::FromSource(const std::string& shaderSrc)
   {
     std::stringstream shaderStream{shaderSrc};
-    std::array<std::string, 3> ss = ReadStream(shaderStream);
-    return Ref<Shader>(new Shader{ss[0], ss[1], ss[2]});
+    std::array<std::pair<std::string, bool>, 3> ss = ReadStream(shaderStream);
+    if(ss[2].second)
+      return NewRef<Shader>(ss[0].first, ss[1].first, ss[2].first);
+    else
+      return NewRef<Shader>(ss[0].first, ss[1].first);
   }
 
   Ref<Shader> Shader::FromSource(const std::string& vertSrc, const std::string& fragSrc)
   {
-    return Ref<Shader>(new Shader{vertSrc, fragSrc});
+    return NewRef<Shader>(vertSrc, fragSrc);
   }
 
   Ref<Shader> Shader::FromSource(const std::string& vertSrc, const std::string& fragSrc, const std::string& geomSrc)
   {
-    return Ref<Shader>(new Shader{vertSrc, fragSrc, geomSrc});
+    return NewRef<Shader>(vertSrc, fragSrc, geomSrc);
   }
 }

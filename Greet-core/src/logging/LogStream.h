@@ -42,7 +42,7 @@ namespace Greet {
         if (m_levelCheck(m_logLevel, level))
         {
           // Output all the arguments with an endline
-          Put("[Greet]", args..., '\n');
+          Put(args..., '\n');
         }
       }
 

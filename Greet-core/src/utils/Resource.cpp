@@ -14,33 +14,11 @@ namespace Greet
 #endif
   }
 
-  Resource::Resource(Resource&& res)
-  {
-    id = res.id;
-    filePath = std::move(res.filePath);
-    modDate = std::move(res.modDate);
-#if defined(_DEBUG) && defined(_GREET_HOTSWAP)
-    HotSwapping::MoveHotswapResource(this);
-#endif
-    res.id = 0;
-  }
-
-  Resource& Resource::operator=(Resource&& res)
-  {
-    id = res.id;
-    filePath = std::move(res.filePath);
-    modDate = std::move(res.modDate);
-#if defined(_DEBUG) && defined(_GREET_HOTSWAP)
-    HotSwapping::MoveHotswapResource(this);
-#endif
-    res.id = 0;
-    return *this;
-  }
-
   Resource::~Resource()
   {
 #if defined(_DEBUG) && defined(_GREET_HOTSWAP)
-    HotSwapping::RemoveHotswapResource(this);
+    if(id != 0)
+      HotSwapping::RemoveHotswapResource(this);
 #endif
   }
 

@@ -8,20 +8,19 @@
 class Portal : public Greet::EntityModel
 {
   private:
-    Greet::Mesh* mesh;
+    Greet::Ref<Greet::Mesh> mesh;
     float delta = 0.0f;
+
   public:
-    Portal(Greet::Vec3f position)
-      : Greet::EntityModel{nullptr, new Greet::Material{Greet::Shader::FromFile("res/shaders/portal.glsl"), Greet::TextureManager::LoadTexture2D("res/textures/portal.meta")}, position, {10,10,10}, {0,0,0}}
+    Portal(const Greet::Vec3f& position)
+      : Greet::EntityModel{nullptr, Greet::NewRef<Greet::Material>(Greet::Shader::FromFile("res/shaders/portal.glsl"), Greet::TextureManager::LoadTexture2D("res/textures/portal.meta")), position, {10,10,10}, {0,0,0}}
     {
       using namespace Greet;
-      SetMesh(mesh = new Mesh(MeshFactory::Plane({0, 0, 0}, {2, 2})));
+      SetMesh(mesh = NewRef<Mesh>(MeshFactory::Plane({0, 0, 0}, {2, 2})));
     }
 
     virtual ~Portal()
-    {
-      delete mesh;
-    }
+    {}
 
     void Update(float timeElapsed) override
     {

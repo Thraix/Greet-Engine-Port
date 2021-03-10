@@ -32,6 +32,7 @@ namespace Greet {
   {
     Init();
     Run();
+    Destruct();
   }
 
   void App::Run()

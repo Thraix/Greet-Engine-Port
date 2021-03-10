@@ -1,0 +1,12 @@
+[TagComponent]
+tag=Radar
+
+[Transform2DComponent]
+position=128 128
+scale=256 256
+rotation=0
+
+[SpriteComponent]
+texture=res/textures/radar.meta
+texturePos=0 0
+textureSize=64 64

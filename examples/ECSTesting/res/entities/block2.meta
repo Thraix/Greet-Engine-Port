@@ -1,0 +1,12 @@
+[TagComponent]
+tag=Block
+
+[Transform3DComponent]
+scale=10 10 10
+
+[MeshComponent]
+type=cube
+
+[MaterialComponent]
+shadertype=shader3d
+texture=res/textures/block.meta

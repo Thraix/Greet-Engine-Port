@@ -32,7 +32,7 @@ namespace Greet {
     static Mat4 PerspectiveViewport(float fov, float near, float far);
     static Mat4 Perspective(float aspect, float fov, float near, float far);
 
-    static Mat4 TransformationMatrix(const Vec3f& position, const Vec3f& rotation, const Vec3f& scale);
+    static Mat4 TransformationMatrix(const Vec3f& position, const Vec3f& scale, const Vec3f& rotation);
     static Mat4 ViewMatrix(const Vec3f& position, const Vec3f& rotation);
     static Mat4 AlignAxis(const Vec3f& point, const Vec3f& normal, const Vec3f& up);
 
@@ -57,6 +57,7 @@ namespace Greet {
     static Mat4 Rotate(float rad, const Vec3f& axis);
 
     static Mat4 Inverse(const Mat4& inv);
+    static Mat4 InverseTranspose(const Mat4& inv);
 
     Mat4 Cpy();
 

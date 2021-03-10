@@ -6,17 +6,15 @@
 
 namespace Greet {
 
-
-
   class FrameBufferObject
   {
     private:
-      uint m_fbo;
-      uint m_width;
-      uint m_height;
-      std::map<uint,const Texture2D&> m_colorTextures;
-      Texture2D m_depthTexture;
-      uint m_depthBuffer;
+      uint fbo;
+      uint width;
+      uint height;
+      std::map<uint,Ref<Texture2D>> colorTextures;
+      Ref<Texture2D> depthTexture;
+      uint depthBuffer;
     public:
       FrameBufferObject(uint width, uint height);
       virtual ~FrameBufferObject();
@@ -24,8 +22,8 @@ namespace Greet {
       void Unbind();
       void AttachColorTexture(uint attachementId);
       void AttachDepthTexture();
-      const Texture2D& GetColorTexture(uint attachmentId) const;
-      inline const Texture2D& GetDepthTexture() const { return m_depthTexture; }
+      const Ref<Texture2D>& GetColorTexture(uint attachmentId) const;
+      const Ref<Texture2D>& GetDepthTexture() const { return depthTexture; }
     private:
   };
 }

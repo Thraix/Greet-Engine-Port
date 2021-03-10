@@ -11,40 +11,32 @@ namespace Greet {
   class Layer : public Scene
   {
     protected:
-      Renderer2D* renderer;
-      std::vector<Renderable*> renderables;
+      Ref<Renderer2D> renderer;
+      std::vector<Ref<Renderable>> renderables;
 
       Mat3 projectionMatrix;
     public:
-      Layer(Renderer2D* renderer, const Mat3& projectionMatrix)
+      Layer(const Ref<Renderer2D>& renderer, const Mat3& projectionMatrix)
         : renderer(renderer), projectionMatrix(projectionMatrix)
       {
         renderer->GetShader()->Enable();
-        renderer->GetShader()->SetUniformMat3("projectionMatrix", projectionMatrix);
+        renderer->GetShader()->SetUniformMat3("uProjectionMatrix", projectionMatrix);
+        renderer->GetShader()->SetUniformMat3("uViewMatrix", Mat3::Scale(1));
         renderer->GetShader()->Disable();
       }
 
       virtual ~Layer()
-      {
-        delete renderer;
+      {}
 
-        for (uint i = 0; i < renderables.size(); i++)
-          delete renderables[i];
-      }
-
-      virtual void Add(Renderable* renderable)
+      virtual void Add(const Ref<Renderable>& renderable)
       {
         renderables.push_back(renderable);
       }
 
-      virtual void PreRender() override
+      virtual void Render() const override
       {
         renderer->Begin();
         setUniforms();
-      }
-
-      virtual void Render() const override
-      {
         uint size = renderables.size();
         for (uint i = 0; i < size; i++)
         {
@@ -52,10 +44,6 @@ namespace Greet {
           renderables[i]->Render(renderer);
           renderables[i]->End(renderer);
         }
-      }
-
-      virtual void PostRender() override
-      {
         renderer->End();
         renderer->Flush();
       }
@@ -67,11 +55,11 @@ namespace Greet {
           renderables[i]->Update(timeElapsed);
       }
 
-      void SetProjectionMatrix(Mat3 projectionMatrix)
+      void SetProjectionMatrix(Mat3 amProjectionMatrix)
       {
-        projectionMatrix = projectionMatrix;
+        projectionMatrix = amProjectionMatrix;
         renderer->GetShader()->Enable();
-        renderer->GetShader()->SetUniformMat3("projectionMatrix", projectionMatrix);
+        renderer->GetShader()->SetUniformMat3("uProjectionMatrix", projectionMatrix);
         renderer->GetShader()->Disable();
       }
 
