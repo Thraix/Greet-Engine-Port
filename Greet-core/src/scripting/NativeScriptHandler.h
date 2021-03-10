@@ -23,6 +23,7 @@ namespace Greet
 
     public:
       NativeScriptHandler(const std::string& scriptCpp);
+      NativeScriptHandler(NativeScript* script);
       virtual ~NativeScriptHandler();
 
       void ReloadResource() override;

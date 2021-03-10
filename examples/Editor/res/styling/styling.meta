@@ -29,6 +29,7 @@ borderColor=#626262
 
 [Container]
 backgroundColor=$gray-2
+borderColor=$gray-3
 
 [Label]
 font=noto:12

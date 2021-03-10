@@ -1,5 +1,7 @@
 #include "Editor.h"
 
+#include "CameraController.h"
+
 using namespace Greet;
 
 Editor::Editor()
@@ -15,15 +17,24 @@ Editor::~Editor()
 void Editor::Init()
 {
   FontManager::Add("noto", FontContainer("res/fonts/noto.ttf"));
-  gui = new GUIScene();
-  Frame* frame = FrameFactory::GetFrame("res/guis/Editor.xml");
+  gui = NewRef<GUIScene>();
+  frame = FrameFactory::GetFrame("res/guis/Editor.xml");
   gui->AddFrameQueued(frame);
   GlobalSceneManager::GetSceneManager().Add2DScene(gui, "gui");
+
+  shader3d = ShaderFactory::Shader3D();
+  shaderSkybox = ShaderFactory::ShaderSkybox();
+  cubeMapSkybox = TextureManager::LoadCubeMap("res/textures/skybox.meta");
+
   SetupGUI(frame);
 }
 
 void Editor::SetupGUI(Frame* frame)
 {
+  settingsContainer = frame->GetComponentByName<Container>("settings");
+  settingsContainer->AddComponent(ComponentFactory::GetComponent("res/guis/Transformation3DCompontent.xml", settingsContainer));
+  settingsContainer->AddComponent(ComponentFactory::GetComponent("res/guis/Transformation2DCompontent.xml", settingsContainer));
+  settingsContainer->LoadFrameStyle(frame->GetStylingFile());
   sceneView = frame->GetComponentByName<SceneView>("sceneView");
   Button* addSceneButton = frame->GetComponentByName<Button>("addSceneButton");
   Button* addEntityButton = frame->GetComponentByName<Button>("addEntityButton");
@@ -37,24 +48,40 @@ void Editor::SetupGUI(Frame* frame)
   sceneTree = new TreeNode({});
   sceneTreeView->SetTreeNode(sceneTree);
 
-  addSceneButton->SetOnPressCallback([&](Component* component)
-  {
-    std::string name = "Scene " + std::to_string(scenes.size());
-    scenes.emplace(name, Ref<Scene>{new Scene()});
-    sceneTree->AddChildNode(TreeNode{name});
-  });
+  // Create scene
+  std::string name = "Scene " + std::to_string(scenes.size());
+  scene = NewRef<EditorScene>();
+  Entity camera = scene->AddEntity("Camera3D");
+  camera.AddComponent<Camera3DComponent>(Mat4::Identity(), 90, 0.01, 1000, true);
+  camera.AddComponent<Environment3DComponent>(shaderSkybox, cubeMapSkybox);
+  camera.AddComponent<NativeScriptComponent>(NewRef<NativeScriptHandler>(new CameraControllerScript()));
+
+  scenes.emplace(name, scene);
+  sceneTree->AddChildNode(TreeNode{name});
+  sceneView->GetSceneManager().Add3DScene(scene, name);
 
   addEntityButton->SetOnPressCallback([&](Component* component)
   {
     if(sceneTreeView->HasSelectedNode())
     {
+      static int entityId = 0;
       TreeNode* selected = sceneTreeView->GetSelectedNode();
       TreeNode* sceneNode = GetRootSceneTreeNode(selected);
-      Ref<Scene> scene = scenes.find(sceneNode->GetName())->second;
-      Entity entity = scene->AddEntity();
-      selected->AddChildNode(TreeNode{"Entity: " + std::to_string(entity.GetID())});
+      Ref<ECSScene> scene = scenes.find(sceneNode->GetName())->second;
+      Entity entity = scene->AddEntity("Entity#" + std::to_string(entityId));
+      selected->AddChildNode(TreeNode{"Entity#" + std::to_string(entityId)});
+      entity.AddComponent<Transform3DComponent>(Mat4::Translate({entityId * 1.5f, 0, 0}));
+      MeshData data = MeshFactory::Cube({0,0,0}, {1,1,1});
+      entity.AddComponent<MeshComponent>(NewRef<Mesh>(data));
+      entity.AddComponent<MaterialComponent>(NewRef<Material>(ShaderFactory::Shader3D()));
+      entityId++;
     }
   });
+}
+
+void Editor::Destruct()
+{
+  GlobalSceneManager::GetSceneManager().Remove2DScene("gui");
 }
 
 TreeNode* Editor::GetRootSceneTreeNode(TreeNode* node) const

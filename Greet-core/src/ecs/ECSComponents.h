@@ -170,7 +170,8 @@ namespace Greet
         invPVMatrix{~(projectionMatrix * viewMatrix)}
       {}
 
-      const Mat4& GetViewMatrix() const { return viewMatrix;}
+      const Vec3f& GetPosition() const { return cameraPos; }
+      const Mat4& GetViewMatrix() const { return viewMatrix; }
       const Mat4& GetProjectionMatrix() const { return projectionMatrix; }
 
       void SetProjectionMatrix(const Mat4& amProjectionMatrix)
@@ -205,11 +206,25 @@ namespace Greet
         return projectionMatrix * (viewMatrix * coordinate);
       }
 
+      Vec3f GetWorldToScreenCoordinate(const Mat4& transformation, const Vec3f& coordinate) const
+      {
+        return transformation * (projectionMatrix * (viewMatrix * coordinate));
+      }
+
       Line GetScreenToWorldCoordinate(const Vec2f& screenPos) const
       {
         Line line;
         line.pos = invPVMatrix * Vec3f(screenPos.x, screenPos.y, -1.0);
         Vec3f far = invPVMatrix * Vec3f(screenPos.x, screenPos.y, 1.0);
+        line.dir = far - line.pos;
+        return line;
+      }
+
+      Line GetScreenToWorldCoordinate(const Mat4& invTransformation, const Vec2f& screenPos) const
+      {
+        Line line;
+        line.pos = invTransformation * (invPVMatrix * Vec3f(screenPos.x, screenPos.y, -1.0));
+        Vec3f far = invTransformation * (invPVMatrix * Vec3f(screenPos.x, screenPos.y, 1.0));
         line.dir = far - line.pos;
         return line;
       }

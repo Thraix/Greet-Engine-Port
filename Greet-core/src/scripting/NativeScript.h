@@ -11,6 +11,7 @@ namespace Greet
   {
     DELETE_COPY_AND_MOVE(NativeScript);
 
+    NativeScript() {}
     Entity entity{nullptr};
     virtual ~NativeScript() {}
 

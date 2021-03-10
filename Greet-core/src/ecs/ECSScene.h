@@ -11,7 +11,7 @@ namespace Greet
 {
   class ECSScene : public Greet::Scene
   {
-    private:
+    protected:
       Ref<ECSManager> manager;
       Ref<BatchRenderer> renderer2d;
 
@@ -26,13 +26,13 @@ namespace Greet
       void RemoveEntity(const Entity& entity);
       void RemoveEntity(EntityID entity);
 
-      void Render() const override;
-      void Render2D() const;
-      void Render3D() const;
+      virtual void Render() const override;
+      virtual void Render2D() const;
+      virtual void Render3D() const;
       virtual void UpdateBefore(float timeElapsed) {}
-      void Update(float timeElapsed) override;
+      virtual void Update(float timeElapsed) override;
       virtual void UpdateAfter(float timeElapsed) {}
-      void OnEvent(Event& event) override;
+      virtual void OnEvent(Event& event) override;
 
     private:
       template <typename T>

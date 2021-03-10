@@ -9,6 +9,29 @@ namespace Greet
   ComponentFactory::ComponentMap* ComponentFactory::guiComponents;
   FrameFactory::FrameMap* FrameFactory::guiFrames;
 
+  Component* ComponentFactory::GetComponent(const std::string& xmlFile, Component* parent)
+  {
+    ComponentMap* map = GetMap();
+    try
+    {
+      XMLObject object = XML::FromFile(xmlFile);
+      auto it = map->find(object.GetName());
+      if(it == map->end())
+      {
+        Log::Warning("There is no such component: ", object.GetName(), ".");
+        XMLObject o("Failed", std::map<std::string, std::string>(), "");
+        return new Component(o, parent); // Return plain content to avoid crash.
+      }
+      return it->second(object, parent);
+    }
+    catch(XMLException& e)
+    {
+      Log::Error(e.what());
+      XMLObject o("Failed", std::map<std::string, std::string>(), "");
+      return new Component(o, parent); // Return plain content to avoid crash.
+    }
+  }
+
   Component* ComponentFactory::GetComponent(const XMLObject& xmlObject, Component* parent)
   {
     ComponentMap* map = GetMap();

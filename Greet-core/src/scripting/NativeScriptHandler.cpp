@@ -17,6 +17,10 @@ namespace Greet
     ReloadResource();
   }
 
+  NativeScriptHandler::NativeScriptHandler(NativeScript* script)
+    : Resource{}, script{script}
+  {}
+
   NativeScriptHandler::~NativeScriptHandler()
   {
     if(script)

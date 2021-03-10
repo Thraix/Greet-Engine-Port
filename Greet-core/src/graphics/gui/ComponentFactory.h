@@ -54,6 +54,7 @@ namespace Greet
       }
 
     public:
+      static Component* GetComponent(const std::string& xmlFile, Component* parent);
       static Component* GetComponent(const XMLObject& xmlObject, Component* parent);
   };
 

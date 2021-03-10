@@ -77,8 +77,8 @@ namespace Greet {
     // so that WM_CLASS property contain the engine.
     // Generally just to make i3 window managing work the same for all applications.
     window = glfwCreateWindow(width, height, ("Greet-Engine - " + title).c_str(), NULL, NULL);
-    SetTitle(title);
     ASSERT(window,"Failed to initialize window!");
+    SetTitle(title);
     //glfwSetInputMode(window,GLFW_CURSOR,GLFW_CURSOR_HIDDEN);
     //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glfwMakeContextCurrent(window);

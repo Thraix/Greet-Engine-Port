@@ -1,19 +1,31 @@
 #include <Greet.h>
 
+#include "EditorScene.h"
+
 class Editor : public Greet::App
 {
   private:
-    Greet::GUIScene* gui;
-    std::map<std::string, Greet::Ref<Greet::Scene>> scenes;
+    Greet::Ref<Greet::GUIScene> gui;
+    std::map<std::string, Greet::Ref<Greet::ECSScene>> scenes;
+
+    // GUI references
+    Greet::Frame* frame;
     Greet::SceneView* sceneView;
     Greet::TreeNode* sceneTree;
     Greet::TreeView* sceneTreeView;
+    Greet::Container* settingsContainer;
+
+    Greet::Ref<EditorScene> scene;
+    Greet::Ref<Greet::Shader> shader3d;
+    Greet::Ref<Greet::Shader> shaderSkybox;
+    Greet::Ref<Greet::CubeMap> cubeMapSkybox;
   public:
     Editor();
 
     ~Editor();
 
     void Init() override;
+    void Destruct() override;
     void SetupGUI(Greet::Frame* frame);
 
     void Tick() override;

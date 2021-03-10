@@ -57,6 +57,7 @@ namespace Greet {
     static Mat4 Rotate(float rad, const Vec3f& axis);
 
     static Mat4 Inverse(const Mat4& inv);
+    static Mat4 InverseTranspose(const Mat4& inv);
 
     Mat4 Cpy();
 

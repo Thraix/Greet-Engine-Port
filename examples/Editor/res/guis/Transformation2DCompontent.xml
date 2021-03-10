@@ -1,0 +1,27 @@
+<Container width="1w" vertical="true" padding="10" spacing="5">
+  <Label name="transformation2DLabel" width="1w">Transformation2DComponent</Label>
+  <Container width="1w" vertical="true" padding="10" spacing="5" border="2">
+    <Label name="translateLabel" width="1w">Translation</Label>
+    <Container width="1w" vertical="false">
+      <Label name="translateXLabel" height="1w" align="center">X</Label>
+      <TextBox name="translateX" width="1w"/>
+      <Label name="translateYLabel" height="1w" align="center">Y</Label>
+      <TextBox name="translateY" width="1w"/>
+    </Container>
+
+    <Label name="scalingLabel" width="1w">Scaling</Label>
+    <Container width="1w" vertical="false">
+      <Label name="scalingXLabel" height="1w" align="center">X</Label>
+      <TextBox name="scalingX" width="1w"/>
+      <Label name="scalingYLabel" height="1w" align="center">Y</Label>
+      <TextBox name="scalingY" width="1w"/>
+    </Container>
+
+      <Label name="rotationLabel">Rotation</Label>
+    <Container width="1w" vertical="false">
+      <Label name="scalingYLabel" height="1w" align="center">A</Label>
+      <TextBox name="angleX" width="1w"/>
+    </Container>
+
+  </Container>
+</Container>

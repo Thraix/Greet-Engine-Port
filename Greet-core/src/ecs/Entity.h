@@ -15,6 +15,10 @@ namespace Greet
       EntityID id;
 
     public:
+      Entity()
+        : manager{nullptr}, id{0}
+      {}
+
       Entity(ECSManager* manager)
         : manager{manager}, id{0}
       {}
