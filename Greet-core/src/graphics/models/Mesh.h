@@ -1,12 +1,13 @@
 #pragma once
 
-#include <math/Maths.h>
 #include <map>
 #include <vector>
-#include <graphics/models/MeshData.h>
 #include <memory>
-#include <graphics/buffers/VertexArray.h>
 #include <graphics/buffers/Buffer.h>
+#include <graphics/buffers/VertexArray.h>
+#include <graphics/models/MeshData.h>
+#include <math/Maths.h>
+#include <utils/BoundingBox.h>
 
 namespace Greet {
 
@@ -26,6 +27,8 @@ namespace Greet {
       bool m_culling = true;
       bool m_clockwise = false;
       bool wireframe = false;
+
+      BoundingBox boundingBox;
 
     public:
       Mesh(const Pointer<Vec3f>& vertices, const Pointer<uint>& indices);
@@ -50,6 +53,8 @@ namespace Greet {
 
       void SetDefaultAttribute4f(uint location, const Vec4f& data);
       void SetDefaultAttribute3f(uint location, const Vec3f& data);
+
+      const BoundingBox& GetBoundingBox() const { return boundingBox; }
     private:
       bool HasVBO(uint location) const;
   };
