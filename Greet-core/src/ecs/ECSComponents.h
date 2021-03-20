@@ -115,22 +115,45 @@ namespace Greet
 
   struct Transform3DComponent
   {
-    Mat4 transform;
+    private:
+      Vec3f position = Vec3f{0, 0, 0};
+      Vec3f scale = Vec3f{1, 1, 1};
+      Vec3f rotation = Vec3f{0, 0, 0};
+    public:
+      Mat4 transform;
+
     Transform3DComponent(const Mat4& transform)
       : transform{transform}
-    {}
+    {
+      RecalcTransform();
+    }
 
     Transform3DComponent(const Vec3f& pos, const Vec3f& scale, const Vec3f& rot)
-      : transform{Mat4::TransformationMatrix(pos, scale, rot)}
-    {}
+      : position{pos}, scale{scale}, rotation{rot}
+    {
+      RecalcTransform();
+    }
 
     Transform3DComponent(const MetaFileClass& metaClass)
-      : transform{Mat4::TransformationMatrix(
+      : Transform3DComponent{
           MetaFileLoading::LoadVec3f(metaClass, "position", {0.0f}),
           MetaFileLoading::LoadVec3f(metaClass, "scale", {1.0f}),
-          MetaFileLoading::LoadVec3f(metaClass, "rotation", {0.0f}).ToRadians())}
-    {
-    }
+          MetaFileLoading::LoadVec3f(metaClass, "rotation", {0.0f}).ToRadians()}
+    {}
+
+    void SetPosition(const Vec3f& avPos) { position = avPos; RecalcTransform(); }
+    void SetScale(const Vec3f& avScale) { scale = avScale; RecalcTransform(); }
+    void SetRotation(const Vec3f& avRotation) { position = avRotation; RecalcTransform(); }
+
+    const Vec3f& GetPosition() const { return position; }
+    const Vec3f& GetScale() const { return scale; }
+    const Vec3f& GetRotation() const { return rotation; }
+
+    private:
+      void RecalcTransform()
+      {
+        transform = Mat4::TransformationMatrix(position, scale, rotation);
+      }
   };
 
   struct Camera3DComponent {
