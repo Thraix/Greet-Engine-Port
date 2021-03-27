@@ -196,6 +196,7 @@ namespace Greet
       const Vec3f& GetPosition() const { return cameraPos; }
       const Mat4& GetViewMatrix() const { return viewMatrix; }
       const Mat4& GetProjectionMatrix() const { return projectionMatrix; }
+      const Mat4& GetInvPVMatrix() const { return invPVMatrix; }
 
       void SetProjectionMatrix(const Mat4& amProjectionMatrix)
       {
@@ -237,7 +238,7 @@ namespace Greet
       Line GetScreenToWorldCoordinate(const Vec2f& screenPos) const
       {
         Line line;
-        line.pos = invPVMatrix * Vec3f(screenPos.x, screenPos.y, -1.0);
+        line.pos = invPVMatrix * Vec3f(screenPos.x, screenPos.y, 0.0);
         Vec3f far = invPVMatrix * Vec3f(screenPos.x, screenPos.y, 1.0);
         line.dir = far - line.pos;
         return line;
