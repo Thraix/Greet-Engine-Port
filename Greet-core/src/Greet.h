@@ -70,6 +70,7 @@
 #include <graphics/gui/GUIScene.h>
 #include <graphics/gui/GUIUtils.h>
 #include <graphics/gui/HueSlider.h>
+#include <graphics/gui/Image.h>
 #include <graphics/gui/Label.h>
 #include <graphics/gui/ProgressBar.h>
 #include <graphics/gui/RadioButton.h>
@@ -150,6 +151,7 @@
 #include <utils/json/JSONArray.h>
 #include <utils/json/JSONLoader.h>
 #include <utils/json/JSONObject.h>
+#include <utils/random/Random.h>
 #include <utils/xml/XML.h>
 #include <utils/xml/XMLException.h>
 #include <utils/xml/XMLObject.h>
